@@ -1,7 +1,7 @@
 import os
 FONTS=''
 def head(title,desc,p):
-    return f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{title}</title><meta name="description" content="{desc}">{FONTS}<link rel="stylesheet" href="{p}assets/style.css?v=1107j"></head><body><div class="wrap">'
+    return f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{title}</title><meta name="description" content="{desc}">{FONTS}<link rel="stylesheet" href="{p}assets/style.css?v=1107l"></head><body><div class="wrap">'
 def nav(p):
     return f'''<header class="nav"><a class="logo" href="{p or './'}">fantasyapp<span class="o">.io</span></a>
 <nav class="links"><a class="hide" href="{p}#games">All games</a><a class="hide" href="{p}#games" data-cat="sports">Sports</a><a class="hide" href="{p}#games" data-cat="trivia">Trivia</a><a class="hide" href="{p}#games" data-cat="learn">Learn</a>
@@ -42,8 +42,8 @@ p=''
 h=head('fantasyapp.io · Games to play with friends','A new game every week to test your knowledge, your fandom or your creativity. Free to try.',p)
 h+=nav(p)
 h+='''<section class="panel hero"><div class="strip topo" aria-hidden="true"></div>
-<div class="eb o" style="margin-bottom:20px">A new game every week</div>
-<h1 class="d">Games to<br>play with<br><span class="o">friends.</span></h1>
+<div class="eb o" style="margin-bottom:20px">Games to play with friends</div>
+<h1 class="d">Game<br>night,<br><span class="o">every week.</span></h1>
 <p class="blurb">A game a week to test your knowledge, fandom or creativity. Think you know movies? Always wanted a fantasy league, but for college football? Start here.</p>
 <div class="acts"><a class="btn" href="cfb/demo/">▶ Play a demo</a><span class="cir" style="background:var(--cream)" aria-hidden="true">↗</span></div>
 <div class="fan">
