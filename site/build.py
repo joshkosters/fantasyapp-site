@@ -60,10 +60,10 @@ h+='''<section class="panel hero"><div class="strip topo" aria-hidden="true"></d
 </section>
 <section style="position:relative;padding:36px 14px 8px"><h2 class="d" style="font-size:clamp(48px,6vw,72px);margin-bottom:22px">Follow the<br>white rabbit</h2>
 <div class="rows">
-<div class="row"><span class="n">01</span><span class="tx">Pick a game</span><a class="cir" href="#games" aria-label="Pick a game">↗</a></div>
-<div class="row"><span class="n">02</span><span class="tx">Watch the 20-second tour</span><a class="cir" href="cfb/demo/#watch" aria-label="Watch the 20-second tour">↗</a></div>
-<div class="row on"><span class="n">03</span><span class="tx">Play the demo</span><a class="cir" href="cfb/demo/#play" aria-label="Play the demo">↗</a></div>
-<div class="row"><span class="n">04</span><span class="tx">Run your own league</span><a class="cir" href="cfb/start/" aria-label="Run your own league">↗</a></div></div>
+<div class="row"><span class="n">01</span><span class="tx">Browse the games</span><a class="cir" href="#games" aria-label="Browse the games">↗</a></div>
+<div class="row"><span class="n">02</span><span class="tx">Filter by sports, trivia or learning</span><a class="cir" href="#games" aria-label="Filter the games">↗</a></div>
+<div class="row on"><span class="n">03</span><span class="tx">Open one and play</span><a class="cir" href="#grid" aria-label="Open a game">↗</a></div>
+<div class="row"><span class="n">04</span><span class="tx">Get a new game every week</span><a class="cir" href="#signup" aria-label="Join the list">↗</a></div></div></div>
 <div class="pop" aria-hidden="true"><div class="eb" style="color:var(--mute2);margin-bottom:10px">Week 9 · In progress</div><div style="height:8px;border-radius:9px;background:#e9e1c4"><div style="width:61%;height:8px;border-radius:9px;background:var(--orange)"></div></div><div style="display:flex;justify-content:space-between;font-weight:800;font-size:14px;margin-top:12px"><span>Jordan Hart</span><span style="background:var(--ink);color:var(--cream);padding:2px 8px;border-radius:6px;font-size:12px">24.6</span></div><div style="display:flex;justify-content:space-between;font-weight:700;font-size:14px;margin-top:8px"><span>Marcus Cole</span><span style="background:var(--yellow);padding:2px 8px;border-radius:6px;font-size:12px">LIVE</span></div></div></section>
 <section id="games" style="padding:40px 14px 0;display:flex;flex-direction:column;gap:20px"><div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px"><h2 class="d" style="font-size:clamp(52px,7.5vw,96px)">Shall we play<br>a game?</h2>
 <div class="tabs" role="tablist"><button class="on" data-f="all">All</button><button data-f="sports">Sports</button><button data-f="trivia">Trivia</button><button data-f="learn">Learn</button></div></div></section>
