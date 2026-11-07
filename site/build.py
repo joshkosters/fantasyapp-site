@@ -1,7 +1,7 @@
 import os
 FONTS=''
 def head(title,desc,p):
-    return f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{title}</title><meta name="description" content="{desc}">{FONTS}<link rel="stylesheet" href="{p}assets/style.css?v=1107f"></head><body><div class="wrap">'
+    return f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{title}</title><meta name="description" content="{desc}">{FONTS}<link rel="stylesheet" href="{p}assets/style.css?v=1107h"></head><body><div class="wrap">'
 def nav(p):
     return f'''<header class="nav"><a class="logo" href="{p or './'}">fantasyapp<span class="o">.io</span></a>
 <nav class="links"><a class="hide" href="{p}#games">All games</a><a class="hide" href="{p}#games" data-cat="sports">Sports</a><a class="hide" href="{p}#games" data-cat="trivia">Trivia</a><a class="hide" href="{p}#games" data-cat="learn">Learn</a>
@@ -47,10 +47,11 @@ h+='''<section class="panel hero"><div class="strip topo" aria-hidden="true"></d
 <p class="blurb">A game a week to test your knowledge, fandom or creativity. Think you know movies? Always wanted a fantasy league, but for college football? Start here.</p>
 <div class="acts"><a class="btn" href="cfb/demo/">▶ Play a demo</a><span class="cir" style="background:var(--cream)" aria-hidden="true">↗</span></div>
 <div class="fan" aria-hidden="true">
-<div class="c" style="left:0;top:60px;background:var(--dark2);color:var(--cream);transform:rotate(-14deg)"><div class="d">Marquee<br>Grid</div></div>
-<div class="c" style="left:110px;top:20px;background:var(--yellow);transform:rotate(-2deg)"><div class="d">Defense<br>IQ</div></div>
-<div class="c" style="left:220px;top:56px;background:var(--orange);transform:rotate(11deg)"><div class="d">Fantasy<br>CFB</div><div style="margin-top:90px;background:var(--ink);color:var(--cream);border-radius:14px;padding:12px 14px;font-size:12px;font-weight:700"><div style="display:flex;justify-content:space-between"><span>You</span><span>98.4</span></div><div style="height:6px;border-radius:9px;background:#3a3834;margin:8px 0"><div style="width:61%;height:6px;border-radius:9px;background:var(--orange)"></div></div><div style="display:flex;justify-content:space-between;color:var(--mute)"><span>Sam</span><span>71.2</span></div></div></div></div>
-<span class="sticker" style="position:absolute;left:600px;top:470px;z-index:4">FREE TO TRY</span></section>
+<div class="bw" style="left:0;top:70px"><div class="sh"></div><div class="bx b-mq" style="--r:-6deg"><div class="f"><div class="br">fantasyapp.io</div><div class="d tt">Marquee<br>Grid</div><div class="art"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="ft"><span>Movie trivia</span><span>1+ players</span></div><div class="bc"></div></div><div class="s"><span>MARQUEE GRID</span></div><div class="tp"></div></div></div>
+<div class="bw" style="left:142px;top:24px"><div class="sh"></div><div class="bx b-cc" style="--r:2deg"><div class="f"><div class="br">fantasyapp.io</div><div class="d tt">NASCAR<br>Crew Chief</div><div class="art"><b></b></div><div class="ft"><span>Weekly game</span><span>2+ players</span></div><div class="bc"></div></div><div class="s"><span>NASCAR CREW CHIEF</span></div><div class="tp"></div></div></div>
+<div class="bw" style="left:284px;top:84px"><div class="sh"></div><div class="bx b-cf" style="--r:-3deg"><div class="f"><div class="br">fantasyapp.io</div><div class="d tt">Fantasy<br>CFB</div><div class="art"><u></u><u></u><u></u></div><div class="ft"><span>College football</span><span>Your league</span></div><div class="bc"></div></div><div class="s"><span>FANTASY CFB</span></div><div class="tp"></div></div></div>
+</div>
+<span class="sticker" style="position:absolute;left:930px;top:338px;z-index:4">FREE TO TRY</span></section>
 <div class="sec-h"><h2 class="d">What's in<br>the box<span class="o">.</span></h2><p>Think you know movies? Ever wanted a fantasy league, but for college football? Every game has a quick tour and a demo. Nothing to install, no account.</p></div>
 <section class="bento">
 <div class="t tall" style="grid-row:span 2;background:var(--orange)"><div class="eb">New game, every week</div><div class="d big" style="font-size:420px;left:20px;bottom:-70px;color:var(--ink)">1</div></div>
