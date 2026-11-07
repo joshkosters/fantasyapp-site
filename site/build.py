@@ -1,7 +1,7 @@
 import os
 FONTS=''
 def head(title,desc,p):
-    return f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{title}</title><meta name="description" content="{desc}">{FONTS}<link rel="stylesheet" href="{p}assets/style.css?v=1107e"></head><body><div class="wrap">'
+    return f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{title}</title><meta name="description" content="{desc}">{FONTS}<link rel="stylesheet" href="{p}assets/style.css?v=1107f"></head><body><div class="wrap">'
 def nav(p):
     return f'''<header class="nav"><a class="logo" href="{p or './'}">fantasyapp<span class="o">.io</span></a>
 <nav class="links"><a class="hide" href="{p}#games">All games</a><a class="hide" href="{p}#games" data-cat="sports">Sports</a><a class="hide" href="{p}#games" data-cat="trivia">Trivia</a><a class="hide" href="{p}#games" data-cat="learn">Learn</a>
