@@ -1,0 +1,18 @@
+
+/* ===== landing-page embed mode ===== */
+html.embed .plate,html.embed #tabs{display:none!important}
+html.embed .bar{position:static!important}
+html.embed body{padding-top:8px;padding-bottom:20px}
+html.embed .shelf,html.embed .felt,html.embed .ledger,html.embed .scroll-margin{scroll-margin-top:0}
+html.p-sched .bar,html.p-league .bar,html.p-coll .bar,html.p-match .bar,html.p-fan .bar,html.p-fan .dockrow{display:none!important}
+html.p-fan body,html.mm body{background:transparent!important;background-image:none!important}
+html.p-fan body::before,html.mm body::before,html.p-fan body::after,html.mm body::after{display:none!important}
+html.p-fan{background:transparent}html.p-fan .handw{padding-top:48px;padding-bottom:84px;overflow:visible}
+html.p-fan .hc{width:clamp(104px,15.5vw,230px);margin-left:calc(clamp(104px,15.5vw,230px)*-.42)}
+html.p-fan .hc:first-child{margin-left:0}
+html.p-fan .wrap{max-width:none}
+html.mm .wrap,html.mm #toast{visibility:hidden}
+html.p-lineup .warnp{display:none!important}
+html.p-sched .ledger .tw{max-height:420px;overflow:auto}
+html.p-cards .case,html.p-draft .case{max-height:620px;overflow-y:auto;padding-right:8px}
+@media(max-width:560px){html.p-fan .hc:nth-child(1),html.p-fan .hc:nth-child(7){display:none}html.p-fan .hc{width:34vw;margin-left:calc(34vw*-.45)}html.p-fan .hc:nth-child(2){margin-left:0}html.p-fan .hand{padding:0;width:auto;min-width:0}html.p-fan .handw{overflow:hidden;padding-left:0}}
