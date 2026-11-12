@@ -22,7 +22,7 @@ games=[
  ('cfb','Fantasy CFB','sports','Sports · League','College fantasy football with friends.','big','background:var(--orange)','live'),
  ('marquee-grid','Marquee Grid','trivia','Trivia · Movies','Spin the wheel and fill the grid with movie knowledge.','','background:var(--ink);color:var(--cream)','live'),
  ('crew-chief','NASCAR Crew Chief','sports','Sports · Coming 2027','Build a crew. Out-wrench your friends.','','background:var(--yellow)','live'),
- ('m2','Mystery game','mystery','Game 04','Something new.','','background:var(--card);border:2px solid var(--ink)','mystery'),
+ ('nascar','Fantasy NASCAR','sports','Sports · Weekly','Pick 3 drivers a week. A, B, C.','','background:var(--card);border:2px solid var(--ink)','live'),
  ('m3','Mystery game','mystery','Game 05','Something new.','','background:var(--dark2);color:var(--cream)','mystery'),
  ('m4','Mystery game','mystery','Game 06 · Unlocks in 4 weeks','Something new.','wide','background:var(--orange)','mystery'),
 ]
@@ -142,6 +142,36 @@ h+=f'''<div class="sec-h" style="padding-bottom:0"><h2 class="d" style="font-siz
 <section class="more"><a class="d" style="background:var(--yellow)" href="{p}crew-chief/">NASCAR Crew Chief</a><a class="d" style="background:var(--orange)" href="{p}cfb/">Fantasy CFB</a><a class="d" style="background:var(--card);border:2px solid var(--ink)" href="{p}#games">All games →</a></section>'''
 h+=foot(p)+end()
 open('marquee/index.html','w').write(h)
+
+# ---------- fantasy nascar page
+os.makedirs('nascar',exist_ok=True)
+p='../'
+h=head('Fantasy NASCAR · fantasyapp.io','Pick 3 NASCAR drivers every week, one from each tier: A, B and C. A snake draft with friends, real NASCAR points and bonuses.',p)
+h+=nav(p)
+h+=f"""<section class="panel hero" style="min-height:560px;padding-bottom:56px"><div class="strip topo" style="width:200px" aria-hidden="true"></div>
+<div class="eb" style="color:var(--mute)"><a class="o" href="{p}">All games</a> / Sports / Fantasy NASCAR</div>
+<h1 class="d" style="font-size:clamp(70px,14.5vw,190px);margin-top:22px">Fantasy<br><span class="o">NASCAR.</span></h1>
+<p style="margin:26px 0 0;max-width:440px;font-size:18px;line-height:1.6;color:var(--mute);font-weight:500;position:relative;z-index:1">Three drivers. Three tiers. Every week. Draft one driver each from A, B and C, then score real NASCAR points plus bonuses for qualifying and laps led.</p>
+<div style="margin-top:30px;position:relative;z-index:3;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><a class="btn" href="#signup-nascar">Get notified</a><a class="btn line" style="color:var(--cream)" href="#how">How it works</a></div>
+<div class="hide-s" style="position:absolute;right:120px;top:70px;width:300px;z-index:2;transform:rotate(5deg);background:var(--cream);color:var(--ink);border-radius:26px;padding:22px;box-shadow:0 22px 50px rgba(0,0,0,.5)">
+<div class="eb" style="color:var(--mute2)">Your picks this week</div>
+<div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;font-weight:800">
+<div style="display:flex;align-items:center;gap:12px"><span class="d" style="background:var(--yellow);width:38px;height:38px;border-radius:50%;display:grid;place-items:center">A</span><span>Driver from the top 12</span></div>
+<div style="display:flex;align-items:center;gap:12px"><span class="d" style="background:var(--orange);width:38px;height:38px;border-radius:50%;display:grid;place-items:center">B</span><span>Driver from the next 12</span></div>
+<div style="display:flex;align-items:center;gap:12px"><span class="d" style="background:var(--ink);color:var(--cream);width:38px;height:38px;border-radius:50%;display:grid;place-items:center">C</span><span>Driver from the rest</span></div></div>
+<div style="font-size:12px;color:var(--mute2);margin-top:12px">Example only. Tiers follow the season standings.</div></div></section>"""
+h+="""<div class="sec-h" id="how"><h2 class="d">Pick three.<br>Beat your friends<span class="o">.</span></h2><p>A small-group game built for a few friends and a race every week. Nothing to install and no cap on trash talk.</p></div>"""
+h+=f"""<section class="bench">{feat('A','Three tiers','Drivers are split by season points into the top 12, the next 12 and everyone else. You take one from each tier every week.','var(--yellow)','var(--ink)')}{feat('B','Draft every week',"Pick order starts from last place in the standings, then snakes. No two players can take the same driver. Each pick has a 12-hour clock and the draft locks before qualifying.",'var(--ink)','var(--cream)','margin-top:34px;')}{feat('C','Real points, plus bonuses','Your drivers score their actual NASCAR points. Add 5 for winning the pole, 3 for second and 1 for third. Leading a lap is worth 5 and leading the most laps is 5 more.','var(--orange)','var(--ink)')}</section>"""
+h+="""<section class="panel" style="margin-top:36px;background:var(--ink);color:var(--cream);padding:44px 56px"><div class="eb o">The weekly rhythm</div><h2 class="d" style="font-size:clamp(40px,5.5vw,72px);margin:10px 0 14px">Results post.<br>The draft opens<span class="o">.</span></h2>
+<p style="max-width:620px;font-size:17px;line-height:1.65;font-weight:500;margin:0 0 22px">As soon as a race's results are in, picks open for the next one. Check the matchup page to see everyone's drivers side by side, then watch the standings move once the checkered flag falls. Pages for the draft, matchup, standings, race recap, awards and an admin view are all part of the game.</p></section>"""
+h+="""<section class="panel" style="margin-top:36px;background:var(--yellow);color:var(--ink);padding:48px 56px;position:relative" id="signup-nascar"><div class="eb">Want to play?</div>
+<h2 class="d" style="font-size:clamp(44px,6vw,80px);margin:10px 0 12px">Tell us you're in<span class="o">.</span></h2>
+<p style="max-width:520px;font-size:17px;line-height:1.6;font-weight:600;margin:0 0 22px">Leave your email and we will let you know when Fantasy NASCAR is open for more leagues. We will email you once.</p>
+<div><form data-interest="nascar-weekly" onsubmit="return su(event)" style="display:flex;gap:10px;flex-wrap:wrap"><input type="email" required maxlength="200" placeholder="you@example.com" aria-label="Email address" style="flex:1 1 240px;padding:16px 20px;border-radius:99px;border:2px solid var(--ink);background:var(--cream);font:inherit;font-size:16px"><button class="btn ink" type="submit">Notify me</button></form><span class="msg" role="status" style="display:block;margin-top:10px;font-weight:700"></span></div></section>"""
+h+=f"""<div class="sec-h" style="padding-bottom:0"><h2 class="d" style="font-size:clamp(48px,6vw,72px)">Other projects</h2></div>
+<section class="more"><a class="d" style="background:var(--yellow)" href="{p}crew-chief/">NASCAR Crew Chief</a><a class="d" style="background:var(--orange)" href="{p}cfb/">Fantasy CFB</a><a class="d" style="background:var(--card);border:2px solid var(--ink)" href="{p}#games">All games →</a></section>"""
+h+=foot(p)+end()
+open('nascar/index.html','w').write(h)
 # ---------- privacy page
 
 exec(open('cc_page.py').read())
