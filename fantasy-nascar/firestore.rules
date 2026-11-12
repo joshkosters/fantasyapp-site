@@ -1,0 +1,19 @@
+rules_version = '2';
+// Replace you@example.com with the same commissioner email you put in index.html (lowercase).
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function email() { return request.auth.token.email.lower(); }
+    function isAdmin() { return request.auth != null && email() == 'you@example.com'; }
+    function isMember() { return request.auth != null && exists(/databases/$(database)/documents/members/$(email())); }
+
+    // Players can read everything and make picks (picks are saved on the week document).
+    match /weeks/{week} {
+      allow read, write: if isAdmin() || isMember();
+    }
+    // Everything else: players read, only the commissioner writes.
+    match /{col}/{doc} {
+      allow read: if isAdmin() || isMember();
+      allow write: if isAdmin();
+    }
+  }
+}

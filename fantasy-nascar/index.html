@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fantasy NASCAR</title>
+<style>
+:root{--bg:#0f1115;--card:#181b22;--line:#2a2f3a;--tx:#e8eaf0;--mu:#8b93a5;--ac:#ffcc00;--A:#e5484d;--B:#3e9bff;--C:#46c37b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,sans-serif}
+header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 14px;background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+nav{display:flex;gap:6px;flex:1;flex-wrap:wrap}nav button,.btn{background:#222733;color:var(--tx);border:1px solid var(--line);border-radius:8px;padding:7px 12px;cursor:pointer;font:inherit}
+nav button.on,.btn.pri{background:var(--ac);color:#111;border-color:var(--ac);font-weight:600}
+main{max-width:900px;margin:0 auto;padding:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px}
+h2{margin:0 0 8px;font-size:17px}h3{margin:10px 0 6px;font-size:14px;color:var(--mu)}
+.mu{color:var(--mu)}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pool{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px}
+.drv{background:#222733;border:1px solid var(--line);border-radius:8px;padding:6px 8px;text-align:left;color:var(--tx);cursor:pointer;font:inherit}
+.drv small{display:block;color:var(--mu)}.drv:disabled{opacity:.35;cursor:not-allowed}
+.tag{display:inline-block;border-radius:5px;padding:0 6px;font-weight:700;font-size:12px;color:#111}
+.tA{background:var(--A)}.tB{background:var(--B)}.tC{background:var(--C)}
+table{width:100%;border-collapse:collapse}td,th{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left}th{color:var(--mu);font-weight:500}
+td.n,th.n{text-align:right}
+.seq{display:flex;gap:4px;flex-wrap:wrap}.slot{border:1px solid var(--line);border-radius:6px;padding:3px 7px;font-size:12px}.slot.now{border-color:var(--ac);color:var(--ac)}
+textarea,input,select{background:#222733;color:var(--tx);border:1px solid var(--line);border-radius:8px;padding:7px;font:inherit;width:100%}
+.chip{display:inline-block;border-radius:10px;padding:0 8px;font-size:12px;font-weight:700;color:#111}
+#load{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:50;transition:opacity .35s;font-weight:800;letter-spacing:2px;color:var(--ac)}
+#load.off{opacity:0;pointer-events:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.drv{display:flex;align-items:center;gap:8px;border-left:6px solid var(--c,#555);background:linear-gradient(90deg,color-mix(in srgb,var(--c,#555) 24%,transparent),transparent 70%),#222733}
+.drv .bdg{height:30px;width:auto;flex:none}.drv .nm{flex:1;min-width:0;line-height:1.2}.drv .mk{width:40px;height:auto;flex:none}
+.teams{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.drv.tc{cursor:default}.st{display:flex;gap:12px;font-size:11px;color:var(--mu);margin-top:3px}.st b{display:block;font-size:13px;color:var(--tx)}
+.bn{display:inline-block;font-size:10px;font-weight:700;border-radius:8px;padding:0 6px;background:#ffcc00;color:#111;margin:0 3px 2px 0}
+</style></head><body>
+<div id="load" aria-label="Loading">LOADING…</div>
+<header><b style="letter-spacing:1px">FANTASY NASCAR</b><nav id="nav"></nav><span id="who" class="mu"></span></header>
+<main id="app">Loading…</main>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+// ====== PASTE YOUR FIREBASE WEB CONFIG HERE (Firebase console > Project settings > Your apps) ======
+const firebaseConfig = {
+  apiKey: "PASTE_API_KEY", authDomain: "PASTE_PROJECT_ID.firebaseapp.com", projectId: "PASTE_PROJECT_ID", appId: "PASTE_APP_ID"
+};
+// ====== The league commissioner (admin). Use the Google account you will sign in with. Lowercase. ======
+const COMMISH = "you@example.com";
+const PICK_HOURS = 12, H = 3600e3;
+const TIER_SIZE = 12; // A = top 12, B = next 12, C = rest
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore(), auth = firebase.auth();
+const S = { user: null, got: {}, authDone: false, members: {}, drivers: {}, weeks: {}, scores: {}, league: {}, tab: 'draft', wk: null };
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const isAdmin = () => S.user && S.user.email.toLowerCase() === COMMISH;
+const me = () => S.user && S.user.email.toLowerCase();
+const nameOf = e => (S.members[e] && S.members[e].name) || (e || '').split('@')[0];
+const dname = id => S.drivers[id] ? S.drivers[id].name : id;
+
+// ---------- standings ----------
+// bonus points: qualifying 5/3/1, led a lap +5, most laps led +5 (ties share it). Computed from sc.qual / sc.led, never stored.
+const QB = [5, 3, 1], QL = ['Pole', 'Q2', 'Q3'];
+function bonusOf(sc, id) {
+  const q = (sc.qual || []).indexOf(id), led = Number((sc.led || {})[id] || 0), mx = Math.max(0, ...Object.values(sc.led || {}).map(Number));
+  const b = { q: q >= 0 && q < 3 ? QB[q] : 0, qn: q >= 0 && q < 3 ? QL[q] : '', l: led > 0 ? 5 : 0, m: led > 0 && led === mx ? 5 : 0, laps: led };
+  b.t = b.q + b.l + b.m; return b;
+}
+const drvPts = (sc, id) => Number((sc.pts || {})[id] || 0) + bonusOf(sc, id).t;
+const bonusChips = (sc, id) => { const b = bonusOf(sc, id); return [b.q && `${b.qn} +${b.q}`, b.l && `Led +${b.l}`, b.m && `Most led +${b.m}`].filter(Boolean).map(t => `<span class="bn">${t}</span>`).join(''); };
+function totals(uptoWeek) {
+  const T = {};
+  Object.keys(S.members).forEach(e => T[e] = { pts: 0, wins: 0 });
+  Object.values(S.weeks).filter(w => w.status === 'scored' && (uptoWeek == null || w.n <= uptoWeek)).forEach(w => {
+    const sc = S.scores['w' + w.n] || {}, wt = {};
+    w.picks.forEach(p => { const v = drvPts(sc, p.driverId); wt[p.email] = (wt[p.email] || 0) + v; if (T[p.email]) T[p.email].pts += v; });
+    const best = Math.max(0, ...Object.values(wt));
+    if (best > 0) Object.keys(wt).forEach(e => { if (wt[e] === best && T[e]) T[e].wins++; });
+  });
+  return T;
+}
+function standingsList(uptoWeek) {
+  const T = totals(uptoWeek);
+  return Object.keys(T).map(e => ({ e, ...T[e] })).sort((a, b) => b.pts - a.pts || b.wins - a.wins || a.e.localeCompare(b.e));
+}
+
+// ---------- draft logic ----------
+function autoPick(w, email) {
+  const taken = new Set(w.picks.map(p => p.driverId));
+  const have = new Set(w.picks.filter(p => p.email === email).map(p => w.tiers[p.driverId]));
+  return Object.values(S.drivers).filter(d => !taken.has(d.id) && w.tiers[d.id] && !have.has(w.tiers[d.id]))
+    .sort((a, b) => (b.seasonPts || 0) - (a.seasonPts || 0))[0]?.id;
+}
+function applyTimeouts(w, now) {
+  let ch = false;
+  while (w.status === 'open' && w.picks.length < w.seq.length && (now >= w.lockAt || now >= w.deadline)) {
+    const em = w.seq[w.picks.length], d = autoPick(w, em);
+    if (!d) break;
+    w.picks.push({ email: em, driverId: d, auto: true, at: Math.min(now, w.deadline) });
+    if (now < w.lockAt) w.deadline += PICK_HOURS * H;
+    ch = true;
+  }
+  if (w.status === 'open' && (w.picks.length >= w.seq.length || now >= w.lockAt)) { w.status = 'locked'; ch = true; }
+  return ch;
+}
+async function mutateWeek(n, fn) {
+  const ref = db.doc('weeks/w' + n);
+  return db.runTransaction(async t => {
+    const s = await t.get(ref); if (!s.exists) return;
+    const w = s.data(); if (fn(w)) t.set(ref, w);
+  });
+}
+async function pickDriver(n, id) {
+  await mutateWeek(n, w => {
+    applyTimeouts(w, Date.now());
+    if (w.status !== 'open') { alert('Draft is closed.'); return false; }
+    if (w.seq[w.picks.length] !== me()) { alert("It's not your turn."); return false; }
+    if (w.picks.some(p => p.driverId === id)) { alert('Already taken.'); return false; }
+    const t = w.tiers[id];
+    if (w.picks.some(p => p.email === me() && w.tiers[p.driverId] === t)) { alert('You already have a tier ' + t + ' driver.'); return false; }
+    w.picks.push({ email: me(), driverId: id, auto: false, at: Date.now() });
+    w.deadline = Date.now() + PICK_HOURS * H;
+    if (w.picks.length >= w.seq.length) w.status = 'locked';
+    return true;
+  });
+}
+function fmtLeft(ms) { if (ms <= 0) return 'now'; const h = Math.floor(ms / H), m = Math.floor(ms % H / 60000); return h + 'h ' + m + 'm'; }
+
+// ---------- admin actions ----------
+async function importDrivers() {
+  const lines = document.getElementById('drvTxt').value.split('\n').map(l => l.trim()).filter(Boolean);
+  const batch = db.batch(); let n = 0;
+  lines.forEach(l => { const [name, num, team, pts, wins] = l.split(',').map(x => x.trim()); if (!name || !num) return;
+    batch.set(db.doc('drivers/' + num), { id: num, name, num, team: team || '', seasonPts: Number(pts) || 0, wins: Number(wins) || 0 }, { merge: true }); n++; });
+  await batch.commit(); alert('Imported ' + n + ' drivers');
+}
+async function saveMembers() {
+  const lines = document.getElementById('memTxt').value.split('\n').map(l => l.trim()).filter(Boolean);
+  const batch = db.batch();
+  lines.forEach(l => { const [em, name] = l.split(',').map(x => x.trim()); if (em) batch.set(db.doc('members/' + em.toLowerCase()), { name: name || em.split('@')[0] }); });
+  await batch.commit(); alert('Saved');
+}
+async function openWeek() {
+  const n = Number(document.getElementById('wkN').value), race = document.getElementById('wkRace').value.trim(),
+    lock = new Date(document.getElementById('wkLock').value).getTime();
+  if (!n || !lock) return alert('Need week number and lock time');
+  if (lock < Date.now() + 3600e3) return alert('Lock time must be at least 1 hour from now.');
+  const ds = Object.values(S.drivers).sort((a, b) => (b.seasonPts || 0) - (a.seasonPts || 0) || (b.wins || 0) - (a.wins || 0));
+  if (ds.length < 3) return alert('Import drivers first');
+  const tiers = {}; ds.forEach((d, i) => tiers[d.id] = i < TIER_SIZE ? 'A' : i < TIER_SIZE * 2 ? 'B' : 'C');
+  const emails = Object.keys(S.members);
+  let first;
+  const scored = Object.values(S.weeks).some(w => w.status === 'scored' && w.n < n);
+  if (scored) first = standingsList(n - 1).map(x => x.e).reverse().filter(e => emails.includes(e)); // last place first
+  else first = emails.slice().sort(() => Math.random() - .5);
+  const seq = [...first, ...first.slice().reverse(), ...first];
+  await db.doc('weeks/w' + n).set({ n, race, status: 'open', lockAt: lock, tiers, seq, picks: [], deadline: Date.now() + PICK_HOURS * H, openedAt: Date.now() });
+  await db.doc('config/league').set({ currentWeek: n }, { merge: true });
+  S.wk = n;
+}
+async function saveScores(n) {
+  const lines = document.getElementById('scTxt').value.split('\n').map(l => l.trim()).filter(Boolean), pts = {}, order = [], miss = [];
+  lines.forEach(l => { const i = l.lastIndexOf(','); const key = l.slice(0, i).trim().toLowerCase(), v = Number(l.slice(i + 1));
+    const d = Object.values(S.drivers).find(d => d.num === key || d.name.toLowerCase() === key); if (d && !isNaN(v)) { pts[d.id] = v; order.push(d.id); } else miss.push(l); });
+  await db.doc('scores/w' + n).set({ pts, order, t: Date.now() }, { merge: true });
+  await db.doc('weeks/w' + n).set({ status: 'scored' }, { merge: true });
+  alert('Saved ' + Object.keys(pts).length + ' scores' + (miss.length ? '. Unmatched: ' + miss.join(' | ') : ''));
+}
+async function saveQual(n) {
+  const lines = document.getElementById('qualTxt').value.split('\n').map(l => l.trim()).filter(Boolean), qual = [], unknown = [], dup = [];
+  lines.forEach(l => { const raw = l.replace(/^\?/, '').split(',')[0].trim(), key = raw.toLowerCase(), d = Object.values(S.drivers).find(d => d.num === key || d.name.toLowerCase() === key);
+    if (!d) { qual.push('?' + raw); unknown.push(raw); } else if (qual.includes(d.id)) dup.push(l); else qual.push(d.id); });
+  // shortcut: names not in the driver pool are kept as "?name" placeholders so everyone's start position stays right; a typo also becomes a placeholder, so check the alert
+  await db.doc('scores/w' + n).set({ qual }, { merge: true });
+  alert('Saved ' + qual.length + ' qualifying spots' + (unknown.length ? '. Not in driver pool (kept as placeholders): ' + unknown.join(' | ') : '') + (dup.length ? '. Duplicates skipped: ' + dup.join(' | ') : ''));
+}
+async function saveLed(n) {
+  const lines = document.getElementById('ledTxt').value.split('\n').map(l => l.trim()).filter(Boolean), led = {}, miss = [];
+  lines.forEach(l => { const i = l.lastIndexOf(','); const key = l.slice(0, i).trim().toLowerCase(), v = Number(l.slice(i + 1));
+    const d = i > 0 && Object.values(S.drivers).find(d => d.num === key || d.name.toLowerCase() === key); if (d && v >= 0 && !isNaN(v) && led[d.id] == null) led[d.id] = v; else miss.push(l); });
+  await db.doc('scores/w' + n).set({ led }, { mergeFields: ['led'] });
+  alert('Saved laps led for ' + Object.keys(led).length + ' drivers' + (miss.length ? '. Unmatched or duplicate: ' + miss.join(' | ') : ''));
+}
+async function unlock(n) { await db.doc('weeks/w' + n).set({ status: 'open', lockAt: Date.now() + 6 * H }, { merge: true }); }
+
+// ---------- views ----------
+function weekPick() {
+  const ns = Object.values(S.weeks).map(w => w.n).sort((a, b) => b - a);
+  if (!S.wk) S.wk = S.league.currentWeek || ns[0] || null;
+  return S.wk;
+}
+function weekSelect() {
+  const ns = Object.values(S.weeks).map(w => w.n).sort((a, b) => b - a);
+  return ns.length ? `<select style="width:auto" onchange="S.wk=+this.value;render()">${ns.map(n => `<option value="${n}" ${n === S.wk ? 'selected' : ''}>Week ${n}${S.weeks['w' + n].race ? ' – ' + esc(S.weeks['w' + n].race) : ''}</option>`).join('')}</select>` : '';
+}
+function vDraft() {
+  const n = weekPick(), w = S.weeks['w' + n];
+  if (!w) return `<div class="card">No draft open yet.${isAdmin() ? ' Open one from the Admin tab.' : ''}</div>`;
+  const now = Date.now(), open = w.status === 'open', turn = w.seq[w.picks.length], myTurn = open && turn === me();
+  const mine = w.picks.filter(p => p.email === me()), myTiers = new Set(mine.map(p => w.tiers[p.driverId]));
+  const owner = {}; w.picks.forEach(p => owner[p.driverId] = p.email);
+  let h = `<div class="card"><div class="row"><h2 style="flex:1">${esc(w.race || 'Week ' + w.n)}</h2>${weekSelect()}</div>`;
+  h += open ? `<div>On the clock: <b>${esc(nameOf(turn))}</b> <span class="mu">(auto-pick in ${fmtLeft(w.deadline - now)})</span></div>
+     <div class="mu">Draft locks ${new Date(w.lockAt).toLocaleString()} (${fmtLeft(w.lockAt - now)})</div>`
+    : `<div><b>${w.status === 'scored' ? 'Scored' : 'Draft closed'}</b></div>`;
+  h += `<h3>Pick order</h3><div class="seq">${w.seq.map((e, i) => { const p = w.picks[i];
+    return `<span class="slot ${open && i === w.picks.length ? 'now' : ''}">${i + 1}. ${esc(nameOf(e))}${p ? ' → ' + esc(dname(p.driverId)) + (p.auto ? ' (auto)' : '') : ''}</span>`; }).join('')}</div></div>`;
+  h += `<div class="card"><h2>Your team</h2>${['A', 'B', 'C'].map(t => { const p = mine.find(p => w.tiers[p.driverId] === t);
+    return `<span class="tag t${t}">${t}</span> ${p ? esc(dname(p.driverId)) : '<span class="mu">—</span>'}&nbsp;&nbsp;`; }).join('')}</div>`;
+  ['A', 'B', 'C'].forEach(t => {
+    const ds = Object.values(S.drivers).filter(d => w.tiers[d.id] === t).sort((a, b) => (b.seasonPts || 0) - (a.seasonPts || 0));
+    h += `<div class="card"><h2><span class="tag t${t}">${t}</span> Tier ${t}</h2><div class="pool">${ds.map(d => {
+      const o = owner[d.id], dis = !myTurn || o || myTiers.has(t);
+      return `<button class="drv" style="--c:${esc(d.color || '#555')}" ${dis ? 'disabled' : ''} onclick="pickDriver(${n},'${d.id}')"><img class="bdg" src="https://cf.nascar.com/data/images/carbadges/1/${esc(d.num)}.png" alt="#${esc(d.num)}" onerror="this.outerHTML='<b>#${esc(d.num)}</b>'"><span class="nm">${esc(d.name)}<small>${o ? 'Taken: ' + esc(nameOf(o)) : (d.seasonPts || 0) + ' pts'}</small></span>${d.make ? `<img class="mk" src="logos/${esc(d.make.toLowerCase())}.png" alt="${esc(d.make)}" onerror="this.remove()">` : ''}</button>`; }).join('')}</div></div>`;
+  });
+  return h;
+}
+function vStandings() {
+  const L = standingsList(), wks = Object.values(S.weeks).filter(w => w.status === 'scored').sort((a, b) => a.n - b.n);
+  const wt = (e, w) => w.picks.filter(p => p.email === e).reduce((s, p) => s + drvPts(S.scores['w' + w.n] || {}, p.driverId), 0);
+  return `<div class="card"><h2>Standings</h2><div style="overflow:auto"><table><tr><th>#</th><th>Player</th><th class="n">Pts</th><th class="n">Wk wins</th>${wks.map(w => `<th class="n">W${w.n}</th>`).join('')}</tr>
+  ${L.map((r, i) => `<tr><td>${i + 1}</td><td>${esc(nameOf(r.e))}</td><td class="n"><b>${r.pts}</b></td><td class="n">${r.wins}</td>${wks.map(w => `<td class="n">${wt(r.e, w)}</td>`).join('')}</tr>`).join('')}</table></div>
+  <div class="mu" style="margin-top:6px">Next draft: last place picks first. Ties broken by weekly wins.</div></div>`;
+}
+function vAdmin() {
+  if (!isAdmin()) return '';
+  const n = weekPick(), w = S.weeks['w' + n];
+  return `<div class="card"><h2>Players</h2><div class="mu">One per line: email,name</div><textarea id="memTxt" rows="4">${Object.entries(S.members).map(([e, m]) => e + ',' + m.name).join('\n')}</textarea><p><button class="btn" onclick="saveMembers()">Save players</button></p></div>
+  <div class="card"><h2>Drivers</h2><div class="mu">One per line: name,number,team,seasonPts,wins (re-import to refresh points before opening a week)</div><textarea id="drvTxt" rows="6">${Object.values(S.drivers).map(d => [d.name, d.num, d.team, d.seasonPts, d.wins].join(',')).join('\n')}</textarea><p><button class="btn" onclick="importDrivers()">Import drivers</button></p></div>
+  <div class="card"><h2>Open a week</h2><div class="row"><input id="wkN" type="number" placeholder="Week #" style="width:90px"><input id="wkRace" placeholder="Race name"><input id="wkLock" type="datetime-local"></div><p><button class="btn pri" onclick="openWeek()">Open draft</button> <span class="mu">Snapshots tiers and sets order (last place first, snake).</span></p></div>
+  ${w ? `<div class="card"><h2>Week ${n} scores</h2><div class="mu">One per line, in finishing order: driver number or name, points</div><textarea id="scTxt" rows="8">${(() => { const sc = S.scores['w' + n] || {}, pts = sc.pts || {}; return (sc.order || Object.keys(pts)).map(id => id + ',' + pts[id]).join('\n'); })()}</textarea><p><button class="btn pri" onclick="saveScores(${n})">Save scores</button> <button class="btn" onclick="unlock(${n})">Reopen draft (+6h)</button></p></div>
+  <div class="card"><h2>Week ${n} qualifying</h2><div class="mu">One per line, in qualifying order (fastest first): driver number or name</div><textarea id="qualTxt" rows="8">${((S.scores['w' + n] || {}).qual || []).join('\n')}</textarea><p><button class="btn pri" onclick="saveQual(${n})">Save qualifying</button></p></div>
+  <div class="card"><h2>Week ${n} laps led</h2><div class="mu">One per line: driver number or name, laps led (only drivers who led). Bonus: +5 for any lap led, +5 more for most laps led.</div><textarea id="ledTxt" rows="6">${Object.entries(((S.scores['w' + n] || {}).led) || {}).map(([id, v]) => id + ',' + v).join('\n')}</textarea><p><button class="btn pri" onclick="saveLed(${n})">Save laps led</button></p></div>` : ''}`;
+}
+const COLORS = ['#ffcc00', '#3e9bff', '#e5484d', '#46c37b', '#b07cff', '#ff8a3d'];
+const colorOf = e => COLORS[Math.max(0, Object.keys(S.members).sort().indexOf(e)) % COLORS.length];
+function vResults() {
+  const sw = Object.values(S.weeks).filter(w => w.status === 'scored').sort((a, b) => b.n - a.n);
+  if (!sw.length) return '<div class="card">No results yet. They show up once a race\'s scores are posted.</div>';
+  const w = S.weeks['w' + S.rwk] && S.weeks['w' + S.rwk].status === 'scored' ? S.weeks['w' + S.rwk] : sw[0], n = w.n;
+  const sc = S.scores['w' + n] || {}, pts = sc.pts || {};
+  const order = sc.order && sc.order.length ? sc.order : Object.keys(pts).sort((a, b) => pts[b] - pts[a]);
+  const own = {}; w.picks.forEach(p => own[p.driverId] = p.email);
+  const chip = e => `<span class="chip" style="background:${colorOf(e)}">${esc(nameOf(e))}</span>`;
+  const by = {}; w.picks.forEach(p => (by[p.email] = by[p.email] || []).push(p));
+  const rows = Object.keys(by).map(e => ({ e, tot: by[e].reduce((t, p) => t + drvPts(sc, p.driverId), 0) })).sort((a, b) => b.tot - a.tot);
+  const board = rows.map((r, i) => `<div style="margin:6px 0">${i + 1}. ${chip(r.e)} <b>${r.tot} pts</b><div class="mu" style="margin-left:18px">${by[r.e].map(p => `<span class="tag t${w.tiers[p.driverId]}">${w.tiers[p.driverId]}</span> ${esc(dname(p.driverId))} ${drvPts(sc, p.driverId)}`).join(' &nbsp; ')}</div></div>`).join('');
+  return `<div class="card"><div class="row"><h2 style="flex:1">${esc(w.race || 'Week ' + n)}</h2><select style="width:auto" onchange="S.rwk=+this.value;render()">${sw.map(x => `<option value="${x.n}" ${x.n === n ? 'selected' : ''}>Week ${x.n}${x.race ? ' – ' + esc(x.race) : ''}</option>`).join('')}</select></div>
+  <div style="margin:8px 0">${board}</div>
+  <table><tr><th>Pos</th><th>Driver</th><th></th><th class="n">Pts</th></tr>${order.map((id, i) => `<tr><td>${i + 1}</td><td>${esc(dname(id))}</td><td>${own[id] ? chip(own[id]) : ''}</td><td class="n"><b>${drvPts(sc, id)}</b>${bonusOf(sc, id).t ? `<div>${bonusChips(sc, id)}</div>` : ''}</td></tr>`).join('')}</table></div>`;
+}
+const LV = ['', { n: 'Bronze', c: '#cd7f32' }, { n: 'Silver', c: '#c0c0c0' }, { n: 'Gold', c: '#ffcc00' }];
+// [id, icon, name, level, kind, description]
+const AW = [
+  ['winner', '🏆', 'Week Winner', 1, 'good', 'Highest total of the week'],
+  ['flag', '🏁', 'Checkered Flag', 1, 'good', 'Own the driver who wins the race'],
+  ['sleeper', '😴', 'Sleeper Pick', 1, 'good', 'Own a tier C driver who finishes top 10'],
+  ['tierfail', '📉', 'Tier Fail', 1, 'roast', 'Your A driver scores less than your C driver'],
+  ['fire', '🔥', 'Dumpster Fire', 1, 'roast', 'Your first overall pick finishes 15th or worse'],
+  ['spoon', '🥄', 'Wooden Spoon', 1, 'roast', 'Lowest total of the week'],
+  ['photo', '📸', 'Photo Finish', 2, 'good', 'Win a week by 5 points or fewer'],
+  ['perfect', '✨', 'Perfect Week', 2, 'good', 'All 3 drivers finish top 10'],
+  ['podium', '🥇', 'Podium Lock', 2, 'good', 'Own 2 of the top 3 finishers'],
+  ['comeback', '🔄', 'Comeback Kid', 2, 'good', 'Win a week after picking first (last place)'],
+  ['blowout', '💥', 'Blowout', 2, 'good', 'Win a week by 50 points or more'],
+  ['big', '🚀', 'Big Week', 2, 'good', 'Hold the season-high weekly total'],
+  ['part', '🎗️', 'Participation Trophy', 2, 'roast', 'All 3 drivers finish 20th or worse'],
+  ['cursed', '💀', 'Cursed', 2, 'roast', 'Own the driver who finishes dead last'],
+  ['streak', '🔥', 'Hot Streak', 3, 'good', 'Win 3 weeks in a row'],
+  ['triple', '👑', 'Triple Crown', 3, 'good', 'All 3 drivers score 30+ points in one race'],
+  ['dream', '💎', 'Dream Team', 3, 'good', 'All 3 drivers finish top 5'],
+  ['champ', '🏆', 'Champion', 3, 'season', 'Most points in the season'],
+  ['mostwins', '🥇', 'Most Weekly Wins', 3, 'season', 'Most weekly wins in the season'],
+  ['runner', '🥈', 'Runner-Up', 2, 'season', 'Second in the season standings'],
+  ['last', '🥄', 'Last Place', 1, 'season', 'Last in the season standings']
+];
+function computeAwards() {
+  const out = {}, give = (id, e, tag) => { out[id] = out[id] || {}; (out[id][e] = out[id][e] || []).push(tag); };
+  const ws = Object.values(S.weeks).filter(w => w.status === 'scored' && (S.scores['w' + w.n] || {}).pts).sort((a, b) => a.n - b.n);
+  const run = {}, totals = [];
+  ws.forEach(w => {
+    const sc = S.scores['w' + w.n], pts = sc.pts, tag = 'W' + w.n;
+    const order = sc.order && sc.order.length ? sc.order : Object.keys(pts).sort((a, b) => pts[b] - pts[a]);
+    const pos = {}; order.forEach((id, i) => pos[id] = i + 1);
+    const P = id => Number(pts[id] || 0), R = id => pos[id] || 99;
+    const by = {}; w.picks.forEach(p => (by[p.email] = by[p.email] || []).push(p.driverId));
+    const emails = Object.keys(by), tot = {};
+    emails.forEach(e => tot[e] = by[e].reduce((t, id) => t + drvPts(sc, id), 0));
+    const sv = emails.map(e => tot[e]).sort((a, b) => b - a), hi = sv[0], lo = sv[sv.length - 1];
+    const margin = sv.length > 1 ? sv[0] - sv[1] : 0, hasPrior = ws.some(x => x.n < w.n);
+    emails.forEach(e => {
+      const ids = by[e], won = hi > 0 && tot[e] === hi, full = ids.length === 3;
+      totals.push({ e, t: tot[e], tag });
+      run[e] = won ? (run[e] || 0) + 1 : 0;
+      if (won) give('winner', e, tag);
+      if (run[e] === 3) give('streak', e, tag);
+      if (ids.some(id => R(id) === 1)) give('flag', e, tag);
+      if (ids.some(id => w.tiers[id] === 'C' && R(id) <= 10)) give('sleeper', e, tag);
+      if (full && ids.every(id => R(id) <= 10)) give('perfect', e, tag);
+      if (won && hasPrior && w.seq[0] === e) give('comeback', e, tag);
+      if (full && ids.every(id => P(id) >= 30)) give('triple', e, tag);
+      if (full && ids.every(id => R(id) >= 20)) give('part', e, tag);
+      if (hi > lo && tot[e] === lo) give('spoon', e, tag);
+      if (w.picks[0] && w.picks[0].email === e && R(w.picks[0].driverId) >= 15) give('fire', e, tag);
+      const a = ids.find(id => w.tiers[id] === 'A'), c = ids.find(id => w.tiers[id] === 'C');
+      if (a && c && P(a) < P(c)) give('tierfail', e, tag);
+      if (ids.some(id => R(id) === order.length)) give('cursed', e, tag);
+      if (won && margin <= 5) give('photo', e, tag);
+      if (won && margin >= 50) give('blowout', e, tag);
+      if (ids.filter(id => R(id) <= 3).length >= 2) give('podium', e, tag);
+      if (full && ids.every(id => R(id) <= 5)) give('dream', e, tag);
+    });
+  });
+  const max = Math.max(0, ...totals.map(x => x.t)), seen = {};
+  if (max > 0) totals.filter(x => x.t === max).forEach(x => { if (!seen[x.e]) { seen[x.e] = 1; give('big', x.e, x.tag); } });
+  if (ws.length) {
+    const L = standingsList(), mw = Math.max(...L.map(r => r.wins));
+    give('champ', L[0].e, 'now'); if (L[1]) give('runner', L[1].e, 'now');
+    if (mw > 0) L.filter(r => r.wins === mw).forEach(r => give('mostwins', r.e, 'now'));
+    if (L.length > 1) give('last', L[L.length - 1].e, 'now');
+  }
+  return out;
+}
+const chipOf = e => `<span class="chip" style="background:${colorOf(e)}">${esc(nameOf(e))}</span>`;
+function vAwards() {
+  const got = computeAwards(), members = Object.keys(S.members).sort();
+  const sel = members.includes(S.awp) ? S.awp : (members.includes(me()) ? me() : members[0]);
+  const earned = e => Object.values(got).reduce((t, g) => t + (g[e] || []).filter(x => x !== 'now').length, 0);
+  const tile = a => {
+    const [id, ic, nm, lv, kind, ds] = a, tags = (got[id] || {})[sel], on = !!tags;
+    const col = kind === 'roast' ? 'var(--A)' : kind === 'season' ? 'var(--B)' : 'var(--C)';
+    const note = kind === 'season' ? 'Currently yours' : `×${tags && tags.length} <span class="mu">${tags && tags.join(', ')}</span>`;
+    return `<div class="card" style="margin:0;border-left:4px solid ${col};opacity:${on ? 1 : .3};${on ? '' : 'filter:grayscale(1)'}"><div class="row"><span style="font-size:22px">${ic}</span><span class="chip" style="background:${LV[lv].c};margin-left:auto">${LV[lv].n}</span></div><b>${nm}</b><div class="mu" style="font-size:12px">${ds}</div>${on ? `<div style="margin-top:6px;font-weight:700">${note}</div>` : ''}</div>`;
+  };
+  const sect = (t, f) => { const l = AW.filter(f); return l.length ? `<h3>${t}</h3><div class="grid">${l.map(tile).join('')}</div>` : ''; };
+  const pick = members.map(e => `<button class="btn" style="${e === sel ? 'border-color:' + colorOf(e) + ';box-shadow:0 0 0 2px ' + colorOf(e) : ''}" onclick="S.awp='${e}';render()">${esc(nameOf(e))} · ${earned(e)}</button>`).join(' ');
+  return `<div class="card"><h2>Awards</h2><div class="row">${pick}</div><div class="mu" style="margin-top:6px">Faded = not earned yet. Green = brag, red = roast, blue = season.</div></div>`
+    + sect('Gold (hard)', a => a[3] === 3 && a[4] !== 'season') + sect('Silver (medium)', a => a[3] === 2 && a[4] !== 'season') + sect('Bronze (easy)', a => a[3] === 1 && a[4] !== 'season') + sect('Season', a => a[4] === 'season');
+}
+const ordn = n => n + (n % 100 > 10 && n % 100 < 14 ? 'th' : ['th', 'st', 'nd', 'rd'][n % 10 < 4 ? n % 10 : 0]);
+function teamCard(id, w, sc) {
+  const d = S.drivers[id] || { num: '', name: id }, t = w.tiers[id] || '', q = (sc.qual || []).indexOf(id), f = (sc.order || []).indexOf(id), p = (sc.pts || {})[id] != null ? drvPts(sc, id) : null, bc = bonusChips(sc, id);
+  return `<div class="drv tc" style="--c:${esc(d.color || '#555')}">${d.num ? `<img class="bdg" src="https://cf.nascar.com/data/images/carbadges/1/${esc(d.num)}.png" alt="#${esc(d.num)}" onerror="this.outerHTML='<b>#${esc(d.num)}</b>'">` : ''}<span class="nm"><span class="tag t${t}">${t}</span> ${esc(d.name)}<div class="st"><span>Start<b>${q >= 0 ? ordn(q + 1) : '—'}</b></span><span>Finish<b>${f >= 0 ? ordn(f + 1) : '—'}</b></span><span>Pts<b>${p != null ? p : '—'}</b></span></div>${bc ? `<div style="margin-top:3px">${bc}</div>` : ''}</span>${d.make ? `<img class="mk" src="logos/${esc(d.make.toLowerCase())}.png" alt="${esc(d.make)}" onerror="this.remove()">` : ''}</div>`;
+}
+function vTeam() {
+  const n = weekPick(), w = S.weeks['w' + n];
+  if (!w) return '<div class="card">No draft yet.</div>';
+  const sc = S.scores['w' + n] || {}, scored = w.status === 'scored' && !!sc.pts;
+  const emails = Object.keys(S.members).sort((a, b) => (b === me()) - (a === me()) || nameOf(a).localeCompare(nameOf(b)));
+  const team = e => {
+    const ps = w.picks.filter(p => p.email === e), tot = ps.reduce((t, p) => t + drvPts(sc, p.driverId), 0);
+    const cards = ['A', 'B', 'C'].map(t => { const p = ps.find(p => w.tiers[p.driverId] === t);
+      return p ? teamCard(p.driverId, w, sc) : `<div class="drv tc" style="opacity:.35"><span class="nm"><span class="tag t${t}">${t}</span> <span class="mu">Not picked yet</span></span></div>`; }).join('');
+    return `<div class="card" style="margin:0"><div class="row"><b style="flex:1">${chipOf(e)}${e === me() ? ' <span class="mu">you</span>' : ''}</b>${scored ? `<b>${tot} pts</b>` : ''}</div><div style="display:grid;gap:6px;margin-top:8px">${cards}</div></div>`;
+  };
+  return `<div class="card"><div class="row"><h2 style="flex:1">Matchup – ${esc(w.race || 'Week ' + n)}</h2>${weekSelect()}</div><div class="mu">${w.status === 'scored' ? 'Final results' : w.status === 'open' ? 'Draft open' : 'Draft locked'}${(sc.qual || []).length ? '' : ' · qualifying not posted yet'}<div style="font-size:12px;margin-top:2px">Bonus: Pole +5 · Q2 +3 · Q3 +1 · led a lap +5 · most laps led +5</div></div></div><div class="teams">${emails.map(team).join('')}</div>`;
+}
+const TABS = { draft: ['Draft', vDraft], team: ['Matchup', vTeam], standings: ['Standings', vStandings], results: ['Recap', vResults], awards: ['Awards', vAwards], admin: ['Admin', vAdmin] };
+function render() {
+  const app = document.getElementById('app');
+  if (!S.user) { app.innerHTML = '<div class="card">Sign in to play.<p><button class="btn pri" onclick="signIn()">Sign in with Google</button></p></div>'; return; }
+  if (!isAdmin() && !S.members[me()]) { app.innerHTML = `<div class="card">${esc(S.user.email)} isn\'t in the league yet. Ask the commissioner to add you.</div>`; return; }
+  document.getElementById('nav').innerHTML = Object.entries(TABS).filter(([k]) => k !== 'admin' || isAdmin()).map(([k, [l]]) => `<button class="${S.tab === k ? 'on' : ''}" onclick="S.tab='${k}';render()">${l}</button>`).join('');
+  const ae = document.activeElement; if (ae && /TEXTAREA|INPUT|SELECT/.test(ae.tagName) && S.tab === 'admin') return; // don't clobber typing
+  app.innerHTML = TABS[S.tab][1]();
+}
+window.signIn = () => auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e => alert('Sign-in failed: ' + e.code + ' ' + e.message));
+
+const loadStart = Date.now();
+const hideLoader = () => document.getElementById('load').classList.add('off');
+const showLoader = () => document.getElementById('load').classList.remove('off');
+function checkReady() {
+  if (!S.authDone) return;
+  if (S.user && !['members', 'drivers', 'weeks', 'scores', 'league'].every(k => S.got[k])) return;
+  setTimeout(hideLoader, Math.max(0, 700 - (Date.now() - loadStart)));
+}
+setTimeout(hideLoader, 8000); // shortcut: failsafe so a stuck connection can't hide the app forever; tune if it feels long
+// ---------- wiring ----------
+function listen(path, key) {
+  const done = () => { S.got[key] = 1; checkReady(); };
+  db.collection(path).onSnapshot(q => { S[key] = {}; q.forEach(d => S[key][d.id] = d.data()); render(); done(); }, done);
+}
+auth.onAuthStateChanged(u => {
+  S.user = u; document.getElementById('who').textContent = u ? u.email : ''; render(); S.authDone = true; checkReady();
+  if (!u) return;
+  listen('members', 'members'); listen('drivers', 'drivers'); listen('weeks', 'weeks'); listen('scores', 'scores');
+  db.doc('config/league').onSnapshot(d => { S.league = d.data() || {}; render(); S.got.league = 1; checkReady(); }, () => { S.got.league = 1; checkReady(); });
+});
+// expire timers / auto-pick whenever any member has the page open
+async function sweep() {
+  const w = S.weeks['w' + (S.league.currentWeek || 0)];
+  if (w && w.status === 'open' && (Date.now() >= w.deadline || Date.now() >= w.lockAt)) await mutateWeek(w.n, x => applyTimeouts(x, Date.now()));
+}
+setInterval(() => { sweep(); if (S.tab !== 'admin') render(); }, 30000);
+</script></body></html>
