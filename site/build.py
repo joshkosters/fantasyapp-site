@@ -190,9 +190,9 @@ h+=f"""<section class="panel hero" style="min-height:380px;padding-bottom:56px">
 <div class="eb" style="color:var(--mute)"><a class="o" href="{p}">All games</a> / <a class="o" href="{p}nascar/">Fantasy NASCAR</a> / League data</div>
 <h1 class="d" style="font-size:clamp(60px,11vw,150px);margin-top:22px">Copy.<br><span class="o">Paste. Done.</span></h1>
 <p style="margin:26px 0 0;max-width:560px;font-size:18px;line-height:1.6;color:var(--mute);font-weight:500;position:relative;z-index:1">The driver list, qualifying order, finishing points and laps led, already in the format the Admin tab wants. Refreshed after every race. <span id="upd"></span></p></section>
-<div class="sec-h"><h2 class="d">Driver<br>list<span class="o">.</span></h2><p>Paste into <b>Admin &gt; Drivers</b> and press Import drivers. Do this before you open each week so tiers use fresh points. Format: name, number, team, points, wins, color, make.</p></div>
-<section style="padding:0 14px"><div class="dp"><textarea id="t-drv" rows="8" readonly></textarea><button class="btn ink" data-copy="t-drv" type="button">Copy driver list</button></div></section>
-<div class="sec-h"><h2 class="d">Race<br>results<span class="o">.</span></h2><p>Pick a race, then paste each box into the matching card in <b>Admin</b> for that week.</p></div>
+<div class="sec-h"><h2 class="d">Driver<br>list<span class="o">.</span></h2><p>Paste into <b>Admin &gt; Drivers</b> and press Import drivers. Do this before you open each week so tiers use fresh points. It follows the race you pick below, so you can also see the points as of any archived week. Format: name, number, team, points, wins, color, make.</p></div>
+<section style="padding:0 14px"><div class="dp"><p class="dn" id="drvnote"></p><textarea id="t-drv" rows="8" readonly></textarea><button class="btn ink" data-copy="t-drv" type="button">Copy driver list</button></div></section>
+<div class="sec-h"><h2 class="d">Race<br>archive<span class="o">.</span></h2><p>Every week is saved here, newest first, and the list grows after each race. It starts with the final two races of 2026, and a full season builds up from 2027. Pick a race, then paste each box into the matching card in <b>Admin</b> for that week.</p></div>
 <section style="padding:0 14px"><div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:16px"><select id="race" aria-label="Race" style="padding:14px 18px;border-radius:99px;border:2px solid var(--ink);background:var(--cream);font:inherit;font-size:16px;font-weight:700"></select>
 <label style="font-weight:700;display:flex;gap:8px;align-items:center"><input id="num" type="checkbox"> Use car numbers instead of names</label>
 <label style="font-weight:700;display:flex;gap:8px;align-items:center"><input id="pool" type="checkbox"> Only drivers in the list above</label></div>
@@ -212,7 +212,8 @@ parseCsv(D).forEach(function(l){var c=l.split(',');names[c[0]]=1});
 var ok=function(x){return !only||names[x[0]]},key=function(x){return useNum?x[1]:x[0]};
 $('t-qual').value=r.qual.filter(ok).map(key).join('\\n');
 $('t-fin').value=r.fin.filter(ok).map(function(x){return key(x)+','+x[2]}).join('\\n');
-$('t-led').value=r.led.filter(ok).map(function(x){return key(x)+','+x[2]}).join('\\n');}
+$('t-led').value=r.led.filter(ok).map(function(x){return key(x)+','+x[2]}).join('\\n');
+$('t-drv').value=r.drivers?r.drivers.join('\\n'):D;$('drvnote').textContent=r.drivers?'Showing points after the '+r.name+' ('+r.date+').':'Showing the latest points.';}
 function load(){Promise.all([fetch('drivers.csv').then(function(r){return r.text()}),fetch('season.json').then(function(r){return r.json()})]).then(function(a){D=a[0].trim();S=a[1];$('t-drv').value=D;
 $('race').innerHTML=S.races.map(function(r,i){return '<option value="'+i+'">'+r.name+' · '+r.track+' · '+r.date+'</option>'}).join('');
 $('upd').textContent='Last refreshed '+S.updated.replace('T',' ').replace('Z',' UTC')+'.';render()}).catch(function(){$('upd').textContent='Data is not available yet. Check back after the next race.'})}
