@@ -25,6 +25,7 @@ textarea,input,select{background:#222733;color:var(--tx);border:1px solid var(--
 #load.off{opacity:0;pointer-events:none}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
 .drv{display:flex;align-items:center;gap:8px;border-left:6px solid var(--c,#555);background:linear-gradient(90deg,color-mix(in srgb,var(--c,#555) 24%,transparent),transparent 70%),#222733}
+.drv .mk[alt="Toyota"]{width:34px}
 .drv .bdg{height:30px;width:auto;flex:none}.drv .nm{flex:1;min-width:0;line-height:1.2}.drv .mk{width:40px;height:auto;flex:none}
 .teams{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
 .drv.tc{cursor:default}.st{display:flex;gap:12px;font-size:11px;color:var(--mu);margin-top:3px}.st b{display:block;font-size:13px;color:var(--tx)}
@@ -128,8 +129,9 @@ function fmtLeft(ms) { if (ms <= 0) return 'now'; const h = Math.floor(ms / H), 
 async function importDrivers() {
   const lines = document.getElementById('drvTxt').value.split('\n').map(l => l.trim()).filter(Boolean);
   const batch = db.batch(); let n = 0;
-  lines.forEach(l => { const [name, num, team, pts, wins] = l.split(',').map(x => x.trim()); if (!name || !num) return;
-    batch.set(db.doc('drivers/' + num), { id: num, name, num, team: team || '', seasonPts: Number(pts) || 0, wins: Number(wins) || 0 }, { merge: true }); n++; });
+  lines.forEach(l => { const [name, num, team, pts, wins, color, make] = l.split(',').map(x => x.trim()); if (!name || !num) return;
+    const d = { id: num, name, num, team: team || '', seasonPts: Number(pts) || 0, wins: Number(wins) || 0 }; if (color) d.color = color; if (make) d.make = make;
+    batch.set(db.doc('drivers/' + num), d, { merge: true }); n++; });
   await batch.commit(); alert('Imported ' + n + ' drivers');
 }
 async function saveMembers() {
@@ -224,7 +226,7 @@ function vAdmin() {
   if (!isAdmin()) return '';
   const n = weekPick(), w = S.weeks['w' + n];
   return `<div class="card"><h2>Players</h2><div class="mu">One per line: email,name</div><textarea id="memTxt" rows="4">${Object.entries(S.members).map(([e, m]) => e + ',' + m.name).join('\n')}</textarea><p><button class="btn" onclick="saveMembers()">Save players</button></p></div>
-  <div class="card"><h2>Drivers</h2><div class="mu">One per line: name,number,team,seasonPts,wins (re-import to refresh points before opening a week)</div><textarea id="drvTxt" rows="6">${Object.values(S.drivers).map(d => [d.name, d.num, d.team, d.seasonPts, d.wins].join(',')).join('\n')}</textarea><p><button class="btn" onclick="importDrivers()">Import drivers</button></p></div>
+  <div class="card"><h2>Drivers</h2><div class="mu">One per line: name,number,team,seasonPts,wins,color,make (color and make are optional; re-import to refresh points before opening a week)</div><textarea id="drvTxt" rows="6">${Object.values(S.drivers).map(d => [d.name, d.num, d.team, d.seasonPts, d.wins, d.color || '', d.make || ''].join(',')).join('\n')}</textarea><p><button class="btn" onclick="importDrivers()">Import drivers</button></p></div>
   <div class="card"><h2>Open a week</h2><div class="row"><input id="wkN" type="number" placeholder="Week #" style="width:90px"><input id="wkRace" placeholder="Race name"><input id="wkLock" type="datetime-local"></div><p><button class="btn pri" onclick="openWeek()">Open draft</button> <span class="mu">Snapshots tiers and sets order (last place first, snake).</span></p></div>
   ${w ? `<div class="card"><h2>Week ${n} scores</h2><div class="mu">One per line, in finishing order: driver number or name, points</div><textarea id="scTxt" rows="8">${(() => { const sc = S.scores['w' + n] || {}, pts = sc.pts || {}; return (sc.order || Object.keys(pts)).map(id => id + ',' + pts[id]).join('\n'); })()}</textarea><p><button class="btn pri" onclick="saveScores(${n})">Save scores</button> <button class="btn" onclick="unlock(${n})">Reopen draft (+6h)</button></p></div>
   <div class="card"><h2>Week ${n} qualifying</h2><div class="mu">One per line, in qualifying order (fastest first): driver number or name</div><textarea id="qualTxt" rows="8">${((S.scores['w' + n] || {}).qual || []).join('\n')}</textarea><p><button class="btn pri" onclick="saveQual(${n})">Save qualifying</button></p></div>

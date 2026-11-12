@@ -2,7 +2,7 @@
 Swaps the three Firebase script tags for an in-memory fake + made-up seed data.
 Run from the repo root:  python3 nascarsrc/make_demo.py
 Writes site/nascar/demo/play/index.html"""
-import os, re
+import os, re, json, shutil
 
 src = open('fantasy-nascar/index.html', encoding='utf8').read()
 
@@ -29,13 +29,8 @@ SHIM = r"""<script>
   let seed = 7; const rnd = () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   const P = { 'maya@demo.test': 'Maya', 'dre@demo.test': 'Dre', [ME]: 'Jordan', 'priya@demo.test': 'Priya' };
   Object.entries(P).forEach(([e, name]) => store['members/' + e] = { name });
-  const NAMES = ['Cole Ransom', 'Tyler Voss', 'Mason Pike', 'Jace Holloway', 'Rex Calder', 'Wade Brennan', 'Colt Maddox', 'Nash Delaney', 'Reid Sutter', 'Beau Garrison', 'Clay Whitlock', 'Dane Foster',
-    'Heath Merrick', 'Troy Ellison', 'Grant Pruitt', 'Luke Danner', 'Kyle Brandt', 'Owen Tackett', 'Shane Redding', 'Cade Winslow', 'Brock Hadley', 'Levi Carrow', 'Zane Mercer', 'Eli Thornton',
-    'Pat Lindqvist', 'Hank Rowley', 'Ray Kessler', 'Dale Penrose', 'Gus Halvorsen', 'Moe Tillman', 'Ned Calloway', 'Walt Sterling', 'Abe Fontaine', 'Vic Navarro', 'Roy Ketchum', 'Sam Okafor'];
-  const NUMS = [4, 7, 9, 11, 12, 15, 17, 19, 20, 21, 22, 23, 24, 34, 38, 41, 42, 43, 45, 47, 48, 51, 54, 60, 6, 8, 10, 14, 16, 31, 35, 50, 66, 71, 77, 88];
-  const CLR = ['#e5484d', '#3e9bff', '#ffcc00', '#46c37b', '#b07cff', '#ff8a3d', '#2dd4bf', '#f472b6', '#94a3b8', '#84cc16', '#fb7185', '#60a5fa'];
-  const drivers = NAMES.map((name, i) => ({ id: String(NUMS[i]), num: String(NUMS[i]), name, team: 'Demo Racing', color: CLR[(i * 5) % CLR.length],
-    seasonPts: i < 12 ? 600 - i * 18 : i < 24 ? 380 - (i - 12) * 9 : 250 - (i - 24) * 8, wins: i < 4 ? 4 - i : 0 }));
+  const ROWS = __ROWS__;
+  const drivers = ROWS.split('\n').map(r => { const [name, num, team, pts, wins, color, make] = r.split(','); return { id: num, num, name, team, color, make, seasonPts: Number(pts), wins: Number(wins) }; });
   drivers.forEach(d => store['drivers/' + d.id] = d);
   const tiers = {}; drivers.forEach((d, i) => tiers[d.id] = i < 12 ? 'A' : i < 24 ? 'B' : 'C');
 
@@ -54,9 +49,9 @@ SHIM = r"""<script>
   const seqOf = n => { const f = first[n]; return [...f, ...f.slice().reverse(), ...f]; };
   [1, 2, 3].forEach(n => {
     const seq = seqOf(n), picks = draftSim(seq, 12);
-    const order = drivers.slice().sort((a, b) => (b.seasonPts / 12 + rnd() * 30) - (a.seasonPts / 12 + rnd() * 30)).map(d => d.id);
+    const so = new Map(drivers.map((x, i) => [x.id, -i + rnd() * 14])), order = drivers.slice().sort((a, b) => so.get(b.id) - so.get(a.id)).map(x => x.id);
     const pts = {}; order.forEach((id, i) => pts[id] = i === 0 ? 40 : Math.max(1, 37 - (i + 1)));
-    const qual = drivers.slice().sort((a, b) => (b.seasonPts / 15 + rnd() * 25) - (a.seasonPts / 15 + rnd() * 25)).slice(0, 12).map(d => d.id);
+    const sq = new Map(drivers.map((x, i) => [x.id, -i + rnd() * 12])), qual = drivers.slice().sort((a, b) => sq.get(b.id) - sq.get(a.id)).slice(0, 12).map(x => x.id);
     const led = {}; [order[0], order[1], order[Math.floor(rnd() * 6) + 2]].forEach((id, i) => led[id] = [120, 62, 18][i]);
     store['weeks/w' + n] = { n, race: races[n], status: 'scored', lockAt: Date.now() - (5 - n) * 24 * H, tiers, seq, picks, deadline: Date.now(), openedAt: Date.now() - 6 * 24 * H };
     store['scores/w' + n] = { pts, order, qual, led, t: Date.now() };
@@ -67,16 +62,17 @@ SHIM = r"""<script>
 })();
 </script>"""
 
-BANNER = '<div style="background:#ffcc00;color:#111;text-align:center;font-size:12px;font-weight:700;padding:5px 8px">DEMO · made-up players and drivers · nothing is saved</div>'
+BANNER = '<div style="background:#ffcc00;color:#111;text-align:center;font-size:12px;font-weight:700;padding:5px 8px">DEMO · example players and results · nothing is saved</div>'
 
+rows = '\n'.join(l.strip() for l in open('fantasy-nascar/data/drivers.csv', encoding='utf8') if l.strip())
+SHIM = SHIM.replace('__ROWS__', json.dumps(rows))
 out = re.sub(r'<script src="https://www\.gstatic\.com/firebasejs/[^"]+"></script>\s*', '', src)
 out = out.replace('<script>\n// ====== PASTE', SHIM + '\n<script>\n// ====== PASTE', 1)
 out = out.replace('const COMMISH = "you@example.com";', 'const COMMISH = "jordan@demo.test";')
 out = out.replace('<title>Fantasy NASCAR</title>', '<title>Fantasy NASCAR (demo)</title>')
 out = out.replace('<body>\n', '<body>\n' + BANNER + '\n', 1)
-# no real car badges next to made-up drivers: force the "#number" fallback
-out = out.replace('https://cf.nascar.com/data/images/carbadges/1/', 'data:,')
 assert 'firebasejs' not in out and 'DEMO MODE' in out and 'jordan@demo.test' in out
-os.makedirs('site/nascar/demo/play', exist_ok=True)
+os.makedirs('site/nascar/demo/play/logos', exist_ok=True)
+for f in os.listdir('fantasy-nascar/logos'): shutil.copy('fantasy-nascar/logos/' + f, 'site/nascar/demo/play/logos/' + f)
 open('site/nascar/demo/play/index.html', 'w', encoding='utf8').write(out)
 print('wrote site/nascar/demo/play/index.html', len(out))

@@ -19,14 +19,16 @@ It is one `index.html` file on a free Firebase project. No build step. Try the d
 Sign in as the commissioner, open the **Admin** tab:
 
 1. **Players:** one per line, `email,name`. Players must sign in with that Google email.
-2. **Drivers:** one per line, `name,number,team,seasonPts,wins`. Re-import before each week so the tiers use fresh points.
+2. **Drivers:** one per line, `name,number,team,seasonPts,wins,color,make` (color and make are optional). Re-import before each week so the tiers use fresh points. A ready-to-paste, current list is in `data/drivers.csv` and at https://fantasyapp.io/nascar/data/
 3. **Open a week:** week number, race name, and a lock time (the draft locks then, ideally before qualifying). Order is last place first, then snake. Week 1 is random.
-4. After qualifying, paste the **qualifying order** (fastest first). After the race, paste **scores** (finishing order, `driver,points`) and **laps led**. Saving scores marks the week as scored and updates standings, recap and awards.
+4. After qualifying, paste the **qualifying order** (fastest first). After the race, paste **scores** (finishing order, `driver,points`) and **laps led**. https://fantasyapp.io/nascar/data/ has all three ready to copy, refreshed after every race. Saving scores marks the week as scored and updates standings, recap and awards.
 
-Optional: put manufacturer logos in `logos/chevrolet.png`, `ford.png`, `toyota.png` and add a `make` field to drivers. Car-number badges load from nascar.com when available and fall back to `#number`.
+Manufacturer logos are in `logos/` (small versions of Chevrolet, Ford and Toyota); set a driver's `make` to use them. Car-number badges load from nascar.com when available and fall back to `#number`.
 
 ## Notes
 
 - Security: the rules let signed-in players read everything and make picks; only the commissioner changes anything else. I have not run these rules through the Firebase emulator, so test with a second account before relying on them.
 - The Firebase web config is not a secret. Never commit a service-account key.
 - Rebuild the site's demo after changing `index.html`: `python3 nascarsrc/make_demo.py` (from the fantasyapp-site repo root).
+
+- The copy-paste data on fantasyapp.io is refreshed by `tools/update_nascar_data.py`, run by a GitHub Action after race day (`.github/workflows/nascar-data.yml`). It reads NASCAR's public JSON feeds, which are unofficial and could change.
