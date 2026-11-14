@@ -10,8 +10,8 @@
 <meta name="apple-mobile-web-app-title" content="Us">
 <title>Us</title>
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="icon-180.png">
-<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png?v=2">
+<link rel="icon" href="icon-192.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
@@ -514,7 +514,7 @@ details.more summary{cursor:pointer;font-weight:700;color:var(--ink);padding:8px
 <div class="backdrop" id="backdrop" hidden></div>
 <div class="sheet" id="sheet" hidden><div class="in" id="sheetIn"></div></div>
 <div class="toast" id="toast"></div>
-<div class="gate" id="gate"><div class="logo"><svg class="i" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></div><div id="gateBody"><h1>Us</h1><p>Loading…</p></div></div>
+<div class="gate" id="gate"><img src="icon-192.png?v=2" alt="" style="width:96px;height:96px;border-radius:24px;margin-bottom:8px"><div id="gateBody"><h1>Us</h1><p>Loading…</p></div></div>
 
 <script>
 /* ================= helpers ================= */
@@ -642,7 +642,7 @@ const S = {
 
 /* ================= render ================= */
 const TABS = [['home', 'Home', 'home'], ['feelings', 'Feelings', 'feel'], ['connect', 'Connect', 'heart'], ['talk', 'Talk', 'talk'], ['dates', '8 Dates', 'cal']];
-const TITLES = { home: 'Today', feelings: 'Feelings', connect: 'Connect', talk: 'Talk', dates: '8 Dates', checkin: 'Check-in', growth: 'Growth' };
+const TITLES = { home: 'Today', feelings: 'Feelings', connect: 'Connect', talk: 'Talk', dates: '8 Dates', checkin: 'Check-in', growth: 'Growth', time: 'Our Time' };
 function badges() {
   const b = {};
   b.feelings = S.shared.filter(f => f.author === S.partner && !(f.seenBy || []).includes(S.me)).length;
@@ -667,7 +667,7 @@ function render() {
   const main = $('#main');
   if (S.fatal) { main.innerHTML = ''; return; }
   if (!S.loaded) { main.innerHTML = '<div class="skel" style="height:180px"></div>'; return; }
-  main.innerHTML = S.tab === 'home' ? homeHTML() : S.tab === 'feelings' ? feelingsHTML() : S.tab === 'talk' ? talkHTML() : S.tab === 'connect' ? connectHTML() : S.tab === 'dates' ? datesHTML() : S.tab === 'growth' ? growthHTML() : checkinHTML();
+  main.innerHTML = S.tab === 'home' ? homeHTML() : S.tab === 'feelings' ? feelingsHTML() : S.tab === 'talk' ? talkHTML() : S.tab === 'connect' ? connectHTML() : S.tab === 'dates' ? datesHTML() : S.tab === 'growth' ? growthHTML() : S.tab === 'time' ? timeHTML() : checkinHTML();
 }
 
 const typingInMain = () => { const a = document.activeElement; return !!(a && a.closest && a.closest('#main') && /TEXTAREA|INPUT/.test(a.tagName)); };
@@ -1293,6 +1293,7 @@ function homeHTML() {
   if (S.pauses.some(p => p.status !== 'closed')) h += `<button class="notice" data-tab="talk"><span class="ico">${ic('pause')}</span><span>A pause is in place<small>Open Talk to see it</small></span><span class="go">Open</span></button>`;
   h += reflectionCard();
   h += weekStrip();
+  h += nextEventBlock();
   h += `<div class="card"><div class="chead"><h3>How are you feeling?</h3><span class="meta">private unless you share</span></div><div class="quad">
     ${Object.entries(QUADS).map(([k, q]) => `<button class="q-${k}" data-action="log" data-q="${k}">${esc(q.name)}<small>${esc(q.hint)}</small></button>`).join('')}</div></div>`;
   const today = isoDay(), w = S.weather[today], sky = w && SKIES.find(s => s[0] === w.sky);
@@ -1433,6 +1434,7 @@ function dateHTML(n) {
   let h = `${backBtn('dback', '8 Dates')}<div class="qcard" style="background:${d.color}"><div class="lab">Date ${n} of 8</div><div class="txt">${esc(d.theme)}</div><div class="src">Read the matching chapter in your Eight Dates book before or after. This page is a companion, not a replacement.</div></div>`;
   h += `<div class="step"><h3><span class="n">1</span>Prepare</h3><p>${esc(d.prep)}</p>
     <label class="field"><span>When (optional)</span><input type="datetime-local" data-dfield="scheduledFor" data-n="${n}" value="${st.scheduledFor ? new Date(st.scheduledFor - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16) : ''}"></label>
+    <button class="btn sec block" data-action="cal-plan" data-c="8 Dates" data-t="Date night" data-ref="d${n}" style="margin-bottom:8px">${st.eventId ? 'On the calendar \u00b7 add another' : 'Add to our calendar'}</button>
     ${d.budget ? '<a class="btn sec block" style="text-align:center;text-decoration:none" href="/budget/">Open our budget</a>' : ''}</div>`;
   h += `<div class="step"><h3><span class="n">2</span>Reflect privately first</h3>`;
   if (iShared && cache.mine && !S.editing[sid]) h += d.reflect.map((q, i) => cache.mine['r' + i] ? `<div class="ans"><div class="q">${esc(q)}</div><div class="a">${esc(cache.mine['r' + i])}</div></div>` : '').join('');
@@ -1512,7 +1514,7 @@ function growthHTML() {
   if (v === 'review') return reviewHTML();
   const rituals = S.together.filter(t => t.type === 'ritual'), goals = S.together.filter(t => t.type === 'goal'), ideas = S.together.filter(t => t.type === 'idea');
   let h = `<div class="blocks"><button class="blk bg-lav" data-action="g-review" style="min-height:120px"><span class="tag2">Monthly</span><h4>Review ${esc(new Date().toLocaleDateString('en-US', { month: 'long' }))}</h4></button><button class="blk bg-blu" data-action="open-ws" data-k="dreams" style="min-height:120px"><span class="tag2">Dreams</span><h4>Dream levels</h4></button></div>`;
-  h += `<div class="card"><div class="chead"><h3>Our rituals</h3><button class="linkbtn" data-action="ritual-new">+ Add</button></div>${rituals.length ? rituals.map(r => `<div class="cm"><div class="t">${esc(r.title)}</div><div class="m">${esc(r.cadence || '')}${r.notes ? ' · ' + esc(r.notes) : ''}</div><div class="a"><button data-action="tog-edit" data-id="${r.id}">Edit</button><button data-action="tog-del" data-id="${r.id}">Remove</button></div></div>`).join('') : '<p class="line-sub" style="font-size:14px">Morning coffee, a phone-free dinner, a Sunday walk. Small, repeated and yours. Either of you can add or edit.</p>'}</div>`;
+  h += `<div class="card"><div class="chead"><h3>Our rituals</h3><button class="linkbtn" data-action="ritual-new">+ Add</button></div>${rituals.length ? rituals.map(r => `<div class="cm"><div class="t">${esc(r.title)}</div><div class="m">${esc(r.cadence || '')}${r.notes ? ' · ' + esc(r.notes) : ''}</div><div class="a"><button data-action="cal-plan" data-c="Shared Ritual" data-t="${esc(r.title)}" data-r="weekly">Calendar</button><button data-action="tog-edit" data-id="${r.id}">Edit</button><button data-action="tog-del" data-id="${r.id}">Remove</button></div></div>`).join('') : '<p class="line-sub" style="font-size:14px">Morning coffee, a phone-free dinner, a Sunday walk. Small, repeated and yours. Either of you can add or edit.</p>'}</div>`;
   h += `<div class="card"><div class="chead"><h3>Shared goals</h3><button class="linkbtn" data-action="goal-new">+ Add</button></div>${goals.length ? goals.map(r => `<div class="cm"><div class="t">${esc(r.title)}</div><div class="m">${r.target ? 'By ' + esc(r.target) + ' · ' : ''}${esc(r.status || 'active')}${r.notes ? ' · ' + esc(r.notes) : ''}</div><div class="a"><button data-action="tog-edit" data-id="${r.id}">Edit</button><button data-action="tog-done" data-id="${r.id}">${r.status === 'done' ? 'Reopen' : 'Done'}</button></div></div>`).join('') : '<p class="line-sub" style="font-size:14px">Personal goals stay in your private reflections. Add the ones you want to work on together here.</p>'}</div>`;
   h += `<div class="card"><div class="chead"><h3>Date ideas</h3><button class="linkbtn" data-action="idea-new">+ Add</button></div>${ideas.length ? ideas.map(r => `<div class="phrase"><span>${esc(r.title)}</span><button data-action="tog-del" data-id="${r.id}">Remove</button></div>`).join('') : '<p class="line-sub" style="font-size:14px">Ideas you both picked in “For the fun of it” land here. Calendar scheduling comes in Phase 4.</p>'}</div>`;
   return h;
@@ -1538,6 +1540,166 @@ function reviewHTML() {
   if (hist.length > 1) h += `<div class="card"><div class="chead"><h3>My trend</h3><span class="meta">only you see this</span></div>${REVIEW_DIMS.map((dm, i) => `<div style="display:flex;align-items:center;gap:8px;padding:4px 0"><span style="flex:1;font-size:13.5px">${esc(dm)}</span>${hist.map(r => `<i title="${r.id}" style="width:16px;height:${6 + 5 * ((r.s || {})[i] || 0)}px;background:var(--lav);border-radius:4px;align-self:flex-end"></i>`).join('')}</div>`).join('')}</div>`;
   return h;
 }
+
+/* ================= Phase 4: Google Calendar (browser connect) ================= */
+const CAL_CATS = [['Date Night', 'var(--pnk)'], ['Weekly Check-In', 'var(--blu)'], ['8 Dates', 'var(--lav)'], ['Couples Activity', 'var(--org)'], ['Anniversary', 'var(--pnk)'], ['Shared Ritual', 'var(--mint)'], ['Other', '#fff']];
+const catColor = c => (CAL_CATS.find(x => x[0] === c) || CAL_CATS[6])[1];
+const FOTOCUBE_URL = 'https://apps.apple.com/app/id6736965269';
+const TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+S.cal = { events: [], calendars: null, loading: false, err: null, at: 0 };
+const calSettings = () => S.together.find(t => t.id === 'calendar') || {};
+function calToken() { try { const t = JSON.parse(localStorage.getItem('calTok') || 'null'); if (t && t.exp > Date.now() + 60000 && t.who === S.me) return t.tok; } catch (e) {} return null; }
+async function connectCal() {
+  const p = new firebase.auth.GoogleAuthProvider();
+  p.addScope('https://www.googleapis.com/auth/calendar.events');
+  p.addScope('https://www.googleapis.com/auth/calendar.calendarlist.readonly');
+  p.setCustomParameters({ login_hint: S.me || '' });
+  const r = await firebase.auth().currentUser.reauthenticateWithPopup(p);
+  const tok = r && r.credential && r.credential.accessToken;
+  if (tok) { try { localStorage.setItem('calTok', JSON.stringify({ tok, who: S.me, exp: Date.now() + 55 * 60000 })); } catch (e) {} }
+  S.cal.err = null; return tok;
+}
+async function gcal(path, opts = {}) {
+  const tok = calToken(); if (!tok) throw { code: 'needs_token' };
+  const r = await fetch('https://www.googleapis.com/calendar/v3/' + path, { ...opts, headers: { Authorization: 'Bearer ' + tok, 'Content-Type': 'application/json', ...(opts.headers || {}) } });
+  if (r.status === 401) { try { localStorage.removeItem('calTok'); } catch (e) {} throw { code: 'needs_token' }; }
+  if (r.status === 403 || r.status === 404) { const j = await r.json().catch(() => ({})); throw { code: 'cal_' + r.status, message: (j.error && j.error.message) || '' }; }
+  if (!r.ok) throw { code: 'unavailable' };
+  return r.status === 204 ? null : r.json();
+}
+function calErr(e) {
+  const c = e && e.code, m = (e && e.message) || '';
+  if (c === 'needs_token' || c === 'auth/popup-closed-by-user' || c === 'auth/cancelled-popup-request') return 'Tap Connect to link Google Calendar.';
+  if (c === 'auth/popup-blocked') return 'Your browser blocked the Google window. Allow pop-ups for fantasyapp.io and try again.';
+  if (c === 'cal_403') return /has not been used|disabled/i.test(m) ? 'The Google Calendar API still needs to be turned on for this project (Josh: one click in Google Cloud).' : /insufficient|scope/i.test(m) ? 'Google didn’t give calendar access. Tap Connect and make sure the calendar boxes are checked.' : 'Google said you can’t edit this calendar. Ask its owner to share it with you with “Make changes to events.”';
+  if (c === 'cal_404') return 'This calendar isn’t shared with your account yet. Ask its owner to share it with you, or pick a different calendar.';
+  return 'Couldn’t reach Google Calendar. Try again.';
+}
+async function refreshCal(force) {
+  const cs = calSettings();
+  if (!calToken() || !cs.calendarId || S.cal.loading) return;
+  if (!force && Date.now() - S.cal.at < 120000) return;
+  S.cal.loading = true;
+  try {
+    const now = new Date(); now.setHours(0, 0, 0, 0);
+    const q = new URLSearchParams({ timeMin: now.toISOString(), timeMax: new Date(now.getTime() + 60 * 864e5).toISOString(), singleEvents: 'true', orderBy: 'startTime', maxResults: '60' });
+    const j = await gcal(`calendars/${encodeURIComponent(cs.calendarId)}/events?` + q);
+    S.cal.events = (j.items || []).filter(ev => ev.status !== 'cancelled'); S.cal.err = null; S.cal.at = Date.now();
+  } catch (e) { S.cal.err = calErr(e); S.cal.at = Date.now(); }
+  S.cal.loading = false; renderSoft();
+}
+async function loadCalendars() {
+  try { const j = await gcal('users/me/calendarList?minAccessRole=writer'); S.cal.calendars = (j.items || []).map(c => ({ id: c.id, name: c.summaryOverride || c.summary, primary: !!c.primary, color: c.backgroundColor })); S.cal.err = null; }
+  catch (e) { S.cal.err = calErr(e); S.cal.calendars = []; }
+  renderSoft();
+}
+const evStart = ev => ev.start.dateTime ? new Date(ev.start.dateTime) : new Date(ev.start.date + 'T00:00');
+const evCat = ev => ((ev.extendedProperties || {}).private || {}).usCat || '';
+function evWhen(ev) {
+  const d = evStart(ev);
+  const day = isoDay(d) === isoDay() ? 'Today' : isoDay(d) === isoDay(new Date(Date.now() + 864e5)) ? 'Tomorrow' : d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+  return ev.start.dateTime ? day + ' · ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) : day + ' · all day';
+}
+function evRow(ev) {
+  const c = evCat(ev);
+  return `<button class="cm" data-action="${c ? 'cal-edit' : 'noop'}" data-id="${esc(ev.id)}" style="display:flex;gap:12px;align-items:center;width:100%;border:0;background:none;text-align:left;padding:10px 0;border-bottom:1px solid var(--line)">
+    <span style="width:10px;align-self:stretch;border-radius:6px;background:${c ? catColor(c) : '#dcdce3'};flex:none"></span>
+    <span style="flex:1"><b style="display:block;color:var(--ink);font-size:15px">${esc(ev.summary || '(busy)')}</b><small style="color:var(--muted)">${esc(evWhen(ev))}${c ? ' · ' + esc(c) : ''}</small></span>${c ? '<span style="color:var(--muted)">›</span>' : ''}</button>`;
+}
+function nextEventBlock() {
+  if (!calToken() || !calSettings().calendarId) return '';
+  const ev = S.cal.events.find(e => evStart(e) >= new Date(Date.now() - 3600e3));
+  return `<button class="blk bg-white" data-tab="time" style="width:100%;min-height:0;margin-bottom:12px;flex-direction:row;align-items:center;gap:12px"><span style="width:46px;height:46px;border-radius:50%;background:${ev && evCat(ev) ? catColor(evCat(ev)) : 'var(--bg)'};display:grid;place-items:center;flex:none">${ic('cal')}</span><span style="flex:1"><span class="tag2" style="background:var(--bg)">Next up</span><h4 style="font-size:16px">${ev ? esc(ev.summary || '(busy)') : 'Nothing planned yet'}</h4><p>${ev ? esc(evWhen(ev)) : 'Plan a date night in Our Time.'}</p></span></button>`;
+}
+function timeHTML() {
+  const cs = calSettings(), tok = calToken(), P = nameOf(S.partner);
+  let h = '';
+  if (S.cal.err) h += `<div class="warnline" style="margin-bottom:12px">${esc(S.cal.err)}</div>`;
+  if (!tok) {
+    h += `<div class="qcard"><div class="lab">Our Time</div><div class="txt">Connect Google Calendar</div><div class="src">See what's coming up and plan time together. Events you make here land in Google Calendar, so FotoCube picks them up too.</div><div class="row"><button class="on" data-action="cal-connect">Connect</button></div></div>
+      <div class="card"><div class="chead"><h3>What Us does with your calendar</h3></div><p style="margin:0;font-size:14px">It only uses the one shared calendar you pick. Events get plain titles like “Date night” or “Weekly check-in.” Feelings, notes and conversation topics are never written to your calendar. Google asks again about once an hour while you're using it.</p></div>`;
+  } else if (!cs.calendarId || S.cal.picking) {
+    if (!S.cal.calendars) { loadCalendars(); h += '<div class="skel" style="height:140px"></div>'; }
+    else h += `<div class="card"><div class="chead"><h3>Which calendar is shared?</h3></div><p style="margin:0 0 10px;font-size:14px">Pick the household calendar you both use (and FotoCube shows). You both need “Make changes to events” access in Google.</p>${S.cal.calendars.map(c => `<button class="sess" data-action="cal-pick" data-id="${esc(c.id)}" data-n="${esc(c.name)}"><span style="width:12px;height:12px;border-radius:50%;background:${esc(c.color || '#ccc')};flex:none"></span><span class="t"><b>${esc(c.name)}</b><small>${c.primary ? 'Your main calendar' : 'Shared or secondary'}${c.id === cs.calendarId ? ' · current' : ''}</small></span><span>›</span></button>`).join('') || '<p class="src-note">No calendars you can edit were found.</p>'}${cs.calendarId ? '<button class="btn sec block" data-action="cal-pick-cancel" style="margin-top:8px">Keep current</button>' : ''}</div>`;
+  } else {
+    refreshCal();
+    h += `<div class="blocks"><button class="blk bg-pnk" data-action="cal-plan" data-c="Date Night" style="min-height:110px"><span class="tag2">Plan</span><h4>Date night</h4></button><button class="blk bg-blu" data-action="cal-plan" data-c="Weekly Check-In" data-r="weekly" style="min-height:110px"><span class="tag2">Plan</span><h4>Weekly check-in</h4></button></div>`;
+    h += `<div class="card"><div class="chead"><h3>Coming up</h3><button class="linkbtn" data-action="cal-plan" data-c="Couples Activity">+ Add</button></div><div class="src-note" style="margin:-6px 0 4px">${esc(cs.calendarName || 'Shared calendar')} · next 60 days${S.cal.loading ? ' · updating…' : ''}</div>
+      ${S.cal.events.length ? S.cal.events.map(evRow).join('') : `<p class="line-sub" style="font-size:14px">${S.cal.loading ? 'Loading…' : 'Nothing on the calendar yet.'}</p>`}
+      <div class="resp"><button data-action="cal-refresh">Refresh</button><button data-action="cal-change">Change calendar</button></div></div>`;
+  }
+  const ideas = S.together.filter(t => t.type === 'idea');
+  h += `<div class="card"><div class="chead"><h3>Date ideas</h3><button class="linkbtn" data-action="idea-new">+ Add</button></div>${ideas.length ? ideas.map(r => `<div class="phrase"><span>${esc(r.title)}</span>${tok && cs.calendarId ? `<button data-action="cal-plan" data-c="Date Night" data-t="${esc(r.title)}">Plan it</button>` : ''}</div>`).join('') : '<p class="line-sub" style="font-size:14px">Ideas from “For the fun of it” and ones you add show up here.</p>'}</div>`;
+  h += `<div class="card"><div class="chead"><h3>FotoCube</h3></div><p style="margin:0 0 10px;font-size:14px">FotoCube reads the same Google Calendar, so anything planned here shows up on the frame after it syncs. If it doesn't, in the FotoCube app go to Schedule → Import → Google Calendar and include ${esc(cs.calendarName || 'this calendar')}.</p><a class="btn sec block" style="text-align:center;text-decoration:none" href="${FOTOCUBE_URL}" target="_blank" rel="noopener">Open FotoCube</a><div class="src-note">Opens the FotoCube app's App Store page, which opens the app if it's installed.</div></div>`;
+  return h;
+}
+function toLocalInput(d) { return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16); }
+function openPlan(pre = {}) {
+  S.plan = { cat: pre.cat || 'Date Night', title: pre.title || '', start: pre.start || '', dur: pre.dur || 120, allDay: !!pre.allDay, repeat: pre.repeat || '', loc: pre.loc || '', ref: pre.ref || '', id: pre.id || '' };
+  drawPlan();
+}
+function capturePlan() { const P = S.plan; if (!$('#plTitle')) return; P.title = $('#plTitle').value; P.start = $('#plStart').value; P.dur = +$('#plDur').value; P.repeat = $('#plRep').value; P.loc = $('#plLoc').value; }
+function drawPlan() {
+  const P = S.plan, tm = new Date(Date.now() + 864e5); tm.setHours(18, 0, 0, 0); const def = P.start || toLocalInput(tm);
+  const html = `<h2>${P.id ? 'Edit' : 'Plan'} ${esc(P.cat.toLowerCase())}</h2>
+    <div class="field"><span>Category</span><div class="words">${CAL_CATS.map(([c]) => `<button data-action="pl-cat" data-v="${esc(c)}" class="${P.cat === c ? 'on' : ''}">${esc(c)}</button>`).join('')}</div></div>
+    <label class="field"><span>Title on the calendar</span><input id="plTitle" maxlength="60" value="${esc(P.title)}" placeholder="${esc(P.cat === 'Weekly Check-In' ? 'Weekly check-in' : P.cat === 'Date Night' ? 'Date night' : P.cat)}"></label>
+    <div class="src-note" style="margin:-6px 0 12px">Shows on Google Calendar and FotoCube, so keep it neutral. Nothing private goes on the calendar.</div>
+    <label class="field"><span>Starts</span><input id="plStart" type="datetime-local" value="${esc(def)}"></label>
+    <label class="field"><span>How long</span><select id="plDur">${[[30, '30 minutes'], [60, '1 hour'], [90, '1½ hours'], [120, '2 hours'], [180, '3 hours'], [240, '4 hours'], [0, 'All day']].map(([v, l]) => `<option value="${v}" ${P.dur === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
+    <label class="field"><span>Repeat</span><select id="plRep">${[...(P.repeat === 'keep' ? [['keep', 'Keep the current repeat']] : []), ['', 'Doesn’t repeat'], ['weekly', 'Every week'], ['biweekly', 'Every 2 weeks'], ['monthly', 'Every month'], ['yearly', 'Every year']].map(([v, l]) => `<option value="${v}" ${P.repeat === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
+    <label class="field"><span>Where (optional)</span><input id="plLoc" maxlength="80" value="${esc(P.loc)}"></label>
+    <button class="btn block" data-action="pl-save">${P.id ? 'Save changes' : 'Add to calendar'}</button>
+    ${P.id ? '<button class="btn danger block" style="margin-top:8px" data-action="pl-del">Remove from calendar</button>' : ''}`;
+  if (sheetOpen) { $('#sheetIn').innerHTML = '<div class="grab"></div>' + html; } else openSheet(html);
+}
+async function savePlan() {
+  capturePlan(); const P = S.plan, cs = calSettings();
+  if (!P.start) { toast('Pick a start time'); return; }
+  const st = new Date(P.start), title = (P.title || '').trim() || (P.cat === 'Weekly Check-In' ? 'Weekly check-in' : P.cat === 'Date Night' ? 'Date night' : P.cat);
+  const body = { summary: title, location: P.loc || undefined, extendedProperties: { private: { usHub: '1', usCat: P.cat, usRef: P.ref || '' } } };
+  if (P.dur === 0) { const d = isoDay(st), e = isoDay(new Date(st.getTime() + 864e5)); body.start = { date: d }; body.end = { date: e }; }
+  else { body.start = { dateTime: st.toISOString(), timeZone: TZ }; body.end = { dateTime: new Date(st.getTime() + P.dur * 60000).toISOString(), timeZone: TZ }; }
+  const rr = { weekly: 'RRULE:FREQ=WEEKLY', biweekly: 'RRULE:FREQ=WEEKLY;INTERVAL=2', monthly: 'RRULE:FREQ=MONTHLY', yearly: 'RRULE:FREQ=YEARLY' }[P.repeat];
+  body.recurrence = P.repeat === 'keep' ? undefined : rr ? [rr] : (P.id ? [] : undefined);
+  try {
+    const base = `calendars/${encodeURIComponent(cs.calendarId)}/events`;
+    const ev = P.id ? await gcal(`${base}/${encodeURIComponent(P.id)}`, { method: 'PATCH', body: JSON.stringify(body) }) : await gcal(base, { method: 'POST', body: JSON.stringify(body) });
+    if (P.ref && /^d\d$/.test(P.ref)) await S.db.doc('us_dates/' + P.ref).set({ scheduledFor: st.getTime(), eventId: ev.id }, { merge: true });
+    closeSheet(); toast(P.id ? 'Updated' : 'Added to ' + (cs.calendarName || 'the calendar')); refreshCal(true);
+  } catch (e) { const m = calErr(e); if (e && e.code === 'needs_token') { closeSheet(); S.cal.err = m; render(); } else toast(m); }
+}
+async function deletePlan() {
+  const P = S.plan, cs = calSettings();
+  try { await gcal(`calendars/${encodeURIComponent(cs.calendarId)}/events/${encodeURIComponent(P.id.split('_')[0])}`, { method: 'DELETE' }); if (P.ref && /^d\d$/.test(P.ref)) await S.db.doc('us_dates/' + P.ref).set({ eventId: null, scheduledFor: null }, { merge: true }); closeSheet(); toast('Removed'); refreshCal(true); }
+  catch (e) { toast(calErr(e)); }
+}
+function editEvent(id) {
+  const ev = S.cal.events.find(e => e.id === id); if (!ev) return;
+  const pv = (ev.extendedProperties || {}).private || {}, st = evStart(ev);
+  const dur = ev.start.dateTime ? Math.round((new Date(ev.end.dateTime) - st) / 60000) : 0;
+  openPlan({ id: ev.recurringEventId || ev.id, cat: pv.usCat || 'Other', title: ev.summary || '', start: toLocalInput(st), dur, loc: ev.location || '', ref: pv.usRef || '', repeat: ev.recurringEventId ? 'keep' : '' });
+}
+function calNeedsConnect(pre) {
+  if (calToken() && calSettings().calendarId) return false;
+  S.tab = 'time'; if (sheetOpen) closeSheet(); render(); window.scrollTo({ top: 0 });
+  toast(calToken() ? 'Pick your shared calendar first' : 'Connect Google Calendar first'); return true;
+}
+document.addEventListener('click', ev => {
+  const t = ev.target.closest('[data-action]'); if (!t) return;
+  switch (t.dataset.action) {
+    case 'cal-connect': connectCal().then(tok => { if (tok) { S.cal.calendars = null; render(); refreshCal(true); } }).catch(e => { S.cal.err = calErr(e); render(); }); return;
+    case 'cal-pick': S.cal.picking = false; S.db.doc('us_together/calendar').set({ type: 'settings', calendarId: t.dataset.id, calendarName: t.dataset.n, setBy: S.me, createdAt: Date.now() }).then(() => { S.cal.at = 0; S.cal.events = []; toast('Using ' + t.dataset.n); }).catch(fail); return;
+    case 'cal-pick-cancel': S.cal.picking = false; return render();
+    case 'cal-change': S.cal.picking = true; S.cal.calendars = null; return render();
+    case 'cal-refresh': return refreshCal(true);
+    case 'cal-plan': if (calNeedsConnect()) return; return openPlan({ cat: t.dataset.c, title: t.dataset.t || '', repeat: t.dataset.r || '', ref: t.dataset.ref || '' });
+    case 'cal-edit': return editEvent(t.dataset.id);
+    case 'pl-cat': capturePlan(); S.plan.cat = t.dataset.v; return drawPlan();
+    case 'pl-save': return savePlan();
+    case 'pl-del': return deletePlan();
+  }
+});
 
 /* ================= actions ================= */
 document.addEventListener('input', ev => {
@@ -1604,7 +1766,7 @@ document.addEventListener('click', ev => {
   const run = p => p.catch(fail);
   switch (a) {
     case 'signin': return signIn();
-    case 'signout': return firebase.auth().signOut().then(() => location.reload());
+    case 'signout': try { localStorage.removeItem('calTok'); } catch (e) {} return firebase.auth().signOut().then(() => location.reload());
     case 'settings': return openSettings();
     case 'budget': location.href = '/budget/'; return;
     case 'refl-next': S.refl++; return render();
@@ -1751,6 +1913,7 @@ function openMenu() {
   const b = badges();
   openSheet(`<h2>Menu</h2><div style="display:grid;gap:8px">
     <button class="sess" data-tab="checkin"><span class="t"><b>Check-in & commitments</b><small>Weekly check-in, agreements${b.checkin ? ' · ' + b.checkin + ' waiting' : ''}</small></span><span>›</span></button>
+    <button class="sess" data-tab="time"><span class="t"><b>Our Time</b><small>Calendar, date planning, FotoCube</small></span><span>\u203a</span></button>
     <button class="sess" data-tab="growth"><span class="t"><b>Growth</b><small>Rituals, shared goals, date ideas, monthly review</small></span><span>›</span></button>
     <button class="sess" data-action="settings"><span class="t"><b>Settings & privacy</b><small>Privacy check, your data, safety resources</small></span><span>›</span></button>
     <button class="sess" data-action="budget"><span class="t"><b>Our budget</b><small>Opens the budget app</small></span><span>›</span></button></div>`);
@@ -1947,7 +2110,7 @@ function start(u, em) {
   db.collection(`private/${em}/aftermath`).orderBy('ts', 'desc').limit(50).onSnapshot(s => { S.afterList = s.docs.map(d => ({ id: d.id, ...d.data() })); soft(); }, failed);
   db.collection(`private/${em}/weather`).orderBy('day', 'desc').limit(14).onSnapshot(s => { S.weather = Object.fromEntries(s.docs.map(d => [d.id, d.data()])); soft(); }, () => {});
   db.collection('us_dates').onSnapshot(s => { S.dates = Object.fromEntries(s.docs.map(d => [d.id, d.data()])); soft(); }, () => {});
-  db.collection('us_together').orderBy('createdAt', 'desc').limit(200).onSnapshot(s => { S.together = s.docs.map(d => ({ id: d.id, ...d.data() })); soft(); }, () => {});
+  db.collection('us_together').orderBy('createdAt', 'desc').limit(200).onSnapshot(s => { S.together = s.docs.map(d => ({ id: d.id, ...d.data() })); refreshCal(); soft(); }, () => {});
   db.doc(`private/${em}/lovemap/main`).onSnapshot(d => { S.lm = d.exists ? d.data() : {}; soft(); }, () => {});
   db.doc('us_lovemap/' + S.partner).onSnapshot(d => { S.lmTheirs = d.exists ? d.data() : {}; soft(); }, () => {});
   db.collection(`private/${em}/appdrafts`).orderBy('ts', 'desc').limit(50).onSnapshot(s => { S.appDrafts = s.docs.map(d => ({ id: d.id, ...d.data() })); soft(); }, () => {});
