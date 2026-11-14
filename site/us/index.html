@@ -497,6 +497,9 @@ details.more summary{cursor:pointer;font-weight:700;color:var(--ink);padding:8px
 .breath{width:90px;height:90px;margin:6px auto 4px;border-radius:50%;background:var(--mint);animation:breath 10s ease-in-out infinite}
 @keyframes breath{0%,100%{transform:scale(.6);opacity:.6}40%{transform:scale(1);opacity:1}}
 @media (prefers-reduced-motion:reduce){.breath{animation:none}}
+
+.secth{display:flex;align-items:center;gap:8px;margin:20px 2px 10px}.secth h2{margin:0;font-size:20px;font-weight:700;color:var(--ink)}.secth .freq{font-size:11.5px;font-weight:700;letter-spacing:.02em;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px 10px}.secth .sx{margin-left:auto;font-size:13px;font-weight:700;color:var(--muted)}
+.donei{width:40px;height:40px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:800;flex:none}
 </style>
 </head>
 <body>
@@ -547,6 +550,7 @@ const ICONS = {
   pause: '<rect x="7" y="5" width="3.5" height="14" rx="1"/><rect x="13.5" y="5" width="3.5" height="14" rx="1"/>',
   plus: '<path d="M12 5v14M5 12h14"/>',
   wallet: '<path d="M4 7a2 2 0 0 1 2-2h11v4"/><rect x="4" y="7" width="16" height="12" rx="2"/><circle cx="16" cy="13" r="1.2"/>',
+  book: '<path d="M12 6.5C10.3 5.2 7.8 4.5 4 4.5v13c3.8 0 6.3.7 8 2 1.7-1.3 4.2-2 8-2v-13c-3.8 0-6.3.7-8 2z"/><path d="M12 6.5v13"/>',
   cal: '<rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M4 10h16M9 3v4M15 3v4"/>',
   ok: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
   shield: '<path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/>',
@@ -645,7 +649,7 @@ const S = {
 };
 
 /* ================= render ================= */
-const TABS = [['home', 'Home', 'home'], ['feelings', 'Feelings', 'feel'], ['connect', 'Connect', 'heart'], ['talk', 'Talk', 'talk'], ['dates', '8 Dates', 'cal']];
+const TABS = [['home', 'Home', 'home'], ['feelings', 'Feelings', 'feel'], ['connect', 'Connect', 'heart'], ['talk', 'Talk', 'talk'], ['dates', '8 Dates', 'book']];
 const TITLES = { home: 'Today', feelings: 'Feelings', connect: 'Connect', talk: 'Talk', dates: '8 Dates', checkin: 'Check-in', growth: 'Growth', time: 'Our Time', morning: 'Morning' };
 function badges() {
   const b = {};
@@ -1294,32 +1298,52 @@ function weekStrip() {
   for (let i = 0; i < 7; i++) { const d = new Date(start); d.setDate(start.getDate() + i); const k = isoDay(d), today = k === isoDay(now); h += `<button data-tab="feelings" class="${today ? 'today' : ''}" aria-label="${d.toDateString()}"><i class="${logged.has(k) ? 'on' : ''}"></i>${d.toLocaleDateString('en-US', { weekday: 'short' })}<b>${d.getDate()}</b></button>`; }
   return h + '</div>';
 }
+const sectH = (title, freq, extra) => `<div class="secth"><h2>${esc(title)}</h2><span class="freq">${esc(freq)}</span>${extra ? `<span class="sx">${extra}</span>` : ''}</div>`;
 function homeHTML() {
   let h = '';
-  if (S.pauses.some(p => p.status !== 'closed')) h += `<button class="notice" data-tab="talk"><span class="ico">${ic('pause')}</span><span>A pause is in place<small>Open Talk to see it</small></span><span class="go">Open</span></button>`;
-  h += morningCard();
+  const P = nameOf(S.partner), today = isoDay();
+  /* --- needs attention --- */
+  const now = [];
+  if (S.pauses.some(p => p.status !== 'closed')) now.push(`<button class="notice" data-tab="talk"><span class="ico">${ic('pause')}</span><span>A pause is in place<small>Open Talk to see it</small></span><span class="go">Open</span></button>`);
+  const waiting = S.commitments.filter(c => c.status === 'proposed' && (c.owners || []).includes(S.me) && !(c.acceptedBy || []).includes(S.me));
+  const fresh = S.shared.filter(f => f.author === S.partner && !(f.seenBy || []).includes(S.me)).slice(0, 2);
+  if (fresh.length) now.push(`<div class="card"><div class="chead"><h3>New from ${esc(P)}</h3><button class="linkbtn" data-tab="feelings">All</button></div>${fresh.map(sharedItem).join('')}</div>`);
+  if (waiting.length) now.push(`<div class="card"><div class="chead"><h3>Waiting for your answer</h3></div>${waiting.map(commitItem).join('')}</div>`);
+  if (now.length) h += sectH('For you now', 'when it comes up') + now.join('');
+  /* --- every day --- */
+  const mN = MORNING.filter(([k]) => mDone(k)).length;
+  h += sectH('Every day', 'about 5 minutes', `${mN}/${MORNING.length} morning steps`);
   h += reflectionCard();
+  h += mN === MORNING.length ? `<button class="blk bg-white" data-tab="morning" style="width:100%;min-height:0;margin-bottom:12px;flex-direction:row;align-items:center;gap:12px"><span class="donei">✓</span><span style="flex:1"><h4 style="font-size:16px">Morning reset done</h4><p>${S.morning.intent ? 'Intention: ' + esc(S.morning.intent) : 'Have a good day.'}</p></span></button>` : morningCard(true);
   h += weekStrip();
-  h += nextEventBlock();
-  h += `<div class="card"><div class="chead"><h3>How are you feeling?</h3><span class="meta">private unless you share</span></div><div class="quad">
+  h += `<div class="card"><div class="chead"><h3>How are you feeling?</h3><span class="meta">any time · private</span></div><div class="quad">
     ${Object.entries(QUADS).map(([k, q]) => `<button class="q-${k}" data-action="log" data-q="${k}">${esc(q.name)}<small>${esc(q.hint)}</small></button>`).join('')}</div></div>`;
-  const today = isoDay(), w = S.weather[today], sky = w && SKIES.find(s => s[0] === w.sky);
+  const w = S.weather[today], sky = w && SKIES.find(s => s[0] === w.sky);
   const prompt = PROMPTS[dayNum() % PROMPTS.length], chal = CHALLENGES[dayNum() % CHALLENGES.length], did = (S.prefs.challengeDone || '') === today;
-  const nextDate = DATES.find(d => (S.dates['d' + d.n] || {}).status !== 'done');
-  const wk = weekId(), ciDone = S.myCheckin && Object.values(S.myCheckin.answers || {}).some(v => v && v.trim());
-  h += `<div class="sect">Your day</div><div class="blocks">
-    <button class="blk bg-org tall" data-action="weather"><span class="tag2">Weather report</span><h4>${sky ? sky[1] + ' ' + esc(sky[2]) : 'How’s your inner weather?'}</h4><p>${w ? `Connection ${w.conn || '–'}/5 · Stress ${w.stress || '–'}/5${w.shared ? ' · shared' : ' · private'}` : 'A 20-second check-in: mood, connection and stress. Private unless you share.'}</p></button>
-    <div class="blk bg-blu"><span class="tag2">Prompt</span><p style="font-size:15px;font-weight:600">${esc(prompt)}</p></div>
-    <button class="blk bg-pnk" data-action="challenge-done"><span class="tag2">${did ? 'Done today' : 'Small challenge'}</span><p style="font-size:14px;font-weight:600">${esc(chal)}</p></button>
-  </div><div class="blocks">
-    <button class="blk bg-white" data-tab="checkin" style="min-height:120px"><span class="tag2" style="background:var(--bg)">Weekly</span><h4>Check-in</h4><p>${ciDone ? 'You’ve started yours.' : 'Six questions, whenever works.'}</p></button>
-    <button class="blk bg-mint" data-action="open-date" data-n="${nextDate ? nextDate.n : 1}" style="min-height:120px"><span class="tag2">8 Dates · ${DATES.filter(d => (S.dates['d' + d.n] || {}).status === 'done').length}/8</span><h4>${nextDate ? 'Date ' + nextDate.n + ': ' + esc(nextDate.theme) : 'All eight done'}</h4></button>
+  h += `<div class="blocks">
+    <button class="blk bg-org tall" data-action="weather"><span class="tag2">${w ? '✓ ' : ''}Weather report</span><h4>${sky ? sky[1] + ' ' + esc(sky[2]) : 'How’s your inner weather?'}</h4><p>${w ? `Connection ${w.conn || '–'}/5 · Stress ${w.stress || '–'}/5${w.shared ? ' · shared' : ' · private'}` : '20 seconds: mood, connection and stress.'}</p></button>
+    <div class="blk bg-blu"><span class="tag2">Talk prompt</span><p style="font-size:15px;font-weight:600">${esc(prompt)}</p></div>
+    <button class="blk bg-pnk" data-action="challenge-done"><span class="tag2">${did ? '✓ Done today' : 'Small challenge'}</span><p style="font-size:14px;font-weight:600">${esc(chal)}</p></button>
   </div>`;
+  /* --- each week --- */
+  const ciDone = S.myCheckin && Object.values(S.myCheckin.answers || {}).some(v => v && v.trim());
+  h += sectH('Each week', 'about 15 minutes');
+  h += `<div class="blocks"><button class="blk bg-white" data-tab="checkin" style="min-height:120px"><span class="tag2" style="background:var(--bg)">${ciDone ? '✓ Started' : 'Weekly'}</span><h4>Check-in</h4><p>${ciDone ? 'Finish or share when ready.' : 'Six questions, whenever works.'}</p></button>
+    <button class="blk bg-pnk" ${calToken() && calSettings().calendarId ? 'data-action="cal-plan" data-c="Date Night"' : 'data-tab="time"'} style="min-height:120px"><span class="tag2">Our Time</span><h4>Plan a date night</h4></button></div>`;
+  h += nextEventBlock();
+  const active = S.commitments.filter(c => c.status === 'active').slice(0, 3);
+  if (active.length) h += `<div class="card"><div class="chead"><h3>Our commitments</h3><button class="linkbtn" data-tab="checkin">All</button></div>${active.map(commitItem).join('')}</div>`;
+  /* --- each month --- */
+  const nextDate = DATES.find(d => (S.dates['d' + d.n] || {}).status !== 'done'), doneN = DATES.filter(d => (S.dates['d' + d.n] || {}).status === 'done').length;
+  const rv = sealedStatus('review_' + monthId());
+  h += sectH('Each month', 'about an hour');
+  h += `<div class="blocks"><button class="blk bg-lav" data-action="open-date" data-n="${nextDate ? nextDate.n : 1}" style="min-height:120px"><span class="tag2">8 Dates · ${doneN}/8</span><h4>${nextDate ? 'Date ' + nextDate.n + ': ' + esc(nextDate.theme) : 'All eight done'}</h4></button>
+    <button class="blk bg-mint" data-action="g-review" style="min-height:120px"><span class="tag2">${rv.iShared ? '✓ Shared' : 'Monthly'}</span><h4>${esc(new Date().toLocaleDateString('en-US', { month: 'long' }))} review</h4></button></div>`;
+  /* --- anytime --- */
+  h += sectH('Anytime', 'when you have a moment');
+  h += `<div class="blocks"><button class="blk bg-blu" data-action="cview" data-v="lovemaps" style="min-height:100px"><span class="tag2">Love Maps</span><h4>Ask a question</h4></button><button class="blk bg-org" data-action="cview" data-v="appreciate" style="min-height:100px"><span class="tag2">Appreciation</span><h4>Say thanks</h4></button></div>`;
   const imgs = S.images; if (imgs.length) { const im = imgs[dayNum() % imgs.length]; h += `<button class="card" data-action="img-open" data-id="${im.id}" style="display:block;width:100%;border:0;text-align:left;padding:10px"><img src="${im.data}" alt="${esc(im.theme)}" style="width:100%;border-radius:18px;display:block"><div class="src-note" style="padding:6px 6px 2px">Gottman Institute image (${esc(im.theme)}), kept private behind sign-in.</div></button>`; }
-  const theirs = S.shared.filter(f => f.author === S.partner).slice(0, 2);
-  if (theirs.length) h += `<div class="card"><div class="chead"><h3>From ${esc(nameOf(S.partner))}</h3><button class="linkbtn" data-tab="feelings">All</button></div>${theirs.map(sharedItem).join('')}</div>`;
-  const active = S.commitments.filter(c => c.status === 'active').slice(0, 3), waiting = S.commitments.filter(c => c.status === 'proposed' && (c.owners || []).includes(S.me) && !(c.acceptedBy || []).includes(S.me));
-  if (active.length || waiting.length) h += `<div class="card"><div class="chead"><h3>Commitments</h3><button class="linkbtn" data-tab="checkin">All</button></div>${waiting.map(commitItem).join('')}${active.map(commitItem).join('')}</div>`;
+  h += `<div class="src-note" style="text-align:center;margin:4px 0 8px">These are suggestions, not targets. Skip anything, any day.</div>`;
   return h;
 }
 function openWeather() {
@@ -1835,8 +1859,8 @@ function saveMorning(patch) {
   S.db.doc(`private/${S.me}/mornings/${isoDay()}`).set(S.morning).catch(fail);
 }
 function morningCard() {
-  const n = MORNING.filter(([k]) => mDone(k)).length, hr = new Date().getHours();
-  if (n === MORNING.length || (hr >= 14 && !n)) return '';
+  const n = MORNING.filter(([k]) => mDone(k)).length;
+  if (n === MORNING.length) return '';
   return `<button class="blk bg-mint" data-tab="morning" style="width:100%;min-height:0;margin-bottom:12px;flex-direction:row;align-items:center;gap:14px"><span style="font-size:30px;line-height:1">☀️</span><span style="flex:1"><span class="tag2">Morning reset · ${n} of ${MORNING.length}</span><h4 style="font-size:16px">${n ? 'Pick up where you left off' : 'A few quiet minutes to start the day'}</h4></span><span>›</span></button>`;
 }
 function morningAhead() {
