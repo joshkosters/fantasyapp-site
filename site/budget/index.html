@@ -630,7 +630,9 @@ function budgetHTML(md) {
   const paceChip = rem < 0 ? `<span class="chip bad">Over budget</span>` : `<span class="chip ${usedPct >= 90 ? 'warn' : ''}">${usedPct}% used</span>`;
   h += `<div class="stats">`;
   h += statCard(rem >= 0 ? 'Left to spend' : 'Over budget', fmt0(Math.abs(rem)), `of <b>${fmt0(n.avail)}</b> available`, paceChip, 'wallet', '#eaf7d8', '#2e6b2f');
-  h += statCard('Spent', fmt0(n.spent), prevN && dayNow ? `<b>${fmt0(Math.abs(n.spent - prevN.spent))}</b> ${n.spent >= prevN.spent ? 'more' : 'less'} vs last month` : `${S.expenses.length} transaction${S.expenses.length === 1 ? '' : 's'}`, spentChip, 'cart', '#fdecc8', '#c47f00');
+  const waiting = S.inbox.filter(i => !i.deposit && monthOf(i.date) === S.cur).reduce((a, i) => a + cents(i.amount), 0);
+  const waitLine = waiting ? `<button data-tab="inbox" style="display:block;border:0;background:none;padding:0;margin-top:5px;font-size:12px;font-weight:700;color:var(--amber);text-align:left">+ ${fmt0(waiting)} waiting in Inbox ›</button>` : '';
+  h += statCard('Spent', fmt0(n.spent), (prevN && dayNow ? `<b>${fmt0(Math.abs(n.spent - prevN.spent))}</b> ${n.spent >= prevN.spent ? 'more' : 'less'} vs last month` : `${S.expenses.length} transaction${S.expenses.length === 1 ? '' : 's'}`) + waitLine, spentChip, 'cart', '#fdecc8', '#c47f00');
   if (st.income) {
     const p = n.income ? Math.round(n.received / n.income * 100) : 0;
     h += statCard('Income in', fmt0(n.received), `of <b>${fmt0(n.income)}</b> expected`, `<span class="chip">${p}% received</span>`, 'down', '#e5e1ff', '#5b4bd6');
