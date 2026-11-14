@@ -4,7 +4,7 @@ self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
 self.addEventListener('push', e => {
   e.waitUntil(self.registration.showNotification('Us', {
     body: 'Something new is waiting for you.',
-    icon: '/us/icon-192.png?v=2', badge: '/us/icon-192.png?v=2', tag: 'us-new', renotify: true,
+    icon: '/us/icon-192.png?v=3', badge: '/us/icon-192.png?v=3', tag: 'us-new', renotify: true,
   }));
 });
 self.addEventListener('notificationclick', e => {
