@@ -262,7 +262,7 @@ svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stro
 .streak b{color:var(--ink)}
 
 /* toast */
-.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 96px);transform:translate(-50%,20px);opacity:0;transition:all .25s;z-index:60;background:var(--ink);color:#fff;padding:11px 16px;border-radius:14px;font-weight:600;font-size:14px;max-width:calc(100vw - 32px);text-align:center;pointer-events:none}
+.toast{position:fixed;z-index:200!important;left:50%;bottom:calc(env(safe-area-inset-bottom) + 96px);transform:translate(-50%,20px);opacity:0;transition:all .25s;z-index:60;background:var(--ink);color:#fff;padding:11px 16px;border-radius:14px;font-weight:600;font-size:14px;max-width:calc(100vw - 32px);text-align:center;pointer-events:none}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .skel{height:130px;border-radius:20px;background:#fff;animation:pulse 1.4s infinite}
 @keyframes pulse{50%{opacity:.5}}
@@ -1338,23 +1338,32 @@ function gmailErr(e) {
 }
 
 /* ---------- sign-in ---------- */
-const FIREBASE_CONFIG = { apiKey: 'AIzaSyBgpN52-Dw9DFdE7ZivGkDVx-d9cMmUzms', authDomain: 'our-budget-josh.firebaseapp.com', projectId: 'our-budget-josh', appId: '1:495368835558:web:50334ad16309d5f61fc627', messagingSenderId: '495368835558' };
+const FIREBASE_CONFIG = { apiKey: 'AIzaSyBgpN52-Dw9DFdE7ZivGkDVx-d9cMmUzms', authDomain: location.hostname === 'fantasyapp.io' ? 'fantasyapp.io' : 'our-budget-josh.firebaseapp.com', projectId: 'our-budget-josh', appId: '1:495368835558:web:50334ad16309d5f61fc627', messagingSenderId: '495368835558' };
 const GLOGO = '<svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.5 12.3c0-.8-.1-1.5-.2-2.2H12v4.2h5.9a5 5 0 0 1-2.2 3.3v2.7h3.5c2.1-1.9 3.3-4.7 3.3-8z"/><path fill="#34A853" d="M12 23c3 0 5.5-1 7.3-2.7l-3.5-2.7c-1 .7-2.2 1.1-3.8 1.1-2.9 0-5.4-2-6.3-4.6H2.1v2.8A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.7 14.1a6.6 6.6 0 0 1 0-4.2V7.1H2.1a11 11 0 0 0 0 9.8z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3.1.6 4.2 1.7l3.1-3.1A11 11 0 0 0 2.1 7.1l3.6 2.8C6.6 7.4 9.1 5.4 12 5.4z"/></svg>';
 function gate(kind, extra) {
   const g = $('#gate'); g.hidden = false;
   let h = '<h1>Our Budget</h1>';
-  if (kind === 'signin') h += `<p>Sign in with your Google account to open your budget.</p><button class="gbtn" data-action="signin">${GLOGO} Sign in with Google</button>`;
+  if (kind === 'signin') h += `<p>Sign in with your Google account to open your budget.</p><button class="gbtn" data-action="signin">${GLOGO} Sign in with Google</button><p id="gateErr" style="margin:18px auto 0;color:#ffc9c9;font-size:13px;min-height:18px"></p>`;
   else if (kind === 'denied') h += `<p>This budget is private. <b>${esc(extra)}</b> doesn\u2019t have access.</p><button class="gbtn" data-action="signout">Use a different account</button>`;
   else if (kind === 'error') h += `<p>${esc(extra)}</p>`;
   else h += '<p>Loading…</p>';
   $('#gateBody').innerHTML = h;
 }
+function authFail(e) {
+  const code = (e && e.code) || 'unknown';
+  const why = code === 'auth/unauthorized-domain' ? 'fantasyapp.io isn\u2019t on the Firebase authorized domains list yet.'
+    : code === 'auth/operation-not-allowed' ? 'Google sign-in isn\u2019t turned on in Firebase yet.'
+    : code === 'auth/network-request-failed' ? 'Couldn\u2019t reach Google. Check your connection.'
+    : 'Google sign-in didn\u2019t finish.';
+  const el = document.getElementById('gateErr');
+  if (el) el.textContent = why + ' (' + code + ')';
+}
 function signIn() {
   const p = new firebase.auth.GoogleAuthProvider();
   p.setCustomParameters({ prompt: 'select_account' });
   firebase.auth().signInWithPopup(p).catch(e => {
-    if (e && (e.code === 'auth/popup-blocked' || e.code === 'auth/operation-not-supported-in-this-environment')) return firebase.auth().signInWithRedirect(p);
-    if (e && e.code !== 'auth/popup-closed-by-user' && e.code !== 'auth/cancelled-popup-request') toast('Sign-in didn\u2019t work: ' + (e.code || 'try again'));
+    if (e && (e.code === 'auth/popup-blocked' || e.code === 'auth/operation-not-supported-in-this-environment')) return firebase.auth().signInWithRedirect(p).catch(authFail);
+    if (e && e.code !== 'auth/popup-closed-by-user' && e.code !== 'auth/cancelled-popup-request') authFail(e);
   });
 }
 function init() {
@@ -1362,7 +1371,7 @@ function init() {
   if (!window.firebase) { gate('error', 'Couldn\u2019t load. Check your connection and reload.'); return; }
   firebase.initializeApp(FIREBASE_CONFIG);
   const auth = firebase.auth();
-  auth.getRedirectResult().catch(() => {});
+  auth.getRedirectResult().catch(e => setTimeout(() => authFail(e), 50));
   auth.onAuthStateChanged(u => {
     if (!u) { gate('signin'); return; }
     const em = (u.email || '').toLowerCase();
