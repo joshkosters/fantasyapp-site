@@ -493,6 +493,10 @@ details.more summary{cursor:pointer;font-weight:700;color:var(--ink);padding:8px
 .sess .t{flex:1;min-width:0}
 .sess b{display:block;color:var(--ink)}
 .sess small{color:var(--muted);font-size:12px}
+
+.breath{width:90px;height:90px;margin:6px auto 4px;border-radius:50%;background:var(--mint);animation:breath 10s ease-in-out infinite}
+@keyframes breath{0%,100%{transform:scale(.6);opacity:.6}40%{transform:scale(1);opacity:1}}
+@media (prefers-reduced-motion:reduce){.breath{animation:none}}
 </style>
 </head>
 <body>
@@ -642,7 +646,7 @@ const S = {
 
 /* ================= render ================= */
 const TABS = [['home', 'Home', 'home'], ['feelings', 'Feelings', 'feel'], ['connect', 'Connect', 'heart'], ['talk', 'Talk', 'talk'], ['dates', '8 Dates', 'cal']];
-const TITLES = { home: 'Today', feelings: 'Feelings', connect: 'Connect', talk: 'Talk', dates: '8 Dates', checkin: 'Check-in', growth: 'Growth', time: 'Our Time' };
+const TITLES = { home: 'Today', feelings: 'Feelings', connect: 'Connect', talk: 'Talk', dates: '8 Dates', checkin: 'Check-in', growth: 'Growth', time: 'Our Time', morning: 'Morning' };
 function badges() {
   const b = {};
   b.feelings = S.shared.filter(f => f.author === S.partner && !(f.seenBy || []).includes(S.me)).length;
@@ -667,7 +671,7 @@ function render() {
   const main = $('#main');
   if (S.fatal) { main.innerHTML = ''; return; }
   if (!S.loaded) { main.innerHTML = '<div class="skel" style="height:180px"></div>'; return; }
-  main.innerHTML = S.tab === 'home' ? homeHTML() : S.tab === 'feelings' ? feelingsHTML() : S.tab === 'talk' ? talkHTML() : S.tab === 'connect' ? connectHTML() : S.tab === 'dates' ? datesHTML() : S.tab === 'growth' ? growthHTML() : S.tab === 'time' ? timeHTML() : checkinHTML();
+  main.innerHTML = S.tab === 'home' ? homeHTML() : S.tab === 'feelings' ? feelingsHTML() : S.tab === 'talk' ? talkHTML() : S.tab === 'connect' ? connectHTML() : S.tab === 'dates' ? datesHTML() : S.tab === 'growth' ? growthHTML() : S.tab === 'time' ? timeHTML() : S.tab === 'morning' ? morningHTML() : checkinHTML();
 }
 
 const typingInMain = () => { const a = document.activeElement; return !!(a && a.closest && a.closest('#main') && /TEXTAREA|INPUT/.test(a.tagName) && !/checkbox|radio|button|file/.test(a.type || '')); };
@@ -1160,7 +1164,7 @@ async function privacyCheck() {
 }
 async function exportData() {
   const db = S.db, me = S.me, data = { exportedAt: new Date().toISOString(), account: me };
-  for (const c of ['feelings', 'checkins', 'prefs', 'aftermath', 'drafts', 'startups', 'lovemap', 'weather', 'appdrafts', 'bids', 'reviews']) { const s = await db.collection(`private/${me}/${c}`).get(); data['private_' + c] = s.docs.map(d => ({ id: d.id, ...d.data() })); }
+  for (const c of ['feelings', 'checkins', 'prefs', 'aftermath', 'drafts', 'startups', 'lovemap', 'weather', 'appdrafts', 'bids', 'reviews', 'mornings']) { const s = await db.collection(`private/${me}/${c}`).get(); data['private_' + c] = s.docs.map(d => ({ id: d.id, ...d.data() })); }
   data.shared_posts = S.posts.filter(p => p.author === me);
   data.shared_feelings = S.shared.filter(f => f.author === me);
   data.pauses = S.pauses.filter(p => p.author === me);
@@ -1293,6 +1297,7 @@ function weekStrip() {
 function homeHTML() {
   let h = '';
   if (S.pauses.some(p => p.status !== 'closed')) h += `<button class="notice" data-tab="talk"><span class="ico">${ic('pause')}</span><span>A pause is in place<small>Open Talk to see it</small></span><span class="go">Open</span></button>`;
+  h += morningCard();
   h += reflectionCard();
   h += weekStrip();
   h += nextEventBlock();
@@ -1807,6 +1812,86 @@ document.addEventListener('change', ev => {
   S.db.doc('us_sessions/' + t.dataset.aiok).update({ ['aiOk.' + S.me]: t.checked }).catch(fail);
 });
 
+/* ================= Morning reset (private, optional, no streaks) ================= */
+S.morning = {};
+const MORNING = [
+  ['breathe', 'Breathe', 'Three slow breaths before anything else. In through the nose for four, out for six.'],
+  ['feel', 'Name how you feel', 'Pick the word that fits right now. It stays private unless you share it.'],
+  ['weather', 'Inner weather', 'A quick read on your mood, how connected you feel, and your stress.'],
+  ['ahead', 'Look at today', 'What’s on the calendar, what you’ve committed to, and anything open between you.'],
+  ['us', 'One small thing for us', 'Today’s small challenge. Try it if it fits your day.'],
+  ['thanks', 'One appreciation', 'Something you appreciate about your partner. Keep it, or send it.'],
+  ['intent', 'Set an intention', 'One line for how you want to show up today.'],
+];
+function morningAuto(k) {
+  const today = isoDay();
+  if (k === 'feel') return S.myFeelings.some(f => isoDay(new Date(f.ts)) === today);
+  if (k === 'weather') return !!S.weather[today];
+  return false;
+}
+const mDone = k => !!(S.morning.done || {})[k] || morningAuto(k);
+function saveMorning(patch) {
+  S.morning = { ...S.morning, ...patch, day: isoDay(), updatedAt: Date.now() };
+  S.db.doc(`private/${S.me}/mornings/${isoDay()}`).set(S.morning).catch(fail);
+}
+function morningCard() {
+  const n = MORNING.filter(([k]) => mDone(k)).length, hr = new Date().getHours();
+  if (n === MORNING.length || (hr >= 14 && !n)) return '';
+  return `<button class="blk bg-mint" data-tab="morning" style="width:100%;min-height:0;margin-bottom:12px;flex-direction:row;align-items:center;gap:14px"><span style="font-size:30px;line-height:1">☀️</span><span style="flex:1"><span class="tag2">Morning reset · ${n} of ${MORNING.length}</span><h4 style="font-size:16px">${n ? 'Pick up where you left off' : 'A few quiet minutes to start the day'}</h4></span><span>›</span></button>`;
+}
+function morningAhead() {
+  const today = isoDay(), items = [];
+  const evs = (S.cal && S.cal.events || []).filter(e => isoDay(evStart(e)) === today);
+  if (calToken() && calSettings().calendarId) items.push(evs.length ? evs.map(e => `<div class="phrase"><span>${esc(e.summary || '(busy)')}</span><small style="color:var(--muted)">${e.start.dateTime ? esc(evStart(e).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })) : 'all day'}</small></div>`).join('') : '<p class="src-note">Nothing on the shared calendar today.</p>');
+  else items.push('<p class="src-note">Connect Google Calendar in Our Time to see today’s plans here.</p>');
+  const mine = S.commitments.filter(c => c.status === 'active' && (c.owners || []).includes(S.me));
+  if (mine.length) items.push(`<div class="lab" style="margin-top:8px">My commitments</div>` + mine.slice(0, 4).map(c => `<div class="phrase"><span>${esc(c.text)}</span>${c.due ? `<small style="color:var(--muted)">${esc(c.due)}</small>` : ''}</div>`).join(''));
+  const waiting = S.commitments.filter(c => c.status === 'proposed' && (c.owners || []).includes(S.me) && !(c.acceptedBy || []).includes(S.me)).length;
+  const open = S.pauses.filter(p => p.status !== 'closed').length;
+  const sess = S.sessions.filter(x => KINDS[x.kind] && x.status !== 'closed' && (x.sharedBy || []).includes(S.partner) && !(x.sharedBy || []).includes(S.me)).length;
+  const notes = [waiting && `${waiting} commitment${waiting > 1 ? 's' : ''} waiting for you`, open && 'a pause is in place', sess && `${nameOf(S.partner)} shared in ${sess} conversation${sess > 1 ? 's' : ''}`].filter(Boolean);
+  if (notes.length) items.push(`<div class="lab" style="margin-top:8px">Between you</div><p style="margin:4px 0 0;font-size:14px">${esc(notes.join(' · '))}. No rush on any of it.</p>`);
+  return items.join('');
+}
+function morningStepBody(k) {
+  const today = isoDay(), P = nameOf(S.partner);
+  if (k === 'breathe') return `<div class="breath" aria-hidden="true"></div><div class="resp"><button class="on" data-action="m-done" data-k="breathe">Done</button></div>`;
+  if (k === 'feel') { const f = S.myFeelings.find(x => isoDay(new Date(x.ts)) === today); return f ? `<p style="margin:0;font-size:15px">Today so far: <b>${esc(f.label || '')}</b></p><div class="resp"><button data-action="log">Log another</button></div>` : `<div class="resp"><button class="on" data-action="log">Pick a feeling</button><button data-action="m-done" data-k="feel">Skip</button></div>`; }
+  if (k === 'weather') { const w = S.weather[today], sk = w && SKIES.find(s => s[0] === w.sky); return w ? `<p style="margin:0;font-size:15px">${sk ? sk[1] + ' ' + esc(sk[2]) : ''} · connection ${w.conn || '–'}/5 · stress ${w.stress || '–'}/5</p><div class="resp"><button data-action="weather">Update</button></div>` : `<div class="resp"><button class="on" data-action="weather">Check in</button><button data-action="m-done" data-k="weather">Skip</button></div>`; }
+  if (k === 'ahead') return morningAhead() + `<div class="resp"><button class="on" data-action="m-done" data-k="ahead">Got it</button></div>`;
+  if (k === 'us') return `<p style="margin:0;font-size:15px;font-weight:600">${esc(CHALLENGES[dayNum() % CHALLENGES.length])}</p><div class="resp"><button class="on" data-action="m-done" data-k="us">I'll try it</button><button data-action="m-done" data-k="us">Not today</button></div>`;
+  if (k === 'thanks') return `<textarea id="mThanks" placeholder="Something specific about ${esc(P)}" style="width:100%;border:1px solid var(--line);border-radius:14px;padding:10px;background:var(--bg);min-height:64px">${esc(S.morning.thanks || '')}</textarea><div class="resp"><button class="on" data-action="m-thanks" data-send="1">Send to ${esc(P)}</button><button data-action="m-thanks">Keep it private</button></div>`;
+  if (k === 'intent') return `<input id="mIntent" maxlength="120" value="${esc(S.morning.intent || '')}" placeholder="Patient, present, playful…" style="width:100%;border:1px solid var(--line);border-radius:14px;padding:11px;background:var(--bg)"><div class="resp"><button class="on" data-action="m-intent">Set it</button></div>`;
+  return '';
+}
+function morningHTML() {
+  const n = MORNING.filter(([k]) => mDone(k)).length, cur = (MORNING.find(([k]) => !mDone(k)) || [])[0];
+  const open = S.mOpen || cur;
+  let h = `<div class="qcard" style="background:var(--mint)"><div class="lab">Morning reset</div><div class="txt">${n === MORNING.length ? 'You’re set for the day' : 'A few quiet minutes before the day starts'}</div><div style="display:flex;gap:5px;margin-top:6px">${MORNING.map(([k]) => `<i style="flex:1;height:8px;border-radius:8px;background:${mDone(k) ? 'var(--ink)' : 'rgba(255,255,255,.6)'}"></i>`).join('')}</div><div class="src" style="margin-top:10px">Private to you. Skip anything. Nothing is counted from day to day.</div></div>`;
+  h += MORNING.map(([k, title, sub], i) => {
+    const done = mDone(k), isOpen = k === open;
+    return `<div class="step" style="${done && !isOpen ? 'opacity:.7' : ''}"><button data-action="m-open" data-k="${k}" style="all:unset;display:flex;gap:12px;align-items:center;width:100%;cursor:pointer"><span class="n" style="${done ? 'background:var(--ink);color:#fff' : ''}">${done ? '✓' : i + 1}</span><span style="flex:1"><b style="display:block;color:var(--ink);font-size:16px">${esc(title)}</b>${isOpen ? `<small style="color:var(--muted)">${esc(sub)}</small>` : ''}</span><span style="color:var(--muted)">${isOpen ? '⌄' : '›'}</span></button>${isOpen ? `<div style="margin-top:10px">${morningStepBody(k)}</div>` : ''}</div>`;
+  }).join('');
+  if (n === MORNING.length) {
+    const pw = S.posts.find(p => p.type === 'weather' && p.author === S.partner && isoDay(new Date(p.ts)) === isoDay()), sk = pw && SKIES.find(s => s[0] === pw.sky);
+    h += `<div class="card"><div class="chead"><h3>Have a good day</h3></div>${S.morning.intent ? `<p style="margin:0 0 6px;font-size:15px">Your intention: <b>${esc(S.morning.intent)}</b></p>` : ''}${pw ? `<p style="margin:0;font-size:14px">${esc(nameOf(S.partner))}'s weather: ${sk ? sk[1] + ' ' + esc(sk[2]) : ''}${pw.note ? ' · ' + esc(pw.note) : ''}</p>` : ''}<div class="resp"><button data-tab="home">Go to Home</button></div></div>`;
+  }
+  return h + label('Original Us routine. It draws on tools already in the app: the feelings logger, weather report, small challenges and appreciations.');
+}
+document.addEventListener('click', ev => {
+  const t = ev.target.closest('[data-action]'); if (!t) return;
+  const a = t.dataset.action;
+  if (a === 'm-open') { S.mOpen = S.mOpen === t.dataset.k ? null : t.dataset.k; render(); }
+  if (a === 'm-done') { S.mOpen = null; saveMorning({ done: { ...(S.morning.done || {}), [t.dataset.k]: true } }); render(); }
+  if (a === 'm-intent') { S.mOpen = null; saveMorning({ intent: $('#mIntent').value.trim(), done: { ...(S.morning.done || {}), intent: true } }); render(); }
+  if (a === 'm-thanks') {
+    const text = ($('#mThanks').value || '').trim(); if (!text) { toast('Write one thing first'); return; }
+    S.mOpen = null; saveMorning({ thanks: text, done: { ...(S.morning.done || {}), thanks: true } });
+    if (t.dataset.send) S.db.collection('us_shared').add({ author: S.me, type: 'appreciation', kind: 'Something I appreciated today', text, ts: Date.now(), responses: {} }).then(() => { nudge(); toast('Sent to the wall'); }).catch(fail);
+    render();
+  }
+});
+
 /* ================= actions ================= */
 document.addEventListener('input', ev => {
   const t = ev.target;
@@ -2019,6 +2104,7 @@ function openMenu() {
   const b = badges();
   openSheet(`<h2>Menu</h2><div style="display:grid;gap:8px">
     <button class="sess" data-tab="checkin"><span class="t"><b>Check-in & commitments</b><small>Weekly check-in, agreements${b.checkin ? ' · ' + b.checkin + ' waiting' : ''}</small></span><span>›</span></button>
+    <button class="sess" data-tab="morning"><span class="t"><b>Morning reset</b><small>A quick, private start to the day</small></span><span>\u203a</span></button>
     <button class="sess" data-tab="time"><span class="t"><b>Our Time</b><small>Calendar, date planning, FotoCube</small></span><span>\u203a</span></button>
     <button class="sess" data-tab="growth"><span class="t"><b>Growth</b><small>Rituals, shared goals, date ideas, monthly review</small></span><span>›</span></button>
     <button class="sess" data-action="settings"><span class="t"><b>Settings & privacy</b><small>Privacy check, your data, safety resources</small></span><span>›</span></button>
@@ -2224,6 +2310,7 @@ function start(u, em) {
   db.collection(`private/${em}/reviews`).orderBy('id').limit(24).onSnapshot(s => { S.reviewHist = s.docs.map(d => d.data()); soft(); }, () => {});
   db.collection('content/images/items').orderBy('name').onSnapshot(s => { S.images = s.docs.map(d => ({ id: d.id, ...d.data() })); soft(); }, () => {});
   loadServerStatus();
+  db.doc(`private/${em}/mornings/${isoDay()}`).onSnapshot(d => { S.morning = d.exists ? d.data() : {}; soft(); }, () => {});
   db.collection('people').onSnapshot(s => { s.docs.forEach(d => { if (d.data().name) S.names[d.id] = d.data().name; }); soft(); }, () => {});
   db.doc('people/' + em).set({ name: S.names[em], updatedAt: Date.now() }, { merge: true }).catch(() => {});
 }
