@@ -498,7 +498,7 @@ details.more summary{cursor:pointer;font-weight:700;color:var(--ink);padding:8px
 <body>
 <header class="hero">
   <div class="wrap hrow">
-    <div class="logo" id="avatar" aria-hidden="true">U</div>
+    <div class="logo" id="avatar" aria-hidden="true" style="font-size:28px;line-height:1"></div>
     <div class="hello2"><b id="helloName">Hello</b><span id="todayLabel"></span></div>
     <button class="hbtn" data-action="menu" aria-label="Menu"><svg class="i" viewBox="0 0 24 24"><path d="M5 8h14M5 12h14M5 16h9"/></svg></button>
   </div>
@@ -656,7 +656,7 @@ function badges() {
 function render() {
   $('#todayLabel').textContent = 'Today ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) + '.';
   $('#helloName').textContent = 'Hello ' + (S.me ? nameOf(S.me) : '');
-  $('#avatar').textContent = S.me ? (nameOf(S.me)[0] || 'U').toUpperCase() : 'U';
+  $('#avatar').textContent = S.me ? (S.me === OWNER ? '\u{1F438}' : '\u{1F351}') : '';
   $('#title').textContent = TITLES[S.tab];
   const b = badges();
   $('#dock').innerHTML = TABS.map(([k, label, icon]) => `<button data-tab="${k}" class="${S.tab === k ? 'on' : ''}" aria-label="${label}">${ic(icon)}<span class="lbl">${label}</span>${b[k] ? `<span class="badge">${b[k]}</span>` : ''}</button>`).join('');
