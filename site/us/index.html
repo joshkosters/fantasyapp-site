@@ -670,7 +670,7 @@ function render() {
   main.innerHTML = S.tab === 'home' ? homeHTML() : S.tab === 'feelings' ? feelingsHTML() : S.tab === 'talk' ? talkHTML() : S.tab === 'connect' ? connectHTML() : S.tab === 'dates' ? datesHTML() : S.tab === 'growth' ? growthHTML() : S.tab === 'time' ? timeHTML() : checkinHTML();
 }
 
-const typingInMain = () => { const a = document.activeElement; return !!(a && a.closest && a.closest('#main') && /TEXTAREA|INPUT/.test(a.tagName)); };
+const typingInMain = () => { const a = document.activeElement; return !!(a && a.closest && a.closest('#main') && /TEXTAREA|INPUT/.test(a.tagName) && !/checkbox|radio|button|file/.test(a.type || '')); };
 function renderSoft() { if (typingInMain()) { S.pendingRender = true; return; } render(); }
 
 /* ----- Home ----- */
@@ -854,6 +854,7 @@ function sessionHTML(id) {
     } else {
       h += `<div class="step"><h3><span class="n">${n0 + 2}</span>Where could either of us step out of the loop?</h3><div class="prompt"><textarea class="sfield" data-sid="${id}" data-f="common">${esc(x.common || '')}</textarea></div><div class="src-note">Original Us exercise. Edit your side any time with “Edit and share again.”</div></div>`;
     }
+    h += aiBlock(id, Object.fromEntries(K.prompts), x.topic);
   } else if (iShared) h += `<div class="card empty" style="padding:18px">Waiting for ${esc(P)}. No rush: they'll share when they're ready, or not at all.</div>`;
   return h;
 }
@@ -1088,7 +1089,7 @@ async function saveFeeling() {
         if (d.shareWhat !== 'label') { shared.contexts = d.contexts; if (d.note.trim()) shared.note = d.note.trim(); }
         if (d.shareWhat === 'support' && d.support) shared.support = d.support;
       }
-      await db.doc('us_feelings/' + sid).set(shared);
+      await db.doc('us_feelings/' + sid).set(shared); nudge();
       priv.sharedId = sid;
     }
     await db.doc(`private/${S.me}/feelings/${id}`).set(priv);
@@ -1137,7 +1138,8 @@ function openSettings() {
     <div class="card" style="box-shadow:none;border:1px solid var(--line)"><div class="chead"><h3>Your data</h3></div>
       <button class="btn sec block" data-action="export">Download my data</button>
       <button class="btn danger block" style="margin-top:8px" data-action="wipe">Delete all my private entries</button></div>
-    ${S.me === 'joshkosters@gmail.com' ? `<div class="card" style="box-shadow:none;border:1px solid var(--line)"><div class="chead"><h3>Gottman images</h3><span class="meta">${S.images.length} uploaded</span></div><p style="margin:0 0 8px;font-size:14px">Upload the images from your Gottman download. They're resized and stored behind sign-in, never on the public site.</p><input type="file" id="imgUp" accept="image/*" multiple style="font-size:13px"><div class="src-note" id="imgRes"></div></div>` : ''}
+    ${S.me === OWNER ? `<div class="card" style="box-shadow:none;border:1px solid var(--line)"><div class="chead"><h3>Gottman images</h3><span class="meta">${S.images.length} uploaded</span></div><p style="margin:0 0 8px;font-size:14px">Upload the images from your Gottman download. They're resized and stored behind sign-in, never on the public site.</p><input type="file" id="imgUp" accept="image/*" multiple style="font-size:13px"><div class="src-note" id="imgRes"></div></div>` : ''}
+    <div id="serverCards">${serverCards()}</div>
     ${safetyCard()}
     <div class="card" style="box-shadow:none;border:1px solid var(--line)"><div class="chead"><h3>About</h3></div>
       <p style="margin:0;font-size:13.5px">Us is a private app for the two of you. It isn't a Gottman Institute product, a therapist or a crisis service. Ideas based on Gottman concepts are labeled; everything else is original. To find a Gottman-trained therapist, see <a href="https://www.gottman.com/couples/private-therapy/" target="_blank" rel="noopener">gottman.com</a>.</p>
@@ -1264,7 +1266,7 @@ async function shareSealed(sid, payload) {
   const { x } = sealedStatus(sid);
   await S.db.doc(`us_sessions/${sid}/answers/${S.me}`).set({ answers: payload, sharedAt: Date.now() });
   await S.db.doc('us_sessions/' + sid).update({ sharedBy: [...new Set([...(x.sharedBy || []), S.me])] });
-  S.editing[sid] = false; toast('Shared'); await loadSession(sid);
+  S.editing[sid] = false; toast('Shared'); nudge(); await loadSession(sid);
 }
 async function withdrawSealed(sid) {
   const { x } = sealedStatus(sid);
@@ -1440,7 +1442,7 @@ function dateHTML(n) {
   if (iShared && cache.mine && !S.editing[sid]) h += d.reflect.map((q, i) => cache.mine['r' + i] ? `<div class="ans"><div class="q">${esc(q)}</div><div class="a">${esc(cache.mine['r' + i])}</div></div>` : '').join('');
   else h += d.reflect.map((q, i) => `<div class="prompt"><label>${esc(q)}</label><textarea data-seal="${sid}" data-k="r${i}" placeholder="Private">${esc(dr['r' + i] || '')}</textarea></div>`).join('');
   h += sealedFooter(sid, 'Share my reflections with ' + esc(P)) + `</div>`;
-  if (both) { const th = cache.theirs || {}; h += `<div class="step"><h3><span class="n">↔</span>Side by side</h3>${d.reflect.map((q, i) => `<div class="ans"><div class="q">${esc(q)}</div><div class="split"><div class="col"><b>You</b>${esc((cache.mine || {})['r' + i] || '—')}</div><div class="col"><b>${esc(P)}</b>${esc(th['r' + i] || '—')}</div></div></div>`).join('')}</div>`; }
+  if (both) { const th = cache.theirs || {}; h += `<div class="step"><h3><span class="n">↔</span>Side by side</h3>${d.reflect.map((q, i) => `<div class="ans"><div class="q">${esc(q)}</div><div class="split"><div class="col"><b>You</b>${esc((cache.mine || {})['r' + i] || '—')}</div><div class="col"><b>${esc(P)}</b>${esc(th['r' + i] || '—')}</div></div></div>`).join('')}</div>`; h += aiBlock(sid, Object.fromEntries(d.reflect.map((q, i) => ['r' + i, q])), 'Eight Dates, date ' + n + ': ' + d.theme); }
   if (d.ws.length) h += `<div class="step"><h3><span class="n">3</span>Worksheet companion${d.ws.length > 1 ? 's' : ''}</h3>${d.ws.map(k => { const s2 = sealedStatus('ws_' + k); return `<button class="sess" data-action="open-ws" data-k="${k}"><span class="t"><b>${esc(WS[k].title)}</b><small>${esc(WS[k].ref)} · ${s2.both ? 'Both shared' : s2.iShared ? 'You shared' : s2.theyShared ? P + ' shared' : 'Not started'}</small></span><span>›</span></button>`; }).join('')}</div>`;
   h += `<div class="step"><h3><span class="n">${d.ws.length ? 4 : 3}</span>On the date: talk it through</h3><p style="font-size:13px;color:var(--muted);margin-top:0">Original prompts. Take turns, listen first, and either of you can skip a question or pause.</p>${d.talk.map(q => `<div class="stem" style="font-style:normal">${esc(q)}</div>`).join('')}<div class="resp"><button data-action="pause">Pause</button><button data-action="view-listen-go">Listening guide</button></div></div>`;
   h += `<div class="step"><h3><span class="n">${d.ws.length ? 5 : 4}</span>Afterward</h3>
@@ -1701,6 +1703,110 @@ document.addEventListener('click', ev => {
   }
 });
 
+/* ================= Phase 4b: AI facilitator + notifications ================= */
+S.ai = { configured: false, busy: {} };
+S.push = { publicKey: undefined, on: false, keys: null };
+async function idToken() { const u = firebase.auth().currentUser; return u && u.getIdToken ? u.getIdToken() : ''; }
+async function api(path, opts = {}) {
+  const r = await fetch('/api/' + path, { ...opts, headers: { 'content-type': 'application/json', Authorization: 'Bearer ' + await idToken(), ...(opts.headers || {}) } });
+  const j = await r.json().catch(() => ({})); if (!r.ok) throw { code: j.error || 'http_' + r.status }; return j;
+}
+async function loadServerStatus() {
+  try { S.ai.configured = !!(await api('facilitate')).configured; } catch (e) { S.ai.configured = false; }
+  try { S.push.publicKey = (await api('notify')).publicKey || null; } catch (e) { S.push.publicKey = null; }
+  try { const reg = 'serviceWorker' in navigator && await navigator.serviceWorker.getRegistration('/us/'); const sub = reg && reg.pushManager && await reg.pushManager.getSubscription(); S.push.on = !!sub; } catch (e) {}
+  renderSoft(); redrawSettings();
+}
+let nudgeAt = 0;
+function nudge() {
+  if (!S.push.publicKey || Date.now() - nudgeAt < 90000) return;
+  nudgeAt = Date.now(); api('notify', { method: 'POST', body: '{}' }).catch(() => {});
+}
+
+/* --- facilitator --- */
+const mdLite = t => esc(t).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+function aiBlock(sid, labels, title) {
+  if (!S.ai.configured) return '';
+  const x = S.sessions.find(z => z.id === sid); if (!x) return '';
+  const ok = x.aiOk || {}, P = nameOf(S.partner), mine = !!ok[S.me], theirs = !!ok[S.partner], busy = S.ai.busy[sid];
+  S.ai.labels = S.ai.labels || {}; S.ai.labels[sid] = { labels, title };
+  let h = `<div class="step" style="background:var(--lime-soft)"><h3>Neutral facilitator &nbsp;<span style="font-weight:500;color:var(--muted);font-size:12px">optional</span></h3>`;
+  if (x.ai && x.ai.text) {
+    h += `<div style="font-size:14.5px;line-height:1.55;color:var(--ink)">${mdLite(x.ai.text)}</div>
+      <div class="src-note">Written by Claude, an AI, from the answers you both shared. It isn't therapy and can get things wrong. Asked by ${esc(x.ai.by === S.me ? 'you' : nameOf(x.ai.by))} ${esc(when(x.ai.at))}.</div>
+      <div class="resp"><button data-action="ai-run" data-sid="${sid}" ${busy ? 'disabled' : ''}>${busy ? 'Thinking…' : 'Ask again'}</button><button data-action="ai-clear" data-sid="${sid}">Remove</button></div>`;
+  } else {
+    h += `<p style="font-size:13.5px;margin-top:0">If you'd both like, an AI facilitator can read the answers you've shared here and suggest common ground and questions to ask each other. It never sees anything private, and it doesn't take sides.</p>
+      <label class="opt" style="background:#fff"><input type="checkbox" data-aiok="${sid}" ${mine ? 'checked' : ''}><span><b>I'm okay with the facilitator reading our shared answers</b><small>${theirs ? esc(P) + ' is okay with it too.' : esc(P) + ' hasn’t said yet. It only runs if you both agree.'}</small></span></label>
+      ${mine && theirs ? `<button class="btn block" data-action="ai-run" data-sid="${sid}" ${busy ? 'disabled' : ''}>${busy ? 'Thinking…' : 'Get a neutral take'}</button>` : ''}`;
+  }
+  return h + '</div>';
+}
+function aiErr(c) {
+  return { not_both_agreed: 'You both need to agree first.', not_both_shared: 'You both need to share first.', not_configured: 'The facilitator isn’t set up yet.', nothing_to_read: 'There isn’t enough shared yet.', not_signed_in: 'Please sign in again.' }[c] || 'The facilitator couldn’t answer right now. Try again in a bit.';
+}
+
+/* --- notifications --- */
+const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent), standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+const b64uToU8 = s => Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/') + '==='.slice((s.length + 3) % 4)), c => c.charCodeAt(0));
+async function pushOn() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) throw { code: 'unsupported' };
+  if (await Notification.requestPermission() !== 'granted') throw { code: 'denied' };
+  const reg = await navigator.serviceWorker.register('/us/sw.js', { scope: '/us/' }); await navigator.serviceWorker.ready;
+  const sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64uToU8(S.push.publicKey) });
+  const j = sub.toJSON(), ref = S.db.doc('us_push/' + S.me), d = await ref.get(), subs = ((d.exists && d.data().subs) || []).filter(s => s.endpoint !== j.endpoint);
+  await ref.set({ subs: [...subs, { endpoint: j.endpoint, keys: j.keys || {}, device: isIOS ? 'iPhone' : navigator.platform || 'browser', at: Date.now() }].slice(-5) });
+  S.push.on = true;
+}
+async function pushOff() {
+  const reg = await navigator.serviceWorker.getRegistration('/us/'), sub = reg && await reg.pushManager.getSubscription();
+  if (sub) { const ep = sub.endpoint; await sub.unsubscribe(); const ref = S.db.doc('us_push/' + S.me), d = await ref.get(); if (d.exists) await ref.set({ subs: (d.data().subs || []).filter(s => s.endpoint !== ep) }); }
+  S.push.on = false;
+}
+async function makeVapidKeys() {
+  const k = await crypto.subtle.generateKey({ name: 'ECDSA', namedCurve: 'P-256' }, true, ['sign', 'verify']);
+  const raw = new Uint8Array(await crypto.subtle.exportKey('raw', k.publicKey)), jwk = await crypto.subtle.exportKey('jwk', k.privateKey);
+  S.push.keys = { pub: btoa(String.fromCharCode(...raw)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''), priv: JSON.stringify({ x: jwk.x, y: jwk.y, d: jwk.d }) };
+}
+function serverCards() {
+  const isOwner = S.me === OWNER;
+  let h = `<div class="card" style="box-shadow:none;border:1px solid var(--line)"><div class="chead"><h3>Notifications</h3><span class="meta">${S.push.on ? 'on for this device' : 'off'}</span></div>`;
+  if (S.push.publicKey === undefined) h += '<p class="src-note">Checking…</p>';
+  else if (!S.push.publicKey) h += `<p style="margin:0;font-size:14px">Not set up yet.${isOwner ? '' : ' ' + esc(nameOf(OWNER)) + ' needs to finish setup.'}</p>`;
+  else if (isIOS && !standalone) h += `<p style="margin:0;font-size:14px">On iPhone, add Us to your Home Screen first (Share → Add to Home Screen), then open Us from there and turn notifications on.</p>`;
+  else h += `<p style="margin:0 0 8px;font-size:14px">Get a gentle heads-up when ${esc(nameOf(S.partner))} shares something, pauses or proposes a commitment. Notifications never say what it is.</p><button class="btn ${S.push.on ? 'sec ' : ''}block" data-action="${S.push.on ? 'push-off' : 'push-on'}">${S.push.on ? 'Turn off on this device' : 'Turn on for this device'}</button>`;
+  h += '</div>';
+  if (isOwner && (S.push.publicKey === null || !S.ai.configured)) {
+    h += `<div class="card" style="box-shadow:none;border:1px solid var(--line)"><div class="chead"><h3>Server setup</h3><span class="meta">only you see this</span></div>
+      <p style="margin:0 0 6px;font-size:14px">In Cloudflare: Workers & Pages → fantasyapp → Settings → Variables and Secrets → Add (type: Secret, Production). Then redeploy (Deployments → latest → Retry deployment).</p>`;
+    if (!S.ai.configured) h += `<p style="margin:8px 0 0;font-size:14px"><b>AI facilitator:</b> add <code>ANTHROPIC_API_KEY</code> with a key from console.anthropic.com (set a monthly limit under Billing).</p>`;
+    if (S.push.publicKey === null) h += `<p style="margin:10px 0 6px;font-size:14px"><b>Notifications:</b> create a key pair here, then add both values as secrets. Keep the private one secret.</p>` + (S.push.keys ? `<label class="field"><span>VAPID_PUBLIC</span><textarea readonly style="min-height:60px;font-size:12px">${esc(S.push.keys.pub)}</textarea></label><label class="field"><span>VAPID_PRIVATE_JWK</span><textarea readonly style="min-height:80px;font-size:12px">${esc(S.push.keys.priv)}</textarea></label><p class="src-note">These aren't saved anywhere. If you close this before copying, just make a new pair.</p>` : `<button class="btn sec block" data-action="vapid-make">Create notification keys</button>`);
+    h += '</div>';
+  }
+  return h;
+}
+function redrawSettings() { const c = $('#serverCards'); if (c) c.innerHTML = serverCards(); }
+
+document.addEventListener('click', ev => {
+  const t = ev.target.closest('[data-action]'); if (!t) return;
+  const a = t.dataset.action;
+  if (a === 'ai-run') {
+    const sid = t.dataset.sid, L = (S.ai.labels || {})[sid] || {};
+    S.ai.busy[sid] = true; render();
+    api('facilitate', { method: 'POST', body: JSON.stringify({ sid, labels: L.labels || {}, title: L.title || '' }) })
+      .then(j => S.db.doc('us_sessions/' + sid).update({ ai: { text: j.text, at: Date.now(), by: S.me } }))
+      .catch(e => toast(aiErr(e && e.code))).finally(() => { S.ai.busy[sid] = false; render(); });
+  }
+  if (a === 'ai-clear') S.db.doc('us_sessions/' + t.dataset.sid).update({ ai: null }).catch(fail);
+  if (a === 'push-on') pushOn().then(() => { toast('Notifications on'); redrawSettings(); }).catch(e => toast(e && e.code === 'denied' ? 'Notifications are blocked in your browser settings.' : 'This browser can’t do notifications.'));
+  if (a === 'push-off') pushOff().then(() => { toast('Notifications off'); redrawSettings(); }).catch(fail);
+  if (a === 'vapid-make') makeVapidKeys().then(redrawSettings);
+});
+document.addEventListener('change', ev => {
+  const t = ev.target; if (!t.dataset || !t.dataset.aiok) return;
+  S.db.doc('us_sessions/' + t.dataset.aiok).update({ ['aiOk.' + S.me]: t.checked }).catch(fail);
+});
+
 /* ================= actions ================= */
 document.addEventListener('input', ev => {
   const t = ev.target;
@@ -1798,11 +1904,11 @@ document.addEventListener('click', ev => {
       const reason = (document.querySelector('input[name="pst"]:checked') || {}).value || '';
       const at = $('#pAt').value ? new Date($('#pAt').value).getTime() : null;
       const msg = $('#pMsgOn').checked ? $('#pMsg').value.trim() : '';
-      return run(db.collection('us_pauses').doc(uid()).set({ author: S.me, reason, returnAt: at, message: msg, status: 'paused', createdAt: Date.now(), ackBy: [] }).then(() => { closeSheet(); S.tab = 'talk'; render(); toast(`${nameOf(S.partner)} will see your pause`); }));
+      return run(db.collection('us_pauses').doc(uid()).set({ author: S.me, reason, returnAt: at, message: msg, status: 'paused', createdAt: Date.now(), ackBy: [] }).then(() => { nudge(); closeSheet(); S.tab = 'talk'; render(); toast(`${nameOf(S.partner)} will see your pause`); }));
     }
     case 'pause-edit': return openPause(S.pauses.find(p => p.id === id));
     case 'pause-save-edit': { const at = $('#pAt').value ? new Date($('#pAt').value).getTime() : null; return run(db.doc('us_pauses/' + id).update({ returnAt: at, updatedAt: Date.now() }).then(() => { closeSheet(); toast('Updated'); })); }
-    case 'pause-ready': return run(db.doc('us_pauses/' + id).update({ status: 'ready', readyAt: Date.now() }).then(() => toast(`${nameOf(S.partner)} will see you're ready`)));
+    case 'pause-ready': return run(db.doc('us_pauses/' + id).update({ status: 'ready', readyAt: Date.now() }).then(() => nudge() || toast(`${nameOf(S.partner)} will see you're ready`)));
     case 'pause-close': return run(db.doc('us_pauses/' + id).update({ status: 'closed', closedAt: Date.now() }).then(() => toast('Pause closed')));
     case 'pause-ack': { const p = S.pauses.find(x => x.id === id); return run(db.doc('us_pauses/' + id).update({ ackBy: [...new Set([...(p.ackBy || []), S.me])], ackAt: Date.now() }).then(() => toast('Sent'))); }
     case 'ci-share': return shareCheckin();
@@ -1813,7 +1919,7 @@ document.addEventListener('click', ev => {
       const owners = own === 'me' ? [S.me] : own === 'them' ? [S.partner] : [S.me, S.partner];
       const acceptedBy = owners.includes(S.me) ? [S.me] : [];
       const status = owners.every(o => acceptedBy.includes(o)) ? 'active' : 'proposed';
-      return run(db.collection('us_commitments').doc(uid()).set({ text, owners, acceptedBy, proposer: S.me, status, due: $('#cDue').value || null, note: $('#cNote').value.trim(), createdAt: Date.now() }).then(() => { closeSheet(); toast(status === 'active' ? 'Added' : `Sent to ${nameOf(S.partner)} to accept`); }));
+      return run(db.collection('us_commitments').doc(uid()).set({ text, owners, acceptedBy, proposer: S.me, status, due: $('#cDue').value || null, note: $('#cNote').value.trim(), createdAt: Date.now() }).then(() => { if (status !== 'active') nudge(); closeSheet(); toast(status === 'active' ? 'Added' : `Sent to ${nameOf(S.partner)} to accept`); }));
     }
     case 'c-accept': { const c = S.commitments.find(x => x.id === id); const acc = [...new Set([...(c.acceptedBy || []), S.me])]; return run(db.doc('us_commitments/' + id).update({ acceptedBy: acc, status: c.owners.every(o => acc.includes(o)) ? 'active' : 'proposed', acceptedAt: Date.now() })); }
     case 'c-decline': return run(db.doc('us_commitments/' + id).update({ status: 'released', releasedAt: Date.now(), note: 'Not right now' }).then(() => toast('Okay, set aside for now')));
@@ -1845,7 +1951,7 @@ document.addEventListener('click', ev => {
       const x = S.sessions.find(z => z.id === id), K = KINDS[x.kind] || KINDS.talk, dr = S.drafts[id] || {}, out = {};
       for (const [k] of K.prompts) if ((dr[k] || '').trim()) out[k] = dr[k].trim();
       if (!Object.keys(out).length) return toast('Write at least one answer first');
-      return run((async () => { await db.doc(`us_sessions/${id}/answers/${S.me}`).set({ answers: out, sharedAt: Date.now() }); await db.doc('us_sessions/' + id).update({ sharedBy: [...new Set([...(x.sharedBy || []), S.me])] }); S.editing[id] = false; toast('Shared'); await loadSession(id); })());
+      return run((async () => { await db.doc(`us_sessions/${id}/answers/${S.me}`).set({ answers: out, sharedAt: Date.now() }); await db.doc('us_sessions/' + id).update({ sharedBy: [...new Set([...(x.sharedBy || []), S.me])] }); S.editing[id] = false; toast('Shared'); nudge(); await loadSession(id); })());
     }
     case 'sess-withdraw': {
       const x = S.sessions.find(z => z.id === id);
@@ -2003,7 +2109,7 @@ document.addEventListener('click', ev => {
     case 'app-post': case 'app-draft': {
       const text = ($('#appText').value || '').trim(); if (!text) { toast('Write something first'); return; }
       const kind = S.appDraft.kind || 'Appreciation';
-      return run((a === 'app-post' ? db.collection('us_shared').add({ author: S.me, type: 'appreciation', kind, text, ts: Date.now(), responses: {} }) : db.collection(`private/${S.me}/appdrafts`).add({ kind, text, ts: Date.now() })).then(() => { S.appDraft = {}; render(); toast(a === 'app-post' ? 'Posted to the wall' : 'Saved privately'); }));
+      return run((a === 'app-post' ? db.collection('us_shared').add({ author: S.me, type: 'appreciation', kind, text, ts: Date.now(), responses: {} }) : db.collection(`private/${S.me}/appdrafts`).add({ kind, text, ts: Date.now() })).then(() => { if (a === 'app-post') nudge(); S.appDraft = {}; render(); toast(a === 'app-post' ? 'Posted to the wall' : 'Saved privately'); }));
     }
     case 'app-post-draft': { const d = S.appDrafts.find(x => x.id === t.dataset.id); if (!d) return; return run(db.collection('us_shared').add({ author: S.me, type: 'appreciation', kind: d.kind, text: d.text, ts: Date.now(), responses: {} }).then(() => db.doc(`private/${S.me}/appdrafts/${d.id}`).delete()).then(() => toast('Posted'))); }
     case 'app-del-draft': return run(db.doc(`private/${S.me}/appdrafts/${t.dataset.id}`).delete());
@@ -2117,6 +2223,7 @@ function start(u, em) {
   db.doc(`private/${em}/bids/${isoDay()}`).get().then(d => { if (d.exists) { S.bidRef = d.data(); soft(); } }).catch(() => {});
   db.collection(`private/${em}/reviews`).orderBy('id').limit(24).onSnapshot(s => { S.reviewHist = s.docs.map(d => d.data()); soft(); }, () => {});
   db.collection('content/images/items').orderBy('name').onSnapshot(s => { S.images = s.docs.map(d => ({ id: d.id, ...d.data() })); soft(); }, () => {});
+  loadServerStatus();
   db.collection('people').onSnapshot(s => { s.docs.forEach(d => { if (d.data().name) S.names[d.id] = d.data().name; }); soft(); }, () => {});
   db.doc('people/' + em).set({ name: S.names[em], updatedAt: Date.now() }, { merge: true }).catch(() => {});
 }
