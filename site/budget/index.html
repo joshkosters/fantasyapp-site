@@ -1038,6 +1038,7 @@ function openSettings() {
   const row = (k, title, desc, sub = false, disabled = false) => `<label class="sw ${sub ? 'sub' : ''}"><span class="t"><b>${title}</b><small>${desc}</small></span><input type="checkbox" data-set="${k}" ${st[k] ? 'checked' : ''} ${disabled || !S.canWrite ? 'disabled' : ''}></label>`;
   openSheet(`<h2>Settings</h2>
     <div class="acct"><span class="t">Signed in as<b>${esc(S.email || '')}</b></span><button class="btn sec" style="padding:8px 14px" data-action="signout">Sign out</button></div>
+    <a class="btn sec block" style="text-align:center;text-decoration:none;margin-bottom:10px" href="/us/">Open Us</a>
     <p style="margin:4px 0 8px;color:var(--muted);font-size:13px">These apply for both of you.</p>
     ${row('rollover', 'Rollover', 'Money left in a category carries into next month. You can turn it off for single lines in Plan.')}
     ${row('carryOver', 'Carry overspending too', 'Going over in one month reduces that category next month.', true, !st.rollover)}

@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1f4d22">
+<meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Us">
+<title>Us</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<style>
+:root{
+  --forest:#1f4d22; --green:#2e6b2f; --green2:#3f8a3f; --ink:#163817; --text:#22332a; --muted:#6f7d71;
+  --lime:#a8e063; --lime2:#c9ef95; --lime-soft:#eaf7d8; --bg:#eef1ea; --card:#ffffff; --line:#e4e9e0;
+  --red:#e5484d; --red-soft:#fde9e9; --amber:#d9900f; --amber-soft:#fdf1d8;
+  --shadow:0 1px 2px rgba(22,56,23,.04),0 8px 24px rgba(22,56,23,.06);
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--text)}
+body{font-family:"Plus Jakarta Sans",system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.4;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:560px;margin:0 auto}
+svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* hero */
+.hero{background:var(--forest);padding:calc(env(safe-area-inset-top) + 14px) calc(env(safe-area-inset-right) + 16px) 44px calc(env(safe-area-inset-left) + 16px)}
+.hrow{display:flex;align-items:center;gap:10px}
+.logo{width:46px;height:46px;border-radius:50%;background:var(--lime);color:var(--forest);display:grid;place-items:center;flex:none}
+.logo svg{width:24px;height:24px}
+.mpill{flex:1;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.1);border-radius:999px;height:46px;padding:0 5px;color:#fff}
+.mpill button{width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.12);color:#fff;display:grid;place-items:center}
+.mpill .label{font-weight:700;font-size:15px;letter-spacing:.01em}
+.hbtn{width:46px;height:46px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:#fff;display:grid;place-items:center;flex:none}
+
+/* panel */
+.panel{margin-top:-26px;background:var(--bg);border-radius:28px 28px 0 0;min-height:70vh;padding:20px calc(env(safe-area-inset-right) + 14px) calc(env(safe-area-inset-bottom) + 120px) calc(env(safe-area-inset-left) + 14px)}
+.titlerow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:2px 2px 16px}
+.titlerow h1{margin:0;font-size:24px;font-weight:800;color:var(--ink);letter-spacing:-.01em}
+.cta{border:0;border-radius:999px;background:var(--green);color:#fff;font-weight:700;padding:11px 18px;display:flex;align-items:center;gap:7px;font-size:15px;box-shadow:0 6px 16px rgba(46,107,47,.25)}
+.cta svg{width:18px;height:18px}
+
+/* stat cards */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.stat{position:relative;background:var(--card);border-radius:20px;padding:14px 14px 13px;box-shadow:var(--shadow);overflow:hidden}
+.stat .k{font-size:13px;font-weight:600;color:var(--text);padding-right:38px}
+.stat .v{font-size:23px;font-weight:800;color:var(--ink);margin:6px 0 4px;letter-spacing:-.01em;white-space:nowrap}
+.stat .sub{font-size:12px;color:var(--muted)}
+.stat .sub b{color:var(--text);font-weight:700}
+.stat .ic{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;display:grid;place-items:center}
+.stat .ic svg{width:18px;height:18px}
+.chip{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:3px 8px;border-radius:8px;font-size:12px;font-weight:700;background:var(--lime-soft);color:var(--green)}
+.chip.bad{background:var(--red-soft);color:var(--red)}
+.chip.warn{background:var(--amber-soft);color:var(--amber)}
+.chip svg{width:12px;height:12px;stroke-width:2.4}
+
+/* cards */
+.card{background:var(--card);border-radius:22px;padding:14px 16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.chead h3{margin:0;font-size:16px;font-weight:800;color:var(--ink)}
+.chead .meta{font-size:12px;color:var(--muted);font-weight:600}
+.seg{display:flex;gap:6px}
+.seg button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600;color:var(--text)}
+.seg button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.kpis{display:flex;gap:18px;flex-wrap:wrap;margin:4px 0 6px;font-size:13px;color:var(--muted);font-weight:600}
+.kpis b{color:var(--ink);font-size:16px;font-weight:800;margin-left:4px}
+.dotb{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;margin-left:6px;vertical-align:-5px}
+.dotb.bad{background:var(--red)}
+.dotb svg{width:12px;height:12px;stroke-width:2.6}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart text{font-family:inherit;font-size:11px;fill:var(--muted)}
+.empty-chart{padding:26px 10px;text-align:center;color:var(--muted);font-size:13px}
+
+/* list rows */
+.ghead{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0 2px;font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.ghead span:last-child{font-weight:600;text-transform:none;letter-spacing:0}
+.line{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:none;border:0;padding:11px 0;border-bottom:1px solid var(--line)}
+.card .line:last-child{border-bottom:0}
+.cav{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-weight:800;font-size:14px;flex:none}
+.lmain{flex:1;min-width:0}
+.line-top{display:flex;justify-content:space-between;gap:10px;font-weight:700;color:var(--ink)}
+.line-top .left{font-weight:700;color:var(--green);white-space:nowrap;font-size:14px}
+.line-top .left.neg{color:var(--red)} .line-top .left.warn{color:var(--amber)}
+.lbar{height:7px;border-radius:7px;background:#edf1ea;margin:7px 0 5px;overflow:hidden}
+.lbar i{display:block;height:100%;border-radius:7px;background:linear-gradient(90deg,var(--green2),var(--lime))}
+.lbar i.warn{background:var(--amber)} .lbar i.neg{background:var(--red)}
+.line-sub{font-size:12px;color:var(--muted)}
+.line-sub .roll{color:var(--green);font-weight:700}
+.line-sub .roll.neg{color:var(--red)}
+
+/* expenses */
+.search{display:flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:0 14px;height:46px;box-shadow:var(--shadow);margin-bottom:10px;color:var(--muted)}
+.search input{border:0;outline:none;background:none;flex:1;height:100%;font-size:15px;color:var(--text)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:2px 0 8px;margin-bottom:4px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chips button{flex:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 13px;font-size:13px;font-weight:700;color:var(--text)}
+.chips button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chips select{flex:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 10px;font-size:13px;font-weight:700}
+.dayhead{display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin:14px 6px 6px}
+.erow{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:none;border:0;padding:11px 0;border-bottom:1px solid var(--line)}
+.card .erow:last-child{border-bottom:0}
+.emain{flex:1;min-width:0}
+.emain b{display:block;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.emain span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.eamt{font-weight:800;white-space:nowrap;color:var(--ink)}
+.eamt.refund{color:var(--green)}
+.tag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.05em;padding:1px 6px;border-radius:6px;background:var(--ink);color:#fff;margin-left:5px;vertical-align:1px}
+.who{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;font-size:10px;font-weight:800;background:var(--lime);color:var(--forest);margin-right:4px;vertical-align:-4px}
+.who.p2{background:#f6d9b8;color:#8a5a1c}
+
+/* notices */
+.notice{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;background:var(--ink);color:#fff;border-radius:20px;padding:13px 14px;margin-bottom:12px;font-weight:700;box-shadow:var(--shadow)}
+.notice .ico{width:38px;height:38px;border-radius:50%;background:var(--lime);color:var(--forest);display:grid;place-items:center;flex:none}
+.notice small{display:block;font-weight:500;color:rgba(255,255,255,.7);font-size:12px}
+.notice .go{margin-left:auto;background:var(--lime);color:var(--forest);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:800;white-space:nowrap}
+.mini{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);width:100%;background:none;border-left:0;border-right:0;border-top:0;text-align:left}
+.card .mini:last-child{border-bottom:0}
+.mini .t{flex:1;min-width:0;font-weight:700;color:var(--ink)}
+.mini .t small{display:block;font-weight:500;color:var(--muted);font-size:12px}
+.mini .r{font-weight:800;white-space:nowrap;color:var(--ink);text-align:right}
+.mini .r small{display:block;font-weight:600;color:var(--muted);font-size:11px}
+.ck{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;flex:none;color:transparent}
+.ck.on{background:var(--green);border-color:var(--green);color:#fff}
+.ck.part{border-color:var(--lime);background:var(--lime-soft);color:var(--green)}
+.ck svg{width:14px;height:14px;stroke-width:3}
+.gbar{height:8px;border-radius:8px;background:#edf1ea;overflow:hidden;margin-top:6px}
+.gbar i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--lime));border-radius:8px}
+
+/* empty / banners / buttons */
+.empty{text-align:center;color:var(--muted);padding:30px 16px}
+.empty h3{color:var(--ink);margin:0 0 6px;font-size:18px}
+.btn{border:0;border-radius:14px;padding:13px 16px;font-weight:700;background:var(--green);color:#fff}
+.btn.sec{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.btn.lime{background:var(--lime);color:var(--forest)}
+.btn.danger{background:var(--red-soft);color:var(--red)}
+.btn.block{display:block;width:100%}
+.stack{display:grid;gap:10px;margin-top:16px}
+.banner{background:var(--red-soft);color:var(--red);border-radius:14px;padding:11px 13px;font-size:13px;font-weight:600;margin-bottom:12px}
+.banner.info{background:var(--lime-soft);color:var(--green)}
+.linkbtn{border:0;background:none;color:var(--green);font-weight:700;padding:8px 0;font-size:14px}
+
+/* dock */
+.dock{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 14px);z-index:30;display:flex;gap:4px;background:var(--green);border-radius:999px;padding:6px;box-shadow:0 10px 30px rgba(22,56,23,.35)}
+.dock button{position:relative;height:46px;min-width:46px;border:0;border-radius:999px;background:none;color:#fff;display:flex;align-items:center;justify-content:center;gap:7px;padding:0 12px;font-weight:700;font-size:13px;letter-spacing:.02em;text-transform:uppercase}
+.dock button.on{background:var(--lime);color:var(--forest)}
+.dock button span.lbl{display:none}
+.dock button.on span.lbl{display:inline}
+.dock .badge{position:absolute;top:3px;right:3px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:var(--red);color:#fff;font-size:10px;font-weight:800;display:grid;place-items:center;letter-spacing:0}
+.dock .dot{position:absolute;top:8px;right:9px;width:8px;height:8px;border-radius:50%;background:#f2b84b}
+
+/* plan editor */
+.psec h3{margin:4px 0 4px;font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:800}
+.prow{display:grid;grid-template-columns:1fr 112px 32px 32px;gap:6px;align-items:center;padding:5px 0}
+.prow input,.gname,.pmore input,.pmore select{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px;width:100%;min-width:0}
+.pamt{position:relative}
+.pamt span{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.pamt input{padding-left:20px;text-align:right}
+.ib{width:32px;height:32px;border-radius:10px;border:0;background:none;color:var(--muted);display:grid;place-items:center;font-size:15px}
+.ib.has{color:var(--green);background:var(--lime-soft)}
+.ib.confirm{background:var(--red-soft);color:var(--red);width:auto;padding:0 6px;font-size:11px;font-weight:800}
+.pmore{grid-column:1 / -1;background:var(--bg);border-radius:14px;padding:10px;display:grid;gap:8px}
+.pmore input,.pmore select{background:#fff;padding:8px 10px;font-size:14px}
+.pmore .r2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.chk{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600}
+.chk input{width:18px;height:18px;accent-color:var(--green);flex:none}
+.chk.inl{justify-content:space-between}
+.chk.inl input,.chk.inl select{width:auto;max-width:150px}
+.pgroup{display:flex;gap:8px;align-items:center;padding:12px 0 2px}
+.gname{font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:.05em;background:transparent;border-color:transparent;padding:6px 4px;color:var(--ink)}
+.gname:focus{border-color:var(--line);background:var(--bg)}
+.gsub{font-size:12px;color:var(--muted);white-space:nowrap}
+.addl{border:0;background:none;color:var(--green);font-weight:700;padding:8px 0 10px;font-size:14px}
+.ptotal{display:flex;justify-content:space-between;font-weight:800;padding:10px 0 4px;border-top:1px solid var(--line);margin-top:4px;color:var(--ink)}
+.savebar{position:fixed;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom) + 80px);z-index:29}
+.savebar .in{max-width:536px;margin:0 auto;display:flex;align-items:center;gap:8px;background:var(--ink);color:#fff;border-radius:20px;padding:10px 10px 10px 16px;box-shadow:0 10px 30px rgba(22,56,23,.3)}
+.savebar .info{flex:1;font-size:12px;color:rgba(255,255,255,.7)}
+.savebar .info b{display:block;color:#fff;font-size:15px}
+.savebar .info b.neg{color:#ff9a9d}
+.savebar .btn{padding:10px 14px}
+.savebar .btn.sec{background:rgba(255,255,255,.1);color:#fff;border:0}
+
+/* sheet */
+.backdrop{position:fixed;inset:0;background:rgba(15,30,16,.45);z-index:40;opacity:0;transition:opacity .2s}
+.backdrop.show{opacity:1}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;background:#fff;border-radius:28px 28px 0 0;max-height:92vh;overflow:auto;transform:translateY(100%);transition:transform .25s cubic-bezier(.2,.8,.2,1);padding:10px calc(env(safe-area-inset-right) + 18px) calc(env(safe-area-inset-bottom) + 20px) calc(env(safe-area-inset-left) + 18px)}
+.sheet.show{transform:none}
+.sheet .in{max-width:560px;margin:0 auto}
+.grab{width:42px;height:5px;border-radius:5px;background:var(--line);margin:0 auto 14px}
+.sheet h2{margin:0 0 14px;font-size:21px;color:var(--ink);font-weight:800}
+.field{display:block;margin-bottom:12px}
+.field>span{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em}
+.field input,.field select{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:14px;padding:12px;font-size:16px}
+.amtbig{display:flex;align-items:center;gap:4px;border:1px solid var(--line);background:var(--bg);border-radius:16px;padding:6px 14px}
+.amtbig span{font-size:30px;font-weight:700;color:var(--muted)}
+.amtbig input{border:0!important;background:none!important;font-size:34px!important;font-weight:800;padding:6px 0!important;outline:none;color:var(--ink)}
+.toggle{display:flex;gap:6px;margin-bottom:12px;background:var(--bg);padding:4px;border-radius:14px}
+.toggle button{flex:1;border:0;background:none;border-radius:10px;padding:9px;font-weight:700;font-size:13px;color:var(--muted)}
+.toggle button.on{background:var(--ink);color:#fff}
+.err{color:var(--red);font-size:13px;font-weight:600;min-height:18px;margin:-4px 0 8px}
+.lsum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.lsum div{background:var(--bg);border-radius:14px;padding:10px;font-size:12px;color:var(--muted);font-weight:600}
+.lsum b{display:block;color:var(--ink);font-size:16px;font-weight:800}
+.lsum b.neg{color:var(--red)}
+.lnote{background:var(--bg);border-radius:14px;padding:10px 12px;font-size:13px;color:var(--muted);margin-bottom:12px}
+
+/* settings switches */
+.sw{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
+.sw:last-child{border-bottom:0}
+.sw .t{flex:1}
+.sw .t b{display:block;color:var(--ink)}
+.sw .t small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.sw.sub{padding-left:16px}
+.sw input{appearance:none;-webkit-appearance:none;width:48px;height:28px;border-radius:999px;background:#d7ded3;position:relative;transition:background .2s;flex:none;margin:0;cursor:pointer}
+.sw input::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:left .2s}
+.sw input:checked{background:var(--green)}
+.sw input:checked::after{left:23px}
+.sw input:disabled{opacity:.4}
+
+/* inbox */
+.syncbar{display:flex;align-items:center;gap:10px;margin:0 2px 12px;font-size:13px;color:var(--muted);font-weight:600}
+.syncbar .grow{flex:1}
+.syncbar button{border:0;background:#fff;border-radius:999px;padding:8px 14px;font-weight:700;font-size:13px;box-shadow:var(--shadow);display:flex;gap:6px;align-items:center}
+.syncbar button svg{width:15px;height:15px}
+.icard{background:#fff;border-radius:20px;padding:13px 14px;margin-bottom:10px;box-shadow:var(--shadow)}
+.icard .t{display:flex;justify-content:space-between;gap:10px;font-weight:800;color:var(--ink)}
+.icard .t .amt.in{color:var(--green)}
+.icard .s{font-size:12px;color:var(--muted);margin:2px 0 10px}
+.icard .a{display:grid;grid-template-columns:1fr auto auto;gap:6px}
+.icard select{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:9px 8px;min-width:0;font-size:14px}
+.icard select.sug{border-color:var(--lime);background:var(--lime-soft)}
+.icard .a button{border:0;border-radius:12px;padding:0 14px;font-weight:700;font-size:14px}
+.icard .add{background:var(--green);color:#fff}
+.icard .skip{background:var(--bg);color:var(--muted)}
+.icard .ib-note{grid-column:1 / -1;width:100%;border:1px solid var(--line);background:#fff;border-radius:12px;padding:9px 10px;font-size:14px;margin-top:6px}
+.icard.busy{opacity:.5;pointer-events:none}
+
+/* report */
+.legend{display:grid;gap:7px;font-size:13px}
+.legend div{display:flex;align-items:center;gap:8px}
+.legend i{width:10px;height:10px;border-radius:3px;flex:none}
+.legend span{flex:1;color:var(--text);font-weight:600}
+.legend b{color:var(--ink)}
+.donutwrap{display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:center}
+.pva{display:grid;gap:12px}
+.pva .row .top{display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:var(--ink)}
+.pva .row .top span:last-child{font-weight:600;color:var(--muted)}
+.pva .track{position:relative;height:10px;border-radius:10px;background:#edf1ea;margin-top:6px;overflow:hidden}
+.pva .track i{position:absolute;left:0;top:0;bottom:0;border-radius:10px;background:linear-gradient(90deg,var(--green2),var(--lime))}
+.pva .track i.over{background:var(--red)}
+.streak{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+.streak:last-child{border-bottom:0}
+.streak b{color:var(--ink)}
+
+/* toast */
+.toast{position:fixed;z-index:200!important;left:50%;bottom:calc(env(safe-area-inset-bottom) + 96px);transform:translate(-50%,20px);opacity:0;transition:all .25s;z-index:60;background:var(--ink);color:#fff;padding:11px 16px;border-radius:14px;font-weight:600;font-size:14px;max-width:calc(100vw - 32px);text-align:center;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.skel{height:130px;border-radius:20px;background:#fff;animation:pulse 1.4s infinite}
+@keyframes pulse{50%{opacity:.5}}
+/* sign-in gate */
+.gate{position:fixed;inset:0;z-index:100;background:var(--forest);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center}
+.gate .logo{width:72px;height:72px;margin-bottom:18px}
+.gate .logo svg{width:36px;height:36px}
+.gate h1{margin:0 0 8px;font-size:28px;font-weight:800}
+.gate p{margin:0 auto 26px;color:rgba(255,255,255,.75);max-width:300px}
+.gate .gbtn{display:inline-flex;align-items:center;gap:10px;border:0;border-radius:999px;background:#fff;color:#1f2a22;font-weight:700;padding:14px 22px;font-size:16px}
+.gate .gbtn svg{width:20px;height:20px}
+.gate .lk{background:none;border:0;color:var(--lime);font-weight:700;margin-top:14px;font-size:14px;display:block;margin-left:auto;margin-right:auto}
+.acct{display:flex;align-items:center;gap:10px;padding:12px;background:var(--bg);border-radius:14px;margin:6px 0 8px}
+.acct .t{flex:1;font-size:13px;color:var(--muted)} .acct .t b{display:block;color:var(--ink);font-size:14px}
+
+/* ---- Us additions ---- */
+.hello{font-size:14px;color:var(--muted);font-weight:600;margin:-8px 2px 14px}
+.qcard{background:var(--ink);color:#fff;border-radius:22px;padding:18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.qcard .lab{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--lime)}
+.qcard .txt{font-size:19px;font-weight:700;line-height:1.35;margin:8px 0 10px}
+.qcard .src{font-size:12px;color:rgba(255,255,255,.65)}
+.qcard .row{display:flex;gap:8px;margin-top:12px}
+.qcard .row button{border:0;border-radius:999px;padding:7px 13px;font-weight:700;font-size:13px;background:rgba(255,255,255,.12);color:#fff}
+.qcard .row button.on{background:var(--lime);color:var(--forest)}
+.quad{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.quad button{border:0;border-radius:16px;padding:14px 12px;text-align:left;font-weight:700;font-size:14px;color:#1d2a20;min-height:64px}
+.quad button small{display:block;font-weight:500;font-size:11.5px;opacity:.75;margin-top:2px}
+.q-ph{background:#fbe7a1} .q-pl{background:#cdeec0} .q-uh{background:#f9c9bd} .q-ul{background:#c9dcf4}
+.dot-ph{background:#e6b422} .dot-pl{background:#58a65c} .dot-uh{background:#e0613f} .dot-ul{background:#4f7fc4}
+.edot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:0}
+.words{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 4px}
+.words button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 12px;font-size:14px;font-weight:600;color:var(--text)}
+.words button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.words button.near{border-style:dashed}
+.scale{display:flex;gap:6px}
+.scale button{flex:1;border:1px solid var(--line);background:#fff;border-radius:12px;padding:9px 0;font-weight:700}
+.scale button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.opt{display:flex;align-items:flex-start;gap:10px;padding:11px 12px;border:1px solid var(--line);border-radius:14px;margin-bottom:8px;background:#fff;cursor:pointer}
+.opt input{margin-top:3px;accent-color:var(--green);width:18px;height:18px;flex:none}
+.opt b{display:block;color:var(--ink);font-size:14px}
+.opt small{color:var(--muted);font-size:12.5px}
+.preview{border:2px dashed var(--lime);background:var(--lime-soft);border-radius:16px;padding:12px 14px;margin:6px 0 12px}
+.preview .lab{font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--green);margin-bottom:6px}
+.fitem{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line)}
+.card .fitem:last-child{border-bottom:0}
+.fitem .fmain{flex:1;min-width:0}
+.fitem b{color:var(--ink)}
+.fitem .meta{font-size:12px;color:var(--muted);margin-top:2px}
+.fitem .note{font-size:14px;margin-top:6px;color:var(--text)}
+.pillv{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:6px;background:#eef1ea;color:var(--muted);margin-left:6px;vertical-align:1px}
+.pillv.sh{background:var(--lime-soft);color:var(--green)}
+.resp{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.resp button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 11px;font-size:13px;font-weight:700;color:var(--green)}
+.resp button.on{background:var(--green);color:#fff;border-color:var(--green)}
+.bubble{background:var(--lime-soft);color:var(--green);border-radius:12px;padding:6px 10px;font-size:13px;font-weight:700;display:inline-block;margin-top:8px}
+.pause{background:#fff;border-radius:22px;padding:16px;margin-bottom:12px;box-shadow:var(--shadow);border-left:6px solid #7fb3d5}
+.pause h3{margin:0 0 4px;font-size:16px;color:var(--ink)}
+.pause p{margin:4px 0;color:var(--text);font-size:14px}
+.pause .msg{background:var(--bg);border-radius:12px;padding:10px 12px;font-style:italic;margin:10px 0}
+.pause .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.pause .acts .btn{padding:9px 14px;font-size:14px}
+.prompt{margin-bottom:14px}
+.prompt label{display:block;font-weight:700;color:var(--ink);font-size:14px;margin-bottom:6px}
+.prompt label small{display:block;font-weight:500;color:var(--muted);font-size:12px;margin-top:2px}
+.prompt textarea,.field textarea{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:14px;padding:10px 12px;font:inherit;font-size:15px;min-height:68px;resize:vertical}
+.prompt .shr{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);margin-top:6px;font-weight:600}
+.prompt .shr input{accent-color:var(--green)}
+.theirs{background:var(--lime-soft);border-radius:12px;padding:9px 12px;margin-top:8px;font-size:14px}
+.theirs b{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--green);margin-bottom:2px}
+.cm{padding:12px 0;border-bottom:1px solid var(--line)}
+.card .cm:last-child{border-bottom:0}
+.cm .t{font-weight:700;color:var(--ink)}
+.cm .m{font-size:12px;color:var(--muted);margin-top:2px}
+.cm .a{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.cm .a button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700;color:var(--ink)}
+.cm .a button.pri{background:var(--green);border-color:var(--green);color:#fff}
+.src-note{font-size:11.5px;color:var(--muted);margin-top:8px}
+.qa{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.qa button{border:0;background:#fff;border-radius:18px;padding:12px 4px;box-shadow:var(--shadow);font-size:12px;font-weight:700;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:6px}
+.qa button span.i{width:36px;height:36px;border-radius:50%;display:grid;place-items:center}
+.qa a{text-decoration:none}
+.safe{background:#fff;border-radius:20px;padding:14px 16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.safe h3{margin:0 0 6px;font-size:15px;color:var(--ink)}
+.safe p{margin:4px 0;font-size:13.5px}
+.safe a{color:var(--green);font-weight:700}
+.chk-res{font-size:13px;margin-top:8px}
+.chk-res div{padding:4px 0}
+.ok{color:var(--green);font-weight:700} .bad{color:var(--red);font-weight:700}
+.dock button{padding:0 11px;white-space:nowrap}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap hrow">
+    <div class="logo" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></div>
+    <div class="mpill" style="justify-content:center"><div class="label" id="todayLabel"></div></div>
+    <button class="hbtn" data-action="settings" aria-label="Settings"><svg class="i" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></button>
+  </div>
+</header>
+<main class="panel">
+  <div class="wrap">
+    <div class="titlerow"><h1 id="title">Us</h1><div id="cta"></div></div>
+    <div id="banner"></div>
+    <div id="main"></div>
+  </div>
+</main>
+<nav class="dock" id="dock"></nav>
+<div class="backdrop" id="backdrop" hidden></div>
+<div class="sheet" id="sheet" hidden><div class="in" id="sheetIn"></div></div>
+<div class="toast" id="toast"></div>
+<div class="gate" id="gate"><div class="logo"><svg class="i" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></div><div id="gateBody"><h1>Us</h1><p>Loading…</p></div></div>
+
+<script>
+/* ================= helpers ================= */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => Math.random().toString(36).slice(2, 9) + Date.now().toString(36).slice(-5);
+const pad = n => String(n).padStart(2, '0');
+const isoDay = (d = new Date()) => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+const dayNum = () => Math.floor((Date.now() - new Date().getTimezoneOffset() * 60000) / 864e5);
+function weekId(d = new Date()) { const x = new Date(d); const k = (x.getDay() + 6) % 7; x.setDate(x.getDate() - k); return isoDay(x); }
+const when = ts => {
+  const d = new Date(ts), now = new Date(), mins = Math.round((now - d) / 60000);
+  if (mins < 1) return 'just now'; if (mins < 60) return mins + ' min ago';
+  if (isoDay(d) === isoDay(now)) return 'today ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  const y = new Date(now); y.setDate(y.getDate() - 1);
+  if (isoDay(d) === isoDay(y)) return 'yesterday ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+};
+const timeText = ts => new Date(ts).toLocaleString('en-US', { weekday: 'short', hour: 'numeric', minute: '2-digit' });
+const ICONS = {
+  home: '<path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/>',
+  heart: '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
+  feel: '<circle cx="12" cy="12" r="8.5"/><path d="M8.5 14.5c1 1.3 2.2 2 3.5 2s2.5-.7 3.5-2"/><path d="M9 10h.01M15 10h.01"/>',
+  talk: '<path d="M4 6h11a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-4 3v-3H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/><path d="M19 9h1a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-1v2l-3-2"/>',
+  check: '<rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4V3h6v1"/><path d="M8.5 11.5l2 2 4-4"/>',
+  pause: '<rect x="7" y="5" width="3.5" height="14" rx="1"/><rect x="13.5" y="5" width="3.5" height="14" rx="1"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  wallet: '<path d="M4 7a2 2 0 0 1 2-2h11v4"/><rect x="4" y="7" width="16" height="12" rx="2"/><circle cx="16" cy="13" r="1.2"/>',
+  ok: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  shield: '<path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/>',
+};
+const ic = (n, cls = 'i') => `<svg class="${cls}" viewBox="0 0 24 24">${ICONS[n] || ''}</svg>`;
+
+/* ================= people ================= */
+const OWNER = 'joshkosters@gmail.com';
+const ALLOWED = { 'joshkosters@gmail.com': 'Josh', 'tlturner9@gmail.com': 'T' };
+const nameOf = em => (S.names[em] || ALLOWED[em] || 'Partner').split(' ')[0];
+
+/* ================= content (original, written for this app) ================= */
+const REFLECTIONS = [
+  'Small moments add up. A two-minute check-in today can matter more than a big gesture next month.',
+  'You don’t have to agree to understand. Today, try to understand one thing before you respond to it.',
+  'When your partner reaches for you with a comment, a question or a look, turning toward it is a quiet way of saying “I’m here.”',
+  'Curiosity is a kind of affection. Ask one question today that you don’t already know the answer to.',
+  'Taking a break isn’t walking away. Coming back when you’re calmer is part of caring.',
+  'Name something specific you appreciated this week. Specific beats general.',
+  'A feeling is information, not a verdict. Let it tell you something before deciding what to do with it.',
+  'Rituals don’t need to be big. A daily coffee, a goodnight, a Sunday walk: repetition is what makes them meaningful.',
+  'Before solving a problem, check whether your partner wants a solution or just wants to be heard.',
+  'Your partner’s world keeps changing. Updating your map of it is an ongoing project, not a one-time test.',
+  'Repair can be simple: “That came out wrong. Can I try again?”',
+  'Say what you need, not what the other person is doing wrong.',
+  'It’s okay to be different. Most differences don’t need solving; they need understanding.',
+  'Celebrate one small win together today, yours or theirs.',
+  'Safety comes first. No conversation is worth continuing if either of you feels unsafe.',
+  'Listening fully, without planning your reply, is one of the most generous things you can offer.',
+  'A dream behind a disagreement is often worth asking about: “What does this mean to you?”',
+  'Notice what’s going right. It’s easy to miss on a busy day.',
+  'You’re on the same team, even on hard days.',
+  'Rest is allowed. A calm evening together counts as connection.',
+  'Gratitude grows when it’s spoken. Tell your partner one thing you’re thankful for.',
+];
+const PROMPTS = [
+  'What’s one thing on your mind this week that I might not know about?',
+  'What’s a small thing I do that makes your day easier?',
+  'If we had a free Saturday with no plans, what would you want to do?',
+  'What’s something you’re looking forward to right now?',
+  'What’s been stressing you out lately, and how could I help, if at all?',
+  'What’s a memory of us that always makes you smile?',
+  'Who’s someone at work or in your life I should know more about?',
+  'What’s one thing you’d like more of in our week?',
+  'What made you laugh recently?',
+  'What’s a goal you’re quietly working toward?',
+  'Is there anything you’ve wanted to tell me but haven’t found the right moment for?',
+  'What helps you feel most cared for when you’re worn out?',
+  'What’s a place you’d love for us to visit someday?',
+  'What’s a song, show or book you’ve been into lately?',
+  'What’s one way I could support you this week?',
+  'What’s something you’re proud of from the last month?',
+  'What does a really good evening at home look like to you?',
+  'What’s a tradition from your family you’d like to keep or change?',
+  'What’s one thing you appreciated about today?',
+  'If you could change one small thing about our routine, what would it be?',
+];
+// Emotion vocabulary, grouped by pleasantness and energy (original word lists).
+const QUADS = {
+  ph: { name: 'Pleasant, high energy', hint: 'excited, hopeful, proud', words: ['excited','joyful','energized','hopeful','proud','playful','enthusiastic','amused','inspired','confident','eager','motivated','delighted','optimistic','silly','surprised'] },
+  pl: { name: 'Pleasant, low energy', hint: 'calm, content, loved', words: ['calm','content','relaxed','grateful','peaceful','safe','loved','connected','relieved','comfortable','at ease','satisfied','tender','cozy','secure','thoughtful'] },
+  uh: { name: 'Unpleasant, high energy', hint: 'anxious, stressed, angry', words: ['anxious','stressed','frustrated','angry','irritated','overwhelmed','worried','nervous','tense','jealous','panicked','defensive','annoyed','restless','embarrassed','scared'] },
+  ul: { name: 'Unpleasant, low energy', hint: 'sad, tired, lonely', words: ['sad','tired','lonely','disappointed','discouraged','hurt','numb','drained','bored','ashamed','withdrawn','guilty','down','empty','exhausted','unsure'] },
+};
+const NEAR = { anxious: ['worried','nervous','tense'], angry: ['frustrated','irritated','hurt'], sad: ['lonely','disappointed','hurt'], tired: ['drained','exhausted','numb'], stressed: ['overwhelmed','tense','anxious'], calm: ['relaxed','peaceful','content'], happy: ['joyful','content','grateful'], hurt: ['sad','disappointed','angry'], overwhelmed: ['stressed','exhausted','anxious'], lonely: ['sad','withdrawn','disconnected'] };
+const CONTEXTS = ['work', 'home', 'us', 'family', 'kids', 'friends', 'health', 'money', 'sleep', 'other'];
+const SUPPORT = ['Just letting you know', 'Please listen', 'I’d like reassurance', 'Can we spend time together?', 'I’d like practical help', 'I need some space', 'I’m not sure yet'];
+const RESPONSES = ['I see you', 'Want to talk?', 'Would a hug, help or space be useful?', 'Thank you for sharing'];
+const PAUSE_STATUS = ['I’m overwhelmed', 'I need time to think', 'I need to calm down', 'I need physical space'];
+const REASSURE = 'I care about this and intend to come back to it. I need time before I can do that well.';
+const CHECKIN = [
+  ['appreciation', 'Appreciation', 'What did I appreciate about you this week?'],
+  ['temperature', 'Emotional temperature', 'How connected have I felt? Is anything weighing on me?'],
+  ['repair', 'Conflict and repair', 'Is there something we need to understand or repair? Only talk about this if you both feel safe and willing.'],
+  ['needs', 'Needs and support', 'What would help me this coming week?'],
+  ['plans', 'Connection planning', 'What will we do together? When is our next intentional date?'],
+  ['mine', 'Personal accountability', 'What is one thing I personally choose to work on?'],
+];
+
+/* ================= state ================= */
+const S = {
+  db: null, me: null, partner: null, names: {}, tab: 'home', fatal: null, loaded: false,
+  myFeelings: [], shared: [], pauses: [], checkins: {}, myCheckin: null, commitments: [], prefs: {},
+  feelFilter: 'mine', draft: null, refl: 0,
+};
+
+/* ================= render ================= */
+const TABS = [['home', 'Home', 'home'], ['feelings', 'Feelings', 'feel'], ['talk', 'Talk', 'talk'], ['checkin', 'Check-in', 'check']];
+const TITLES = { home: 'Us', feelings: 'Feelings', talk: 'Talk', checkin: 'Check-in' };
+function badges() {
+  const b = {};
+  b.feelings = S.shared.filter(f => f.author === S.partner && !(f.seenBy || []).includes(S.me)).length;
+  b.talk = S.pauses.filter(p => p.author === S.partner && p.status !== 'closed' && !(p.ackBy || []).includes(S.me)).length;
+  b.checkin = S.commitments.filter(c => c.status === 'proposed' && (c.owners || []).includes(S.me) && !(c.acceptedBy || []).includes(S.me)).length;
+  return b;
+}
+function render() {
+  $('#todayLabel').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+  $('#title').textContent = TITLES[S.tab];
+  const b = badges();
+  $('#dock').innerHTML = TABS.map(([k, label, icon]) => `<button data-tab="${k}" class="${S.tab === k ? 'on' : ''}" aria-label="${label}">${ic(icon)}<span class="lbl">${label}</span>${b[k] ? `<span class="badge">${b[k]}</span>` : ''}</button>`).join('');
+  $('#banner').innerHTML = S.fatal ? `<div class="banner">${esc(S.fatal)}</div>` : '';
+  $('#cta').innerHTML = S.tab === 'feelings' ? `<button class="cta" data-action="log">${ic('plus')} Log</button>`
+    : S.tab === 'talk' ? `<button class="cta" data-action="pause">${ic('pause')} Pause</button>`
+    : S.tab === 'checkin' ? `<button class="cta" data-action="commit-new">${ic('plus')} Commitment</button>` : '';
+  const main = $('#main');
+  if (S.fatal) { main.innerHTML = ''; return; }
+  if (!S.loaded) { main.innerHTML = '<div class="skel" style="height:180px"></div>'; return; }
+  if (document.activeElement && document.activeElement.closest && document.activeElement.closest('#main') && /TEXTAREA|INPUT/.test(document.activeElement.tagName)) return; // don't wipe typing
+  main.innerHTML = S.tab === 'home' ? homeHTML() : S.tab === 'feelings' ? feelingsHTML() : S.tab === 'talk' ? talkHTML() : checkinHTML();
+}
+
+/* ----- Home ----- */
+function reflectionCard() {
+  const i = (dayNum() + S.refl) % REFLECTIONS.length;
+  const saved = (S.prefs.savedReflections || []).includes(i);
+  return `<div class="qcard"><div class="lab">Daily reflection</div><div class="txt">${esc(REFLECTIONS[i])}</div>
+    <div class="src">Original reflection, written for Us. Not a Gottman quote.</div>
+    <div class="row"><button data-action="refl-next">Show another</button><button data-action="refl-save" data-i="${i}" class="${saved ? 'on' : ''}">${saved ? 'Saved' : 'Save'}</button></div></div>`;
+}
+function pauseCards(compact) {
+  return S.pauses.filter(p => p.status !== 'closed').map(p => {
+    const mine = p.author === S.me, who = mine ? 'You' : nameOf(p.author);
+    const ret = p.returnAt ? `Hoping to come back around ${esc(timeText(p.returnAt))}.` : p.returnText ? esc(p.returnText) : 'No return time set yet.';
+    const ready = p.status === 'ready';
+    let acts = '';
+    if (mine) acts = ready ? `<button class="btn sec" data-action="pause-close" data-id="${p.id}">Close this pause</button>`
+      : `<button class="btn" data-action="pause-ready" data-id="${p.id}">I'm ready to talk</button><button class="btn sec" data-action="pause-edit" data-id="${p.id}">Change time</button><button class="btn sec" data-action="pause-close" data-id="${p.id}">Not returning to this now</button>`;
+    else acts = (p.ackBy || []).includes(S.me) ? `<span class="bubble">${ic('ok')} You let ${esc(who)} know you saw it</span>` : `<button class="btn" data-action="pause-ack" data-id="${p.id}">Thanks for telling me</button>`;
+    return `<div class="pause"><h3>${ready ? `${esc(who)} ${mine ? 'are' : 'is'} ready when you are` : `${esc(who)} asked for a pause`}</h3>
+      <p>${esc(p.status === 'ready' ? 'Return when it works for both of you.' : p.reason || '')}</p><p style="color:var(--muted);font-size:13px">${ready ? '' : ret}</p>
+      ${p.message ? `<div class="msg">“${esc(p.message)}”</div>` : ''}
+      ${compact ? '' : `<div class="acts">${acts}</div>`}</div>`;
+  }).join('');
+}
+function homeHTML() {
+  const first = nameOf(S.me);
+  const hr = new Date().getHours();
+  let h = `<div class="hello">Good ${hr < 12 ? 'morning' : hr < 17 ? 'afternoon' : 'evening'}, ${esc(first)}.</div>`;
+  if (S.pauses.some(p => p.status !== 'closed')) h += `<button class="notice" data-tab="talk" style="background:#2c4a63"><span class="ico" style="background:#c9dcf4;color:#2c4a63">${ic('pause')}</span><span>A pause is in place<small>Open Talk to see it</small></span><span class="go">Open</span></button>`;
+  h += reflectionCard();
+  h += `<div class="card"><div class="chead"><h3>How are you feeling?</h3><span class="meta">private unless you share</span></div><div class="quad">
+    ${Object.entries(QUADS).map(([k, q]) => `<button class="q-${k}" data-action="log" data-q="${k}">${esc(q.name)}<small>${esc(q.hint)}</small></button>`).join('')}</div></div>`;
+  const theirs = S.shared.filter(f => f.author === S.partner).slice(0, 2);
+  if (theirs.length) h += `<div class="card"><div class="chead"><h3>From ${esc(nameOf(S.partner))}</h3><button class="linkbtn" data-tab="feelings">All</button></div>${theirs.map(sharedItem).join('')}</div>`;
+  const prompt = PROMPTS[dayNum() % PROMPTS.length];
+  h += `<div class="card"><div class="chead"><h3>Today's connection prompt</h3></div><p style="margin:0;font-size:16px;font-weight:600;color:var(--ink)">${esc(prompt)}</p><div class="src-note">Original Us prompt. Ask it in person, or skip it today.</div></div>`;
+  const wk = weekId(), mineDone = S.myCheckin && Object.values(S.myCheckin.answers || {}).some(v => v && v.trim());
+  const theirShared = Object.values(S.checkins).find(c => c.author === S.partner && c.week === wk);
+  h += `<button class="card" data-tab="checkin" style="display:block;width:100%;text-align:left;border:0"><div class="chead"><h3>Weekly check-in</h3><span class="meta">${esc(new Date(wk + 'T12:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }))} week</span></div>
+    <div class="line-sub" style="font-size:14px">${mineDone ? 'You’ve started yours.' : 'Six short questions, 15 to 30 minutes, whenever works.'}${theirShared ? ` ${esc(nameOf(S.partner))} shared some answers.` : ''}</div></button>`;
+  const active = S.commitments.filter(c => c.status === 'active').slice(0, 3), waiting = S.commitments.filter(c => c.status === 'proposed' && (c.owners || []).includes(S.me) && !(c.acceptedBy || []).includes(S.me));
+  if (active.length || waiting.length) h += `<div class="card"><div class="chead"><h3>Commitments</h3><button class="linkbtn" data-tab="checkin">All</button></div>${waiting.map(commitItem).join('')}${active.map(commitItem).join('')}</div>`;
+  h += `<div class="qa">
+    <button data-action="log"><span class="i" style="background:#fbe7a1;color:#8a6a00">${ic('feel')}</span>Log a feeling</button>
+    <button data-action="pause"><span class="i" style="background:#c9dcf4;color:#2c4a63">${ic('pause')}</span>Ask for a pause</button>
+    <button data-action="commit-new"><span class="i" style="background:var(--lime-soft);color:var(--green)">${ic('check')}</span>Commitment</button>
+    <button data-action="budget"><span class="i" style="background:#fdecc8;color:#c47f00">${ic('wallet')}</span>Budget</button></div>`;
+  return h;
+}
+
+/* ----- Feelings ----- */
+const quadOf = w => Object.keys(QUADS).find(k => QUADS[k].words.includes(w)) || 'pl';
+function myItem(f) {
+  const sh = S.shared.find(x => x.id === f.sharedId);
+  const resp = sh && Object.entries(sh.responses || {}).filter(([k]) => k !== S.me);
+  return `<div class="fitem"><span class="edot dot-${f.quad}" style="margin-top:6px"></span><div class="fmain">
+    <b>${esc(f.label)}</b>${f.intensity ? ` <span style="color:var(--muted);font-size:13px">${f.intensity}/5</span>` : ''}<span class="pillv ${sh ? 'sh' : ''}">${sh ? (sh.mode === 'status' ? 'Short status shared' : 'Shared') : 'Private'}</span>
+    <div class="meta">${esc(when(f.ts))}${(f.contexts || []).length ? ' · ' + esc(f.contexts.join(', ')) : ''}</div>
+    ${f.note ? `<div class="note">${esc(f.note)}</div>` : ''}${f.body ? `<div class="note" style="color:var(--muted)">Body: ${esc(f.body)}</div>` : ''}${f.support ? `<div class="note" style="color:var(--muted)">What would help: ${esc(f.support)}</div>` : ''}
+    ${resp && resp.length ? resp.map(([k, v]) => `<div class="bubble">${esc(nameOf(k))}: ${esc(v.text)}</div>`).join(' ') : ''}
+    <div class="resp">${sh ? `<button data-action="unshare" data-id="${f.id}">Stop sharing</button>` : `<button data-action="share-later" data-id="${f.id}">Share…</button>`}<button data-action="feel-del" data-id="${f.id}">Delete</button></div>
+  </div></div>`;
+}
+function sharedItem(f) {
+  const mine = (f.responses || {})[S.me];
+  return `<div class="fitem"><span class="edot dot-${f.quad || 'pl'}" style="margin-top:6px"></span><div class="fmain">
+    <b>${esc(nameOf(f.author))} ${f.mode === 'status' ? 'shared a status' : 'is feeling'} ${esc(f.mode === 'status' ? '' : f.label)}</b>${f.mode === 'status' ? `<div class="note">${esc(f.status)}</div>` : ''}
+    <div class="meta">${esc(when(f.ts))}${(f.contexts || []).length ? ' · ' + esc(f.contexts.join(', ')) : ''}</div>
+    ${f.note ? `<div class="note">${esc(f.note)}</div>` : ''}${f.support ? `<div class="bubble" style="background:#eef1ea;color:var(--ink)">${esc(f.support)}</div>` : ''}
+    <div class="resp">${RESPONSES.map(r => `<button data-action="respond" data-id="${f.id}" data-r="${esc(r)}" class="${mine && mine.text === r ? 'on' : ''}">${esc(r)}</button>`).join('')}</div>
+    <div class="src-note">No reply is expected. Sharing isn't a request to talk unless they say so.</div>
+  </div></div>`;
+}
+function feelingsHTML() {
+  const F = S.feelFilter;
+  let h = `<div class="chips"><button data-action="ff" data-v="mine" class="${F === 'mine' ? 'on' : ''}">My log</button><button data-action="ff" data-v="theirs" class="${F === 'theirs' ? 'on' : ''}">From ${esc(nameOf(S.partner))}</button><button data-action="ff" data-v="pattern" class="${F === 'pattern' ? 'on' : ''}">My patterns</button></div>`;
+  if (F === 'mine') {
+    h += `<div class="card"><div class="quad">${Object.entries(QUADS).map(([k, q]) => `<button class="q-${k}" data-action="log" data-q="${k}">${esc(q.name)}<small>${esc(q.hint)}</small></button>`).join('')}</div></div>`;
+    h += S.myFeelings.length ? `<div class="card">${S.myFeelings.map(myItem).join('')}</div>` : `<div class="card empty"><h3>Nothing logged yet</h3>Entries are private unless you choose to share them.</div>`;
+  } else if (F === 'theirs') {
+    const list = S.shared.filter(f => f.author === S.partner);
+    h += list.length ? `<div class="card">${list.map(sharedItem).join('')}</div>` : `<div class="card empty"><h3>Nothing shared yet</h3>When ${esc(nameOf(S.partner))} shares a feeling with you, it shows up here.</div>`;
+  } else {
+    const last30 = S.myFeelings.filter(f => f.ts > Date.now() - 30 * 864e5);
+    const byQ = Object.fromEntries(Object.keys(QUADS).map(k => [k, last30.filter(f => f.quad === k).length]));
+    const tot = last30.length || 1;
+    const words = {}; last30.forEach(f => words[f.label] = (words[f.label] || 0) + 1);
+    const top = Object.entries(words).sort((a, b) => b[1] - a[1]).slice(0, 6);
+    h += `<div class="card"><div class="chead"><h3>Last 30 days</h3><span class="meta">only you can see this</span></div>
+      ${last30.length ? `<div style="display:flex;height:14px;border-radius:8px;overflow:hidden;margin:6px 0 10px">${Object.keys(QUADS).map(k => byQ[k] ? `<i class="dot-${k}" style="width:${byQ[k] / tot * 100}%"></i>` : '').join('')}</div>
+      <div class="legend">${Object.entries(QUADS).map(([k, q]) => `<div><i class="dot-${k}"></i><span>${esc(q.name)}</span><b>${byQ[k]}</b></div>`).join('')}</div>
+      <div class="src-note" style="margin-top:12px">Most logged: ${top.map(([w, n]) => esc(w) + ' (' + n + ')').join(', ')}</div>` : `<div class="empty-chart">Log a few feelings and your patterns show up here.</div>`}</div>`;
+  }
+  return h;
+}
+
+/* ----- Talk ----- */
+function talkHTML() {
+  let h = pauseCards(false);
+  if (!S.pauses.some(p => p.status !== 'closed')) h += `<div class="card"><div class="chead"><h3>Pause & Return</h3></div>
+    <p style="margin:0 0 10px">Either of you can ask for a pause at any time, without giving a reason. A return time is an intention, not a deadline, and either of you can decide not to pick a topic back up.</p>
+    <button class="btn block" data-action="pause">${'I need a pause'}</button></div>`;
+  h += safetyCard();
+  h += `<div class="card"><div class="chead"><h3>Coming next</h3><span class="meta">Phase 2</span></div><p class="line-sub" style="font-size:14px;margin:0">Conversation Room with private answers revealed only when you both share, a listening exercise, the Four Horsemen and their antidotes, an aftermath journal, and repair phrases.</p></div>`;
+  return h;
+}
+function safetyCard() {
+  return `<div class="safe"><h3>${ic('shield')} If things feel unsafe</h3>
+    <p>Stop any conversation and get to a safe place. This app isn't a crisis service or a therapist.</p>
+    <p>Emergency: <a href="tel:911">911</a>. National Domestic Violence Hotline: <a href="tel:18007997233">1-800-799-7233</a>, or text START to 88788, any time. Talking to someone on your own is always okay.</p></div>`;
+}
+
+/* ----- Check-in + commitments ----- */
+function commitItem(c) {
+  const owners = (c.owners || []), acc = c.acceptedBy || [];
+  const ownerTxt = owners.length === 2 ? 'Both of us' : owners[0] === S.me ? 'You' : nameOf(owners[0]);
+  const needMe = c.status === 'proposed' && owners.includes(S.me) && !acc.includes(S.me);
+  const waitingOn = owners.filter(o => !acc.includes(o));
+  let st = c.status === 'proposed' ? (needMe ? 'Waiting for your OK' : `Waiting for ${waitingOn.map(nameOf).join(' and ')} to accept`)
+    : c.status === 'active' ? 'Accepted' : c.status === 'done' ? 'Done' : 'Released';
+  let a = '';
+  if (needMe) a = `<button class="pri" data-action="c-accept" data-id="${c.id}">Accept</button><button data-action="c-decline" data-id="${c.id}">Not right now</button>`;
+  else if (c.status === 'active' && owners.includes(S.me)) a = `<button class="pri" data-action="c-done" data-id="${c.id}">Done</button><button data-action="c-edit" data-id="${c.id}">Adjust</button><button data-action="c-release" data-id="${c.id}">Release</button>`;
+  else if (c.status === 'proposed' && c.proposer === S.me) a = `<button data-action="c-withdraw" data-id="${c.id}">Withdraw</button>`;
+  return `<div class="cm"><div class="t">${esc(c.text)}</div><div class="m">${esc(ownerTxt)} · ${esc(st)}${c.due ? ' · review ' + esc(new Date(c.due + 'T12:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })) : ''}${c.note ? ' · ' + esc(c.note) : ''}</div>${a ? `<div class="a">${a}</div>` : ''}</div>`;
+}
+function checkinHTML() {
+  const wk = weekId();
+  const mine = S.myCheckin || { answers: {}, share: {} };
+  const mySharedDoc = S.checkins[wk + '_' + S.me];
+  const theirDoc = Object.values(S.checkins).find(c => c.author === S.partner && c.week === wk);
+  const iShared = mySharedDoc && Object.keys(mySharedDoc.answers || {}).length;
+  let h = `<div class="card"><div class="chead"><h3>This week's check-in</h3><span class="meta">answers are private until you share</span></div>`;
+  for (const [k, title, q] of CHECKIN) {
+    const theirs = theirDoc && (theirDoc.answers || {})[k];
+    h += `<div class="prompt"><label for="ci-${k}">${esc(title)}<small>${esc(q)}</small></label>
+      <textarea id="ci-${k}" data-ci="${k}" placeholder="Only you can see this">${esc((mine.answers || {})[k] || '')}</textarea>
+      <label class="shr"><input type="checkbox" data-cishare="${k}" ${(mine.share || {})[k] ? 'checked' : ''}> Share this answer with ${esc(nameOf(S.partner))}</label>
+      ${theirs && iShared ? `<div class="theirs"><b>${esc(nameOf(S.partner))}</b>${esc(theirs)}</div>` : ''}</div>`;
+  }
+  const nTheirs = theirDoc ? Object.keys(theirDoc.answers || {}).length : 0;
+  h += `<button class="btn block" data-action="ci-share">${iShared ? 'Update what I’ve shared' : 'Share the checked answers'}</button>
+    <div class="src-note">${nTheirs ? (iShared ? `${esc(nameOf(S.partner))} shared ${nTheirs} answer${nTheirs > 1 ? 's' : ''}.` : `${esc(nameOf(S.partner))} shared ${nTheirs} answer${nTheirs > 1 ? 's' : ''}. Share yours to see them, so you both open up at the same time.`) : 'Answers save privately as you type.'} Questions from your Relationship Hub plan.</div></div>`;
+  const C = S.commitments;
+  const groups = [['Waiting', C.filter(c => c.status === 'proposed')], ['Active', C.filter(c => c.status === 'active')], ['Finished', C.filter(c => c.status === 'done' || c.status === 'released').slice(0, 10)]];
+  h += `<div class="card"><div class="chead"><h3>Commitments</h3><button class="linkbtn" data-action="commit-new">+ New</button></div>`;
+  if (!C.length) h += `<div class="line-sub" style="font-size:14px;padding:4px 0 8px">Small, specific promises you each choose to make. Nothing is assigned until its owner accepts it.</div>`;
+  for (const [name, list] of groups) if (list.length) h += `<div class="ghead"><span>${name}</span><span>${list.length}</span></div>${list.map(commitItem).join('')}`;
+  h += `</div>`;
+  return h;
+}
+
+/* ================= sheets ================= */
+let sheetOpen = false;
+function openSheet(html) {
+  $('#sheetIn').innerHTML = '<div class="grab"></div>' + html;
+  $('#backdrop').hidden = false; $('#sheet').hidden = false;
+  requestAnimationFrame(() => { $('#backdrop').classList.add('show'); $('#sheet').classList.add('show'); });
+  sheetOpen = true;
+}
+function closeSheet() {
+  $('#backdrop').classList.remove('show'); $('#sheet').classList.remove('show'); sheetOpen = false;
+  setTimeout(() => { if (!sheetOpen) { $('#backdrop').hidden = true; $('#sheet').hidden = true; $('#sheetIn').innerHTML = ''; } }, 260);
+}
+$('#backdrop').addEventListener('click', closeSheet);
+let toastT;
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 3000); }
+function fail(e) {
+  const code = e && e.code;
+  toast(code === 'permission-denied' ? 'Not allowed: that belongs to the other person' : 'Couldn’t save. Check your connection and try again.');
+}
+
+/* ----- Feeling logger ----- */
+function openLogger(q, existing) {
+  S.draft = existing ? { ...existing, share: 'private' } : { quad: q || '', label: '', intensity: 0, contexts: [], body: '', note: '', support: '', share: 'private', shareWhat: 'label', status: '' };
+  drawLogger();
+}
+function drawLogger() {
+  const d = S.draft, P = nameOf(S.partner);
+  const search = ($('#fSearch') || {}).value || '';
+  let words = d.quad ? QUADS[d.quad].words : [];
+  if (search.trim()) words = Object.values(QUADS).flatMap(x => x.words).filter(w => w.includes(search.trim().toLowerCase()));
+  const near = d.label && NEAR[d.label] ? NEAR[d.label].filter(w => w !== d.label) : [];
+  const preview = d.share === 'private' ? '' : d.share === 'status' ? `<div class="preview"><div class="lab">${esc(P)} will see</div><b>${esc(nameOf(S.me))} shared a status</b><div>${esc(d.status || 'Rough day, but I’m okay')}</div></div>`
+    : `<div class="preview"><div class="lab">${esc(P)} will see</div><b>${esc(nameOf(S.me))} is feeling ${esc(d.label || '…')}</b>${d.shareWhat !== 'label' && d.contexts.length ? `<div style="font-size:13px;color:var(--muted)">${esc(d.contexts.join(', '))}</div>` : ''}${d.shareWhat !== 'label' && d.note ? `<div>${esc(d.note)}</div>` : ''}${d.shareWhat === 'support' && d.support ? `<div class="bubble" style="background:#fff">${esc(d.support)}</div>` : ''}<div style="font-size:12px;color:var(--muted);margin-top:6px">Intensity, body notes${d.shareWhat === 'label' ? ', context and notes' : ''} stay private.</div></div>`;
+  const html = `<h2>${d.id ? 'Share this feeling' : 'How are you feeling?'}</h2>
+    ${d.id ? '' : `<div class="quad" style="margin-bottom:10px">${Object.entries(QUADS).map(([k, x]) => `<button class="q-${k}" data-action="lq" data-q="${k}" style="${d.quad === k ? 'outline:3px solid var(--ink);outline-offset:-3px' : ''}">${esc(x.name)}</button>`).join('')}</div>
+    <label class="search" style="box-shadow:none;border:1px solid var(--line);height:42px">${'<svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4-4"/></svg>'}<input id="fSearch" placeholder="Search feelings" value="${esc(search)}" autocomplete="off"></label>
+    <div class="words">${words.map(w => `<button data-action="lw" data-w="${esc(w)}" class="${d.label === w ? 'on' : ''}">${esc(w)}</button>`).join('') || '<span class="src-note">Pick a group above, or search.</span>'}</div>
+    ${near.length ? `<div class="src-note">Close to ${esc(d.label)}: </div><div class="words">${near.map(w => `<button class="near" data-action="lw" data-w="${esc(w)}">${esc(w)}</button>`).join('')}</div>` : ''}
+    <div class="field" style="margin-top:12px"><span>How strong? (optional)</span><div class="scale">${[1, 2, 3, 4, 5].map(n => `<button data-action="li" data-n="${n}" class="${d.intensity === n ? 'on' : ''}">${n}</button>`).join('')}</div></div>
+    <div class="field"><span>What's it about? (optional)</span><div class="words">${CONTEXTS.map(c => `<button data-action="lc" data-c="${c}" class="${d.contexts.includes(c) ? 'on' : ''}">${c}</button>`).join('')}</div></div>
+    <label class="field"><span>What happened? (optional)</span><textarea id="fNote" placeholder="A few words for yourself">${esc(d.note)}</textarea></label>
+    <label class="field"><span>Where do you feel it? (optional)</span><input id="fBody" placeholder="tight chest, tired eyes…" value="${esc(d.body)}"></label>
+    <div class="field"><span>What might help? (optional)</span><div class="words">${SUPPORT.map(s => `<button data-action="ls" data-s="${esc(s)}" class="${d.support === s ? 'on' : ''}">${esc(s)}</button>`).join('')}</div></div>`}
+    <div class="field"><span>Who sees this?</span>
+      <label class="opt"><input type="radio" name="vis" value="private" ${d.share === 'private' ? 'checked' : ''}><span><b>Private</b><small>Only you. ${esc(P)} can't see it, and nothing tells them it exists.</small></span></label>
+      <label class="opt"><input type="radio" name="vis" value="share" ${d.share === 'share' ? 'checked' : ''}><span><b>Share with ${esc(P)}</b><small>You choose what's included below.</small></span></label>
+      <label class="opt"><input type="radio" name="vis" value="status" ${d.share === 'status' ? 'checked' : ''}><span><b>Share a short status only</b><small>A one-line update, without the feeling's details.</small></span></label>
+    </div>
+    ${d.share === 'share' ? `<div class="toggle"><button type="button" data-action="lsw" data-v="label" class="${d.shareWhat === 'label' ? 'on' : ''}">Feeling only</button><button type="button" data-action="lsw" data-v="context" class="${d.shareWhat === 'context' ? 'on' : ''}">+ context & note</button><button type="button" data-action="lsw" data-v="support" class="${d.shareWhat === 'support' ? 'on' : ''}">+ what would help</button></div>` : ''}
+    ${d.share === 'status' ? `<label class="field"><span>Your status</span><input id="fStatus" maxlength="100" placeholder="Rough day, but I'm okay" value="${esc(d.status)}"></label>` : ''}
+    ${preview}
+    <div class="err" id="fErr"></div>
+    <button class="btn block" data-action="feel-save">${d.id ? 'Share' : d.share === 'private' ? 'Save privately' : 'Save and share'}</button>
+    <div class="src-note">Inspired by the general idea of mood-and-energy check-ins. Emotion words are an original list.</div>`;
+  const keepScroll = $('#sheet').scrollTop;
+  if (sheetOpen) { $('#sheetIn').innerHTML = '<div class="grab"></div>' + html; $('#sheet').scrollTop = keepScroll; } else openSheet(html);
+  const fs = $('#fSearch'); if (fs && search) { fs.focus(); fs.setSelectionRange(search.length, search.length); }
+}
+function captureLogger() {
+  const d = S.draft; if (!d) return;
+  const n = $('#fNote'), b = $('#fBody'), st = $('#fStatus');
+  if (n) d.note = n.value; if (b) d.body = b.value; if (st) d.status = st.value;
+}
+async function saveFeeling() {
+  captureLogger();
+  const d = S.draft, err = $('#fErr');
+  if (!d.id && !d.label) { err.textContent = 'Pick a feeling word first.'; return; }
+  if (d.share === 'status' && !d.status.trim()) { err.textContent = 'Write a short status, or choose Private.'; return; }
+  const db = S.db, id = d.id || uid(), ts = d.ts || Date.now();
+  const priv = { id, ts, quad: d.quad, label: d.label, intensity: d.intensity || null, contexts: d.contexts, body: d.body.trim(), note: d.note.trim(), support: d.support, sharedId: d.sharedId || null };
+  try {
+    if (d.share !== 'private') {
+      const sid = d.sharedId || uid();
+      const shared = { author: S.me, ts, sharedAt: Date.now(), mode: d.share === 'status' ? 'status' : 'feeling', quad: d.quad, responses: {}, seenBy: [] };
+      if (d.share === 'status') shared.status = d.status.trim();
+      else {
+        shared.label = d.label;
+        if (d.shareWhat !== 'label') { shared.contexts = d.contexts; if (d.note.trim()) shared.note = d.note.trim(); }
+        if (d.shareWhat === 'support' && d.support) shared.support = d.support;
+      }
+      await db.doc('us_feelings/' + sid).set(shared);
+      priv.sharedId = sid;
+    }
+    await db.doc(`private/${S.me}/feelings/${id}`).set(priv);
+    closeSheet(); S.draft = null;
+    toast(d.share === 'private' ? 'Saved privately' : `Shared with ${nameOf(S.partner)}`);
+  } catch (e) { fail(e); }
+}
+
+/* ----- Pause sheet ----- */
+function openPause(existing) {
+  const p = existing || {};
+  openSheet(`<h2>${existing ? 'Change your return time' : 'Ask for a pause'}</h2>
+    <p style="margin:-6px 0 12px;color:var(--muted)">No reason needed. ${esc(nameOf(S.partner))} sees only what you pick here.</p>
+    ${existing ? '' : `<div class="field"><span>How are you doing?</span>${PAUSE_STATUS.map((s, i) => `<label class="opt"><input type="radio" name="pst" value="${esc(s)}" ${i === 0 ? 'checked' : ''}><span><b>${esc(s)}</b></span></label>`).join('')}</div>`}
+    <label class="field"><span>When might you be ready? (optional)</span><input id="pAt" type="datetime-local" value="${p.returnAt ? new Date(p.returnAt - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16) : ''}"></label>
+    <div class="src-note" style="margin:-6px 0 12px">An intention, not a deadline. Leave it blank if you're not sure.</div>
+    ${existing ? '' : `<label class="opt"><input type="checkbox" id="pMsgOn" checked><span><b>Include a reassurance message</b><small>Edit it if you like.</small></span></label>
+    <label class="field"><textarea id="pMsg">${esc(REASSURE)}</textarea></label>`}
+    <button class="btn block" data-action="${existing ? 'pause-save-edit' : 'pause-send'}" data-id="${esc(p.id || '')}">${existing ? 'Update' : 'Send pause'}</button>
+    <div class="src-note">Pausing to calm down before returning is a Gottman concept (self-soothing). This flow is original to Us. A pause isn't a safety plan; if you feel unsafe, leave and get help.</div>`);
+}
+
+/* ----- Commitment sheet ----- */
+function openCommit(existing) {
+  const c = existing || {}, P = nameOf(S.partner);
+  const ownerSel = existing ? ((c.owners || []).length === 2 ? 'both' : c.owners[0] === S.me ? 'me' : 'them') : 'me';
+  openSheet(`<h2>${existing ? 'Adjust commitment' : 'New commitment'}</h2>
+    <label class="field"><span>What's the commitment?</span><input id="cText" maxlength="140" placeholder="Phone-free dinner on Tuesdays" value="${esc(c.text || '')}"></label>
+    ${existing ? '' : `<div class="field"><span>Whose is it?</span>
+      <label class="opt"><input type="radio" name="cOwn" value="me" checked><span><b>Mine</b><small>Active right away.</small></span></label>
+      <label class="opt"><input type="radio" name="cOwn" value="them"><span><b>Suggest one for ${esc(P)}</b><small>Only becomes active if ${esc(P)} accepts it.</small></span></label>
+      <label class="opt"><input type="radio" name="cOwn" value="both"><span><b>Both of us</b><small>Active once ${esc(P)} accepts too.</small></span></label></div>`}
+    <label class="field"><span>Review date (optional)</span><input id="cDue" type="date" value="${esc(c.due || '')}"></label>
+    <label class="field"><span>Note (optional)</span><input id="cNote" maxlength="140" value="${esc(c.note || '')}"></label>
+    <div class="err" id="cErr"></div>
+    <button class="btn block" data-action="${existing ? 'c-save-edit' : 'c-save'}" data-id="${esc(c.id || '')}">${existing ? 'Save' : 'Add'}</button>`);
+}
+
+/* ----- Settings ----- */
+function openSettings() {
+  openSheet(`<h2>Settings</h2>
+    <div class="acct"><span class="t">Signed in as<b>${esc(S.me)}</b></span><button class="btn sec" style="padding:8px 14px" data-action="signout">Sign out</button></div>
+    <div class="card" style="box-shadow:none;border:1px solid var(--line)"><div class="chead"><h3>Privacy</h3></div>
+      <p style="margin:0 0 8px;font-size:14px">Feelings, notes, check-in answers and drafts are private by default. The database itself refuses to show them to anyone but you. Sharing makes a separate copy that ${esc(nameOf(S.partner))} can see; “Stop sharing” deletes that copy, though ${esc(nameOf(S.partner))} may already have read it.</p>
+      <button class="btn sec block" data-action="privacy-check">Run privacy check</button><div class="chk-res" id="chkRes"></div></div>
+    <div class="card" style="box-shadow:none;border:1px solid var(--line)"><div class="chead"><h3>Your data</h3></div>
+      <button class="btn sec block" data-action="export">Download my data</button>
+      <button class="btn danger block" style="margin-top:8px" data-action="wipe">Delete all my private entries</button></div>
+    ${safetyCard()}
+    <div class="card" style="box-shadow:none;border:1px solid var(--line)"><div class="chead"><h3>About</h3></div>
+      <p style="margin:0;font-size:13.5px">Us is a private app for the two of you. It isn't a Gottman Institute product, a therapist or a crisis service. Ideas based on Gottman concepts are labeled; everything else is original. To find a Gottman-trained therapist, see <a href="https://www.gottman.com/couples/private-therapy/" target="_blank" rel="noopener">gottman.com</a>.</p>
+      <a class="btn sec block" style="margin-top:10px;text-align:center;text-decoration:none" href="/budget/">Open Budget</a></div>`);
+}
+async function privacyCheck() {
+  const out = $('#chkRes'); out.innerHTML = 'Checking…';
+  const P = S.partner, db = S.db, res = [];
+  const expectDenied = async (label, fn) => { try { await fn(); res.push([label, false]); } catch (e) { res.push([label, e && e.code === 'permission-denied']); } };
+  await expectDenied(`Read ${nameOf(P)}'s private feelings`, () => db.collection(`private/${P}/feelings`).limit(1).get());
+  await expectDenied(`Read ${nameOf(P)}'s private check-in`, () => db.collection(`private/${P}/checkins`).limit(1).get());
+  await expectDenied(`Write into ${nameOf(P)}'s private area`, () => db.doc(`private/${P}/feelings/_probe`).set({ x: 1 }));
+  await expectDenied(`Post a feeling as ${nameOf(P)}`, () => db.doc('us_feelings/_probe_' + uid()).set({ author: P, ts: Date.now() }));
+  const cid = '_probe_' + uid();
+  await expectDenied(`Accept a commitment for ${nameOf(P)}`, () => db.doc('us_commitments/' + cid).set({ proposer: S.me, owners: [P], acceptedBy: [P], status: 'active', text: 'probe' }));
+  let ownOk = true; try { await db.collection(`private/${S.me}/feelings`).limit(1).get(); } catch (e) { ownOk = false; }
+  out.innerHTML = res.map(([l, ok]) => `<div>${ok ? '<span class="ok">Blocked ✓</span>' : '<span class="bad">NOT blocked ✗</span>'} ${esc(l)}</div>`).join('') + `<div>${ownOk ? '<span class="ok">Allowed ✓</span>' : '<span class="bad">Blocked ✗</span>'} Read your own private feelings</div>`;
+}
+async function exportData() {
+  const db = S.db, me = S.me, data = { exportedAt: new Date().toISOString(), account: me };
+  for (const c of ['feelings', 'checkins', 'prefs']) { const s = await db.collection(`private/${me}/${c}`).get(); data['private_' + c] = s.docs.map(d => ({ id: d.id, ...d.data() })); }
+  data.shared_feelings = S.shared.filter(f => f.author === me);
+  data.pauses = S.pauses.filter(p => p.author === me);
+  data.checkins_shared = Object.values(S.checkins).filter(c => c.author === me);
+  data.commitments = S.commitments;
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `us-data-${isoDay()}.json`; a.click();
+}
+async function wipe(t) {
+  if (!t.dataset.armed) { t.dataset.armed = '1'; t.textContent = 'Tap again to delete everything private'; return; }
+  t.disabled = true;
+  const db = S.db;
+  for (const c of ['feelings', 'checkins', 'prefs']) { const s = await db.collection(`private/${S.me}/${c}`).get(); for (const d of s.docs) await d.ref.delete(); }
+  closeSheet(); toast('Your private entries are deleted');
+}
+
+/* ================= actions ================= */
+document.addEventListener('input', ev => {
+  const t = ev.target;
+  if (t.id === 'fSearch') { captureLogger(); drawLogger(); return; }
+  if (t.dataset && t.dataset.ci) saveCheckinDebounced();
+});
+document.addEventListener('change', ev => {
+  const t = ev.target;
+  if (t.name === 'vis') { captureLogger(); S.draft.share = t.value; drawLogger(); }
+  if (t.dataset && t.dataset.cishare) saveCheckinDebounced();
+});
+document.addEventListener('focusout', ev => { if (ev.target.dataset && ev.target.dataset.ci) setTimeout(render, 50); });
+let ciT;
+function saveCheckinDebounced() { clearTimeout(ciT); ciT = setTimeout(saveCheckin, 700); }
+async function saveCheckin() {
+  const answers = {}, share = {};
+  document.querySelectorAll('[data-ci]').forEach(el => { answers[el.dataset.ci] = el.value; });
+  document.querySelectorAll('[data-cishare]').forEach(el => { share[el.dataset.cishare] = el.checked; });
+  S.myCheckin = { week: weekId(), answers, share, updatedAt: Date.now() };
+  try { await S.db.doc(`private/${S.me}/checkins/${weekId()}`).set(S.myCheckin); } catch (e) { fail(e); }
+}
+async function shareCheckin() {
+  await saveCheckin();
+  const { answers, share } = S.myCheckin, wk = weekId(), out = {};
+  for (const [k] of CHECKIN) if (share[k] && (answers[k] || '').trim()) out[k] = answers[k].trim();
+  if (!Object.keys(out).length) { toast('Check “Share this answer” on at least one answer'); return; }
+  try { await S.db.doc(`us_checkins/${wk}_${S.me}`).set({ author: S.me, week: wk, answers: out, sharedAt: Date.now() }); toast(`Shared ${Object.keys(out).length} answer${Object.keys(out).length > 1 ? 's' : ''}`); }
+  catch (e) { fail(e); }
+}
+async function savePrefs(patch) { S.prefs = { ...S.prefs, ...patch }; try { await S.db.doc(`private/${S.me}/prefs/main`).set(S.prefs); } catch (e) {} }
+
+document.addEventListener('click', ev => {
+  const t = ev.target.closest('[data-action],[data-tab]'); if (!t) return;
+  if (t.dataset.tab && !t.dataset.action) { S.tab = t.dataset.tab; if (sheetOpen) closeSheet(); render(); window.scrollTo({ top: 0 }); markSeen(); return; }
+  const a = t.dataset.action, id = t.dataset.id, db = S.db;
+  const run = p => p.catch(fail);
+  switch (a) {
+    case 'signin': return signIn();
+    case 'signout': return firebase.auth().signOut().then(() => location.reload());
+    case 'settings': return openSettings();
+    case 'budget': location.href = '/budget/'; return;
+    case 'refl-next': S.refl++; return render();
+    case 'refl-save': { const i = +t.dataset.i, list = S.prefs.savedReflections || []; savePrefs({ savedReflections: list.includes(i) ? list.filter(x => x !== i) : [...list, i] }).then(render); return; }
+    case 'log': return openLogger(t.dataset.q || '');
+    case 'lq': captureLogger(); S.draft.quad = t.dataset.q; if ($('#fSearch')) $('#fSearch').value = ''; return drawLogger();
+    case 'lw': captureLogger(); S.draft.label = t.dataset.w; S.draft.quad = quadOf(t.dataset.w); return drawLogger();
+    case 'li': captureLogger(); S.draft.intensity = S.draft.intensity === +t.dataset.n ? 0 : +t.dataset.n; return drawLogger();
+    case 'lc': { captureLogger(); const c = t.dataset.c, cs = S.draft.contexts; S.draft.contexts = cs.includes(c) ? cs.filter(x => x !== c) : [...cs, c]; return drawLogger(); }
+    case 'ls': captureLogger(); S.draft.support = S.draft.support === t.dataset.s ? '' : t.dataset.s; return drawLogger();
+    case 'lsw': captureLogger(); S.draft.shareWhat = t.dataset.v; return drawLogger();
+    case 'feel-save': return saveFeeling();
+    case 'share-later': { const f = S.myFeelings.find(x => x.id === id); if (f) { S.draft = { ...f, share: 'share', shareWhat: 'label', status: '' }; drawLogger(); } return; }
+    case 'unshare': { const f = S.myFeelings.find(x => x.id === id); if (!f) return; return run((async () => { await db.doc('us_feelings/' + f.sharedId).delete(); await db.doc(`private/${S.me}/feelings/${f.id}`).set({ ...f, sharedId: null }); toast(`No longer shared. ${nameOf(S.partner)} may have already seen it.`); })()); }
+    case 'feel-del': {
+      if (!t.dataset.armed) { t.dataset.armed = '1'; t.textContent = 'Tap again'; return; }
+      const f = S.myFeelings.find(x => x.id === id); if (!f) return;
+      return run((async () => { if (f.sharedId) await db.doc('us_feelings/' + f.sharedId).delete(); await db.doc(`private/${S.me}/feelings/${f.id}`).delete(); toast('Deleted'); })());
+    }
+    case 'respond': { const f = S.shared.find(x => x.id === id); if (!f) return; const cur = (f.responses || {})[S.me]; const responses = { ...(f.responses || {}) }; if (cur && cur.text === t.dataset.r) delete responses[S.me]; else responses[S.me] = { text: t.dataset.r, at: Date.now() }; return run(db.doc('us_feelings/' + id).update({ responses, seenBy: [...new Set([...(f.seenBy || []), S.me])] }).then(() => toast('Sent'))); }
+    case 'ff': S.feelFilter = t.dataset.v; render(); return markSeen();
+    case 'pause': return openPause();
+    case 'pause-send': {
+      const reason = (document.querySelector('input[name="pst"]:checked') || {}).value || '';
+      const at = $('#pAt').value ? new Date($('#pAt').value).getTime() : null;
+      const msg = $('#pMsgOn').checked ? $('#pMsg').value.trim() : '';
+      return run(db.collection('us_pauses').doc(uid()).set({ author: S.me, reason, returnAt: at, message: msg, status: 'paused', createdAt: Date.now(), ackBy: [] }).then(() => { closeSheet(); S.tab = 'talk'; render(); toast(`${nameOf(S.partner)} will see your pause`); }));
+    }
+    case 'pause-edit': return openPause(S.pauses.find(p => p.id === id));
+    case 'pause-save-edit': { const at = $('#pAt').value ? new Date($('#pAt').value).getTime() : null; return run(db.doc('us_pauses/' + id).update({ returnAt: at, updatedAt: Date.now() }).then(() => { closeSheet(); toast('Updated'); })); }
+    case 'pause-ready': return run(db.doc('us_pauses/' + id).update({ status: 'ready', readyAt: Date.now() }).then(() => toast(`${nameOf(S.partner)} will see you're ready`)));
+    case 'pause-close': return run(db.doc('us_pauses/' + id).update({ status: 'closed', closedAt: Date.now() }).then(() => toast('Pause closed')));
+    case 'pause-ack': { const p = S.pauses.find(x => x.id === id); return run(db.doc('us_pauses/' + id).update({ ackBy: [...new Set([...(p.ackBy || []), S.me])], ackAt: Date.now() }).then(() => toast('Sent'))); }
+    case 'ci-share': return shareCheckin();
+    case 'commit-new': return openCommit();
+    case 'c-save': {
+      const text = $('#cText').value.trim(); if (!text) { $('#cErr').textContent = 'Write the commitment first.'; return; }
+      const own = (document.querySelector('input[name="cOwn"]:checked') || {}).value || 'me';
+      const owners = own === 'me' ? [S.me] : own === 'them' ? [S.partner] : [S.me, S.partner];
+      const acceptedBy = owners.includes(S.me) ? [S.me] : [];
+      const status = owners.every(o => acceptedBy.includes(o)) ? 'active' : 'proposed';
+      return run(db.collection('us_commitments').doc(uid()).set({ text, owners, acceptedBy, proposer: S.me, status, due: $('#cDue').value || null, note: $('#cNote').value.trim(), createdAt: Date.now() }).then(() => { closeSheet(); toast(status === 'active' ? 'Added' : `Sent to ${nameOf(S.partner)} to accept`); }));
+    }
+    case 'c-accept': { const c = S.commitments.find(x => x.id === id); const acc = [...new Set([...(c.acceptedBy || []), S.me])]; return run(db.doc('us_commitments/' + id).update({ acceptedBy: acc, status: c.owners.every(o => acc.includes(o)) ? 'active' : 'proposed', acceptedAt: Date.now() })); }
+    case 'c-decline': return run(db.doc('us_commitments/' + id).update({ status: 'released', releasedAt: Date.now(), note: 'Not right now' }).then(() => toast('Okay, set aside for now')));
+    case 'c-withdraw': return run(db.doc('us_commitments/' + id).delete());
+    case 'c-done': return run(db.doc('us_commitments/' + id).update({ status: 'done', doneAt: Date.now() }).then(() => toast('Nice. Marked done.')));
+    case 'c-release': return run(db.doc('us_commitments/' + id).update({ status: 'released', releasedAt: Date.now() }).then(() => toast('Released. That’s okay.')));
+    case 'c-edit': return openCommit(S.commitments.find(x => x.id === id));
+    case 'c-save-edit': return run(db.doc('us_commitments/' + id).update({ text: $('#cText').value.trim(), due: $('#cDue').value || null, note: $('#cNote').value.trim() }).then(() => { closeSheet(); toast('Saved'); }));
+    case 'privacy-check': return privacyCheck();
+    case 'export': return exportData().catch(fail);
+    case 'wipe': return wipe(t).catch(fail);
+  }
+});
+function markSeen() {
+  if (S.tab === 'feelings' && S.feelFilter === 'theirs') S.shared.filter(f => f.author === S.partner && !(f.seenBy || []).includes(S.me)).forEach(f => S.db.doc('us_feelings/' + f.id).update({ seenBy: [...(f.seenBy || []), S.me] }).catch(() => {}));
+}
+
+/* ================= sign-in + data ================= */
+const FIREBASE_CONFIG = { apiKey: 'AIzaSyBgpN52-Dw9DFdE7ZivGkDVx-d9cMmUzms', authDomain: location.hostname === 'fantasyapp.io' ? 'fantasyapp.io' : 'our-budget-josh.firebaseapp.com', projectId: 'our-budget-josh', appId: '1:495368835558:web:50334ad16309d5f61fc627', messagingSenderId: '495368835558' };
+const GLOGO = '<svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.5 12.3c0-.8-.1-1.5-.2-2.2H12v4.2h5.9a5 5 0 0 1-2.2 3.3v2.7h3.5c2.1-1.9 3.3-4.7 3.3-8z"/><path fill="#34A853" d="M12 23c3 0 5.5-1 7.3-2.7l-3.5-2.7c-1 .7-2.2 1.1-3.8 1.1-2.9 0-5.4-2-6.3-4.6H2.1v2.8A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.7 14.1a6.6 6.6 0 0 1 0-4.2V7.1H2.1a11 11 0 0 0 0 9.8z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3.1.6 4.2 1.7l3.1-3.1A11 11 0 0 0 2.1 7.1l3.6 2.8C6.6 7.4 9.1 5.4 12 5.4z"/></svg>';
+function gate(kind, extra) {
+  $('#gate').hidden = false;
+  let h = '<h1>Us</h1>';
+  if (kind === 'signin') h += `<p>A private space for the two of you.</p><button class="gbtn" data-action="signin">${GLOGO} Sign in with Google</button><p id="gateErr" style="margin:18px auto 0;color:#ffc9c9;font-size:13px;min-height:18px"></p>`;
+  else if (kind === 'denied') h += `<p>This space is private. <b>${esc(extra)}</b> doesn’t have access.</p><button class="gbtn" data-action="signout">Use a different account</button>`;
+  else h += `<p>${esc(extra || 'Loading…')}</p>`;
+  $('#gateBody').innerHTML = h;
+}
+function authFail(e) { const el = document.getElementById('gateErr'); if (el) el.textContent = 'Sign-in didn’t finish (' + ((e && e.code) || 'unknown') + ').'; }
+function signIn() {
+  const p = new firebase.auth.GoogleAuthProvider(); p.setCustomParameters({ prompt: 'select_account' });
+  firebase.auth().signInWithPopup(p).catch(e => {
+    if (e && (e.code === 'auth/popup-blocked' || e.code === 'auth/operation-not-supported-in-this-environment')) return firebase.auth().signInWithRedirect(p).catch(authFail);
+    if (e && e.code !== 'auth/popup-closed-by-user' && e.code !== 'auth/cancelled-popup-request') authFail(e);
+  });
+}
+function init() {
+  render();
+  if (!window.firebase) { gate('error', 'Couldn’t load. Check your connection and reload.'); return; }
+  firebase.initializeApp(FIREBASE_CONFIG);
+  const auth = firebase.auth();
+  auth.getRedirectResult().catch(e => setTimeout(() => authFail(e), 50));
+  auth.onAuthStateChanged(u => {
+    if (!u) return gate('signin');
+    const em = (u.email || '').toLowerCase();
+    if (!ALLOWED[em]) return gate('denied', em);
+    $('#gate').hidden = true; start(u, em);
+  });
+}
+let started = false;
+function start(u, em) {
+  if (started) return; started = true;
+  S.me = em; S.partner = Object.keys(ALLOWED).find(e => e !== em);
+  S.names[em] = (u.displayName || '').split(' ')[0] || ALLOWED[em];
+  const db = firebase.firestore(); S.db = db;
+  const soft = () => render();
+  const failed = e => { if (e && e.code === 'permission-denied') { S.fatal = 'Your account can’t open this space yet.'; render(); } };
+  let pending = 4; const ready = () => { if (--pending <= 0) { S.loaded = true; render(); } };
+  db.collection(`private/${em}/feelings`).orderBy('ts', 'desc').limit(300).onSnapshot(s => { S.myFeelings = s.docs.map(d => ({ id: d.id, ...d.data() })); if (!S.loaded) ready(); else soft(); }, failed);
+  db.collection('us_feelings').orderBy('ts', 'desc').limit(200).onSnapshot(s => { S.shared = s.docs.map(d => ({ id: d.id, ...d.data() })); if (!S.loaded) ready(); else soft(); }, failed);
+  db.collection('us_pauses').orderBy('createdAt', 'desc').limit(20).onSnapshot(s => { S.pauses = s.docs.map(d => ({ id: d.id, ...d.data() })); if (!S.loaded) ready(); else soft(); }, failed);
+  db.collection('us_commitments').orderBy('createdAt', 'desc').limit(100).onSnapshot(s => { S.commitments = s.docs.map(d => ({ id: d.id, ...d.data() })); if (!S.loaded) ready(); else soft(); }, failed);
+  db.collection('us_checkins').where('week', '==', weekId()).onSnapshot(s => { S.checkins = Object.fromEntries(s.docs.map(d => [d.id, d.data()])); soft(); }, failed);
+  db.doc(`private/${em}/checkins/${weekId()}`).get().then(d => { if (d.exists) { S.myCheckin = d.data(); soft(); } }).catch(() => {});
+  db.doc(`private/${em}/prefs/main`).get().then(d => { if (d.exists) { S.prefs = d.data(); soft(); } }).catch(() => {});
+  db.collection('people').onSnapshot(s => { s.docs.forEach(d => { if (d.data().name) S.names[d.id] = d.data().name; }); soft(); }, () => {});
+  db.doc('people/' + em).set({ name: S.names[em], updatedAt: Date.now() }, { merge: true }).catch(() => {});
+}
+init();
+</script>
+</body>
+</html>
