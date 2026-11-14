@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#ece2fb">
+<meta name="theme-color" content="#f3f3f6">
 <meta name="robots" content="noindex, nofollow">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -13,7 +13,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
@@ -342,10 +342,10 @@ svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stro
 .cm .a button.pri{background:var(--green);border-color:var(--green);color:#fff}
 .src-note{font-size:11.5px;color:var(--muted);margin-top:8px}
 .qa{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
-.qa button{border:0;background:#fff;border-radius:18px;padding:12px 4px;box-shadow:var(--shadow);font-size:12px;font-weight:700;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:6px}
+.qa button{border:0;background:#fff;border-radius:22px;padding:12px 4px;font-size:12px;font-weight:700;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:6px}
 .qa button span.i{width:36px;height:36px;border-radius:50%;display:grid;place-items:center}
 .qa a{text-decoration:none}
-.safe{background:#fff;border-radius:20px;padding:14px 16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.safe{background:#fff;border-radius:24px;padding:14px 16px;margin-bottom:12px}
 .safe h3{margin:0 0 6px;font-size:15px;color:var(--ink)}
 .safe p{margin:4px 0;font-size:13.5px}
 .safe a{color:var(--green);font-weight:700}
@@ -354,47 +354,86 @@ svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stro
 .ok{color:var(--green);font-weight:700} .bad{color:var(--red);font-weight:700}
 .dock button{padding:0 11px}
 
-/* ===== Pastel theme for Us (overrides the shared base) ===== */
+/* ===== Us theme: off-white, solid color blocks, black dock (after the reference) ===== */
 :root{
-  --forest:#3d3558; --green:#7c6bb8; --green2:#a596e0; --ink:#3a3150; --text:#433d55; --muted:#867f98;
-  --lime:#f6c9d6; --lime2:#fbe0e7; --lime-soft:#f1ecfb; --bg:#f8f5fc; --card:#ffffff; --line:#ece6f4;
-  --red:#d9566a; --red-soft:#fde8ec; --amber:#c98a2b; --amber-soft:#fdf2df;
-  --shadow:0 1px 2px rgba(60,50,90,.04),0 8px 24px rgba(60,50,90,.07);
+  --forest:#111114; --green:#111114; --green2:#3a3a42; --ink:#111114; --text:#2a2a30; --muted:#7c7c86;
+  --lime:#b9a6fb; --lime2:#d6cbfd; --lime-soft:#efeafe; --bg:#f3f3f6; --card:#ffffff; --line:#e6e6ec;
+  --red:#d6455d; --red-soft:#fde8ec; --amber:#b9791a; --amber-soft:#fff1d9;
+  --lav:#b9a6fb; --org:#fbbf5f; --blu:#a9c9fb; --pnk:#f4a8ec; --mint:#a8e3c8; --link:#5b46c9;
+  --shadow:0 1px 2px rgba(17,17,20,.03),0 6px 18px rgba(17,17,20,.05);
 }
-.hero{background:linear-gradient(135deg,#e6dcfa 0%,#fbe1ea 55%,#dcf2ea 100%)}
-.logo{background:#fff;color:#7c6bb8;box-shadow:0 4px 14px rgba(124,107,184,.18)}
-.mpill,.hbtn{background:rgba(255,255,255,.6);color:var(--ink)}
-.mpill button{background:rgba(255,255,255,.7);color:var(--ink)}
-.cta{background:var(--green);box-shadow:0 6px 16px rgba(124,107,184,.28)}
-.dock{background:#fff;box-shadow:0 10px 30px rgba(60,50,90,.18)}
-.dock button{color:var(--muted)}
-.dock button.on{background:linear-gradient(135deg,#e6dcfa,#fbe1ea);color:var(--ink)}
-.notice{background:linear-gradient(135deg,#efe8fb,#fdeef2);color:var(--ink)}
-.notice small{color:var(--muted)}
-.notice .ico{background:#fff;color:var(--green)}
-.notice .go{background:var(--green);color:#fff}
-.qcard{background:linear-gradient(140deg,#efe7fd 0%,#fde7ee 60%,#e3f5ee 100%);color:var(--ink)}
-.qcard .lab{color:var(--green)}
-.qcard .src{color:var(--muted)}
-.qcard .row button{background:rgba(255,255,255,.75);color:var(--ink)}
-.qcard .row button.on{background:var(--green);color:#fff}
-.btn.lime{background:var(--lime);color:var(--ink)}
+body{font-family:Montserrat,"Plus Jakarta Sans",system-ui,sans-serif;letter-spacing:-.005em}
+.hero{background:var(--bg);padding-bottom:6px}
+.panel{margin-top:0;border-radius:0;padding-top:6px}
+.logo{width:52px;height:52px;background:var(--lav);color:var(--ink);font-weight:800;font-size:20px;box-shadow:none}
+.hello2{flex:1;text-align:center;line-height:1.25}
+.hello2 b{display:block;font-size:17px;color:var(--ink);font-weight:700}
+.hello2 span{font-size:13.5px;color:var(--text)}
+.hbtn{width:52px;height:52px;background:transparent;border:1.5px solid #d4d4dc;color:var(--ink)}
+.titlerow h1{font-size:26px;font-weight:700}
+.cta{background:var(--ink);color:#fff;box-shadow:none;font-weight:600}
+.dock{background:#111114;padding:7px;gap:8px;box-shadow:0 12px 30px rgba(17,17,20,.28)}
+.dock button{color:#fff;height:50px;min-width:50px;padding:0 12px}
+.dock button.on{background:#fff;color:#111114;border-radius:999px;width:auto}
+.dock button span.lbl{display:none!important}
+.dock .badge{background:var(--pnk);color:#111114}
+.card{border-radius:26px;box-shadow:none}
+.notice{background:var(--blu);color:var(--ink);box-shadow:none}
+.notice small{color:#33334a}
+.notice .ico{background:rgba(255,255,255,.75);color:var(--ink)}
+.notice .go{background:var(--ink);color:#fff}
+.qcard{background:var(--lav);color:var(--ink);border-radius:28px;box-shadow:none;padding:20px}
+.qcard .lab{color:#2b2350;font-size:11px}
+.qcard .txt{font-size:22px;font-weight:700;letter-spacing:-.01em}
+.qcard .src{color:#3c3366}
+.qcard .row button{background:rgba(255,255,255,.7);color:var(--ink)}
+.qcard .row button.on{background:var(--ink);color:#fff}
+.btn{background:var(--ink);border-radius:999px;font-weight:600}
+.btn.sec{background:#fff;border:1.5px solid #d4d4dc}
+.btn.lime{background:var(--lav);color:var(--ink)}
+.btn.danger{background:var(--red-soft)}
 .toast{background:var(--ink)}
-.gate{background:linear-gradient(160deg,#e6dcfa 0%,#fbe1ea 55%,#dcf2ea 100%);color:var(--ink)}
+.gate{background:var(--bg);color:var(--ink)}
 .gate p{color:var(--muted)}
-.gate .lk{color:var(--green)}
-.gate .logo{background:#fff}
-.chips button.on,.seg button.on,.toggle button.on,.words button.on,.scale button.on{background:var(--green);border-color:var(--green);color:#fff}
-.pause{border-left-color:#b8a9ec}
-.sw input:checked{background:var(--green)}
-.who{background:#e6dcfa;color:var(--ink)}
-.bubble{background:#f1ecfb;color:var(--green)}
-.preview{border-color:#cbbdf2;background:#f6f2fe}
-.preview .lab{color:var(--green)}
-.theirs{background:#f6f2fe}
-.theirs b{color:var(--green)}
-.opt input,.prompt .shr input,.chk input{accent-color:var(--green)}
+.gate .logo{background:var(--lav)}
+.gate .gbtn{border:1.5px solid #d4d4dc}
+.chips button,.seg button{border:1.5px solid #dcdce3;background:#fff}
+.chips button.on,.seg button.on,.toggle button.on,.words button.on,.scale button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.linkbtn{color:var(--link)}
+.pause{border-left:0;background:var(--blu);box-shadow:none}
+.pause .msg{background:rgba(255,255,255,.6)}
+.sw input:checked{background:var(--ink)}
+.who{background:var(--lav);color:var(--ink)}
+.bubble{background:var(--lime-soft);color:#3c2fa0}
+.preview{border:1.5px dashed var(--lav);background:#f7f4ff}
+.preview .lab{color:#3c2fa0}
+.theirs{background:#f7f4ff}
+.theirs b{color:#3c2fa0}
+.resp button{color:var(--ink);border:1.5px solid #dcdce3}
+.resp button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.opt input,.prompt .shr input,.chk input{accent-color:#111114}
+.q-uh{background:#f6b8cf} .q-ph{background:#fcd08a} .q-ul{background:#bcd4fb} .q-pl{background:#cfc3fc}
+.dot-uh{background:#e86f9b} .dot-ph{background:#f2a531} .dot-ul{background:#6f9ef0} .dot-pl{background:#8d74ef}
+.quad button{border-radius:20px}
+.ok{color:#1d8a52}
 #gateErr{color:var(--red)!important}
+/* week strip + colored tiles (Home) */
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:4px 0 16px}
+.week button{border:1.5px solid #d4d4dc;background:transparent;border-radius:999px;padding:10px 0 9px;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted);font-size:12px;font-weight:600}
+.week button b{color:var(--ink);font-size:16px;font-weight:600}
+.week button i{width:6px;height:6px;border-radius:50%;background:transparent}
+.week button i.on{background:var(--ink)}
+.week button.today{background:var(--ink);border-color:var(--ink);color:#fff}
+.week button.today b{color:#fff}
+.week button.today i.on{background:#fff}
+.sect{font-size:22px;font-weight:700;color:var(--ink);margin:6px 2px 12px}
+.blocks{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.blk{border:0;border-radius:26px;padding:16px;text-align:left;display:flex;flex-direction:column;gap:6px;min-height:150px;color:var(--ink)}
+.blk .tag2{align-self:flex-start;background:rgba(255,255,255,.55);border-radius:999px;padding:4px 11px;font-size:12px;font-weight:600}
+.blk h4{margin:4px 0 0;font-size:19px;font-weight:600;letter-spacing:-.01em;line-height:1.2}
+.blk p{margin:0;font-size:13.5px;line-height:1.4}
+.blk.tall{grid-row:span 2}
+.bg-lav{background:var(--lav)} .bg-org{background:var(--org)} .bg-blu{background:var(--blu)} .bg-pnk{background:var(--pnk)} .bg-mint{background:var(--mint)} .bg-white{background:#fff}
 
 /* ===== Feelings map ===== */
 .fmap{display:grid;grid-template-columns:1fr 1fr;gap:8px;position:relative;margin:4px 0 6px}
@@ -417,17 +456,17 @@ details.more summary{cursor:pointer;font-weight:700;color:var(--ink);padding:8px
 
 /* ===== Talk tools ===== */
 .tools{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.tool{border:0;background:#fff;border-radius:20px;padding:14px;text-align:left;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px;min-height:118px}
+.tool{border:0;background:#fff;border-radius:24px;padding:14px;text-align:left;box-shadow:none;display:flex;flex-direction:column;gap:6px;min-height:118px}
 .tool .ti{width:38px;height:38px;border-radius:12px;display:grid;place-items:center}
 .tool b{color:var(--ink);font-size:14.5px}
 .tool small{color:var(--muted);font-size:12px;line-height:1.35}
-.back{border:0;background:#fff;border-radius:999px;padding:8px 14px;font-weight:700;font-size:13px;color:var(--ink);box-shadow:var(--shadow);margin-bottom:12px}
-.step{background:#fff;border-radius:20px;padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.back{border:1.5px solid #d4d4dc;background:transparent;border-radius:999px;padding:8px 14px;font-weight:600;font-size:13px;color:var(--ink);margin-bottom:12px}
+.step{background:#fff;border-radius:24px;padding:16px;margin-bottom:12px}
 .step .n{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--lime-soft);color:var(--green);font-weight:800;font-size:12px;margin-right:6px}
 .step h3{margin:0 0 8px;font-size:16px;color:var(--ink);display:flex;align-items:center}
 .step p{margin:6px 0;font-size:14px}
 .stem{background:var(--bg);border-radius:12px;padding:9px 12px;margin:6px 0;font-style:italic}
-.hcard{background:#fff;border-radius:20px;padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow)}
+.hcard{background:#fff;border-radius:24px;padding:14px 16px;margin-bottom:10px}
 .hcard h3{margin:0;font-size:16px;color:var(--ink)}
 .hcard .lab{font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-top:10px}
 .hcard p{margin:4px 0;font-size:14px}
@@ -447,7 +486,7 @@ details.more summary{cursor:pointer;font-weight:700;color:var(--ink);padding:8px
 .phrase:last-child{border-bottom:0}
 .phrase span{flex:1;font-size:14.5px;color:var(--ink)}
 .phrase button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 11px;font-size:12.5px;font-weight:700;color:var(--green);white-space:nowrap}
-.startup{background:linear-gradient(140deg,#efe7fd,#fde7ee);border-radius:16px;padding:14px;font-size:16px;font-weight:600;color:var(--ink);margin:8px 0}
+.startup{background:var(--lime-soft);border-radius:16px;padding:14px;font-size:16px;font-weight:600;color:var(--ink);margin:8px 0}
 .warnline{background:var(--amber-soft);color:var(--amber);border-radius:12px;padding:8px 12px;font-size:13px;font-weight:600;margin:6px 0}
 .sess{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;background:none;padding:11px 0;border-bottom:1px solid var(--line)}
 .card .sess:last-child{border-bottom:0}
@@ -459,9 +498,9 @@ details.more summary{cursor:pointer;font-weight:700;color:var(--ink);padding:8px
 <body>
 <header class="hero">
   <div class="wrap hrow">
-    <div class="logo" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></div>
-    <div class="mpill" style="justify-content:center"><div class="label" id="todayLabel"></div></div>
-    <button class="hbtn" data-action="settings" aria-label="Settings"><svg class="i" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></button>
+    <div class="logo" id="avatar" aria-hidden="true">U</div>
+    <div class="hello2"><b id="helloName">Hello</b><span id="todayLabel"></span></div>
+    <button class="hbtn" data-action="menu" aria-label="Menu"><svg class="i" viewBox="0 0 24 24"><path d="M5 8h14M5 12h14M5 16h9"/></svg></button>
   </div>
 </header>
 <main class="panel">
@@ -504,6 +543,7 @@ const ICONS = {
   pause: '<rect x="7" y="5" width="3.5" height="14" rx="1"/><rect x="13.5" y="5" width="3.5" height="14" rx="1"/>',
   plus: '<path d="M12 5v14M5 12h14"/>',
   wallet: '<path d="M4 7a2 2 0 0 1 2-2h11v4"/><rect x="4" y="7" width="16" height="12" rx="2"/><circle cx="16" cy="13" r="1.2"/>',
+  cal: '<rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M4 10h16M9 3v4M15 3v4"/>',
   ok: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
   shield: '<path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/>',
 };
@@ -568,7 +608,7 @@ const QUADS = {
   pl: { name: 'Pleasant, low energy', hint: 'calm, content, loved', words: ['blissful','loved','grateful','fulfilled','serene','peaceful','connected','content','safe','secure','supported','understood','appreciated','valued','accepted','affectionate','tender','thankful','relieved','satisfied','calm','relaxed','comfortable','cozy','at ease','balanced','centered','carefree','mellow','rested','reflective','thoughtful','gentle','patient','humble','chill'] },
 };
 // Map colors: strongest feelings sit at the outer corners and get the deepest pastel.
-const QCOL = { uh: [236, 112, 112], ph: [245, 192, 80], ul: [118, 150, 220], pl: [112, 196, 150] };
+const QCOL = { uh: [236, 120, 165], ph: [246, 178, 72], ul: [120, 160, 236], pl: [150, 128, 240] };
 function tileColor(q, i) { const t = Math.max(0, 1 - i / 36), k = 0.22 + 0.58 * t; const m = c => Math.round(255 - (255 - c) * k); const [r, g, b] = QCOL[q]; return `rgb(${m(r)},${m(g)},${m(b)})`; }
 const QLAYOUT = { uh: [1, 1], ph: [1, 0], ul: [0, 1], pl: [0, 0] }; // [top?, left?]
 const WHO = ['alone', 'partner', 'kids', 'family', 'friends', 'coworkers'];
@@ -596,22 +636,27 @@ const S = {
   feelFilter: 'mine', draft: null, refl: 0,
   view: null, sessions: [], posts: [], drafts: {}, sessAns: {}, editing: {}, listen: { speaker: 'me', step: 0 },
   gentle: { feel: '', about: '', need: '' }, after: {}, afterList: [], repairQ: '', newGoal: '', prefill: null, pendingRender: false,
+  cv: null, dv: null, gv: null, weather: {}, wdraft: null, dates: {}, lm: {}, lmTheirs: {}, lmRev: {}, lmMode: 'me', lmRand: null,
+  appDraft: {}, appDrafts: [], bidRef: {}, together: [], images: [], reviewHist: [],
 };
 
 /* ================= render ================= */
-const TABS = [['home', 'Home', 'home'], ['feelings', 'Feelings', 'feel'], ['talk', 'Talk', 'talk'], ['checkin', 'Check-in', 'check']];
-const TITLES = { home: 'Us', feelings: 'Feelings', talk: 'Talk', checkin: 'Check-in' };
+const TABS = [['home', 'Home', 'home'], ['feelings', 'Feelings', 'feel'], ['connect', 'Connect', 'heart'], ['talk', 'Talk', 'talk'], ['dates', '8 Dates', 'cal']];
+const TITLES = { home: 'Today', feelings: 'Feelings', connect: 'Connect', talk: 'Talk', dates: '8 Dates', checkin: 'Check-in', growth: 'Growth' };
 function badges() {
   const b = {};
   b.feelings = S.shared.filter(f => f.author === S.partner && !(f.seenBy || []).includes(S.me)).length;
   b.talk = S.pauses.filter(p => p.author === S.partner && p.status !== 'closed' && !(p.ackBy || []).includes(S.me)).length
-    + S.sessions.filter(x => x.status !== 'closed' && (x.sharedBy || []).includes(S.partner) && !(x.sharedBy || []).includes(S.me)).length
+    + S.sessions.filter(x => KINDS[x.kind] && x.status !== 'closed' && (x.sharedBy || []).includes(S.partner) && !(x.sharedBy || []).includes(S.me)).length
     + S.posts.filter(p => p.author === S.partner && (p.type === 'aftermath' || p.type === 'repair') && !(p.responses || {})[S.me]).length;
+  b.dates = S.sessions.filter(x => !KINDS[x.kind] && (x.sharedBy || []).includes(S.partner) && !(x.sharedBy || []).includes(S.me) && /^(date|ws_)/.test(x.id)).length;
   b.checkin = S.commitments.filter(c => c.status === 'proposed' && (c.owners || []).includes(S.me) && !(c.acceptedBy || []).includes(S.me)).length;
   return b;
 }
 function render() {
-  $('#todayLabel').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+  $('#todayLabel').textContent = 'Today ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) + '.';
+  $('#helloName').textContent = 'Hello ' + (S.me ? nameOf(S.me) : '');
+  $('#avatar').textContent = S.me ? (nameOf(S.me)[0] || 'U').toUpperCase() : 'U';
   $('#title').textContent = TITLES[S.tab];
   const b = badges();
   $('#dock').innerHTML = TABS.map(([k, label, icon]) => `<button data-tab="${k}" class="${S.tab === k ? 'on' : ''}" aria-label="${label}">${ic(icon)}<span class="lbl">${label}</span>${b[k] ? `<span class="badge">${b[k]}</span>` : ''}</button>`).join('');
@@ -622,7 +667,7 @@ function render() {
   const main = $('#main');
   if (S.fatal) { main.innerHTML = ''; return; }
   if (!S.loaded) { main.innerHTML = '<div class="skel" style="height:180px"></div>'; return; }
-  main.innerHTML = S.tab === 'home' ? homeHTML() : S.tab === 'feelings' ? feelingsHTML() : S.tab === 'talk' ? talkHTML() : checkinHTML();
+  main.innerHTML = S.tab === 'home' ? homeHTML() : S.tab === 'feelings' ? feelingsHTML() : S.tab === 'talk' ? talkHTML() : S.tab === 'connect' ? connectHTML() : S.tab === 'dates' ? datesHTML() : S.tab === 'growth' ? growthHTML() : checkinHTML();
 }
 
 const typingInMain = () => { const a = document.activeElement; return !!(a && a.closest && a.closest('#main') && /TEXTAREA|INPUT/.test(a.tagName)); };
@@ -651,32 +696,6 @@ function pauseCards(compact) {
       ${compact ? '' : `<div class="acts">${acts}</div>`}</div>`;
   }).join('');
 }
-function homeHTML() {
-  const first = nameOf(S.me);
-  const hr = new Date().getHours();
-  let h = `<div class="hello">Good ${hr < 12 ? 'morning' : hr < 17 ? 'afternoon' : 'evening'}, ${esc(first)}.</div>`;
-  if (S.pauses.some(p => p.status !== 'closed')) h += `<button class="notice" data-tab="talk" style="background:linear-gradient(135deg,#e3eefc,#efe8fb)"><span class="ico" style="color:#4c74b8">${ic('pause')}</span><span>A pause is in place<small>Open Talk to see it</small></span><span class="go">Open</span></button>`;
-  h += reflectionCard();
-  h += `<div class="card"><div class="chead"><h3>How are you feeling?</h3><span class="meta">private unless you share</span></div><div class="quad">
-    ${Object.entries(QUADS).map(([k, q]) => `<button class="q-${k}" data-action="log" data-q="${k}">${esc(q.name)}<small>${esc(q.hint)}</small></button>`).join('')}</div></div>`;
-  const theirs = S.shared.filter(f => f.author === S.partner).slice(0, 2);
-  if (theirs.length) h += `<div class="card"><div class="chead"><h3>From ${esc(nameOf(S.partner))}</h3><button class="linkbtn" data-tab="feelings">All</button></div>${theirs.map(sharedItem).join('')}</div>`;
-  const prompt = PROMPTS[dayNum() % PROMPTS.length];
-  h += `<div class="card"><div class="chead"><h3>Today's connection prompt</h3></div><p style="margin:0;font-size:16px;font-weight:600;color:var(--ink)">${esc(prompt)}</p><div class="src-note">Original Us prompt. Ask it in person, or skip it today.</div></div>`;
-  const wk = weekId(), mineDone = S.myCheckin && Object.values(S.myCheckin.answers || {}).some(v => v && v.trim());
-  const theirShared = Object.values(S.checkins).find(c => c.author === S.partner && c.week === wk);
-  h += `<button class="card" data-tab="checkin" style="display:block;width:100%;text-align:left;border:0"><div class="chead"><h3>Weekly check-in</h3><span class="meta">${esc(new Date(wk + 'T12:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }))} week</span></div>
-    <div class="line-sub" style="font-size:14px">${mineDone ? 'You’ve started yours.' : 'Six short questions, 15 to 30 minutes, whenever works.'}${theirShared ? ` ${esc(nameOf(S.partner))} shared some answers.` : ''}</div></button>`;
-  const active = S.commitments.filter(c => c.status === 'active').slice(0, 3), waiting = S.commitments.filter(c => c.status === 'proposed' && (c.owners || []).includes(S.me) && !(c.acceptedBy || []).includes(S.me));
-  if (active.length || waiting.length) h += `<div class="card"><div class="chead"><h3>Commitments</h3><button class="linkbtn" data-tab="checkin">All</button></div>${waiting.map(commitItem).join('')}${active.map(commitItem).join('')}</div>`;
-  h += `<div class="qa">
-    <button data-action="log"><span class="i" style="background:#fbe7a1;color:#8a6a00">${ic('feel')}</span>Log a feeling</button>
-    <button data-action="pause"><span class="i" style="background:#c9dcf4;color:#2c4a63">${ic('pause')}</span>Ask for a pause</button>
-    <button data-action="commit-new"><span class="i" style="background:var(--lime-soft);color:var(--green)">${ic('check')}</span>Commitment</button>
-    <button data-action="budget"><span class="i" style="background:#fdecc8;color:#c47f00">${ic('wallet')}</span>Budget</button></div>`;
-  return h;
-}
-
 /* ----- Feelings ----- */
 const quadOf = w => Object.keys(QUADS).find(k => QUADS[k].words.includes(w)) || 'pl';
 function myItem(f) {
@@ -758,7 +777,7 @@ function talkHTML() {
   let h = pauseCards(false);
   const posts = S.posts.filter(p => p.author === S.partner && (p.type === 'aftermath' || p.type === 'repair')).slice(0, 4);
   if (posts.length) h += `<div class="card"><div class="chead"><h3>From ${esc(nameOf(S.partner))}</h3></div>${posts.map(postItem).join('')}</div>`;
-  const open = S.sessions.filter(x => x.status !== 'closed');
+  const open = S.sessions.filter(x => KINDS[x.kind] && x.status !== 'closed');
   if (open.length) h += `<div class="card"><div class="chead"><h3>Open conversations</h3></div>${open.map(sessRow).join('')}</div>`;
   h += `<div class="tools">
     ${tool('new-talk', 'talk', '#ece4fb', '#7c6bb8', 'Conversation Room', 'One topic. Write privately; answers show only when you both share.')}
@@ -769,7 +788,7 @@ function talkHTML() {
     ${tool('new-cycle', 'pause', '#efe9fa', '#6a5aa8', 'Our cycle', 'Map a pattern that keeps repeating, each from your side.')}
   </div>`;
   if (!S.pauses.some(p => p.status !== 'closed')) h += `<div class="card"><div class="chead"><h3>Pause & Return</h3></div><p style="margin:0 0 10px;font-size:14px">Either of you can ask for a pause at any time, without giving a reason. A return time is an intention, not a deadline.</p><button class="btn block" data-action="pause">I need a pause</button></div>`;
-  const closed = S.sessions.filter(x => x.status === 'closed').slice(0, 5);
+  const closed = S.sessions.filter(x => KINDS[x.kind] && x.status === 'closed').slice(0, 5);
   if (closed.length) h += `<div class="card"><div class="chead"><h3>Past conversations</h3></div>${closed.map(sessRow).join('')}</div>`;
   h += safetyCard();
   return h;
@@ -1118,6 +1137,7 @@ function openSettings() {
     <div class="card" style="box-shadow:none;border:1px solid var(--line)"><div class="chead"><h3>Your data</h3></div>
       <button class="btn sec block" data-action="export">Download my data</button>
       <button class="btn danger block" style="margin-top:8px" data-action="wipe">Delete all my private entries</button></div>
+    ${S.me === 'joshkosters@gmail.com' ? `<div class="card" style="box-shadow:none;border:1px solid var(--line)"><div class="chead"><h3>Gottman images</h3><span class="meta">${S.images.length} uploaded</span></div><p style="margin:0 0 8px;font-size:14px">Upload the images from your Gottman download. They're resized and stored behind sign-in, never on the public site.</p><input type="file" id="imgUp" accept="image/*" multiple style="font-size:13px"><div class="src-note" id="imgRes"></div></div>` : ''}
     ${safetyCard()}
     <div class="card" style="box-shadow:none;border:1px solid var(--line)"><div class="chead"><h3>About</h3></div>
       <p style="margin:0;font-size:13.5px">Us is a private app for the two of you. It isn't a Gottman Institute product, a therapist or a crisis service. Ideas based on Gottman concepts are labeled; everything else is original. To find a Gottman-trained therapist, see <a href="https://www.gottman.com/couples/private-therapy/" target="_blank" rel="noopener">gottman.com</a>.</p>
@@ -1138,12 +1158,13 @@ async function privacyCheck() {
 }
 async function exportData() {
   const db = S.db, me = S.me, data = { exportedAt: new Date().toISOString(), account: me };
-  for (const c of ['feelings', 'checkins', 'prefs', 'aftermath', 'drafts', 'startups']) { const s = await db.collection(`private/${me}/${c}`).get(); data['private_' + c] = s.docs.map(d => ({ id: d.id, ...d.data() })); }
+  for (const c of ['feelings', 'checkins', 'prefs', 'aftermath', 'drafts', 'startups', 'lovemap', 'weather', 'appdrafts', 'bids', 'reviews']) { const s = await db.collection(`private/${me}/${c}`).get(); data['private_' + c] = s.docs.map(d => ({ id: d.id, ...d.data() })); }
   data.shared_posts = S.posts.filter(p => p.author === me);
   data.shared_feelings = S.shared.filter(f => f.author === me);
   data.pauses = S.pauses.filter(p => p.author === me);
   data.checkins_shared = Object.values(S.checkins).filter(c => c.author === me);
   data.commitments = S.commitments;
+  data.together = S.together; data.dates = S.dates; data.appreciations = S.posts.filter(p => p.type === 'appreciation' && p.author === me);
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `us-data-${isoDay()}.json`; a.click();
 }
@@ -1151,8 +1172,371 @@ async function wipe(t) {
   if (!t.dataset.armed) { t.dataset.armed = '1'; t.textContent = 'Tap again to delete everything private'; return; }
   t.disabled = true;
   const db = S.db;
-  for (const c of ['feelings', 'checkins', 'prefs', 'aftermath', 'drafts', 'startups']) { const s = await db.collection(`private/${S.me}/${c}`).get(); for (const d of s.docs) await d.ref.delete(); }
+  for (const c of ['feelings', 'checkins', 'prefs', 'aftermath', 'drafts', 'startups', 'lovemap', 'weather', 'appdrafts', 'bids', 'reviews']) { const s = await db.collection(`private/${S.me}/${c}`).get(); for (const d of s.docs) await d.ref.delete(); }
   closeSheet(); toast('Your private entries are deleted');
+}
+
+/* ================= Phase 3 content (original wording unless labeled) ================= */
+const LOVEMAP = {
+  'Stress': ['What’s stressing you most this week?', 'What’s one worry you haven’t said out loud?', 'What part of your day drains you most?', 'What’s something small that’s been bugging you?', 'What helps you unwind after a hard day?'],
+  'Hopes': ['What are you hoping happens this year?', 'What’s something you’d love to learn?', 'What would make next month great?', 'What are you looking forward to most right now?', 'What change would you like to see at home?'],
+  'Dreams': ['If money weren’t a factor, what would you do with your time?', 'Where would you love to live someday?', 'What’s a dream you set aside that you still think about?', 'What would you like to be remembered for?', 'What adventure do you want us to take?'],
+  'Work': ['Who at work do you enjoy most right now?', 'What’s the hardest part of your job lately?', 'What are you proud of at work this month?', 'What would your ideal workday look like?', 'What do you wish people at work understood?'],
+  'Family': ['Which family member are you closest to right now?', 'What’s a family tradition you love?', 'What from your childhood still shapes you?', 'What do you want home to feel like for our family?', 'Who in your family would you like to see more?'],
+  'Friends': ['Who’s your closest friend right now?', 'Which friend have you lost touch with but miss?', 'Which friend makes you laugh the most?', 'What do you value most in a friend?', 'Who would you call first with big news?'],
+  'Values': ['What’s something you won’t compromise on?', 'What does a good life mean to you?', 'Who do you admire, and why?', 'What matters more to you now than five years ago?', 'What does generosity look like to you?'],
+  'Favorites': ['What’s your perfect lazy Sunday?', 'What’s your favorite meal right now?', 'What song can’t you get enough of lately?', 'How do you like to be cared for when you’re sick?', 'What’s your favorite way to celebrate?'],
+  'Memories': ['What’s your favorite memory of us?', 'When did you feel really proud of yourself?', 'What childhood memory makes you smile?', 'When did you first know you loved me?', 'What’s the best trip you’ve ever taken?'],
+  'Everyday': ['What’s the best part of your morning?', 'What chore do you dislike most?', 'What made you smile today?', 'What would make our evenings better?', 'What do you need more of this week?'],
+  'Worries': ['What keeps you up at night lately?', 'What’s a fear you’ve carried for a long time?', 'What worries you about the future?', 'Is anything about us worrying you?', 'What helps when you’re anxious?'],
+  'Joys': ['What’s made you happiest lately?', 'What small thing reliably brings you joy?', 'What hobby do you wish you had more time for?', 'What makes you laugh every time?', 'When do you feel most like yourself?'],
+};
+const LM_ALL = Object.entries(LOVEMAP).flatMap(([c, qs]) => qs.map((q, i) => ({ id: c.toLowerCase() + i, cat: c, q })));
+const APPRECIATE = ['Something I appreciated today', 'A quality I admire in you', 'Something you did that helped', 'A favorite memory', 'A strength I don’t mention enough'];
+const CHALLENGES = ['Ask about something meaningful from their day, then really listen.', 'Put phones away for 15 minutes together.', 'Give one specific compliment.', 'Offer a hug, if you both want one.', 'Send an encouraging note.', 'Ask: “What would help you this week?”', 'Tell them one thing you’re grateful for about them.', 'Do one small chore they usually do.', 'Take a 10-minute walk together.', 'Tell them about a moment you thought of them today.'];
+const SKIES = [['sunny', '☀️', 'Sunny'], ['partly', '⛅', 'Partly cloudy'], ['cloudy', '☁️', 'Cloudy'], ['rainy', '🌧️', 'Rainy'], ['stormy', '⛈️', 'Stormy']];
+const HOUSE = [
+  ['Create Shared Meaning', 'Rituals, goals and what your life together stands for', ['growth', 'rituals']],
+  ['Make Life Dreams Come True', 'Knowing and supporting each other’s dreams', ['dates', 8]],
+  ['Manage Conflict', 'Gentle starts, repair, pauses and compromise', ['talk']],
+  ['The Positive Perspective', 'Noticing what’s going right', ['connect', 'appreciate']],
+  ['Turn Toward Instead of Away', 'Noticing and answering small bids for connection', ['connect', 'bids']],
+  ['Share Fondness & Admiration', 'Saying what you appreciate, often', ['connect', 'appreciate']],
+  ['Build Love Maps', 'Knowing each other’s inner world', ['connect', 'lovemaps']],
+];
+const HOUSE_COLORS = ['var(--lav)', 'var(--pnk)', 'var(--blu)', 'var(--mint)', 'var(--org)', 'var(--pnk)', 'var(--lav)'];
+
+const DATES = [
+  { n: 1, theme: 'Trust & Commitment', color: 'var(--lav)', prep: 'Pick a quiet, familiar spot. Think beforehand about times you felt you could count on each other.', reflect: ['When did I first feel I could really trust you?', 'What does commitment look like day to day, for me?', 'What helps me feel secure with you?'], talk: ['What does trust mean to each of us?', 'What’s a way we show commitment that the other might not notice?', 'Is anything making trust harder right now?', 'What could we each do to feel more secure together?'], ws: ['cherish'] },
+  { n: 2, theme: 'Addressing Conflict', color: 'var(--blu)', prep: 'This date is about how you each handle disagreement, not reopening a fight. Agree on a pause signal before you start.', reflect: ['How did my family handle conflict when I was growing up?', 'What do I need when we disagree?', 'What helps me calm down?'], talk: ['How do we each like to handle disagreements?', 'What does a good repair look like for each of us?', 'What’s our pause signal, and how will we come back?', 'What’s one difference we can learn to live with?'], ws: ['issues'] },
+  { n: 3, theme: 'Sex & Intimacy', color: 'var(--pnk)', prep: 'Everything here is optional. Either of you can skip any question, and nothing is assumed or expected.', reflect: ['What helps me feel close to you?', 'What kinds of affection do I enjoy most right now?', 'Is there anything I’d like us to talk about more openly? (Optional)'], talk: ['What makes us each feel connected, emotionally and physically?', 'How do we like to show affection outside the bedroom?', 'How can we talk about this so it feels comfortable?', 'Is there anything either of us would like to try or change? (Optional)'], ws: [] },
+  { n: 4, theme: 'Work & Money', color: 'var(--org)', prep: 'If it helps, open the budget together beforehand. This date is about meanings and values, not line items.', reflect: ['What did money feel like in my house growing up?', 'What would “enough” look like for me?', 'What does work mean to me beyond a paycheck?'], talk: ['What are our money values, and where do they differ?', 'How do we want to balance work and time together?', 'What’s one money worry we can face together?', 'What’s one shared money goal for this year?'], ws: ['famMoney', 'enough'], budget: true },
+  { n: 5, theme: 'Family', color: 'var(--mint)', prep: 'Bring a story or two from your family. Curiosity helps more than comparison here.', reflect: ['What did I love about my family growing up?', 'What do I want to do differently?', 'What does family mean to me now?'], talk: ['Which traditions from each of our families do we want to keep?', 'Where do we need boundaries with extended family?', 'What do we want our home to feel like?', 'How do we want to handle holidays?'], ws: [] },
+  { n: 6, theme: 'Fun & Adventure', color: 'var(--org)', prep: 'Make this one playful. Do something new, even something small.', reflect: ['When do I feel most playful?', 'What adventure have I always wanted to try?', 'What did I do for fun as a kid?'], talk: ['When did we last have real fun together?', 'What gets in the way of play for us?', 'What’s one new thing we could try this month?', 'How can we make fun a regular thing?'], ws: ['fun'] },
+  { n: 7, theme: 'Growth & Spirituality', color: 'var(--lav)', prep: 'Spirituality can mean faith, values, nature or whatever gives life meaning for you. Use the words that fit.', reflect: ['How have I grown in the last few years?', 'What gives my life meaning?', 'What beliefs or values guide me?'], talk: ['How have we each changed since we met?', 'What gives our life together meaning?', 'Which rituals help us feel connected?', 'How can we support each other’s growth?'], ws: ['meaning', 'goals'] },
+  { n: 8, theme: 'Dreams', color: 'var(--blu)', prep: 'Dream big, and listen without judging what’s practical yet.', reflect: ['What dreams have I had since I was a kid?', 'Which dream feels most important now?', 'What would I regret never trying?'], talk: ['What are our biggest individual dreams?', 'How can we each support the other’s dream?', 'What dream do we share?', 'What’s one step toward a dream this year?'], ws: ['dreams'] },
+];
+const WS = {
+  cherish: { title: 'How much do you cherish your partner?', ref: 'worksheet pp. 1–7', type: 'yesno', intro: 'Answer yes or no for each. Mark “Tell partner” on the ones you want to share, and add a specific example if you can.', items: ['You make me laugh, even on hard days.', 'I feel safe telling you hard things.', 'You’ve shown up for me when it counted.', 'We’ve built a home I’m proud of.', 'You’ve helped me become a better person.', 'I trust you with my worries.', 'You’re a great teammate in daily life.', 'I love how you care for the people we love.', 'We’ve gotten through hard times together.', 'You make ordinary days feel good.', 'I admire how hard you work.', 'You support my goals.', 'I love our inside jokes.', 'You comfort me when I’m upset.', 'I’m proud of how we’ve grown together.', 'You notice the little things.', 'I feel chosen by you.', 'We’ve made great memories exploring together.', 'You’re patient with me.', 'I love your laugh.', 'You’ve forgiven me when I needed it.', 'I respect how you handle stress.', 'You keep your promises.', 'I love the way you look at me.', 'You make our home feel warm.', 'You’ve taught me something important.', 'I’m grateful for how you treat my family.', 'You stand up for me.', 'I like who I am with you.', 'I’d choose you again.'] },
+  issues: { title: 'We all have issues', ref: 'worksheet pp. 8–12 · book pp. 76–80', type: 'issues', intro: 'Pick 3 to 5 areas where you two are different. For each, note how you’re alike or different, how you might honor both, and what you need, said positively and specifically.', items: ['Tidiness and organization', 'Being on time', 'Showing emotions', 'Time together vs. alone', 'How often we’re intimate', 'Talking about our sex life', 'Saving vs. spending', 'Adventure vs. routine', 'Relatives and in-laws', 'Household chores', 'How we argue', 'Expressing anger', 'Parenting and discipline', 'How we handle sadness', 'Activity level', 'Socializing', 'Power and decisions', 'Ambition', 'Spirituality', 'Drugs and alcohol', 'Independence', 'Excitement and novelty', 'Fidelity and boundaries', 'Fun and play', 'Screen time'] },
+  famMoney: { title: 'My family history with money', ref: 'worksheet pp. 13–14 · book pp. 129–130', type: 'prompts', intro: 'Answer on your own first, then compare.', items: ['What did the adults in my family do for work?', 'How did my family talk about money, if at all?', 'Were we savers, spenders, or in between?', 'What were birthdays and vacations like, money-wise?', 'Did I get an allowance or earn money as a kid? How did it feel?', 'What was my first job, and what did it teach me?', 'A painful money memory from growing up', 'A happy money memory', 'A money lesson I want to keep, and one I want to let go of'] },
+  enough: { title: 'What “enough money” means to me', ref: 'worksheet pp. 15–18 · book pp. 133–136', type: 'ratings', intro: 'Rate how true each is for you, 1 (not at all) to 5 (very). There are no right answers. Differences are worth a conversation, not a fix.', items: ['Security', 'Independence', 'Freedom', 'Comfort', 'Being responsible', 'Feeling in control', 'Time for what I love', 'Being generous', 'Less stress', 'Taking care of family', 'Saying yes to experiences', 'Feeling successful'] },
+  fun: { title: 'For the fun of it', ref: 'worksheet pp. 19–22 · book pp. 173–176', type: 'fun', intro: 'Pick everything that sounds fun, then star your top three. Add your own ideas too.', items: ['Cook a new cuisine together', 'Take a sunrise walk', 'See live music', 'Try a new hiking trail', 'Board game night', 'Take a dance lesson', 'Go to a farmers market', 'Plan a picnic', 'Try rock climbing', 'Go kayaking or canoeing', 'Visit a museum we’ve never been to', 'Movie marathon', 'Go stargazing', 'Pottery or painting class', 'Do a puzzle together', 'Go to a comedy show', 'Road trip with no plan', 'Try a new restaurant', 'Bowling or mini golf', 'Phone-free day', 'Go camping', 'Volunteer together', 'Bake something from scratch', 'Go to a sports game', 'Bike ride', 'Escape room', 'Thrift-store $10 challenge', 'Backyard bonfire', 'Karaoke night', 'Day trip to a nearby town', 'Cooking class', 'Ice or roller skating', 'Spa night at home', 'Trivia night', 'Explore a used bookstore', 'Plant something together', 'Beach or lake day', 'Photo walk', 'Recreate our first date', 'Learn a song together'] },
+  meaning: { title: 'Shared meaning: our rituals', ref: 'worksheet pp. 23–25 · book pp. 189–191', type: 'prompts', intro: 'For each, write how it is now and how you’d like it to feel. Then design a ritual or two together.', items: ['Meals together', 'Reuniting at the end of the day', 'Bedtime', 'Weekends', 'Holidays', 'Vacations', 'When one of us is sick', 'Renewal and quiet time'] },
+  goals: { title: 'Shared goals', ref: 'worksheet pp. 26–27 · book pp. 192–193', type: 'prompts', intro: 'Answer on your own, then compare and pick a goal or two to share.', items: ['A personal goal for the next year', 'A goal for us as a couple', 'Something I’ve postponed that still matters', 'How you could support my goals', 'A financial goal I care about', 'A hope for our life later on'] },
+  dreams: { title: 'Dream levels', ref: 'worksheet pp. 28–30 · book pp. 208–210', type: 'dreams', intro: 'Pick the dreams that speak to you, add your own, then sort them: Level 1 is most important, Level 3 matters but is more flexible.', items: ['To travel somewhere new', 'To feel financially free', 'To build a home that feels like ours', 'To start my own business', 'To master a new skill or craft', 'To be truly healthy and strong', 'To create something lasting', 'To heal from my past', 'To give back to my community', 'To spend more time with family', 'To feel at peace', 'To have more adventure', 'To grow spiritually', 'To retire early', 'To mentor someone', 'To go back to school', 'To live near water or mountains', 'To have more freedom with my time', 'To reconnect with old friends', 'To raise a family I’m proud of', 'To be known for my work', 'To make art or music', 'To slow down', 'To do something brave', 'To feel confident in who I am', 'To leave something for the next generation', 'To travel together often', 'To finish something I started', 'To live more simply', 'To be close with my siblings'] },
+  qualities: { title: 'Cherishing your partner', ref: 'bonus worksheet pp. 31–32 · book pp. 224–225', type: 'qualities', intro: 'Check the qualities you cherish in your partner, and add a real example for each.', items: ['Kind', 'Funny', 'Patient', 'Loyal', 'Generous', 'Thoughtful', 'Brave', 'Calm', 'Creative', 'Curious', 'Dependable', 'Gentle', 'Hardworking', 'Honest', 'Playful', 'Smart', 'Supportive', 'Warm', 'Wise', 'Forgiving', 'Fun', 'Strong', 'Caring', 'Adventurous', 'Organized', 'Optimistic', 'Protective', 'Romantic', 'Sensitive', 'Steady', 'Spontaneous', 'Tender', 'Attractive', 'Encouraging', 'Respectful', 'Resilient', 'Humble', 'Insightful', 'Easygoing', 'Devoted'] },
+};
+const REVIEW_DIMS = ['Communication', 'Emotional safety', 'Affection', 'Trust', 'Handling conflict', 'Friendship', 'Intimacy', 'Teamwork'];
+const IMG_THEMES = [
+  [/STO|small/i, 'Small Things Often', ['connect', 'bids']],
+  [/Pay-Attention/i, 'Pay attention', ['connect', 'bids']],
+  [/Fondness/i, 'Fondness and admiration', ['connect', 'appreciate']],
+  [/Shared-Meaning/i, 'Creating shared meaning', ['growth', 'rituals']],
+  [/Summer-Date|Date-Ideas/i, 'Date ideas', ['dates', 6]],
+  [/Greatest-Gift/i, 'Curiosity about your partner', ['connect', 'lovemaps']],
+  [/Pain/i, 'When your partner is hurting', ['talk']],
+  [/Turning/i, 'Turning toward', ['connect', 'bids']],
+];
+
+/* ================= helpers shared by Phase 3 ================= */
+const monthId = (d = new Date()) => d.getFullYear() + '-' + pad(d.getMonth() + 1);
+const backBtn = (action, label) => `<button class="back" data-action="${action}">‹ ${label}</button>`;
+function go(target) {
+  const [tab, sub] = target;
+  if (tab === 'talk') { S.tab = 'talk'; S.view = null; }
+  else if (tab === 'connect') { S.tab = 'connect'; S.cv = sub || null; }
+  else if (tab === 'dates') { S.tab = 'dates'; S.dv = sub || null; }
+  else if (tab === 'growth') { S.tab = 'growth'; S.gv = sub || null; }
+  if (sheetOpen) closeSheet();
+  render(); window.scrollTo({ top: 0 });
+}
+async function ensureSession(sid, base) {
+  if (S.sessions.some(x => x.id === sid)) return;
+  try { const d = await S.db.doc('us_sessions/' + sid).get(); if (!d.exists) await S.db.doc('us_sessions/' + sid).set({ createdBy: S.me, createdAt: Date.now(), sharedBy: [], heard: {}, common: '', differences: '', firstStep: '', status: 'open', goals: {}, ...base }); } catch (e) { fail(e); }
+}
+async function openSealed(sid, base) { await ensureSession(sid, base); if (!S.drafts[sid] || !S.sessAns[sid]) await loadSession(sid); }
+function sealedStatus(sid) {
+  const x = S.sessions.find(z => z.id === sid) || { sharedBy: [] }, sb = x.sharedBy || [];
+  return { x, iShared: sb.includes(S.me), theyShared: sb.includes(S.partner), both: sb.includes(S.me) && sb.includes(S.partner) };
+}
+async function shareSealed(sid, payload) {
+  const { x } = sealedStatus(sid);
+  await S.db.doc(`us_sessions/${sid}/answers/${S.me}`).set({ answers: payload, sharedAt: Date.now() });
+  await S.db.doc('us_sessions/' + sid).update({ sharedBy: [...new Set([...(x.sharedBy || []), S.me])] });
+  S.editing[sid] = false; toast('Shared'); await loadSession(sid);
+}
+async function withdrawSealed(sid) {
+  const { x } = sealedStatus(sid);
+  await S.db.doc(`us_sessions/${sid}/answers/${S.me}`).delete();
+  await S.db.doc('us_sessions/' + sid).update({ sharedBy: (x.sharedBy || []).filter(e => e !== S.me) });
+  toast('Withdrawn. Private again.'); await loadSession(sid);
+}
+function sealedFooter(sid, label) {
+  const { iShared, theyShared, both } = sealedStatus(sid), P = nameOf(S.partner);
+  if (iShared && !S.editing[sid]) return `<div class="resp">${!both ? `<button data-action="seal-withdraw" data-sid="${sid}">Withdraw</button>` : ''}<button data-action="seal-edit" data-sid="${sid}">Edit and share again</button></div><div class="src-note">${both ? 'You’ve both shared.' : `Shared. Waiting for ${esc(P)}.`}</div>`;
+  return `<button class="btn block" data-action="seal-share" data-sid="${sid}">${label || 'Share with ' + esc(P)}</button><div class="src-note">${theyShared ? `${esc(P)} has shared. You’ll see theirs once you share yours.` : `Private until you share. ${esc(P)}’s answers appear only when you’ve both shared.`}</div>`;
+}
+let sealT = {};
+function saveSealedDraft(sid) { clearTimeout(sealT[sid]); sealT[sid] = setTimeout(() => S.db.doc(`private/${S.me}/drafts/${sid}`).set({ answers: S.drafts[sid] || {}, updatedAt: Date.now() }).catch(fail), 600); }
+
+/* ================= Home (redesigned) ================= */
+function weekStrip() {
+  const now = new Date(), start = new Date(now); start.setDate(now.getDate() - now.getDay());
+  const logged = new Set(S.myFeelings.map(f => isoDay(new Date(f.ts))));
+  let h = '<div class="week">';
+  for (let i = 0; i < 7; i++) { const d = new Date(start); d.setDate(start.getDate() + i); const k = isoDay(d), today = k === isoDay(now); h += `<button data-tab="feelings" class="${today ? 'today' : ''}" aria-label="${d.toDateString()}"><i class="${logged.has(k) ? 'on' : ''}"></i>${d.toLocaleDateString('en-US', { weekday: 'short' })}<b>${d.getDate()}</b></button>`; }
+  return h + '</div>';
+}
+function homeHTML() {
+  let h = '';
+  if (S.pauses.some(p => p.status !== 'closed')) h += `<button class="notice" data-tab="talk"><span class="ico">${ic('pause')}</span><span>A pause is in place<small>Open Talk to see it</small></span><span class="go">Open</span></button>`;
+  h += reflectionCard();
+  h += weekStrip();
+  h += `<div class="card"><div class="chead"><h3>How are you feeling?</h3><span class="meta">private unless you share</span></div><div class="quad">
+    ${Object.entries(QUADS).map(([k, q]) => `<button class="q-${k}" data-action="log" data-q="${k}">${esc(q.name)}<small>${esc(q.hint)}</small></button>`).join('')}</div></div>`;
+  const today = isoDay(), w = S.weather[today], sky = w && SKIES.find(s => s[0] === w.sky);
+  const prompt = PROMPTS[dayNum() % PROMPTS.length], chal = CHALLENGES[dayNum() % CHALLENGES.length], did = (S.prefs.challengeDone || '') === today;
+  const nextDate = DATES.find(d => (S.dates['d' + d.n] || {}).status !== 'done');
+  const wk = weekId(), ciDone = S.myCheckin && Object.values(S.myCheckin.answers || {}).some(v => v && v.trim());
+  h += `<div class="sect">Your day</div><div class="blocks">
+    <button class="blk bg-org tall" data-action="weather"><span class="tag2">Weather report</span><h4>${sky ? sky[1] + ' ' + esc(sky[2]) : 'How’s your inner weather?'}</h4><p>${w ? `Connection ${w.conn || '–'}/5 · Stress ${w.stress || '–'}/5${w.shared ? ' · shared' : ' · private'}` : 'A 20-second check-in: mood, connection and stress. Private unless you share.'}</p></button>
+    <div class="blk bg-blu"><span class="tag2">Prompt</span><p style="font-size:15px;font-weight:600">${esc(prompt)}</p></div>
+    <button class="blk bg-pnk" data-action="challenge-done"><span class="tag2">${did ? 'Done today' : 'Small challenge'}</span><p style="font-size:14px;font-weight:600">${esc(chal)}</p></button>
+  </div><div class="blocks">
+    <button class="blk bg-white" data-tab="checkin" style="min-height:120px"><span class="tag2" style="background:var(--bg)">Weekly</span><h4>Check-in</h4><p>${ciDone ? 'You’ve started yours.' : 'Six questions, whenever works.'}</p></button>
+    <button class="blk bg-mint" data-action="open-date" data-n="${nextDate ? nextDate.n : 1}" style="min-height:120px"><span class="tag2">8 Dates · ${DATES.filter(d => (S.dates['d' + d.n] || {}).status === 'done').length}/8</span><h4>${nextDate ? 'Date ' + nextDate.n + ': ' + esc(nextDate.theme) : 'All eight done'}</h4></button>
+  </div>`;
+  const imgs = S.images; if (imgs.length) { const im = imgs[dayNum() % imgs.length]; h += `<button class="card" data-action="img-open" data-id="${im.id}" style="display:block;width:100%;border:0;text-align:left;padding:10px"><img src="${im.data}" alt="${esc(im.theme)}" style="width:100%;border-radius:18px;display:block"><div class="src-note" style="padding:6px 6px 2px">Gottman Institute image (${esc(im.theme)}), kept private behind sign-in.</div></button>`; }
+  const theirs = S.shared.filter(f => f.author === S.partner).slice(0, 2);
+  if (theirs.length) h += `<div class="card"><div class="chead"><h3>From ${esc(nameOf(S.partner))}</h3><button class="linkbtn" data-tab="feelings">All</button></div>${theirs.map(sharedItem).join('')}</div>`;
+  const active = S.commitments.filter(c => c.status === 'active').slice(0, 3), waiting = S.commitments.filter(c => c.status === 'proposed' && (c.owners || []).includes(S.me) && !(c.acceptedBy || []).includes(S.me));
+  if (active.length || waiting.length) h += `<div class="card"><div class="chead"><h3>Commitments</h3><button class="linkbtn" data-tab="checkin">All</button></div>${waiting.map(commitItem).join('')}${active.map(commitItem).join('')}</div>`;
+  return h;
+}
+function openWeather() {
+  const w = S.weather[isoDay()] || {};
+  S.wdraft = { sky: w.sky || '', conn: w.conn || 0, stress: w.stress || 0, note: w.note || '', share: !!w.shared };
+  drawWeather();
+}
+function drawWeather() {
+  const d = S.wdraft, P = nameOf(S.partner);
+  const html = `<h2>Weather report</h2><p style="margin:-6px 0 12px;color:var(--muted)">Separate from your feelings log, and not a rating of the relationship.</p>
+    <div class="field"><span>My inner weather</span><div class="words">${SKIES.map(([k, e, n]) => `<button data-action="w-sky" data-v="${k}" class="${d.sky === k ? 'on' : ''}">${e} ${n}</button>`).join('')}</div></div>
+    <div class="field"><span>How connected I feel today</span><div class="scale">${[1, 2, 3, 4, 5].map(n => `<button data-action="w-conn" data-n="${n}" class="${d.conn === n ? 'on' : ''}">${n}</button>`).join('')}</div></div>
+    <div class="field"><span>Stress level</span><div class="scale">${[1, 2, 3, 4, 5].map(n => `<button data-action="w-stress" data-n="${n}" class="${d.stress === n ? 'on' : ''}">${n}</button>`).join('')}</div></div>
+    <label class="field"><span>Something I’d like to share (optional)</span><input id="wNote" maxlength="120" value="${esc(d.note)}" placeholder="Long day, happy to be home"></label>
+    <label class="opt"><input type="checkbox" id="wShare" ${d.share ? 'checked' : ''}><span><b>Share my weather with ${esc(P)}</b><small>${esc(P)} sees the weather and your note, not the numbers.</small></span></label>
+    <button class="btn block" data-action="w-save">Save</button>`;
+  const st = $('#sheet').scrollTop; if (sheetOpen) { $('#sheetIn').innerHTML = '<div class="grab"></div>' + html; $('#sheet').scrollTop = st; } else openSheet(html);
+}
+
+/* ================= Connect ================= */
+function connectHTML() {
+  const v = S.cv;
+  if (v === 'lovemaps') return loveMapsHTML();
+  if (v === 'appreciate') return appreciateHTML();
+  if (v === 'bids') return bidsHTML();
+  if (v === 'house') return houseHTML();
+  if (v === 'gallery') return galleryHTML();
+  const posts = S.posts.filter(p => p.type === 'appreciation').slice(0, 3);
+  const pw = S.posts.filter(p => p.type === 'weather' && p.author === S.partner && isoDay(new Date(p.ts)) === isoDay())[0];
+  let h = '';
+  if (pw) { const sk = SKIES.find(s => s[0] === pw.sky); h += `<div class="card"><div class="chead"><h3>${esc(nameOf(S.partner))}'s weather today</h3></div><p style="margin:0;font-size:18px;font-weight:600">${sk ? sk[1] + ' ' + esc(sk[2]) : ''}</p>${pw.note ? `<p style="margin:6px 0 0">${esc(pw.note)}</p>` : ''}</div>`; }
+  h += `<button class="qcard" data-action="cview" data-v="house" style="display:block;width:100%;border:0;text-align:left"><div class="lab">Our house</div><div class="txt">Seven floors of a strong relationship</div><div class="src">The Sound Relationship House is a Gottman concept. Tap a floor to jump to its tools.</div></button>
+    <div class="blocks">
+      <button class="blk bg-lav tall" data-action="cview" data-v="lovemaps"><span class="tag2">Love Maps</span><h4>How well do we know each other’s world?</h4><p>Answer about yourself, guess about each other, then compare. No scores.</p></button>
+      <button class="blk bg-org" data-action="cview" data-v="appreciate"><span class="tag2">Appreciation</span><h4>The wall</h4></button>
+      <button class="blk bg-blu" data-action="cview" data-v="bids"><span class="tag2">Turning toward</span><h4>Connection bids</h4></button>
+    </div>`;
+  if (S.images.length) h += `<button class="blk bg-pnk" data-action="cview" data-v="gallery" style="width:100%;min-height:90px;margin-bottom:12px"><span class="tag2">Inspiration</span><h4>Gottman Institute images (${S.images.length})</h4></button>`;
+  if (posts.length) h += `<div class="card"><div class="chead"><h3>Latest on the wall</h3><button class="linkbtn" data-action="cview" data-v="appreciate">All</button></div>${posts.map(appItem).join('')}</div>`;
+  const chal = CHALLENGES[dayNum() % CHALLENGES.length];
+  h += `<div class="card"><div class="chead"><h3>Today's small challenge</h3></div><p style="margin:0;font-size:15px;font-weight:600">${esc(chal)}</p><div class="src-note">Optional, and only if it feels good for both of you. Original Us prompt.</div></div>`;
+  return h;
+}
+function houseHTML() {
+  return `${backBtn('cback', 'Connect')}<div class="card" style="padding:18px 14px">
+    <div style="width:0;height:0;margin:0 auto;border-left:150px solid transparent;border-right:150px solid transparent;border-bottom:64px solid var(--ink);max-width:100%"></div>
+    <div style="display:grid;grid-template-columns:28px 1fr 28px;gap:6px;margin-top:6px">
+      <button data-tab="checkin" style="writing-mode:vertical-rl;transform:rotate(180deg);border:0;border-radius:12px;background:var(--bg);font-weight:700;font-size:12px;color:var(--ink)">Trust</button>
+      <div style="display:grid;gap:6px">${HOUSE.map(([n, d, tgt], i) => `<button data-action="go" data-t='${JSON.stringify(tgt)}' style="border:0;border-radius:14px;padding:10px 12px;text-align:left;background:${HOUSE_COLORS[i]}"><b style="display:block;color:var(--ink);font-size:14px">${esc(n)}</b><small style="color:#33334a">${esc(d)}</small></button>`).join('')}</div>
+      <button data-tab="checkin" style="writing-mode:vertical-rl;border:0;border-radius:12px;background:var(--bg);font-weight:700;font-size:12px;color:var(--ink)">Commitment</button>
+    </div></div>${label('The Sound Relationship House is a Gottman concept (Gottman Institute). Floor descriptions are our own words. Us is an independent app, not a Gottman product.')}`;
+}
+function loveMapsHTML() {
+  const mode = S.lmMode || 'me', P = nameOf(S.partner);
+  let h = `${backBtn('cback', 'Connect')}<div class="chips"><button data-action="lm-mode" data-v="me" class="${mode === 'me' ? 'on' : ''}">About me</button><button data-action="lm-mode" data-v="guess" class="${mode === 'guess' ? 'on' : ''}">Guess ${esc(P)}</button><button data-action="lm-mode" data-v="ask" class="${mode === 'ask' ? 'on' : ''}">Ask in person</button></div>`;
+  if (mode === 'ask') { const q = LM_ALL[(S.lmRand ?? dayNum()) % LM_ALL.length]; return h + `<div class="qcard"><div class="lab">${esc(q.cat)}</div><div class="txt">${esc(q.q)}</div><div class="row"><button data-action="lm-rand">Another question</button></div></div>${label('Love Maps are a Gottman concept. Questions are original to Us.')}`; }
+  if (mode === 'me') {
+    const A = S.lm.answers || {}, Sh = S.lm.share || {};
+    h += `<p style="margin:0 0 10px;font-size:14px;color:var(--muted)">Answers are private. Check “shareable” on the ones ${esc(P)} can guess at.</p>`;
+    for (const [cat, qs] of Object.entries(LOVEMAP)) {
+      const n = qs.filter((q, i) => A[cat.toLowerCase() + i]).length;
+      h += `<details class="more" style="padding:4px 14px"><summary>${esc(cat)} <span style="color:var(--muted);font-weight:500">${n}/${qs.length}</span></summary>${qs.map((q, i) => { const id = cat.toLowerCase() + i; return `<div class="prompt"><label>${esc(q)}</label><textarea data-lm="${id}" placeholder="Private">${esc(A[id] || '')}</textarea><label class="shr"><input type="checkbox" data-lmshare="${id}" ${Sh[id] ? 'checked' : ''}> Shareable with ${esc(P)}</label></div>`; }).join('')}</details>`;
+    }
+    return h + label('Love Maps are a Gottman concept. Questions are original to Us.');
+  }
+  const theirs = (S.lmTheirs || {}).answers || {}, G = S.lm.guesses || {}, ids = LM_ALL.filter(q => theirs[q.id]);
+  if (!ids.length) return h + `<div class="card empty"><h3>Nothing to guess yet</h3>When ${esc(P)} marks answers as shareable, they show up here.</div>`;
+  h += ids.map(q => { const rev = S.lmRev[q.id]; return `<div class="hcard"><div class="lab" style="margin-top:0">${esc(q.cat)}</div><h3 style="font-size:15px;margin:4px 0 8px">${esc(q.q)}</h3>
+    <textarea data-lmguess="${q.id}" placeholder="Your guess (private)" style="width:100%;border:1px solid var(--line);border-radius:14px;padding:10px;background:var(--bg);min-height:54px">${esc(G[q.id] || '')}</textarea>
+    ${rev ? `<div class="theirs"><b>${esc(P)} said</b>${esc(theirs[q.id])}</div><div class="src-note">Close or not, ask about it. Curiosity is the point.</div>` : `<div class="resp"><button data-action="lm-reveal" data-id="${q.id}">Reveal ${esc(P)}'s answer</button></div>`}</div>`; }).join('');
+  return h + label('No scores: this is about curiosity, not getting it right.');
+}
+const appItem = p => { const mine = p.author === S.me, liked = (p.responses || {})[mine ? S.partner : S.me]; return `<div class="fitem"><div class="fmain"><div class="meta" style="margin:0 0 4px">${esc(mine ? 'You' : nameOf(p.author))} · ${esc(p.kind || 'Appreciation')} · ${esc(when(p.ts))}</div><div style="font-size:15.5px;color:var(--ink);font-weight:500">${esc(p.text)}</div>
+  ${mine ? (liked ? `<div class="bubble">${esc(nameOf(S.partner))}: ${esc(liked.text)}</div>` : '') : `<div class="resp"><button data-action="app-heart" data-id="${p.id}" class="${liked ? 'on' : ''}">${liked ? '♥ Thank you' : '♡ Thank you'}</button></div>`}</div></div>`; };
+function appreciateHTML() {
+  const a = S.appDraft, short = (a.text || '').trim().length > 0 && (a.text || '').trim().length < 25;
+  let h = `${backBtn('cback', 'Connect')}<div class="step"><h3>Write an appreciation</h3><div class="words">${APPRECIATE.map(k => `<button data-action="app-kind" data-v="${esc(k)}" class="${a.kind === k ? 'on' : ''}">${esc(k)}</button>`).join('')}</div>
+    <textarea id="appText" placeholder="Be specific: what happened, and why it mattered" style="width:100%;border:1px solid var(--line);border-radius:14px;padding:10px;background:var(--bg);min-height:80px;margin-top:8px">${esc(a.text || '')}</textarea>
+    <div id="appHint">${short ? '<div class="warnline">Add a specific example. “Thanks for handling bedtime when I was wiped out” lands better than “thanks.”</div>' : ''}</div>
+    <div class="resp"><button class="on" data-action="app-post">Post to the wall</button><button data-action="app-draft">Save privately</button></div></div>`;
+  const wall = S.posts.filter(p => p.type === 'appreciation');
+  h += wall.length ? `<div class="card"><div class="chead"><h3>Our wall</h3><span class="meta">${wall.length}</span></div>${wall.map(appItem).join('')}</div>` : `<div class="card empty"><h3>The wall is empty</h3>Your shared appreciations become a positive memory archive.</div>`;
+  if (S.appDrafts.length) h += `<div class="card"><div class="chead"><h3>My drafts</h3><span class="meta">private</span></div>${S.appDrafts.map(d => `<div class="fitem"><div class="fmain"><div style="font-size:14.5px">${esc(d.text)}</div><div class="resp"><button data-action="app-post-draft" data-id="${d.id}">Post</button><button data-action="app-del-draft" data-id="${d.id}">Delete</button></div></div></div>`).join('')}</div>`;
+  return h + label('Sharing fondness and admiration is a Gottman concept. Prompts are original to Us.');
+}
+function bidsHTML() {
+  const r = S.bidRef || {};
+  return `${backBtn('cback', 'Connect')}<div class="hcard"><h3>What's a bid?</h3><p>A small attempt to connect: a question, a joke, a touch, an invitation, or “hey, look at this.” Turning toward a bid, even briefly, builds connection over time.</p>
+    <div class="lab">Examples</div><div class="ex">“Look at that sunset.”</div><div class="ex">“You won’t believe what happened at work.”</div><div class="ex">A hand on your shoulder while you’re cooking.</div>
+    <div class="lab">Turning toward can be small</div><p>Look up, answer, ask a follow-up, smile. If you can’t right now, say when you can.</p></div>
+    <div class="step"><h3>Today: notice one bid</h3><p style="font-size:13px;color:var(--muted);margin-top:0">Optional and private. Nothing here is counted or shown to ${esc(nameOf(S.partner))}.</p>
+      <div class="prompt"><label>A bid I noticed today</label><textarea data-bid="noticed">${esc(r.noticed || '')}</textarea></div>
+      <div class="prompt"><label>How I responded</label><textarea data-bid="responded">${esc(r.responded || '')}</textarea></div>
+      <div class="prompt"><label>What I'd like to try next time</label><textarea data-bid="next">${esc(r.next || '')}</textarea></div></div>
+    ${label('Bids for connection and turning toward are Gottman concepts, described in our own words.')}`;
+}
+function galleryHTML() {
+  return `${backBtn('cback', 'Connect')}<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">${S.images.map(im => `<button data-action="img-open" data-id="${im.id}" style="border:0;padding:0;background:none;text-align:left"><img src="${im.data}" alt="${esc(im.theme)}" style="width:100%;border-radius:18px;display:block"><div class="src-note">${esc(im.theme)}</div></button>`).join('')}</div>${label('Gottman Institute images you supplied. Stored behind sign-in for your private use only.')}`;
+}
+function openImage(id) {
+  const im = S.images.find(x => x.id === id); if (!im) return;
+  openSheet(`<img src="${im.data}" alt="${esc(im.theme)}" style="width:100%;border-radius:20px;display:block;margin-bottom:12px"><h2 style="margin-bottom:6px">${esc(im.theme)}</h2><div class="src-note" style="margin-bottom:12px">Gottman Institute image (${esc(im.name)}), kept private.</div>${im.link ? `<button class="btn block" data-action="go" data-t='${JSON.stringify(im.link)}'>Try a related exercise</button>` : ''}`);
+}
+
+/* ================= Eight Dates ================= */
+function datesHTML() {
+  if (S.dv && S.dv.ws) return wsHTML(S.dv.ws);
+  if (S.dv && S.dv.n) return dateHTML(S.dv.n);
+  const done = DATES.filter(d => (S.dates['d' + d.n] || {}).status === 'done').length;
+  let h = `<div class="qcard"><div class="lab">Eight Dates</div><div class="txt">${done} of 8 dates</div><div style="display:flex;gap:5px;margin-top:4px">${DATES.map(d => `<i style="flex:1;height:8px;border-radius:8px;background:${(S.dates['d' + d.n] || {}).status === 'done' ? 'var(--ink)' : 'rgba(255,255,255,.6)'}"></i>`).join('')}</div><div class="src" style="margin-top:10px">A companion to your copy of Eight Dates (Gottman, Gottman, Abrams & Abrams). No deadlines: pause, repeat or skip any date.</div></div>`;
+  h += DATES.map(d => { const st = (S.dates['d' + d.n] || {}); const status = st.status === 'done' ? 'Done' : st.scheduledFor ? 'Planned ' + new Date(st.scheduledFor).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : (S.sessions.some(x => x.id === 'date' + d.n && (x.sharedBy || []).length) ? 'In progress' : 'Not started');
+    return `<button class="blk" data-action="open-date" data-n="${d.n}" style="width:100%;min-height:0;margin-bottom:10px;background:${d.color};flex-direction:row;align-items:center;gap:14px"><span style="width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.65);display:grid;place-items:center;font-weight:800;font-size:18px;flex:none">${d.n}</span><span style="flex:1"><h4 style="margin:0;font-size:17px">${esc(d.theme)}</h4><p style="margin-top:2px">${esc(status)}${d.ws.length ? ' · ' + d.ws.length + ' worksheet' + (d.ws.length > 1 ? 's' : '') : ''}</p></span><span>›</span></button>`; }).join('');
+  h += `<button class="blk bg-white" data-action="open-ws" data-k="qualities" style="width:100%;min-height:0;margin-bottom:10px"><span class="tag2" style="background:var(--bg)">Bonus</span><h4>Cherishing your partner</h4><p>Works with any date, or as its own date night.</p></button>`;
+  return h;
+}
+function dateHTML(n) {
+  const d = DATES.find(x => x.n === n), st = S.dates['d' + n] || {}, sid = 'date' + n, P = nameOf(S.partner);
+  const { iShared, both } = sealedStatus(sid), dr = S.drafts[sid] || {}, cache = S.sessAns[sid] || {};
+  let h = `${backBtn('dback', '8 Dates')}<div class="qcard" style="background:${d.color}"><div class="lab">Date ${n} of 8</div><div class="txt">${esc(d.theme)}</div><div class="src">Read the matching chapter in your Eight Dates book before or after. This page is a companion, not a replacement.</div></div>`;
+  h += `<div class="step"><h3><span class="n">1</span>Prepare</h3><p>${esc(d.prep)}</p>
+    <label class="field"><span>When (optional)</span><input type="datetime-local" data-dfield="scheduledFor" data-n="${n}" value="${st.scheduledFor ? new Date(st.scheduledFor - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16) : ''}"></label>
+    ${d.budget ? '<a class="btn sec block" style="text-align:center;text-decoration:none" href="/budget/">Open our budget</a>' : ''}</div>`;
+  h += `<div class="step"><h3><span class="n">2</span>Reflect privately first</h3>`;
+  if (iShared && cache.mine && !S.editing[sid]) h += d.reflect.map((q, i) => cache.mine['r' + i] ? `<div class="ans"><div class="q">${esc(q)}</div><div class="a">${esc(cache.mine['r' + i])}</div></div>` : '').join('');
+  else h += d.reflect.map((q, i) => `<div class="prompt"><label>${esc(q)}</label><textarea data-seal="${sid}" data-k="r${i}" placeholder="Private">${esc(dr['r' + i] || '')}</textarea></div>`).join('');
+  h += sealedFooter(sid, 'Share my reflections with ' + esc(P)) + `</div>`;
+  if (both) { const th = cache.theirs || {}; h += `<div class="step"><h3><span class="n">↔</span>Side by side</h3>${d.reflect.map((q, i) => `<div class="ans"><div class="q">${esc(q)}</div><div class="split"><div class="col"><b>You</b>${esc((cache.mine || {})['r' + i] || '—')}</div><div class="col"><b>${esc(P)}</b>${esc(th['r' + i] || '—')}</div></div></div>`).join('')}</div>`; }
+  if (d.ws.length) h += `<div class="step"><h3><span class="n">3</span>Worksheet companion${d.ws.length > 1 ? 's' : ''}</h3>${d.ws.map(k => { const s2 = sealedStatus('ws_' + k); return `<button class="sess" data-action="open-ws" data-k="${k}"><span class="t"><b>${esc(WS[k].title)}</b><small>${esc(WS[k].ref)} · ${s2.both ? 'Both shared' : s2.iShared ? 'You shared' : s2.theyShared ? P + ' shared' : 'Not started'}</small></span><span>›</span></button>`; }).join('')}</div>`;
+  h += `<div class="step"><h3><span class="n">${d.ws.length ? 4 : 3}</span>On the date: talk it through</h3><p style="font-size:13px;color:var(--muted);margin-top:0">Original prompts. Take turns, listen first, and either of you can skip a question or pause.</p>${d.talk.map(q => `<div class="stem" style="font-style:normal">${esc(q)}</div>`).join('')}<div class="resp"><button data-action="pause">Pause</button><button data-action="view-listen-go">Listening guide</button></div></div>`;
+  h += `<div class="step"><h3><span class="n">${d.ws.length ? 5 : 4}</span>Afterward</h3>
+    <div class="prompt"><label>What we agreed on</label><textarea data-dfield="agreed" data-n="${n}">${esc(st.agreed || '')}</textarea></div>
+    <div class="prompt"><label>Differences to revisit</label><textarea data-dfield="revisit" data-n="${n}">${esc(st.revisit || '')}</textarea></div>
+    <div class="prompt"><label>A memory from this date</label><textarea data-dfield="memory" data-n="${n}">${esc(st.memory || '')}</textarea></div>
+    <div class="resp"><button data-action="date-commit" data-n="${n}">Add one commitment (optional)</button>${st.status === 'done' ? `<button data-action="date-status" data-n="${n}" data-s="open">Reopen</button>` : `<button class="on" data-action="date-status" data-n="${n}" data-s="done">Mark this date done</button>`}</div>
+    <div class="src-note">Both of you can edit these notes. They're shared, so keep anything private in your reflections.</div></div>`;
+  return h;
+}
+
+/* worksheet companions */
+function wsHTML(k) {
+  const W = WS[k], sid = 'ws_' + k, P = nameOf(S.partner);
+  const { iShared, both } = sealedStatus(sid), dr = S.drafts[sid] || {}, cache = S.sessAns[sid] || {};
+  const backTo = S.dv.from ? backBtn('ws-back', 'Date ' + S.dv.from) : backBtn('dback', '8 Dates');
+  let h = `${backTo}<div class="hcard"><h3>${esc(W.title)}</h3><p style="color:var(--muted);font-size:13px">${esc(W.intro)}</p><div class="src-note">Companion to your Eight Dates ${esc(W.ref)}. Wording here is original to Us; the full exercise is in your book.</div></div>`;
+  const locked = iShared && cache.mine && !S.editing[sid];
+  h += `<div class="step">${locked ? wsSummary(k, cache.mine, 'What you shared') : wsEditor(k, dr)}${sealedFooter(sid)}</div>`;
+  if (both) h += `<div class="step"><h3>${esc(P)}'s side</h3>${wsSummary(k, cache.theirs || {}, '')}${wsTogether(k, cache.mine || {}, cache.theirs || {})}</div>`;
+  return h;
+}
+function wsEditor(k, d) {
+  const W = WS[k], sid = 'ws_' + k;
+  if (W.type === 'yesno') return W.items.map((t, i) => `<div style="padding:10px 0;border-bottom:1px solid var(--line)"><div style="font-weight:600;color:var(--ink);font-size:14.5px">${i + 1}. ${esc(t)}</div><div class="resp" style="margin-top:6px"><button data-action="ws-yn" data-i="${i}" data-v="y" class="${(d.yn || {})[i] === 'y' ? 'on' : ''}">Yes</button><button data-action="ws-yn" data-i="${i}" data-v="n" class="${(d.yn || {})[i] === 'n' ? 'on' : ''}">No</button><button data-action="ws-tell" data-i="${i}" class="${(d.tell || {})[i] ? 'on' : ''}">Tell ${esc(nameOf(S.partner))}</button></div>${(d.tell || {})[i] ? `<input data-wsx="ex" data-i="${i}" placeholder="A specific example (optional)" value="${esc((d.ex || {})[i] || '')}" style="width:100%;margin-top:8px;border:1px solid var(--line);border-radius:12px;padding:9px;background:var(--bg)">` : ''}</div>`).join('');
+  if (W.type === 'issues') { const T = d.topics || []; return `<div class="words">${W.items.map(t => `<button data-action="ws-topic" data-v="${esc(t)}" class="${T.includes(t) ? 'on' : ''}">${esc(t)}</button>`).join('')}</div><div class="src-note">${T.length}/5 picked</div>${T.map(t => { const N = (d.notes || {})[t] || {}; return `<div class="hcard" style="background:var(--bg)"><h3 style="font-size:15px">${esc(t)}</h3>${[['how', 'How we’re alike or different'], ['acc', 'How we might honor both of us'], ['need', 'What I need, said positively and specifically']].map(([f, q]) => `<div class="prompt" style="margin:8px 0"><label style="font-size:13px">${q}</label><textarea data-wsx="note" data-t="${esc(t)}" data-f="${f}" style="background:#fff">${esc(N[f] || '')}</textarea></div>`).join('')}</div>`; }).join('')}`; }
+  if (W.type === 'prompts') return W.items.map((q, i) => `<div class="prompt"><label>${esc(q)}</label><textarea data-wsx="p" data-i="${i}" placeholder="Private">${esc((d.p || {})[i] || '')}</textarea></div>`).join('');
+  if (W.type === 'ratings') return W.items.map((q, i) => `<div style="padding:8px 0"><div style="font-weight:600;font-size:14px;color:var(--ink);margin-bottom:6px">For me, enough money means: ${esc(q.toLowerCase())}</div><div class="scale">${[1, 2, 3, 4, 5].map(n => `<button data-action="ws-rate" data-i="${i}" data-n="${n}" class="${(d.r || {})[i] === n ? 'on' : ''}">${n}</button>`).join('')}</div></div>`).join('');
+  if (W.type === 'fun' || W.type === 'dreams' || W.type === 'qualities') {
+    const P2 = d.pick || [], items = [...W.items, ...(d.custom || [])];
+    let h = `<div class="words">${items.map(t => `<button data-action="ws-pick" data-v="${esc(t)}" class="${P2.includes(t) ? 'on' : ''}">${esc(t)}</button>`).join('')}</div>`;
+    if (W.type !== 'qualities') h += `<div style="display:flex;gap:6px;margin:8px 0"><input id="wsCustom" placeholder="Add your own" style="flex:1;border:1px solid var(--line);border-radius:12px;padding:9px;background:var(--bg)"><button class="btn" data-action="ws-custom" style="padding:9px 14px">Add</button></div>`;
+    if (W.type === 'fun' && P2.length) h += `<div class="field" style="margin-top:10px"><span>Star your top three</span><div class="words">${P2.map(t => `<button data-action="ws-star" data-v="${esc(t)}" class="${(d.star || []).includes(t) ? 'on' : ''}">${(d.star || []).includes(t) ? '★ ' : '☆ '}${esc(t)}</button>`).join('')}</div></div>`;
+    if (W.type === 'dreams' && P2.length) h += `<div class="field" style="margin-top:10px"><span>Sort into levels</span>${P2.map(t => `<div style="display:flex;align-items:center;gap:8px;padding:6px 0"><span style="flex:1;font-size:14px;font-weight:600">${esc(t)}</span>${[1, 2, 3].map(n => `<button class="${(d.lv || {})[t] === n ? 'on' : ''}" data-action="ws-level" data-v="${esc(t)}" data-n="${n}" style="border:1.5px solid #dcdce3;border-radius:999px;padding:5px 10px;font-weight:700;font-size:12px;background:${(d.lv || {})[t] === n ? 'var(--ink)' : '#fff'};color:${(d.lv || {})[t] === n ? '#fff' : 'var(--ink)'}">L${n}</button>`).join('')}</div>`).join('')}</div>`;
+    if (W.type === 'qualities' && P2.length) h += P2.map(t => `<div class="prompt" style="margin-top:8px"><label>${esc(t)}: a time you saw this</label><input data-wsx="qex" data-t="${esc(t)}" value="${esc((d.qex || {})[t] || '')}" style="width:100%;border:1px solid var(--line);border-radius:12px;padding:9px;background:var(--bg)"></div>`).join('');
+    return h;
+  }
+  return '';
+}
+function wsPayload(k, d) {
+  const W = WS[k];
+  if (W.type === 'yesno') return { told: Object.keys(d.tell || {}).filter(i => d.tell[i]).map(i => ({ i: +i, ex: (d.ex || {})[i] || '' })) };
+  if (W.type === 'issues') return { topics: d.topics || [], notes: d.notes || {} };
+  if (W.type === 'prompts') return { p: d.p || {} };
+  if (W.type === 'ratings') return { r: d.r || {} };
+  return { pick: d.pick || [], star: d.star || [], lv: d.lv || {}, qex: d.qex || {} };
+}
+function wsSummary(k, a, title) {
+  const W = WS[k]; let h = title ? `<h3 style="margin:0 0 8px;font-size:15px">${esc(title)}</h3>` : '';
+  if (W.type === 'yesno') h += (a.told || []).length ? a.told.map(t => `<div class="ans"><div class="a" style="font-weight:600">${esc(W.items[t.i])}</div>${t.ex ? `<div class="q" style="font-weight:500">${esc(t.ex)}</div>` : ''}</div>`).join('') : '<p class="src-note">Nothing marked to tell.</p>';
+  else if (W.type === 'issues') h += (a.topics || []).map(t => `<div class="ans"><div class="a" style="font-weight:700">${esc(t)}</div>${Object.entries((a.notes || {})[t] || {}).filter(([, v]) => v).map(([f, v]) => `<div class="q" style="font-weight:500">${esc({ how: 'Alike/different', acc: 'Honor both', need: 'I need' }[f])}: ${esc(v)}</div>`).join('')}</div>`).join('') || '<p class="src-note">No topics picked.</p>';
+  else if (W.type === 'prompts') h += W.items.map((q, i) => (a.p || {})[i] ? `<div class="ans"><div class="q">${esc(q)}</div><div class="a">${esc(a.p[i])}</div></div>` : '').join('');
+  else if (W.type === 'ratings') h += W.items.map((q, i) => `<div style="display:flex;justify-content:space-between;font-size:14px;padding:3px 0"><span>${esc(q)}</span><b>${(a.r || {})[i] || '–'}</b></div>`).join('');
+  else if (W.type === 'dreams') h += [1, 2, 3].map(n => { const L = (a.pick || []).filter(t => (a.lv || {})[t] === n); return L.length ? `<div class="ans"><div class="q">Level ${n}</div><div class="a">${L.map(esc).join(', ')}</div></div>` : ''; }).join('') || `<div class="a">${(a.pick || []).map(esc).join(', ')}</div>`;
+  else if (W.type === 'qualities') h += (a.pick || []).map(t => `<div class="ans"><div class="a" style="font-weight:700">${esc(t)}</div>${(a.qex || {})[t] ? `<div class="q" style="font-weight:500">${esc(a.qex[t])}</div>` : ''}</div>`).join('');
+  else h += `<div class="a">${(a.pick || []).map(t => ((a.star || []).includes(t) ? '★ ' : '') + esc(t)).join(' · ')}</div>`;
+  return h;
+}
+function wsTogether(k, mine, theirs) {
+  const W = WS[k];
+  if (W.type === 'ratings') { const big = W.items.filter((q, i) => Math.abs(((mine.r || {})[i] || 0) - ((theirs.r || {})[i] || 0)) >= 2 && (mine.r || {})[i] && (theirs.r || {})[i]); return big.length ? `<div class="warnline" style="background:var(--lime-soft);color:var(--ink)">Worth talking about: ${big.map(esc).join(', ')}. Different meanings, not right or wrong.</div>` : ''; }
+  if (W.type === 'fun') { const both = (mine.pick || []).filter(t => (theirs.pick || []).includes(t)); return both.length ? `<div class="hcard" style="background:var(--org)"><h3 style="font-size:15px">You both picked</h3>${both.map(t => `<div class="phrase"><span>${esc(t)}</span><button data-action="idea-add" data-t="${esc(t)}">Add to date ideas</button></div>`).join('')}</div>` : ''; }
+  if (W.type === 'meaning' || k === 'meaning') return `<button class="btn block" data-action="ritual-new" style="margin-top:8px">Design a ritual together</button>`;
+  if (k === 'goals') return `<button class="btn block" data-action="goal-new" style="margin-top:8px">Add a shared goal</button>`;
+  return '';
+}
+
+/* ================= Growth ================= */
+function growthHTML() {
+  const v = S.gv;
+  if (v === 'review') return reviewHTML();
+  const rituals = S.together.filter(t => t.type === 'ritual'), goals = S.together.filter(t => t.type === 'goal'), ideas = S.together.filter(t => t.type === 'idea');
+  let h = `<div class="blocks"><button class="blk bg-lav" data-action="g-review" style="min-height:120px"><span class="tag2">Monthly</span><h4>Review ${esc(new Date().toLocaleDateString('en-US', { month: 'long' }))}</h4></button><button class="blk bg-blu" data-action="open-ws" data-k="dreams" style="min-height:120px"><span class="tag2">Dreams</span><h4>Dream levels</h4></button></div>`;
+  h += `<div class="card"><div class="chead"><h3>Our rituals</h3><button class="linkbtn" data-action="ritual-new">+ Add</button></div>${rituals.length ? rituals.map(r => `<div class="cm"><div class="t">${esc(r.title)}</div><div class="m">${esc(r.cadence || '')}${r.notes ? ' · ' + esc(r.notes) : ''}</div><div class="a"><button data-action="tog-edit" data-id="${r.id}">Edit</button><button data-action="tog-del" data-id="${r.id}">Remove</button></div></div>`).join('') : '<p class="line-sub" style="font-size:14px">Morning coffee, a phone-free dinner, a Sunday walk. Small, repeated and yours. Either of you can add or edit.</p>'}</div>`;
+  h += `<div class="card"><div class="chead"><h3>Shared goals</h3><button class="linkbtn" data-action="goal-new">+ Add</button></div>${goals.length ? goals.map(r => `<div class="cm"><div class="t">${esc(r.title)}</div><div class="m">${r.target ? 'By ' + esc(r.target) + ' · ' : ''}${esc(r.status || 'active')}${r.notes ? ' · ' + esc(r.notes) : ''}</div><div class="a"><button data-action="tog-edit" data-id="${r.id}">Edit</button><button data-action="tog-done" data-id="${r.id}">${r.status === 'done' ? 'Reopen' : 'Done'}</button></div></div>`).join('') : '<p class="line-sub" style="font-size:14px">Personal goals stay in your private reflections. Add the ones you want to work on together here.</p>'}</div>`;
+  h += `<div class="card"><div class="chead"><h3>Date ideas</h3><button class="linkbtn" data-action="idea-new">+ Add</button></div>${ideas.length ? ideas.map(r => `<div class="phrase"><span>${esc(r.title)}</span><button data-action="tog-del" data-id="${r.id}">Remove</button></div>`).join('') : '<p class="line-sub" style="font-size:14px">Ideas you both picked in “For the fun of it” land here. Calendar scheduling comes in Phase 4.</p>'}</div>`;
+  return h;
+}
+function openTogether(type, existing, pre) {
+  const r = existing || pre || {};
+  const t = { ritual: ['ritual', 'Phone-free dinner', 'Every weeknight'], goal: ['shared goal', 'Save for a summer trip', 'By June'], idea: ['date idea', 'Sunrise hike', ''] }[type];
+  openSheet(`<h2>${existing ? 'Edit' : 'New'} ${t[0]}</h2>
+    <label class="field"><span>Title</span><input id="tTitle" maxlength="80" value="${esc(r.title || '')}" placeholder="${t[1]}"></label>
+    ${type !== 'idea' ? `<label class="field"><span>${type === 'ritual' ? 'How often' : 'Target (optional)'}</span><input id="tCad" maxlength="60" value="${esc(r.cadence || r.target || '')}" placeholder="${t[2]}"></label>` : ''}
+    <label class="field"><span>Notes (optional)</span><input id="tNotes" maxlength="140" value="${esc(r.notes || '')}"></label>
+    <button class="btn block" data-action="tog-save" data-type="${type}" data-id="${esc(r.id || '')}">Save</button>`);
+}
+function reviewHTML() {
+  const sid = 'review_' + monthId(), P = nameOf(S.partner), { iShared, both } = sealedStatus(sid), dr = S.drafts[sid] || {}, cache = S.sessAns[sid] || {};
+  const locked = iShared && cache.mine && !S.editing[sid];
+  let h = `${backBtn('gback', 'Growth')}<div class="hcard"><h3>${esc(new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }))} review</h3><p style="color:var(--muted);font-size:13px">Rate your own experience from 1 to 5, with a few words of context. This isn't a relationship score: there's no total, and comparing is for understanding, not ranking.</p></div><div class="step">`;
+  if (locked) h += REVIEW_DIMS.map((dm, i) => `<div style="display:flex;justify-content:space-between;padding:4px 0"><span>${esc(dm)}</span><b>${(cache.mine.s || {})[i] || '–'}</b></div>${(cache.mine.n || {})[i] ? `<div class="src-note" style="margin:0 0 6px">${esc(cache.mine.n[i])}</div>` : ''}`).join('');
+  else h += REVIEW_DIMS.map((dm, i) => `<div style="padding:8px 0;border-bottom:1px solid var(--line)"><div style="font-weight:700;color:var(--ink);margin-bottom:6px">${esc(dm)}</div><div class="scale">${[1, 2, 3, 4, 5].map(n => `<button data-action="rv-score" data-i="${i}" data-n="${n}" class="${(dr.s || {})[i] === n ? 'on' : ''}">${n}</button>`).join('')}</div><input data-rvnote="${i}" placeholder="Context (optional)" value="${esc((dr.n || {})[i] || '')}" style="width:100%;margin-top:8px;border:1px solid var(--line);border-radius:12px;padding:8px;background:var(--bg)"></div>`).join('');
+  h += sealedFooter(sid, 'Share my review with ' + esc(P)) + '</div>';
+  if (both) { const th = cache.theirs || {}; h += `<div class="step"><h3>Side by side</h3>${REVIEW_DIMS.map((dm, i) => `<div style="display:grid;grid-template-columns:1fr 50px 50px;gap:6px;padding:5px 0;border-bottom:1px solid var(--line)"><span>${esc(dm)}</span><b style="text-align:center">${(cache.mine.s || {})[i] || '–'}</b><b style="text-align:center">${(th.s || {})[i] || '–'}</b></div>`).join('')}<div class="src-note">Columns: you, ${esc(P)}. Where you differ is worth a curious conversation.</div></div>`; }
+  const hist = S.reviewHist;
+  if (hist.length > 1) h += `<div class="card"><div class="chead"><h3>My trend</h3><span class="meta">only you see this</span></div>${REVIEW_DIMS.map((dm, i) => `<div style="display:flex;align-items:center;gap:8px;padding:4px 0"><span style="flex:1;font-size:13.5px">${esc(dm)}</span>${hist.map(r => `<i title="${r.id}" style="width:16px;height:${6 + 5 * ((r.s || {})[i] || 0)}px;background:var(--lav);border-radius:4px;align-self:flex-end"></i>`).join('')}</div>`).join('')}</div>`;
+  return h;
 }
 
 /* ================= actions ================= */
@@ -1215,7 +1599,7 @@ async function savePrefs(patch) { S.prefs = { ...S.prefs, ...patch }; try { awai
 
 document.addEventListener('click', ev => {
   const t = ev.target.closest('[data-action],[data-tab]'); if (!t) return;
-  if (t.dataset.tab && !t.dataset.action) { if (t.dataset.tab !== 'talk' || S.tab === 'talk') S.view = null; S.tab = t.dataset.tab; if (sheetOpen) closeSheet(); render(); window.scrollTo({ top: 0 }); markSeen(); return; }
+  if (t.dataset.tab && !t.dataset.action) { if (t.dataset.tab !== 'talk' || S.tab === 'talk') S.view = null; if (t.dataset.tab === S.tab || t.closest('#dock,.sheet')) { S.cv = null; S.dv = null; S.gv = null; } S.tab = t.dataset.tab; if (sheetOpen) closeSheet(); render(); window.scrollTo({ top: 0 }); markSeen(); return; }
   const a = t.dataset.action, id = t.dataset.id, db = S.db;
   const run = p => p.catch(fail);
   switch (a) {
@@ -1356,6 +1740,174 @@ function signIn() {
     if (e && e.code !== 'auth/popup-closed-by-user' && e.code !== 'auth/cancelled-popup-request') authFail(e);
   });
 }
+/* ================= Phase 3 actions ================= */
+function openSealedIds() {
+  const ids = [];
+  if (S.tab === 'dates' && S.dv) ids.push(S.dv.ws ? 'ws_' + S.dv.ws : 'date' + S.dv.n);
+  if (S.tab === 'growth' && S.gv === 'review') ids.push('review_' + monthId());
+  return ids;
+}
+function openMenu() {
+  const b = badges();
+  openSheet(`<h2>Menu</h2><div style="display:grid;gap:8px">
+    <button class="sess" data-tab="checkin"><span class="t"><b>Check-in & commitments</b><small>Weekly check-in, agreements${b.checkin ? ' · ' + b.checkin + ' waiting' : ''}</small></span><span>›</span></button>
+    <button class="sess" data-tab="growth"><span class="t"><b>Growth</b><small>Rituals, shared goals, date ideas, monthly review</small></span><span>›</span></button>
+    <button class="sess" data-action="settings"><span class="t"><b>Settings & privacy</b><small>Privacy check, your data, safety resources</small></span><span>›</span></button>
+    <button class="sess" data-action="budget"><span class="t"><b>Our budget</b><small>Opens the budget app</small></span><span>›</span></button></div>`);
+}
+async function openDate(n) { S.tab = 'dates'; S.dv = { n }; render(); window.scrollTo({ top: 0 }); await openSealed('date' + n, { kind: 'date', topic: 'Date ' + n }); renderSoft(); }
+async function openWs(k) { const from = S.dv && S.dv.n ? S.dv.n : null; S.tab = 'dates'; S.dv = { ws: k, from }; render(); window.scrollTo({ top: 0 }); await openSealed('ws_' + k, { kind: 'ws', topic: WS[k].title }); renderSoft(); }
+async function openReview() { S.tab = 'growth'; S.gv = 'review'; render(); window.scrollTo({ top: 0 }); await openSealed('review_' + monthId(), { kind: 'review', topic: 'Monthly review' }); renderSoft(); }
+let lmT, bidT, dT = {};
+function saveLoveMap() {
+  clearTimeout(lmT); lmT = setTimeout(async () => {
+    const L = S.lm, A = L.answers || {}, Sh = L.share || {}, pub = {};
+    for (const k in A) if (Sh[k] && (A[k] || '').trim()) pub[k] = A[k].trim();
+    try { await S.db.doc(`private/${S.me}/lovemap/main`).set({ answers: A, share: Sh, guesses: L.guesses || {}, updatedAt: Date.now() }); await S.db.doc('us_lovemap/' + S.me).set({ answers: pub, updatedAt: Date.now() }); } catch (e) { fail(e); }
+  }, 700);
+}
+function saveDateField(n, f, v) { const k = n + f; clearTimeout(dT[k]); dT[k] = setTimeout(() => S.db.doc('us_dates/d' + n).set({ [f]: v, updatedAt: Date.now() }, { merge: true }).catch(fail), 600); }
+function curWs() { return S.dv && S.dv.ws; }
+function wsDraft() { const sid = 'ws_' + curWs(); return (S.drafts[sid] = S.drafts[sid] || {}); }
+const toggleIn = (arr, v, max) => arr.includes(v) ? arr.filter(x => x !== v) : (max && arr.length >= max ? (toast('Pick up to ' + max), arr) : [...arr, v]);
+function sealPayload(sid) {
+  const d = S.drafts[sid] || {};
+  if (sid.startsWith('ws_')) return wsPayload(sid.slice(3), d);
+  if (sid.startsWith('review_')) return { s: d.s || {}, n: d.n || {} };
+  const out = {}; for (const k in d) if (/^r\d$/.test(k) && (d[k] || '').trim()) out[k] = d[k].trim(); return out;
+}
+function resize(file) {
+  return new Promise((res, rej) => {
+    const img = new Image(); img.onload = () => {
+      const max = 1100, k = Math.min(1, max / Math.max(img.width, img.height)), c = document.createElement('canvas');
+      c.width = Math.round(img.width * k); c.height = Math.round(img.height * k); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      let q = 0.82, url = c.toDataURL('image/webp', q); while (url.length > 850000 && q > 0.4) { q -= 0.12; url = c.toDataURL('image/webp', q); }
+      URL.revokeObjectURL(img.src); res(url);
+    }; img.onerror = rej; img.src = URL.createObjectURL(file);
+  });
+}
+async function uploadImages(files) {
+  const out = $('#imgRes'); let n = 0;
+  for (const f of files) {
+    try {
+      out.textContent = `Uploading ${f.name}…`;
+      const data = await resize(f), base = f.name.replace(/\.[^.]+$/, ''), hit = IMG_THEMES.find(([re]) => re.test(base));
+      const id = base.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 60);
+      await S.db.doc('content/images/items/' + id).set({ name: f.name, theme: hit ? hit[1] : base.replace(/[-_]+/g, ' '), link: hit ? hit[2] : null, data, uploadedAt: Date.now() });
+      n++;
+    } catch (e) { fail(e); }
+  }
+  out.textContent = `${n} image${n === 1 ? '' : 's'} uploaded.`;
+}
+
+document.addEventListener('click', ev => {
+  const t = ev.target.closest('[data-action]'); if (!t) return;
+  const a = t.dataset.action, db = S.db, run = p => Promise.resolve(p).catch(fail), P = nameOf(S.partner);
+  switch (a) {
+    case 'menu': return openMenu();
+    case 'weather': return openWeather();
+    case 'w-sky': S.wdraft.note = ($('#wNote') || {}).value || S.wdraft.note; S.wdraft.share = ($('#wShare') || {}).checked; S.wdraft.sky = t.dataset.v; return drawWeather();
+    case 'w-conn': case 'w-stress': S.wdraft.note = ($('#wNote') || {}).value || S.wdraft.note; S.wdraft.share = ($('#wShare') || {}).checked; S.wdraft[a === 'w-conn' ? 'conn' : 'stress'] = +t.dataset.n; return drawWeather();
+    case 'w-save': {
+      const d = S.wdraft, day = isoDay(); d.note = $('#wNote').value.trim(); d.share = $('#wShare').checked;
+      if (!d.sky) { toast('Pick your weather first'); return; }
+      const pid = `wx_${day}_${S.me.split('@')[0]}`;
+      return run((async () => {
+        await db.doc(`private/${S.me}/weather/${day}`).set({ day, sky: d.sky, conn: d.conn || null, stress: d.stress || null, note: d.note, shared: d.share, ts: Date.now() });
+        if (d.share) await db.doc('us_shared/' + pid).set({ author: S.me, type: 'weather', ts: Date.now(), sky: d.sky, note: d.note, responses: {} });
+        else await db.doc('us_shared/' + pid).delete().catch(() => {});
+        closeSheet(); toast(d.share ? `Shared with ${P}` : 'Saved privately');
+      })());
+    }
+    case 'challenge-done': { const today = isoDay(); return savePrefs({ challengeDone: S.prefs.challengeDone === today ? '' : today }).then(render); }
+    case 'open-date': return openDate(+t.dataset.n);
+    case 'open-ws': return openWs(t.dataset.k);
+    case 'ws-back': return openDate(S.dv.from);
+    case 'cview': S.tab = 'connect'; S.cv = t.dataset.v; render(); return window.scrollTo({ top: 0 });
+    case 'cback': S.cv = null; render(); return window.scrollTo({ top: 0 });
+    case 'dback': S.dv = null; render(); return window.scrollTo({ top: 0 });
+    case 'gback': S.gv = null; render(); return window.scrollTo({ top: 0 });
+    case 'go': return go(JSON.parse(t.dataset.t));
+    case 'img-open': return openImage(t.dataset.id);
+    case 'g-review': return openReview();
+    case 'view-listen-go': S.tab = 'talk'; S.view = 'listen'; S.listen = { speaker: 'me', step: 0 }; render(); return window.scrollTo({ top: 0 });
+    /* love maps */
+    case 'lm-mode': S.lmMode = t.dataset.v; return render();
+    case 'lm-rand': S.lmRand = Math.floor(Math.random() * LM_ALL.length); return render();
+    case 'lm-reveal': S.lmRev[t.dataset.id] = true; return render();
+    /* appreciation */
+    case 'app-kind': S.appDraft.kind = S.appDraft.kind === t.dataset.v ? '' : t.dataset.v; S.appDraft.text = ($('#appText') || {}).value || ''; return render();
+    case 'app-post': case 'app-draft': {
+      const text = ($('#appText').value || '').trim(); if (!text) { toast('Write something first'); return; }
+      const kind = S.appDraft.kind || 'Appreciation';
+      return run((a === 'app-post' ? db.collection('us_shared').add({ author: S.me, type: 'appreciation', kind, text, ts: Date.now(), responses: {} }) : db.collection(`private/${S.me}/appdrafts`).add({ kind, text, ts: Date.now() })).then(() => { S.appDraft = {}; render(); toast(a === 'app-post' ? 'Posted to the wall' : 'Saved privately'); }));
+    }
+    case 'app-post-draft': { const d = S.appDrafts.find(x => x.id === t.dataset.id); if (!d) return; return run(db.collection('us_shared').add({ author: S.me, type: 'appreciation', kind: d.kind, text: d.text, ts: Date.now(), responses: {} }).then(() => db.doc(`private/${S.me}/appdrafts/${d.id}`).delete()).then(() => toast('Posted'))); }
+    case 'app-del-draft': return run(db.doc(`private/${S.me}/appdrafts/${t.dataset.id}`).delete());
+    case 'app-heart': { const p = S.posts.find(z => z.id === t.dataset.id); if (!p) return; const r = { ...(p.responses || {}) }; if (r[S.me]) delete r[S.me]; else r[S.me] = { text: 'Thank you ♥', at: Date.now() }; return run(db.doc('us_shared/' + p.id).update({ responses: r })); }
+    /* sealed sessions */
+    case 'seal-share': { const sid = t.dataset.sid, pl = sealPayload(sid); if (!Object.keys(pl).some(k => { const v = pl[k]; return Array.isArray(v) ? v.length : v && typeof v === 'object' ? Object.keys(v).length : v; })) { toast('Add at least one answer first'); return; }
+      return run((async () => { await shareSealed(sid, pl); if (sid.startsWith('review_')) await db.doc(`private/${S.me}/reviews/${sid.slice(7)}`).set({ id: sid.slice(7), s: pl.s }); })()); }
+    case 'seal-withdraw': return run(withdrawSealed(t.dataset.sid));
+    case 'seal-edit': { const sid = t.dataset.sid, m = (S.sessAns[sid] || {}).mine; if (m && !sid.startsWith('ws_')) S.drafts[sid] = { ...m, ...(S.drafts[sid] || {}) }; S.editing[sid] = true; return render(); }
+    /* worksheet editors */
+    case 'ws-yn': { const d = wsDraft(), i = t.dataset.i; d.yn = { ...(d.yn || {}) }; d.yn[i] = d.yn[i] === t.dataset.v ? '' : t.dataset.v; break; }
+    case 'ws-tell': { const d = wsDraft(), i = t.dataset.i; d.tell = { ...(d.tell || {}), [i]: !(d.tell || {})[i] }; break; }
+    case 'ws-topic': { const d = wsDraft(); d.topics = toggleIn(d.topics || [], t.dataset.v, 5); break; }
+    case 'ws-rate': { const d = wsDraft(), i = t.dataset.i; d.r = { ...(d.r || {}), [i]: (d.r || {})[i] === +t.dataset.n ? 0 : +t.dataset.n }; break; }
+    case 'ws-pick': { const d = wsDraft(); d.pick = toggleIn(d.pick || [], t.dataset.v); d.star = (d.star || []).filter(x => d.pick.includes(x)); break; }
+    case 'ws-star': { const d = wsDraft(); d.star = toggleIn(d.star || [], t.dataset.v, 3); break; }
+    case 'ws-level': { const d = wsDraft(); d.lv = { ...(d.lv || {}), [t.dataset.v]: (d.lv || {})[t.dataset.v] === +t.dataset.n ? 0 : +t.dataset.n }; break; }
+    case 'ws-custom': { const v = ($('#wsCustom').value || '').trim(); if (!v) return; const d = wsDraft(); d.custom = [...new Set([...(d.custom || []), v])]; d.pick = [...new Set([...(d.pick || []), v])]; break; }
+    case 'rv-score': { const sid = 'review_' + monthId(), d = (S.drafts[sid] = S.drafts[sid] || {}), i = t.dataset.i; d.s = { ...(d.s || {}), [i]: (d.s || {})[i] === +t.dataset.n ? 0 : +t.dataset.n }; saveSealedDraft(sid); return render(); }
+    /* dates */
+    case 'date-status': return run(db.doc('us_dates/d' + t.dataset.n).set({ status: t.dataset.s, ...(t.dataset.s === 'done' ? { doneAt: Date.now() } : {}) }, { merge: true }).then(() => toast(t.dataset.s === 'done' ? 'Nice. Date ' + t.dataset.n + ' is done.' : 'Reopened')));
+    case 'date-commit': return openCommit(null, { owner: 'me' });
+    /* together */
+    case 'ritual-new': return openTogether('ritual');
+    case 'goal-new': return openTogether('goal');
+    case 'idea-new': return openTogether('idea');
+    case 'idea-add': return run(db.collection('us_together').add({ type: 'idea', title: t.dataset.t, createdAt: Date.now(), by: S.me }).then(() => toast('Added to date ideas')));
+    case 'tog-edit': { const r = S.together.find(x => x.id === t.dataset.id); return r && openTogether(r.type, r); }
+    case 'tog-del': return run(db.doc('us_together/' + t.dataset.id).delete());
+    case 'tog-done': { const r = S.together.find(x => x.id === t.dataset.id); return run(db.doc('us_together/' + r.id).update({ status: r.status === 'done' ? 'active' : 'done' })); }
+    case 'tog-save': {
+      const type = t.dataset.type, title = $('#tTitle').value.trim(); if (!title) { toast('Add a title'); return; }
+      const c = $('#tCad'), doc = { type, title, notes: $('#tNotes').value.trim(), updatedAt: Date.now() };
+      if (c) doc[type === 'ritual' ? 'cadence' : 'target'] = c.value.trim();
+      const p = t.dataset.id ? db.doc('us_together/' + t.dataset.id).update(doc) : db.collection('us_together').add({ ...doc, createdAt: Date.now(), by: S.me, status: 'active' });
+      return run(p.then(() => { closeSheet(); toast('Saved'); }));
+    }
+    default: return;
+  }
+  // worksheet mutations fall through here
+  saveSealedDraft('ws_' + curWs()); render();
+});
+document.addEventListener('input', ev => {
+  const t = ev.target, d = t.dataset || {};
+  if (d.lm) { S.lm.answers = { ...(S.lm.answers || {}), [d.lm]: t.value }; saveLoveMap(); }
+  if (d.lmguess) { S.lm.guesses = { ...(S.lm.guesses || {}), [d.lmguess]: t.value }; saveLoveMap(); }
+  if (d.bid) { S.bidRef = { ...S.bidRef, [d.bid]: t.value }; clearTimeout(bidT); bidT = setTimeout(() => S.db.doc(`private/${S.me}/bids/${isoDay()}`).set({ ...S.bidRef, day: isoDay() }).catch(fail), 700); }
+  if (d.seal) { const sid = d.seal; S.drafts[sid] = { ...(S.drafts[sid] || {}), [d.k]: t.value }; saveSealedDraft(sid); }
+  if (d.wsx) {
+    const w = wsDraft();
+    if (d.wsx === 'ex') w.ex = { ...(w.ex || {}), [d.i]: t.value };
+    if (d.wsx === 'p') w.p = { ...(w.p || {}), [d.i]: t.value };
+    if (d.wsx === 'qex') w.qex = { ...(w.qex || {}), [d.t]: t.value };
+    if (d.wsx === 'note') { const N = { ...(w.notes || {}) }; N[d.t] = { ...(N[d.t] || {}), [d.f]: t.value }; w.notes = N; }
+    saveSealedDraft('ws_' + curWs());
+  }
+  if (d.rvnote !== undefined) { const sid = 'review_' + monthId(), r = (S.drafts[sid] = S.drafts[sid] || {}); r.n = { ...(r.n || {}), [d.rvnote]: t.value }; saveSealedDraft(sid); }
+  if (d.dfield && t.tagName === 'TEXTAREA') saveDateField(d.n, d.dfield, t.value);
+  if (t.id === 'appText') { S.appDraft.text = t.value; const L = t.value.trim().length; $('#appHint').innerHTML = L > 0 && L < 25 ? '<div class="warnline">Add a specific example. “Thanks for handling bedtime when I was wiped out” lands better than “thanks.”</div>' : ''; }
+});
+document.addEventListener('change', ev => {
+  const t = ev.target, d = t.dataset || {};
+  if (d.lmshare) { S.lm.share = { ...(S.lm.share || {}), [d.lmshare]: t.checked }; saveLoveMap(); }
+  if (d.dfield === 'scheduledFor') S.db.doc('us_dates/d' + d.n).set({ scheduledFor: t.value ? new Date(t.value).getTime() : null }, { merge: true }).catch(fail);
+  if (t.id === 'imgUp' && t.files.length) uploadImages([...t.files]);
+});
+
 function init() {
   render();
   if (!window.firebase) { gate('error', 'Couldn’t load. Check your connection and reload.'); return; }
@@ -1385,13 +1937,23 @@ function start(u, em) {
   db.collection('us_checkins').where('week', '==', weekId()).onSnapshot(s => { S.checkins = Object.fromEntries(s.docs.map(d => [d.id, d.data()])); soft(); }, failed);
   db.doc(`private/${em}/checkins/${weekId()}`).get().then(d => { if (d.exists) { S.myCheckin = d.data(); soft(); } }).catch(() => {});
   db.doc(`private/${em}/prefs/main`).get().then(d => { if (d.exists) { S.prefs = d.data(); soft(); } }).catch(() => {});
-  db.collection('us_sessions').orderBy('createdAt', 'desc').limit(50).onSnapshot(s => {
+  db.collection('us_sessions').orderBy('createdAt', 'desc').limit(120).onSnapshot(s => {
     S.sessions = s.docs.map(d => ({ id: d.id, ...d.data() }));
+    for (const sid of openSealedIds()) { const x = S.sessions.find(z => z.id === sid), c = S.sessAns[sid]; if (x && c && c.key !== (x.sharedBy || []).slice().sort().join('|')) loadSession(sid); }
     const v = S.view; if (v && v.t === 'session') { const x = S.sessions.find(z => z.id === v.id), c = S.sessAns[v.id]; if (x && (!c || c.key !== (x.sharedBy || []).slice().sort().join('|'))) loadSession(v.id); }
     soft();
   }, failed);
   db.collection('us_shared').orderBy('ts', 'desc').limit(100).onSnapshot(s => { S.posts = s.docs.map(d => ({ id: d.id, ...d.data() })); soft(); }, failed);
   db.collection(`private/${em}/aftermath`).orderBy('ts', 'desc').limit(50).onSnapshot(s => { S.afterList = s.docs.map(d => ({ id: d.id, ...d.data() })); soft(); }, failed);
+  db.collection(`private/${em}/weather`).orderBy('day', 'desc').limit(14).onSnapshot(s => { S.weather = Object.fromEntries(s.docs.map(d => [d.id, d.data()])); soft(); }, () => {});
+  db.collection('us_dates').onSnapshot(s => { S.dates = Object.fromEntries(s.docs.map(d => [d.id, d.data()])); soft(); }, () => {});
+  db.collection('us_together').orderBy('createdAt', 'desc').limit(200).onSnapshot(s => { S.together = s.docs.map(d => ({ id: d.id, ...d.data() })); soft(); }, () => {});
+  db.doc(`private/${em}/lovemap/main`).onSnapshot(d => { S.lm = d.exists ? d.data() : {}; soft(); }, () => {});
+  db.doc('us_lovemap/' + S.partner).onSnapshot(d => { S.lmTheirs = d.exists ? d.data() : {}; soft(); }, () => {});
+  db.collection(`private/${em}/appdrafts`).orderBy('ts', 'desc').limit(50).onSnapshot(s => { S.appDrafts = s.docs.map(d => ({ id: d.id, ...d.data() })); soft(); }, () => {});
+  db.doc(`private/${em}/bids/${isoDay()}`).get().then(d => { if (d.exists) { S.bidRef = d.data(); soft(); } }).catch(() => {});
+  db.collection(`private/${em}/reviews`).orderBy('id').limit(24).onSnapshot(s => { S.reviewHist = s.docs.map(d => d.data()); soft(); }, () => {});
+  db.collection('content/images/items').orderBy('name').onSnapshot(s => { S.images = s.docs.map(d => ({ id: d.id, ...d.data() })); soft(); }, () => {});
   db.collection('people').onSnapshot(s => { s.docs.forEach(d => { if (d.data().name) S.names[d.id] = d.data().name; }); soft(); }, () => {});
   db.doc('people/' + em).set({ name: S.names[em], updatedAt: Date.now() }, { merge: true }).catch(() => {});
 }
