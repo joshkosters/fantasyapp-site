@@ -656,7 +656,8 @@ function badges() {
   b.feelings = S.shared.filter(f => f.author === S.partner && !(f.seenBy || []).includes(S.me)).length;
   b.talk = S.pauses.filter(p => p.author === S.partner && p.status !== 'closed' && !(p.ackBy || []).includes(S.me)).length
     + S.sessions.filter(x => KINDS[x.kind] && x.status !== 'closed' && (x.sharedBy || []).includes(S.partner) && !(x.sharedBy || []).includes(S.me)).length
-    + S.posts.filter(p => p.author === S.partner && (p.type === 'aftermath' || p.type === 'repair') && !(p.responses || {})[S.me]).length;
+    + S.posts.filter(p => p.author === S.partner && (p.type === 'aftermath' || p.type === 'repair') && !(p.responses || {})[S.me]).length
+    + (typeof mindWaiting === 'function' ? mindWaiting().length : 0);
   b.dates = S.sessions.filter(x => !KINDS[x.kind] && (x.sharedBy || []).includes(S.partner) && !(x.sharedBy || []).includes(S.me) && /^(date|ws_)/.test(x.id)).length;
   b.checkin = S.commitments.filter(c => c.status === 'proposed' && (c.owners || []).includes(S.me) && !(c.acceptedBy || []).includes(S.me)).length;
   return b;
@@ -783,6 +784,7 @@ function talkHTML() {
   if (v === 'after') return afterHTML();
   if (v === 'repair') return repairHTML();
   let h = pauseCards(false);
+  h += mindCard();
   const posts = S.posts.filter(p => p.author === S.partner && (p.type === 'aftermath' || p.type === 'repair')).slice(0, 4);
   if (posts.length) h += `<div class="card"><div class="chead"><h3>From ${esc(nameOf(S.partner))}</h3></div>${posts.map(postItem).join('')}</div>`;
   const open = S.sessions.filter(x => KINDS[x.kind] && x.status !== 'closed');
@@ -1169,12 +1171,13 @@ async function privacyCheck() {
 }
 async function exportData() {
   const db = S.db, me = S.me, data = { exportedAt: new Date().toISOString(), account: me };
-  for (const c of ['feelings', 'checkins', 'prefs', 'aftermath', 'drafts', 'startups', 'lovemap', 'weather', 'appdrafts', 'bids', 'reviews', 'mornings']) { const s = await db.collection(`private/${me}/${c}`).get(); data['private_' + c] = s.docs.map(d => ({ id: d.id, ...d.data() })); }
+  for (const c of ['feelings', 'checkins', 'prefs', 'aftermath', 'drafts', 'startups', 'lovemap', 'weather', 'appdrafts', 'bids', 'reviews', 'mornings', 'minddrafts']) { const s = await db.collection(`private/${me}/${c}`).get(); data['private_' + c] = s.docs.map(d => ({ id: d.id, ...d.data() })); }
   data.shared_posts = S.posts.filter(p => p.author === me);
   data.shared_feelings = S.shared.filter(f => f.author === me);
   data.pauses = S.pauses.filter(p => p.author === me);
   data.checkins_shared = Object.values(S.checkins).filter(c => c.author === me);
   data.commitments = S.commitments;
+  data.onMyMind = S.mind.filter(m => m.author === me);
   data.together = S.together; data.dates = S.dates; data.appreciations = S.posts.filter(p => p.type === 'appreciation' && p.author === me);
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `us-data-${isoDay()}.json`; a.click();
@@ -1309,6 +1312,7 @@ function homeHTML() {
   const waiting = S.commitments.filter(c => c.status === 'proposed' && (c.owners || []).includes(S.me) && !(c.acceptedBy || []).includes(S.me));
   const fresh = S.shared.filter(f => f.author === S.partner && !(f.seenBy || []).includes(S.me)).slice(0, 2);
   if (fresh.length) now.push(`<div class="card"><div class="chead"><h3>New from ${esc(P)}</h3><button class="linkbtn" data-tab="feelings">All</button></div>${fresh.map(sharedItem).join('')}</div>`);
+  const mc = mindCard(true); if (mc) now.push(mc);
   if (waiting.length) now.push(`<div class="card"><div class="chead"><h3>Waiting for your answer</h3></div>${waiting.map(commitItem).join('')}</div>`);
   if (now.length) h += sectH('For you now', 'when it comes up') + now.join('');
   /* --- every day --- */
@@ -1846,6 +1850,7 @@ const MORNING = [
   ['ahead', 'Look at today', 'What’s on the calendar, what you’ve committed to, and anything open between you.'],
   ['us', 'One small thing for us', 'Today’s small challenge. Try it if it fits your day.'],
   ['thanks', 'One appreciation', 'Something you appreciate about your partner. Keep it, or send it.'],
+  ['mind', 'Anything on your mind?', 'Something bothering you, or something you need? Write it down. Share it now or keep it private.'],
   ['intent', 'Set an intention', 'One line for how you want to show up today.'],
 ];
 function morningAuto(k) {
@@ -1886,6 +1891,7 @@ function morningStepBody(k) {
   if (k === 'ahead') return morningAhead() + `<div class="resp"><button class="on" data-action="m-done" data-k="ahead">Got it</button></div>`;
   if (k === 'us') return `<p style="margin:0;font-size:15px;font-weight:600">${esc(CHALLENGES[dayNum() % CHALLENGES.length])}</p><div class="resp"><button class="on" data-action="m-done" data-k="us">I'll try it</button><button data-action="m-done" data-k="us">Not today</button></div>`;
   if (k === 'thanks') return `<textarea id="mThanks" placeholder="Something specific about ${esc(P)}" style="width:100%;border:1px solid var(--line);border-radius:14px;padding:10px;background:var(--bg);min-height:64px">${esc(S.morning.thanks || '')}</textarea><div class="resp"><button class="on" data-action="m-thanks" data-send="1">Send to ${esc(P)}</button><button data-action="m-thanks">Keep it private</button></div>`;
+  if (k === 'mind') { const wt = mindWaiting(); return `${wt.length ? `<p style="margin:0 0 8px;font-size:14px">${esc(nameOf(S.partner))} shared ${wt.length} thing${wt.length > 1 ? 's' : ''} that ${wt.length > 1 ? 'are' : 'is'} waiting for an answer, whenever you're ready. <button class="linkbtn" data-tab="talk">See</button></p>` : ''}<div class="resp"><button class="on" data-action="mind-new">Write it down</button><button data-action="m-done" data-k="mind">Nothing today</button></div>`; }
   if (k === 'intent') return `<input id="mIntent" maxlength="120" value="${esc(S.morning.intent || '')}" placeholder="Patient, present, playful…" style="width:100%;border:1px solid var(--line);border-radius:14px;padding:11px;background:var(--bg)"><div class="resp"><button class="on" data-action="m-intent">Set it</button></div>`;
   return '';
 }
@@ -1964,6 +1970,98 @@ document.addEventListener('click', ev => {
 });
 let ctxDelArm = 0;
 function confirmDelete() { if (Date.now() - ctxDelArm < 4000) return true; ctxDelArm = Date.now(); toast('Tap delete again to confirm'); return false; }
+
+/* ================= On my mind ================= */
+S.mind = []; S.mindDrafts = []; S.mindEdit = null;
+const MIND_KINDS = { bother: 'Something that’s bothering me', need: 'Something I need' };
+const MIND_SOON = { whenever: 'Whenever works', week: 'This week', soon: 'Soon, please' };
+const MIND_REPLIES = [['hear', 'I hear you'], ['time', 'Can we talk at…'], ['commit', 'Let’s make it a commitment'], ['talk', 'Let’s open a full conversation'], ['later', 'I need a little time first']];
+const mindWaiting = () => S.mind.filter(m => m.author === S.partner && m.status === 'open' && !m.reply);
+function mindItem(m) {
+  const mine = m.author === S.me, P = nameOf(S.partner), r = m.reply;
+  const rtext = r ? (r.type === 'time' ? `Can we talk ${r.at ? new Date(r.at).toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : 'soon'}?` : (MIND_REPLIES.find(x => x[0] === r.type) || [])[1]) : '';
+  let h = `<div class="fitem"><div class="fmain"><div class="meta" style="margin:0 0 4px">${esc(mine ? 'You' : nameOf(m.author))} · ${esc(MIND_KINDS[m.kind] || '')} · ${esc(MIND_SOON[m.soon] || '')} · ${esc(when(m.ts))}</div><div style="font-size:15.5px;color:var(--ink);font-weight:500;white-space:pre-wrap">${esc(m.text)}</div>`;
+  if (r) h += `<div class="bubble">${esc(mine ? P : 'You')}: ${esc(rtext)}${r.note ? ' · ' + esc(r.note) : ''}</div>`;
+  if (m.status === 'settled') h += `<div class="src-note">Settled ${esc(when(m.settledAt))}</div>`;
+  else if (!mine) h += `<div class="resp">${MIND_REPLIES.map(([k, l]) => `<button data-action="mind-reply" data-id="${m.id}" data-r="${k}" class="${r && r.type === k ? 'on' : ''}">${esc(l)}</button>`).join('')}<button data-action="mind-settle" data-id="${m.id}">Settled</button></div>`;
+  else h += `<div class="resp"><button data-action="mind-settle" data-id="${m.id}">Mark settled</button><button data-action="mind-withdraw" data-id="${m.id}">Take it back</button></div>${r ? '' : `<div class="src-note">${esc(P)} will answer when they can.</div>`}`;
+  return h + '</div></div>';
+}
+function mindCard(compact) {
+  const P = nameOf(S.partner), open = S.mind.filter(m => m.status === 'open'), theirs = open.filter(m => m.author === S.partner), mine = open.filter(m => m.author === S.me), settled = S.mind.filter(m => m.status === 'settled');
+  if (compact) return theirs.filter(m => !m.reply).length ? `<div class="card"><div class="chead"><h3>On ${esc(P)}'s mind</h3><button class="linkbtn" data-tab="talk">Talk</button></div>${theirs.filter(m => !m.reply).slice(0, 2).map(mindItem).join('')}</div>` : '';
+  let h = `<div class="card"><div class="chead"><h3>On my mind</h3><button class="linkbtn" data-action="mind-new">+ Add</button></div>`;
+  if (!open.length && !S.mindDrafts.length) h += `<p style="margin:0;font-size:14px">Something bothering you, or something you need from ${esc(P)}? Write it here first, then share when you're ready. ${esc(P)} answers in their own time.</p>`;
+  if (theirs.length) h += `<div class="lab">From ${esc(P)}</div>` + theirs.map(mindItem).join('');
+  if (mine.length) h += `<div class="lab" style="margin-top:6px">From you</div>` + mine.map(mindItem).join('');
+  if (S.mindDrafts.length) h += `<div class="lab" style="margin-top:6px">Your drafts (private)</div>` + S.mindDrafts.map(d => `<div class="phrase"><span>${esc(d.text.slice(0, 70))}${d.text.length > 70 ? '…' : ''}</span><button data-action="mind-open-draft" data-id="${d.id}">Open</button></div>`).join('');
+  if (settled.length) h += `<details class="more" style="margin-top:8px"><summary>Settled (${settled.length})</summary>${settled.slice(0, 20).map(mindItem).join('')}</details>`;
+  return h + '</div>';
+}
+function openMind(draft) {
+  S.mindEdit = draft ? { ...draft } : { kind: 'need', soon: 'whenever', text: '' };
+  drawMind();
+}
+function drawMind() {
+  const d = S.mindEdit, P = nameOf(S.partner), w = startupWarnings(d.text || '');
+  const html = `<h2>On my mind</h2>
+    <div class="field"><span>What is it?</span><div class="words">${Object.entries(MIND_KINDS).map(([k, l]) => `<button data-action="mind-kind" data-v="${k}" class="${d.kind === k ? 'on' : ''}">${esc(l)}</button>`).join('')}</div></div>
+    <label class="field"><span>In your words</span><textarea id="mindText" style="min-height:120px" placeholder="${d.kind === 'need' ? 'I’d really like… It would help me because…' : 'I feel ___ about ___. I need ___.'}">${esc(d.text || '')}</textarea></label>
+    <div id="mindWarn">${w.map(x => `<div class="warnline">${esc(x)}</div>`).join('')}</div>
+    <div class="src-note" style="margin:-4px 0 12px">Describe the situation and what you need, not your partner's character. One thing at a time.</div>
+    <div class="field"><span>How soon?</span><div class="words">${Object.entries(MIND_SOON).map(([k, l]) => `<button data-action="mind-soon" data-v="${k}" class="${d.soon === k ? 'on' : ''}">${esc(l)}</button>`).join('')}</div></div>
+    <button class="btn block" data-action="mind-share">Share with ${esc(P)}</button>
+    <button class="btn sec block" data-action="mind-draft" style="margin-top:8px">Keep it private for now</button>
+    ${d.id ? '<button class="btn danger block" data-action="mind-del-draft" style="margin-top:8px">Delete draft</button>' : ''}`;
+  if (sheetOpen) $('#sheetIn').innerHTML = '<div class="grab"></div>' + html; else openSheet(html);
+}
+function openMindTime(id) {
+  const tm = new Date(Date.now() + 864e5); tm.setHours(19, 0, 0, 0);
+  openSheet(`<h2>When could you talk?</h2><label class="field"><span>Suggest a time</span><input id="mtAt" type="datetime-local" value="${toLocalInput(tm)}"></label>
+    <label class="field"><span>Note (optional)</span><input id="mtNote" maxlength="100" placeholder="After the kids are down"></label>
+    ${calToken() && calSettings().calendarId ? `<label class="opt"><input type="checkbox" id="mtCal" checked><span><b>Add “Talk time” to our calendar</b><small>Just the neutral title, nothing about the topic.</small></span></label>` : ''}
+    <button class="btn block" data-action="mind-time-save" data-id="${id}">Send</button>`);
+}
+async function mindReply(id, reply) {
+  await S.db.doc('us_mind/' + id).update({ reply: { ...reply, by: S.me, ts: Date.now() } }); nudge();
+}
+document.addEventListener('click', ev => {
+  const t = ev.target.closest('[data-action]'); if (!t) return;
+  const a = t.dataset.action, db = S.db, cap = () => { const x = $('#mindText'); if (x && S.mindEdit) S.mindEdit.text = x.value; };
+  if (a === 'mind-new') openMind();
+  if (a === 'mind-open-draft') { const d = S.mindDrafts.find(x => x.id === t.dataset.id); if (d) openMind(d); }
+  if (a === 'mind-kind') { cap(); S.mindEdit.kind = t.dataset.v; drawMind(); }
+  if (a === 'mind-soon') { cap(); S.mindEdit.soon = t.dataset.v; drawMind(); }
+  if (a === 'mind-share' || a === 'mind-draft') {
+    cap(); const d = S.mindEdit, text = (d.text || '').trim(); if (!text) { toast('Write a little first'); return; }
+    const data = { kind: d.kind, soon: d.soon, text, ts: Date.now() };
+    const p = a === 'mind-share'
+      ? db.collection('us_mind').add({ ...data, author: S.me, status: 'open' }).then(() => d.id && db.doc(`private/${S.me}/minddrafts/${d.id}`).delete()).then(() => { nudge(); toast(`Shared with ${nameOf(S.partner)}`); })
+      : (d.id ? db.doc(`private/${S.me}/minddrafts/${d.id}`).set(data) : db.collection(`private/${S.me}/minddrafts`).add(data)).then(() => toast('Saved privately'));
+    p.then(() => { if (S.tab === 'morning') saveMorning({ done: { ...(S.morning.done || {}), mind: true } }); closeSheet(); }).catch(fail);
+  }
+  if (a === 'mind-del-draft') db.doc(`private/${S.me}/minddrafts/${S.mindEdit.id}`).delete().then(() => { closeSheet(); toast('Deleted'); }).catch(fail);
+  if (a === 'mind-reply') {
+    const id = t.dataset.id, r = t.dataset.r, m = S.mind.find(x => x.id === id); if (!m) return;
+    if (r === 'time') return openMindTime(id);
+    if (r === 'commit') { mindReply(id, { type: 'commit' }).catch(fail); return openCommit(null, { owner: 'me' }); }
+    if (r === 'talk') { mindReply(id, { type: 'talk' }).catch(fail); return openNewSession('talk', ''); }
+    mindReply(id, { type: r }).then(() => toast('Sent')).catch(fail);
+  }
+  if (a === 'mind-time-save') {
+    const id = t.dataset.id, v = $('#mtAt').value, at = v ? new Date(v).getTime() : null, note = $('#mtNote').value.trim(), cal = $('#mtCal') && $('#mtCal').checked;
+    mindReply(id, { type: 'time', at, note }).then(async () => {
+      if (cal && at) { try { await gcal(`calendars/${encodeURIComponent(calSettings().calendarId)}/events`, { method: 'POST', body: JSON.stringify({ summary: 'Talk time', start: { dateTime: new Date(at).toISOString(), timeZone: TZ }, end: { dateTime: new Date(at + 30 * 60000).toISOString(), timeZone: TZ }, extendedProperties: { private: { usHub: '1', usCat: 'Other' } } }) }); refreshCal(true); } catch (e) { toast(calErr(e)); } }
+      closeSheet(); toast('Sent');
+    }).catch(fail);
+  }
+  if (a === 'mind-settle') db.doc('us_mind/' + t.dataset.id).update({ status: 'settled', settledAt: Date.now(), settledBy: S.me }).then(() => toast('Marked settled')).catch(fail);
+  if (a === 'mind-withdraw') db.doc('us_mind/' + t.dataset.id).delete().then(() => toast('Taken back')).catch(fail);
+});
+document.addEventListener('input', ev => {
+  if (ev.target.id !== 'mindText' || !S.mindEdit) return;
+  S.mindEdit.text = ev.target.value; const w = startupWarnings(ev.target.value), el = $('#mindWarn'); if (el) el.innerHTML = w.map(x => `<div class="warnline">${esc(x)}</div>`).join('');
+});
 
 /* ================= actions ================= */
 document.addEventListener('input', ev => {
@@ -2383,6 +2481,8 @@ function start(u, em) {
   db.collection(`private/${em}/reviews`).orderBy('id').limit(24).onSnapshot(s => { S.reviewHist = s.docs.map(d => d.data()); soft(); }, () => {});
   db.collection('content/images/items').orderBy('name').onSnapshot(s => { S.images = s.docs.map(d => ({ id: d.id, ...d.data() })); soft(); }, () => {});
   loadServerStatus();
+  db.collection('us_mind').orderBy('ts', 'desc').limit(100).onSnapshot(s => { S.mind = s.docs.map(d => ({ id: d.id, ...d.data() })); soft(); }, () => {});
+  db.collection(`private/${em}/minddrafts`).orderBy('ts', 'desc').limit(30).onSnapshot(s => { S.mindDrafts = s.docs.map(d => ({ id: d.id, ...d.data() })); soft(); }, () => {});
   db.doc('us_context/main').onSnapshot(d => { S.ctx = d.exists ? d.data() : null; soft(); }, () => {});
   db.doc(`private/${em}/mornings/${isoDay()}`).onSnapshot(d => { S.morning = d.exists ? d.data() : {}; soft(); }, () => {});
   db.collection('people').onSnapshot(s => { s.docs.forEach(d => { if (d.data().name) S.names[d.id] = d.data().name; }); soft(); }, () => {});
