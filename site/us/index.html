@@ -1147,6 +1147,7 @@ function openSettings() {
       <button class="btn sec block" data-action="export">Download my data</button>
       <button class="btn danger block" style="margin-top:8px" data-action="wipe">Delete all my private entries</button></div>
     ${S.me === OWNER ? `<div class="card" style="box-shadow:none;border:1px solid var(--line)"><div class="chead"><h3>Gottman images</h3><span class="meta">${S.images.length} uploaded</span></div><p style="margin:0 0 8px;font-size:14px">Upload the images from your Gottman download. They're resized and stored behind sign-in, never on the public site.</p><input type="file" id="imgUp" accept="image/*" multiple style="font-size:13px"><div class="src-note" id="imgRes"></div></div>` : ''}
+    ${ctxCard()}
     <div id="serverCards">${serverCards()}</div>
     ${safetyCard()}
     <div class="card" style="box-shadow:none;border:1px solid var(--line)"><div class="chead"><h3>About</h3></div>
@@ -1765,7 +1766,7 @@ function aiBlock(sid, labels, title) {
       <div class="src-note">Written by Claude, an AI, from the answers you both shared. It isn't therapy and can get things wrong. Asked by ${esc(x.ai.by === S.me ? 'you' : nameOf(x.ai.by))} ${esc(when(x.ai.at))}.</div>
       <div class="resp"><button data-action="ai-run" data-sid="${sid}" ${busy ? 'disabled' : ''}>${busy ? 'Thinking…' : 'Ask again'}</button><button data-action="ai-clear" data-sid="${sid}">Remove</button></div>`;
   } else {
-    h += `<p style="font-size:13.5px;margin-top:0">If you'd both like, an AI facilitator can read the answers you've shared here and suggest common ground and questions to ask each other. It never sees anything private, and it doesn't take sides.</p>
+    h += `<p style="font-size:13.5px;margin-top:0">If you'd both like, an AI facilitator can read the answers you've shared here and suggest common ground and questions to ask each other. It never sees anything private, and it doesn't take sides.${ctxStatus().active ? ' It will also use the background you both approved.' : ''}</p>
       <label class="opt" style="background:#fff"><input type="checkbox" data-aiok="${sid}" ${mine ? 'checked' : ''}><span><b>I'm okay with the facilitator reading our shared answers</b><small>${theirs ? esc(P) + ' is okay with it too.' : esc(P) + ' hasn’t said yet. It only runs if you both agree.'}</small></span></label>
       ${mine && theirs ? `<button class="btn block" data-action="ai-run" data-sid="${sid}" ${busy ? 'disabled' : ''}>${busy ? 'Thinking…' : 'Get a neutral take'}</button>` : ''}`;
   }
@@ -1915,6 +1916,54 @@ document.addEventListener('click', ev => {
     render();
   }
 });
+
+/* ================= Background for the facilitator (shared, both approve) ================= */
+S.ctx = null;
+function ctxStatus() {
+  const c = S.ctx; if (!c || !c.text) return { exists: false };
+  const ap = c.approvedBy || {}, mine = ap[S.me] === c.version, theirs = ap[S.partner] === c.version;
+  return { exists: true, mine, theirs, active: mine && theirs };
+}
+function ctxCard() {
+  const st = ctxStatus(), P = nameOf(S.partner);
+  const status = !st.exists ? 'Not added' : st.active ? 'In use · you both approved' : st.mine ? `Waiting for ${esc(P)} to approve` : 'Waiting for your approval';
+  return `<div class="card" style="box-shadow:none;border:1px solid var(--line)"><div class="chead"><h3>Background for the facilitator</h3><span class="meta">${status}</span></div><p style="margin:0 0 8px;font-size:14px">Shared context about the two of you that the AI facilitator can use to pick better questions and exercises. Only used when you've both approved the current version. Either of you can edit it, withdraw, or delete it.</p><button class="btn sec block" data-action="ctx-open">${st.exists ? 'Read and review' : 'Add background'}</button></div>`;
+}
+function openCtx(edit) {
+  const c = S.ctx || {}, st = ctxStatus(), P = nameOf(S.partner);
+  let html = `<h2>Background for the facilitator</h2>`;
+  if (edit || !st.exists) {
+    html += `<p style="margin:-6px 0 10px;font-size:13.5px;color:var(--muted)">Saving a change clears ${esc(P)}'s approval until they read and approve the new version.</p>
+      <textarea id="ctxText" style="width:100%;min-height:52vh;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg);font-size:14px;line-height:1.5">${esc(c.text || '')}</textarea>
+      <button class="btn block" data-action="ctx-save" style="margin-top:10px">Save and approve this version</button>
+      ${st.exists ? '<button class="btn sec block" data-action="ctx-open" style="margin-top:8px">Cancel</button>' : ''}`;
+  } else {
+    html += `<div class="src-note" style="margin:-6px 0 10px">Last edited by ${esc(c.by === S.me ? 'you' : nameOf(c.by))} ${esc(when(c.updatedAt))} · ${st.mine ? '✓ you approved' : 'you haven’t approved'} · ${st.theirs ? '✓ ' + esc(P) + ' approved' : esc(P) + ' hasn’t approved'}</div>
+      <div style="white-space:pre-wrap;font-size:14px;line-height:1.55;background:var(--bg);border-radius:14px;padding:12px;max-height:52vh;overflow:auto">${esc(c.text)}</div>
+      ${st.mine ? `<button class="btn sec block" data-action="ctx-withdraw" style="margin-top:10px">Withdraw my approval</button>` : `<button class="btn block" data-action="ctx-approve" style="margin-top:10px">I've read this and approve it</button>`}
+      <button class="btn sec block" data-action="ctx-edit" style="margin-top:8px">Edit</button>
+      <button class="btn danger block" data-action="ctx-delete" style="margin-top:8px">Delete background</button>`;
+  }
+  html += `<div class="src-note" style="margin-top:10px">Stored behind your two sign-ins. The facilitator sees it only when you both approve, and it's told to treat it as tentative context, never as diagnosis or to take sides.</div>`;
+  if (sheetOpen) $('#sheetIn').innerHTML = '<div class="grab"></div>' + html; else openSheet(html);
+}
+document.addEventListener('click', ev => {
+  const t = ev.target.closest('[data-action]'); if (!t) return;
+  const a = t.dataset.action, ref = () => S.db.doc('us_context/main');
+  if (a === 'ctx-open') openCtx(false);
+  if (a === 'ctx-edit') openCtx(true);
+  if (a === 'ctx-save') {
+    const text = ($('#ctxText').value || '').trim(); if (!text) { toast('Write something first'); return; }
+    const version = String(Date.now());
+    const doc = { text, version, by: S.me, updatedAt: Date.now(), approvedBy: { [S.me]: version } };
+    ref().set(doc).then(() => { S.ctx = doc; toast(`Saved. ${nameOf(S.partner)} will need to approve it.`); nudge(); openCtx(false); }).catch(fail);
+  }
+  if (a === 'ctx-approve') ref().update({ ['approvedBy.' + S.me]: S.ctx.version }).then(() => { S.ctx = { ...S.ctx, approvedBy: { ...(S.ctx.approvedBy || {}), [S.me]: S.ctx.version } }; toast('Approved'); setTimeout(() => openCtx(false), 300); }).catch(fail);
+  if (a === 'ctx-withdraw') ref().update({ ['approvedBy.' + S.me]: firebase.firestore.FieldValue.delete() }).then(() => { const ap = { ...(S.ctx.approvedBy || {}) }; delete ap[S.me]; S.ctx = { ...S.ctx, approvedBy: ap }; toast('Approval withdrawn. The facilitator won’t use it.'); setTimeout(() => openCtx(false), 300); }).catch(fail);
+  if (a === 'ctx-delete') { if (!confirmDelete()) return; ref().delete().then(() => { closeSheet(); toast('Deleted'); }).catch(fail); }
+});
+let ctxDelArm = 0;
+function confirmDelete() { if (Date.now() - ctxDelArm < 4000) return true; ctxDelArm = Date.now(); toast('Tap delete again to confirm'); return false; }
 
 /* ================= actions ================= */
 document.addEventListener('input', ev => {
@@ -2334,6 +2383,7 @@ function start(u, em) {
   db.collection(`private/${em}/reviews`).orderBy('id').limit(24).onSnapshot(s => { S.reviewHist = s.docs.map(d => d.data()); soft(); }, () => {});
   db.collection('content/images/items').orderBy('name').onSnapshot(s => { S.images = s.docs.map(d => ({ id: d.id, ...d.data() })); soft(); }, () => {});
   loadServerStatus();
+  db.doc('us_context/main').onSnapshot(d => { S.ctx = d.exists ? d.data() : null; soft(); }, () => {});
   db.doc(`private/${em}/mornings/${isoDay()}`).onSnapshot(d => { S.morning = d.exists ? d.data() : {}; soft(); }, () => {});
   db.collection('people').onSnapshot(s => { s.docs.forEach(d => { if (d.data().name) S.names[d.id] = d.data().name; }); soft(); }, () => {});
   db.doc('people/' + em).set({ name: S.names[em], updatedAt: Date.now() }, { merge: true }).catch(() => {});

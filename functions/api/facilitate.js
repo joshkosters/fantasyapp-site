@@ -32,16 +32,23 @@ export async function onRequestPost({ request, env }) {
     mine = ((await getDoc(who.token, `us_sessions/${sid}/answers/${me}`)) || {}).answers || {};
     theirs = ((await getDoc(who.token, `us_sessions/${sid}/answers/${them}`)) || {}).answers || {};
   } catch (e) { return json({ error: 'read_failed' }, 502); }
+  // Shared background, only if BOTH approved the current version.
+  let background = '';
+  try {
+    const c = await getDoc(who.token, 'us_context/main');
+    const ap = (c && c.approvedBy) || {};
+    if (c && c.text && c.version && ap[me] === c.version && ap[them] === c.version) background = String(c.text).slice(0, 14000);
+  } catch (e) {}
   const block = (name, A) => `## ${name}\n` + Object.keys(labels).filter(k => typeof A[k] === 'string' && A[k].trim()).map(k => `${String(labels[k]).slice(0, 160)}\n${A[k].slice(0, 2000)}`).join('\n\n');
   const text = `Topic: ${title || sess.topic || 'A conversation'}\n\n${block(PEOPLE[me], mine)}\n\n${block(PEOPLE[them], theirs)}`;
   if (text.length < 60) return json({ error: 'nothing_to_read' }, 400);
   const r = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: { 'x-api-key': env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-    body: JSON.stringify({ model: env.ANTHROPIC_MODEL || MODEL, max_tokens: 900, system: SYSTEM, messages: [{ role: 'user', content: text }] }),
+    body: JSON.stringify({ model: env.ANTHROPIC_MODEL || MODEL, max_tokens: 900, system: background ? SYSTEM + `\n\nBackground both partners wrote and approved. Treat it as tentative context for tone and which questions to ask, never as diagnosis, never to decide who is right or to excuse harm. Its safety section overrides everything. Don't quote it back or mention labels from it unless they raise them.\n<background>\n${background}\n</background>` : SYSTEM, messages: [{ role: 'user', content: text }] }),
   });
   if (!r.ok) return json({ error: 'ai_failed', status: r.status }, 502);
   const j = await r.json();
   const out = (j.content || []).filter(c => c.type === 'text').map(c => c.text).join('\n').trim();
-  return json({ text: out });
+  return json({ text: out, usedBackground: !!background });
 }
