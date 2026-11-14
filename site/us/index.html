@@ -683,13 +683,6 @@ const typingInMain = () => { const a = document.activeElement; return !!(a && a.
 function renderSoft() { if (typingInMain()) { S.pendingRender = true; return; } render(); }
 
 /* ----- Home ----- */
-function reflectionCard() {
-  const i = (dayNum() + S.refl) % REFLECTIONS.length;
-  const saved = (S.prefs.savedReflections || []).includes(i);
-  return `<div class="qcard"><div class="lab">Daily reflection</div><div class="txt">${esc(REFLECTIONS[i])}</div>
-    <div class="src">Original reflection, written for Us. Not a Gottman quote.</div>
-    <div class="row"><button data-action="refl-next">Show another</button><button data-action="refl-save" data-i="${i}" class="${saved ? 'on' : ''}">${saved ? 'Saved' : 'Save'}</button></div></div>`;
-}
 function pauseCards(compact) {
   return S.pauses.filter(p => p.status !== 'closed').map(p => {
     const mine = p.author === S.me, who = mine ? 'You' : nameOf(p.author);
@@ -1148,6 +1141,7 @@ function openSettings() {
     <div class="card" style="box-shadow:none;border:1px solid var(--line)"><div class="chead"><h3>Your data</h3></div>
       <button class="btn sec block" data-action="export">Download my data</button>
       <button class="btn danger block" style="margin-top:8px" data-action="wipe">Delete all my private entries</button></div>
+    ${S.me === OWNER ? quotesCard() : ''}
     ${S.me === OWNER ? `<div class="card" style="box-shadow:none;border:1px solid var(--line)"><div class="chead"><h3>Gottman images</h3><span class="meta">${S.images.length} uploaded</span></div><p style="margin:0 0 8px;font-size:14px">Upload the images from your Gottman download. They're resized and stored behind sign-in, never on the public site.</p><input type="file" id="imgUp" accept="image/*" multiple style="font-size:13px"><div class="src-note" id="imgRes"></div></div>` : ''}
     ${ctxCard()}
     <div id="serverCards">${serverCards()}</div>
@@ -2063,6 +2057,56 @@ document.addEventListener('input', ev => {
   S.mindEdit.text = ev.target.value; const w = startupWarnings(ev.target.value), el = $('#mindWarn'); if (el) el.innerHTML = w.map(x => `<div class="warnline">${esc(x)}</div>`).join('');
 });
 
+/* ================= Daily quotes (stored behind sign-in, added by the owner with their source) ================= */
+S.quotes = [];
+function reflPool() { return [...REFLECTIONS.map((t, i) => ({ key: i, text: t })), ...S.quotes.map(q => ({ key: q.id, text: q.text, who: q.who, title: q.title, url: q.url }))]; }
+function reflectionCard() {
+  const pool = reflPool(), it = pool[(dayNum() + S.refl) % pool.length];
+  const saved = (S.prefs.savedReflections || []).includes(it.key);
+  const src = it.who !== undefined
+    ? `— ${esc(it.who || 'Unattributed')}${it.title ? ` · via ${it.url ? `<a href="${esc(it.url)}" target="_blank" rel="noopener" style="color:inherit">${esc(it.title)}</a>` : esc(it.title)}` : ''}`
+    : 'Original reflection, written for Us. Not a Gottman quote.';
+  return `<div class="qcard"><div class="lab">${it.who !== undefined ? 'Daily quote' : 'Daily reflection'}</div><div class="txt">${esc(it.text)}</div>
+    <div class="src">${src}</div>
+    <div class="row"><button data-action="refl-next">Show another</button><button data-action="refl-save" data-k="${esc(String(it.key))}" class="${saved ? 'on' : ''}">${saved ? 'Saved' : 'Save'}</button></div></div>`;
+}
+function parseQuotes(raw) {
+  const out = [], clean = s => s.trim().replace(/^[\s"“‘']+|[\s"”’']+$/g, '').trim();
+  for (let line of raw.split(/\n+/).map(l => l.trim()).filter(Boolean)) {
+    line = line.replace(/^\d+[.)]\s*/, '');
+    if (/^[—–-]{1,2}\s*\S/.test(line) && out.length && !out[out.length - 1].who) { out[out.length - 1].who = clean(line.replace(/^[—–-]+/, '')); continue; }
+    const m = line.match(/^(.*\S)\s+[—–-]{1,2}\s+([^—–]{2,80})$/);
+    if (m && /["”’.!?]\s*$/.test(m[1])) out.push({ text: clean(m[1]), who: clean(m[2]) });
+    else out.push({ text: clean(line), who: '' });
+  }
+  return out.filter(q => q.text.length > 8);
+}
+function quotesCard() {
+  return `<div class="card" style="box-shadow:none;border:1px solid var(--line)"><div class="chead"><h3>Daily quotes</h3><span class="meta">${S.quotes.length} added</span></div><p style="margin:0 0 8px;font-size:14px">Paste quotes from a source you trust, with who said them and where they're from. They mix in with the original reflections on Home, always with their attribution. They're stored behind sign-in, not on the public site.</p><button class="btn sec block" data-action="q-open">Add or manage quotes</button></div>`;
+}
+function openQuotes(preview) {
+  const html = `<h2>Daily quotes</h2>
+    <label class="field"><span>Paste quotes, one per line</span><textarea id="qRaw" style="min-height:150px" placeholder="&quot;Quote text here.&quot; — Who said it">${esc((S.qDraft || {}).raw || '')}</textarea></label>
+    <div class="src-note" style="margin:-6px 0 12px">Put the person's name after a dash, on the same line or the next one. Numbered lists are fine.</div>
+    <label class="field"><span>Source title</span><input id="qTitle" maxlength="120" value="${esc((S.qDraft || {}).title || '')}" placeholder="20 Quotes to Make Your Relationship Better (Gottman Institute)"></label>
+    <label class="field"><span>Source link</span><input id="qUrl" maxlength="300" value="${esc((S.qDraft || {}).url || '')}" placeholder="https://…"></label>
+    ${preview ? `<div class="lab">Check before adding (${preview.length})</div>${preview.map(q => `<div class="phrase"><span>${esc(q.text)}<br><small style="color:var(--muted)">— ${esc(q.who || 'no name found')}</small></span></div>`).join('')}<button class="btn block" data-action="q-add" style="margin-top:10px">Add ${preview.length} quote${preview.length === 1 ? '' : 's'}</button>` : `<button class="btn block" data-action="q-preview">Preview</button>`}
+    ${S.quotes.length ? `<details class="more" style="margin-top:12px"><summary>Added quotes (${S.quotes.length})</summary>${S.quotes.map(q => `<div class="phrase"><span>${esc(q.text)}<br><small style="color:var(--muted)">— ${esc(q.who || 'Unattributed')}</small></span><button data-action="q-del" data-id="${q.id}">Remove</button></div>`).join('')}</details>` : ''}`;
+  if (sheetOpen) { const st = $('#sheet').scrollTop; $('#sheetIn').innerHTML = '<div class="grab"></div>' + html; $('#sheet').scrollTop = st; } else openSheet(html);
+}
+document.addEventListener('click', ev => {
+  const t = ev.target.closest('[data-action]'); if (!t) return;
+  const a = t.dataset.action, cap = () => { S.qDraft = { raw: $('#qRaw').value, title: $('#qTitle').value.trim(), url: $('#qUrl').value.trim() }; };
+  if (a === 'q-open') { S.qDraft = null; openQuotes(); }
+  if (a === 'q-preview') { cap(); const p = parseQuotes(S.qDraft.raw); if (!p.length) { toast('No quotes found'); return; } S.qPrev = p; openQuotes(p); }
+  if (a === 'q-add') {
+    const d = S.qDraft || {}, list = S.qPrev || [], batch = S.db.batch ? S.db.batch() : null, now = Date.now();
+    if (!/^https?:\/\//.test(d.url || '') && d.url) { toast('The link should start with https://'); return; }
+    Promise.all(list.map((q, i) => S.db.collection('content/quotes/items').add({ text: q.text, who: q.who, title: d.title || '', url: d.url || '', addedBy: S.me, addedAt: now + i }))).then(() => { toast(`Added ${list.length}`); S.qDraft = null; S.qPrev = null; openQuotes(); }).catch(fail);
+  }
+  if (a === 'q-del') S.db.doc('content/quotes/items/' + t.dataset.id).delete().then(() => setTimeout(() => openQuotes(), 200)).catch(fail);
+});
+
 /* ================= actions ================= */
 document.addEventListener('input', ev => {
   const t = ev.target;
@@ -2132,7 +2176,7 @@ document.addEventListener('click', ev => {
     case 'settings': return openSettings();
     case 'budget': location.href = '/budget/'; return;
     case 'refl-next': S.refl++; return render();
-    case 'refl-save': { const i = +t.dataset.i, list = S.prefs.savedReflections || []; savePrefs({ savedReflections: list.includes(i) ? list.filter(x => x !== i) : [...list, i] }).then(render); return; }
+    case 'refl-save': { const k = /^\d+$/.test(t.dataset.k) ? +t.dataset.k : t.dataset.k, list = S.prefs.savedReflections || []; savePrefs({ savedReflections: list.includes(k) ? list.filter(x => x !== k) : [...list, k] }).then(render); return; }
     case 'log': return openLogger(t.dataset.q || '');
     case 'lq': captureLogger(); S.draft.quad = t.dataset.q; S.draft.search = ''; S.draft.picking = true; return drawLogger();
     case 'lw': captureLogger(); S.draft.label = t.dataset.w; S.draft.quad = quadOf(t.dataset.w); S.draft.picking = false; S.draft.search = ''; $('#sheet').scrollTop = 0; return drawLogger();
@@ -2481,6 +2525,7 @@ function start(u, em) {
   db.collection(`private/${em}/reviews`).orderBy('id').limit(24).onSnapshot(s => { S.reviewHist = s.docs.map(d => d.data()); soft(); }, () => {});
   db.collection('content/images/items').orderBy('name').onSnapshot(s => { S.images = s.docs.map(d => ({ id: d.id, ...d.data() })); soft(); }, () => {});
   loadServerStatus();
+  db.collection('content/quotes/items').orderBy('addedAt').onSnapshot(s => { S.quotes = s.docs.map(d => ({ id: d.id, ...d.data() })); soft(); }, () => {});
   db.collection('us_mind').orderBy('ts', 'desc').limit(100).onSnapshot(s => { S.mind = s.docs.map(d => ({ id: d.id, ...d.data() })); soft(); }, () => {});
   db.collection(`private/${em}/minddrafts`).orderBy('ts', 'desc').limit(30).onSnapshot(s => { S.mindDrafts = s.docs.map(d => ({ id: d.id, ...d.data() })); soft(); }, () => {});
   db.doc('us_context/main').onSnapshot(d => { S.ctx = d.exists ? d.data() : null; soft(); }, () => {});
