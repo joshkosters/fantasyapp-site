@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#1f4d22">
+<meta name="theme-color" content="#ece2fb">
 <meta name="robots" content="noindex, nofollow">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -352,7 +352,108 @@ svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stro
 .chk-res{font-size:13px;margin-top:8px}
 .chk-res div{padding:4px 0}
 .ok{color:var(--green);font-weight:700} .bad{color:var(--red);font-weight:700}
-.dock button{padding:0 11px;white-space:nowrap}
+.dock button{padding:0 11px}
+
+/* ===== Pastel theme for Us (overrides the shared base) ===== */
+:root{
+  --forest:#3d3558; --green:#7c6bb8; --green2:#a596e0; --ink:#3a3150; --text:#433d55; --muted:#867f98;
+  --lime:#f6c9d6; --lime2:#fbe0e7; --lime-soft:#f1ecfb; --bg:#f8f5fc; --card:#ffffff; --line:#ece6f4;
+  --red:#d9566a; --red-soft:#fde8ec; --amber:#c98a2b; --amber-soft:#fdf2df;
+  --shadow:0 1px 2px rgba(60,50,90,.04),0 8px 24px rgba(60,50,90,.07);
+}
+.hero{background:linear-gradient(135deg,#e6dcfa 0%,#fbe1ea 55%,#dcf2ea 100%)}
+.logo{background:#fff;color:#7c6bb8;box-shadow:0 4px 14px rgba(124,107,184,.18)}
+.mpill,.hbtn{background:rgba(255,255,255,.6);color:var(--ink)}
+.mpill button{background:rgba(255,255,255,.7);color:var(--ink)}
+.cta{background:var(--green);box-shadow:0 6px 16px rgba(124,107,184,.28)}
+.dock{background:#fff;box-shadow:0 10px 30px rgba(60,50,90,.18)}
+.dock button{color:var(--muted)}
+.dock button.on{background:linear-gradient(135deg,#e6dcfa,#fbe1ea);color:var(--ink)}
+.notice{background:linear-gradient(135deg,#efe8fb,#fdeef2);color:var(--ink)}
+.notice small{color:var(--muted)}
+.notice .ico{background:#fff;color:var(--green)}
+.notice .go{background:var(--green);color:#fff}
+.qcard{background:linear-gradient(140deg,#efe7fd 0%,#fde7ee 60%,#e3f5ee 100%);color:var(--ink)}
+.qcard .lab{color:var(--green)}
+.qcard .src{color:var(--muted)}
+.qcard .row button{background:rgba(255,255,255,.75);color:var(--ink)}
+.qcard .row button.on{background:var(--green);color:#fff}
+.btn.lime{background:var(--lime);color:var(--ink)}
+.toast{background:var(--ink)}
+.gate{background:linear-gradient(160deg,#e6dcfa 0%,#fbe1ea 55%,#dcf2ea 100%);color:var(--ink)}
+.gate p{color:var(--muted)}
+.gate .lk{color:var(--green)}
+.gate .logo{background:#fff}
+.chips button.on,.seg button.on,.toggle button.on,.words button.on,.scale button.on{background:var(--green);border-color:var(--green);color:#fff}
+.pause{border-left-color:#b8a9ec}
+.sw input:checked{background:var(--green)}
+.who{background:#e6dcfa;color:var(--ink)}
+.bubble{background:#f1ecfb;color:var(--green)}
+.preview{border-color:#cbbdf2;background:#f6f2fe}
+.preview .lab{color:var(--green)}
+.theirs{background:#f6f2fe}
+.theirs b{color:var(--green)}
+.opt input,.prompt .shr input,.chk input{accent-color:var(--green)}
+#gateErr{color:var(--red)!important}
+
+/* ===== Feelings map ===== */
+.fmap{display:grid;grid-template-columns:1fr 1fr;gap:8px;position:relative;margin:4px 0 6px}
+.fmap .qd{border:0;border-radius:18px;padding:10px;text-align:left;cursor:pointer}
+.fmap .qd b{display:block;font-size:13px;color:var(--ink);margin-bottom:6px}
+.fmap .dots{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+.fmap .dots i{display:block;aspect-ratio:1;border-radius:50%}
+.axis{display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:2px 4px 8px}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:8px 0}
+.tiles button{border:0;border-radius:16px;min-height:58px;padding:6px 4px;font-weight:700;font-size:13.5px;color:#2f2943;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.15;transition:transform .1s}
+.tiles button.on{outline:3px solid var(--ink);outline-offset:-3px;transform:scale(.97)}
+.zoomhead{display:flex;align-items:center;gap:8px;margin:2px 0 4px}
+.zoomhead button{border:0;background:var(--bg);border-radius:999px;padding:7px 12px;font-weight:700;font-size:13px;color:var(--ink)}
+.zoomhead b{color:var(--ink);font-size:15px}
+.chosen{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;margin:6px 0 12px}
+.chosen b{font-size:18px;color:#2f2943}
+.chosen button{margin-left:auto;border:0;background:rgba(255,255,255,.7);border-radius:999px;padding:6px 12px;font-weight:700;font-size:12.5px;color:var(--ink)}
+details.more{border:1px solid var(--line);border-radius:14px;padding:4px 12px;margin-bottom:12px;background:#fff}
+details.more summary{cursor:pointer;font-weight:700;color:var(--ink);padding:8px 0;font-size:14px}
+
+/* ===== Talk tools ===== */
+.tools{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.tool{border:0;background:#fff;border-radius:20px;padding:14px;text-align:left;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px;min-height:118px}
+.tool .ti{width:38px;height:38px;border-radius:12px;display:grid;place-items:center}
+.tool b{color:var(--ink);font-size:14.5px}
+.tool small{color:var(--muted);font-size:12px;line-height:1.35}
+.back{border:0;background:#fff;border-radius:999px;padding:8px 14px;font-weight:700;font-size:13px;color:var(--ink);box-shadow:var(--shadow);margin-bottom:12px}
+.step{background:#fff;border-radius:20px;padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.step .n{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--lime-soft);color:var(--green);font-weight:800;font-size:12px;margin-right:6px}
+.step h3{margin:0 0 8px;font-size:16px;color:var(--ink);display:flex;align-items:center}
+.step p{margin:6px 0;font-size:14px}
+.stem{background:var(--bg);border-radius:12px;padding:9px 12px;margin:6px 0;font-style:italic}
+.hcard{background:#fff;border-radius:20px;padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow)}
+.hcard h3{margin:0;font-size:16px;color:var(--ink)}
+.hcard .lab{font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-top:10px}
+.hcard p{margin:4px 0;font-size:14px}
+.hcard .ex{background:var(--bg);border-radius:12px;padding:8px 12px;font-style:italic;margin-top:4px;font-size:13.5px}
+.hcard .ex.good{background:#eef8f1}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.split .col{background:var(--bg);border-radius:14px;padding:10px}
+.split .col b{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--green);margin-bottom:4px}
+.ans{margin-bottom:10px}
+.ans .q{font-size:12px;font-weight:700;color:var(--muted)}
+.ans .a{font-size:14px;color:var(--text);white-space:pre-wrap}
+.cycle{display:flex;flex-direction:column;align-items:stretch;gap:0}
+.cycle .node{background:var(--bg);border-radius:12px;padding:8px 10px;font-size:13px}
+.cycle .node small{display:block;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.cycle .arr{text-align:center;color:var(--green2);font-size:14px;line-height:1.2}
+.phrase{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--line)}
+.phrase:last-child{border-bottom:0}
+.phrase span{flex:1;font-size:14.5px;color:var(--ink)}
+.phrase button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 11px;font-size:12.5px;font-weight:700;color:var(--green);white-space:nowrap}
+.startup{background:linear-gradient(140deg,#efe7fd,#fde7ee);border-radius:16px;padding:14px;font-size:16px;font-weight:600;color:var(--ink);margin:8px 0}
+.warnline{background:var(--amber-soft);color:var(--amber);border-radius:12px;padding:8px 12px;font-size:13px;font-weight:600;margin:6px 0}
+.sess{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;background:none;padding:11px 0;border-bottom:1px solid var(--line)}
+.card .sess:last-child{border-bottom:0}
+.sess .t{flex:1;min-width:0}
+.sess b{display:block;color:var(--ink)}
+.sess small{color:var(--muted);font-size:12px}
 </style>
 </head>
 <body>
@@ -461,12 +562,19 @@ const PROMPTS = [
 ];
 // Emotion vocabulary, grouped by pleasantness and energy (original word lists).
 const QUADS = {
-  ph: { name: 'Pleasant, high energy', hint: 'excited, hopeful, proud', words: ['excited','joyful','energized','hopeful','proud','playful','enthusiastic','amused','inspired','confident','eager','motivated','delighted','optimistic','silly','surprised'] },
-  pl: { name: 'Pleasant, low energy', hint: 'calm, content, loved', words: ['calm','content','relaxed','grateful','peaceful','safe','loved','connected','relieved','comfortable','at ease','satisfied','tender','cozy','secure','thoughtful'] },
-  uh: { name: 'Unpleasant, high energy', hint: 'anxious, stressed, angry', words: ['anxious','stressed','frustrated','angry','irritated','overwhelmed','worried','nervous','tense','jealous','panicked','defensive','annoyed','restless','embarrassed','scared'] },
-  ul: { name: 'Unpleasant, low energy', hint: 'sad, tired, lonely', words: ['sad','tired','lonely','disappointed','discouraged','hurt','numb','drained','bored','ashamed','withdrawn','guilty','down','empty','exhausted','unsure'] },
+  uh: { name: 'Unpleasant, high energy', hint: 'anxious, stressed, angry', words: ['furious','enraged','panicked','terrified','livid','frantic','angry','anxious','stressed','overwhelmed','frustrated','irritated','worried','nervous','tense','jealous','defensive','annoyed','restless','embarrassed','scared','afraid','pressured','agitated','resentful','impatient','on edge','rattled','shocked','insecure','uneasy','jittery','disgusted','provoked','disrespected','criticized'] },
+  ph: { name: 'Pleasant, high energy', hint: 'excited, hopeful, proud', words: ['ecstatic','elated','thrilled','exhilarated','euphoric','overjoyed','excited','energized','enthusiastic','inspired','motivated','passionate','joyful','playful','proud','delighted','amused','cheerful','hopeful','optimistic','eager','confident','curious','lively','happy','upbeat','focused','determined','accomplished','surprised','silly','adventurous','pleased','glad','engaged','interested'] },
+  ul: { name: 'Unpleasant, low energy', hint: 'sad, tired, lonely', words: ['hopeless','heartbroken','despondent','defeated','helpless','grieving','sad','lonely','hurt','exhausted','burned out','drained','disappointed','discouraged','rejected','left out','unappreciated','misunderstood','ashamed','guilty','regretful','vulnerable','invisible','disconnected','down','empty','numb','withdrawn','tired','sluggish','apathetic','bored','homesick','nostalgic','sorry','unsure'] },
+  pl: { name: 'Pleasant, low energy', hint: 'calm, content, loved', words: ['blissful','loved','grateful','fulfilled','serene','peaceful','connected','content','safe','secure','supported','understood','appreciated','valued','accepted','affectionate','tender','thankful','relieved','satisfied','calm','relaxed','comfortable','cozy','at ease','balanced','centered','carefree','mellow','rested','reflective','thoughtful','gentle','patient','humble','chill'] },
 };
-const NEAR = { anxious: ['worried','nervous','tense'], angry: ['frustrated','irritated','hurt'], sad: ['lonely','disappointed','hurt'], tired: ['drained','exhausted','numb'], stressed: ['overwhelmed','tense','anxious'], calm: ['relaxed','peaceful','content'], happy: ['joyful','content','grateful'], hurt: ['sad','disappointed','angry'], overwhelmed: ['stressed','exhausted','anxious'], lonely: ['sad','withdrawn','disconnected'] };
+// Map colors: strongest feelings sit at the outer corners and get the deepest pastel.
+const QCOL = { uh: [236, 112, 112], ph: [245, 192, 80], ul: [118, 150, 220], pl: [112, 196, 150] };
+function tileColor(q, i) { const t = Math.max(0, 1 - i / 36), k = 0.22 + 0.58 * t; const m = c => Math.round(255 - (255 - c) * k); const [r, g, b] = QCOL[q]; return `rgb(${m(r)},${m(g)},${m(b)})`; }
+const QLAYOUT = { uh: [1, 1], ph: [1, 0], ul: [0, 1], pl: [0, 0] }; // [top?, left?]
+const WHO = ['alone', 'partner', 'kids', 'family', 'friends', 'coworkers'];
+const WHERE = ['home', 'work', 'car', 'out', 'somewhere else'];
+const SLEEP = ['rough', 'okay', 'good'];
+const NEAR = { anxious: ['worried','nervous','uneasy'], angry: ['frustrated','resentful','hurt'], sad: ['lonely','disappointed','hurt'], tired: ['drained','exhausted','sluggish'], stressed: ['overwhelmed','pressured','tense'], calm: ['relaxed','peaceful','content'], happy: ['joyful','content','grateful'], hurt: ['rejected','disappointed','unappreciated'], overwhelmed: ['stressed','exhausted','pressured'], lonely: ['disconnected','left out','invisible'], frustrated: ['irritated','annoyed','impatient'], content: ['calm','satisfied','grateful'], excited: ['eager','thrilled','energized'], disappointed: ['discouraged','let down','sad'].filter(w => w !== 'let down') };
 const CONTEXTS = ['work', 'home', 'us', 'family', 'kids', 'friends', 'health', 'money', 'sleep', 'other'];
 const SUPPORT = ['Just letting you know', 'Please listen', 'I’d like reassurance', 'Can we spend time together?', 'I’d like practical help', 'I need some space', 'I’m not sure yet'];
 const RESPONSES = ['I see you', 'Want to talk?', 'Would a hug, help or space be useful?', 'Thank you for sharing'];
@@ -486,6 +594,8 @@ const S = {
   db: null, me: null, partner: null, names: {}, tab: 'home', fatal: null, loaded: false,
   myFeelings: [], shared: [], pauses: [], checkins: {}, myCheckin: null, commitments: [], prefs: {},
   feelFilter: 'mine', draft: null, refl: 0,
+  view: null, sessions: [], posts: [], drafts: {}, sessAns: {}, editing: {}, listen: { speaker: 'me', step: 0 },
+  gentle: { feel: '', about: '', need: '' }, after: {}, afterList: [], repairQ: '', newGoal: '', prefill: null, pendingRender: false,
 };
 
 /* ================= render ================= */
@@ -494,7 +604,9 @@ const TITLES = { home: 'Us', feelings: 'Feelings', talk: 'Talk', checkin: 'Check
 function badges() {
   const b = {};
   b.feelings = S.shared.filter(f => f.author === S.partner && !(f.seenBy || []).includes(S.me)).length;
-  b.talk = S.pauses.filter(p => p.author === S.partner && p.status !== 'closed' && !(p.ackBy || []).includes(S.me)).length;
+  b.talk = S.pauses.filter(p => p.author === S.partner && p.status !== 'closed' && !(p.ackBy || []).includes(S.me)).length
+    + S.sessions.filter(x => x.status !== 'closed' && (x.sharedBy || []).includes(S.partner) && !(x.sharedBy || []).includes(S.me)).length
+    + S.posts.filter(p => p.author === S.partner && (p.type === 'aftermath' || p.type === 'repair') && !(p.responses || {})[S.me]).length;
   b.checkin = S.commitments.filter(c => c.status === 'proposed' && (c.owners || []).includes(S.me) && !(c.acceptedBy || []).includes(S.me)).length;
   return b;
 }
@@ -510,9 +622,11 @@ function render() {
   const main = $('#main');
   if (S.fatal) { main.innerHTML = ''; return; }
   if (!S.loaded) { main.innerHTML = '<div class="skel" style="height:180px"></div>'; return; }
-  if (document.activeElement && document.activeElement.closest && document.activeElement.closest('#main') && /TEXTAREA|INPUT/.test(document.activeElement.tagName)) return; // don't wipe typing
   main.innerHTML = S.tab === 'home' ? homeHTML() : S.tab === 'feelings' ? feelingsHTML() : S.tab === 'talk' ? talkHTML() : checkinHTML();
 }
+
+const typingInMain = () => { const a = document.activeElement; return !!(a && a.closest && a.closest('#main') && /TEXTAREA|INPUT/.test(a.tagName)); };
+function renderSoft() { if (typingInMain()) { S.pendingRender = true; return; } render(); }
 
 /* ----- Home ----- */
 function reflectionCard() {
@@ -541,7 +655,7 @@ function homeHTML() {
   const first = nameOf(S.me);
   const hr = new Date().getHours();
   let h = `<div class="hello">Good ${hr < 12 ? 'morning' : hr < 17 ? 'afternoon' : 'evening'}, ${esc(first)}.</div>`;
-  if (S.pauses.some(p => p.status !== 'closed')) h += `<button class="notice" data-tab="talk" style="background:#2c4a63"><span class="ico" style="background:#c9dcf4;color:#2c4a63">${ic('pause')}</span><span>A pause is in place<small>Open Talk to see it</small></span><span class="go">Open</span></button>`;
+  if (S.pauses.some(p => p.status !== 'closed')) h += `<button class="notice" data-tab="talk" style="background:linear-gradient(135deg,#e3eefc,#efe8fb)"><span class="ico" style="color:#4c74b8">${ic('pause')}</span><span>A pause is in place<small>Open Talk to see it</small></span><span class="go">Open</span></button>`;
   h += reflectionCard();
   h += `<div class="card"><div class="chead"><h3>How are you feeling?</h3><span class="meta">private unless you share</span></div><div class="quad">
     ${Object.entries(QUADS).map(([k, q]) => `<button class="q-${k}" data-action="log" data-q="${k}">${esc(q.name)}<small>${esc(q.hint)}</small></button>`).join('')}</div></div>`;
@@ -570,7 +684,7 @@ function myItem(f) {
   const resp = sh && Object.entries(sh.responses || {}).filter(([k]) => k !== S.me);
   return `<div class="fitem"><span class="edot dot-${f.quad}" style="margin-top:6px"></span><div class="fmain">
     <b>${esc(f.label)}</b>${f.intensity ? ` <span style="color:var(--muted);font-size:13px">${f.intensity}/5</span>` : ''}<span class="pillv ${sh ? 'sh' : ''}">${sh ? (sh.mode === 'status' ? 'Short status shared' : 'Shared') : 'Private'}</span>
-    <div class="meta">${esc(when(f.ts))}${(f.contexts || []).length ? ' · ' + esc(f.contexts.join(', ')) : ''}</div>
+    <div class="meta">${esc(when(f.ts))}${(f.contexts || []).length ? ' · ' + esc(f.contexts.join(', ')) : ''}${(f.who || []).length ? ' · with ' + esc(f.who.join(', ')) : ''}${f.where ? ' · ' + esc(f.where) : ''}${f.sleep ? ' · sleep ' + esc(f.sleep) : ''}</div>
     ${f.note ? `<div class="note">${esc(f.note)}</div>` : ''}${f.body ? `<div class="note" style="color:var(--muted)">Body: ${esc(f.body)}</div>` : ''}${f.support ? `<div class="note" style="color:var(--muted)">What would help: ${esc(f.support)}</div>` : ''}
     ${resp && resp.length ? resp.map(([k, v]) => `<div class="bubble">${esc(nameOf(k))}: ${esc(v.text)}</div>`).join(' ') : ''}
     <div class="resp">${sh ? `<button data-action="unshare" data-id="${f.id}">Stop sharing</button>` : `<button data-action="share-later" data-id="${f.id}">Share…</button>`}<button data-action="feel-del" data-id="${f.id}">Delete</button></div>
@@ -609,16 +723,208 @@ function feelingsHTML() {
   return h;
 }
 
-/* ----- Talk ----- */
+/* ----- Talk (Phase 2) ----- */
+const KINDS = {
+  talk: { name: 'Conversation', prompts: [['happened', 'What happened?'], ['felt', 'What did I feel?'], ['mattered', 'What mattered to me?'], ['need', 'What do I need?'], ['understand', 'What do I want my partner to understand?']] },
+  compromise: { name: 'Compromise', prompts: [['core', 'My core need here (hard for me to bend on)'], ['flex', 'Where I can be flexible'], ['why', 'Why my core need matters to me'], ['step', 'A small first step I could try']] },
+  cycle: { name: 'Our cycle', prompts: [['trigger', 'What usually sets it off'], ['inside', 'What I feel or tell myself'], ['do', 'What I do next'], ['seen', 'What my partner might take from that'], ['they', 'What my partner tends to do'], ['needed', 'What I actually needed']] },
+};
+const GOALS = ['Be understood', 'Understand my partner', 'Ask for support', 'Make a decision', 'Repair', 'Brainstorm'];
+const HORSEMEN = [
+  { name: 'Criticism', what: 'Turning a complaint about a situation into a judgment of the person.', bad: '“You never think about anyone but yourself.”', anti: 'Gentle startup', how: 'Describe the situation and your feeling, then ask for what you need.', good: '“I felt stressed when the dishes piled up. Could we split them tonight?”' },
+  { name: 'Contempt', what: 'Mocking, eye-rolling, sarcasm or acting superior. It says “I’m better than you.”', bad: '“Oh, great job. Really impressive.” (with an eye-roll)', anti: 'Appreciation and respect', how: 'Notice what your partner does well, say it out loud, and speak from your own feelings and needs.', good: '“I’m frustrated right now, and I also know you’ve been carrying a lot this week.”' },
+  { name: 'Defensiveness', what: 'Protecting yourself by making excuses or turning the blame back.', bad: '“Well, I wouldn’t have forgotten if you’d reminded me.”', anti: 'Take some responsibility', how: 'Find the part that’s yours, even a small one, and own it.', good: '“You’re right, I forgot. I’m sorry. Let me fix it.”' },
+  { name: 'Stonewalling', what: 'Shutting down and withdrawing, often because you’re overwhelmed.', bad: 'Going silent, looking away, leaving without a word.', anti: 'Pause and self-soothe', how: 'Say you need a break, take at least 20 minutes doing something calming, and come back when you’re ready and safe.', good: '“I’m getting overwhelmed. I need a break, and I want to come back to this.”' },
+];
+const REPAIRS = {
+  'I’m feeling it': ['I’m getting worked up. Can we slow down?', 'That hurt. Can you say it a different way?', 'I’m feeling defensive right now.', 'I’m scared this is turning into a fight.', 'I need you to hear that this matters to me.'],
+  'Owning my part': ['You’re right about that part.', 'I can see how I made this harder.', 'That came out wrong. Can I try again?', 'I’m sorry. I didn’t mean it the way it sounded.', 'Let me take that back and start over.'],
+  'Slowing down': ['Can we take a short break and come back?', 'Let’s pause for 20 minutes.', 'I want to keep talking, just more calmly.', 'Can we stick to one topic?', 'Let’s try again later tonight.'],
+  'Finding common ground': ['What do we agree on so far?', 'I think we both want the same thing here.', 'What would a small compromise look like?', 'Help me understand your side.', 'What’s the most important part of this for you?'],
+  'Reaching for each other': ['I love you, even when we disagree.', 'We’re on the same team.', 'Thanks for hanging in there with me.', 'Can I have a hug?', 'I appreciate you telling me how you feel.'],
+};
+const AFTERMATH = [['happened', 'What happened, from my perspective?'], ['felt', 'What did I feel?'], ['under', 'What was underneath that feeling?'], ['needed', 'What did I need?'], ['theirs', 'What do I think my partner experienced?'], ['mine', 'What can I take responsibility for?'], ['safe', 'What would help me feel safe enough to move forward?']];
+const POST_RESP = ['Thank you for sharing', 'I’m open to talking', 'Not yet, but I will come back to it'];
+const label = (txt) => `<div class="src-note">${txt}</div>`;
+const GOTTMAN = 'Gottman concept, described in our own words.';
+
 function talkHTML() {
+  const v = S.view;
+  if (v && v.t === 'session') return sessionHTML(v.id);
+  if (v === 'listen') return listenHTML();
+  if (v === 'horse') return horseHTML();
+  if (v === 'after') return afterHTML();
+  if (v === 'repair') return repairHTML();
   let h = pauseCards(false);
-  if (!S.pauses.some(p => p.status !== 'closed')) h += `<div class="card"><div class="chead"><h3>Pause & Return</h3></div>
-    <p style="margin:0 0 10px">Either of you can ask for a pause at any time, without giving a reason. A return time is an intention, not a deadline, and either of you can decide not to pick a topic back up.</p>
-    <button class="btn block" data-action="pause">${'I need a pause'}</button></div>`;
+  const posts = S.posts.filter(p => p.author === S.partner && (p.type === 'aftermath' || p.type === 'repair')).slice(0, 4);
+  if (posts.length) h += `<div class="card"><div class="chead"><h3>From ${esc(nameOf(S.partner))}</h3></div>${posts.map(postItem).join('')}</div>`;
+  const open = S.sessions.filter(x => x.status !== 'closed');
+  if (open.length) h += `<div class="card"><div class="chead"><h3>Open conversations</h3></div>${open.map(sessRow).join('')}</div>`;
+  h += `<div class="tools">
+    ${tool('new-talk', 'talk', '#ece4fb', '#7c6bb8', 'Conversation Room', 'One topic. Write privately; answers show only when you both share.')}
+    ${tool('view-listen', 'feel', '#e0f2ea', '#3f8a6b', 'Listening exercise', 'Take turns speaking and reflecting back. Understanding first.')}
+    ${tool('view-horse', 'shield', '#fde7ec', '#c2546a', 'Four Horsemen', 'Spot the patterns, practice the antidotes, draft a gentle start.')}
+    ${tool('view-after', 'check', '#fdf1dc', '#b07a1e', 'After a fight', 'Reflect privately. Share only what you choose.')}
+    ${tool('view-repair', 'heart', '#e3eefc', '#4c74b8', 'Repair & compromise', 'Phrases for getting back on track, and a compromise guide.')}
+    ${tool('new-cycle', 'pause', '#efe9fa', '#6a5aa8', 'Our cycle', 'Map a pattern that keeps repeating, each from your side.')}
+  </div>`;
+  if (!S.pauses.some(p => p.status !== 'closed')) h += `<div class="card"><div class="chead"><h3>Pause & Return</h3></div><p style="margin:0 0 10px;font-size:14px">Either of you can ask for a pause at any time, without giving a reason. A return time is an intention, not a deadline.</p><button class="btn block" data-action="pause">I need a pause</button></div>`;
+  const closed = S.sessions.filter(x => x.status === 'closed').slice(0, 5);
+  if (closed.length) h += `<div class="card"><div class="chead"><h3>Past conversations</h3></div>${closed.map(sessRow).join('')}</div>`;
   h += safetyCard();
-  h += `<div class="card"><div class="chead"><h3>Coming next</h3><span class="meta">Phase 2</span></div><p class="line-sub" style="font-size:14px;margin:0">Conversation Room with private answers revealed only when you both share, a listening exercise, the Four Horsemen and their antidotes, an aftermath journal, and repair phrases.</p></div>`;
   return h;
 }
+const tool = (action, icon, bg, fg, title, sub) => `<button class="tool" data-action="${action}"><span class="ti" style="background:${bg};color:${fg}">${ic(icon)}</span><b>${title}</b><small>${sub}</small></button>`;
+function sessState(x) {
+  const sb = x.sharedBy || [], me = sb.includes(S.me), them = sb.includes(S.partner);
+  return me && them ? 'Both shared' : me ? `Waiting for ${nameOf(S.partner)}` : them ? `${nameOf(S.partner)} shared; your turn when ready` : 'Writing privately';
+}
+const sessRow = x => `<button class="sess" data-action="open-sess" data-id="${x.id}"><span class="t"><b>${esc(x.topic)}</b><small>${esc(KINDS[x.kind] ? KINDS[x.kind].name : 'Conversation')} · ${esc(x.status === 'closed' ? 'Closed' : x.status === 'later' ? 'Revisit later' : sessState(x))}</small></span><span style="color:var(--muted)">›</span></button>`;
+function postItem(p) {
+  const mine = (p.responses || {})[S.me];
+  const body = p.type === 'repair' ? `<div class="startup" style="font-size:15px;margin:6px 0">${esc(p.text)}</div>`
+    : `${Object.entries(p.answers || {}).map(([k, a]) => `<div class="ans"><div class="q">${esc((AFTERMATH.find(x => x[0] === k) || [k, k])[1])}</div><div class="a">${esc(a)}</div></div>`).join('')}${p.request === 'repair' ? '<div class="bubble">Would like to repair</div>' : p.request === 'revisit' ? '<div class="bubble">Would like to revisit this later</div>' : ''}`;
+  return `<div class="fitem"><div class="fmain"><b>${esc(nameOf(p.author))} ${p.type === 'repair' ? 'sent a repair' : 'shared a reflection'}</b><div class="meta">${esc(when(p.ts))}</div>${body}
+    <div class="resp">${POST_RESP.map(r => `<button data-action="post-resp" data-id="${p.id}" data-r="${esc(r)}" class="${mine && mine.text === r ? 'on' : ''}">${esc(r)}</button>`).join('')}</div></div></div>`;
+}
+
+/* session view */
+function sessionHTML(id) {
+  const x = S.sessions.find(z => z.id === id);
+  if (!x) return `<button class="back" data-action="back">‹ Talk</button><div class="card empty">This conversation was removed.</div>`;
+  const K = KINDS[x.kind] || KINDS.talk, P = nameOf(S.partner);
+  const sb = x.sharedBy || [], iShared = sb.includes(S.me), theyShared = sb.includes(S.partner), both = iShared && theyShared;
+  const draft = (S.drafts[id] || {}), cache = S.sessAns[id] || {};
+  let h = `<button class="back" data-action="back">‹ Talk</button>
+    <div class="hcard"><h3>${esc(x.topic)}</h3><div class="meta" style="font-size:12.5px;color:var(--muted);margin-top:4px">${esc(K.name)} · started by ${esc(x.createdBy === S.me ? 'you' : nameOf(x.createdBy))} ${esc(when(x.createdAt))} · ${esc(sessState(x))}</div>
+    <div class="resp"><button data-action="pause">${'Pause'}</button>${x.status !== 'closed' ? `<button data-action="sess-status" data-id="${id}" data-s="later">Revisit later</button><button data-action="sess-status" data-id="${id}" data-s="closed">Close</button>` : `<button data-action="sess-status" data-id="${id}" data-s="open">Reopen</button>`}</div></div>`;
+  if (x.kind === 'talk') {
+    const g = (x.goals || {});
+    h += `<div class="step"><h3><span class="n">1</span>My goal for this</h3><div class="words">${GOALS.map(o => `<button data-action="sess-goal" data-id="${id}" data-v="${esc(o)}" class="${g[S.me] === o ? 'on' : ''}">${esc(o)}</button>`).join('')}</div>${g[S.partner] ? `<p style="font-size:13px;color:var(--muted)">${esc(P)}'s goal: <b style="color:var(--ink)">${esc(g[S.partner])}</b></p>` : ''}</div>`;
+  }
+  const n0 = x.kind === 'talk' ? 2 : 1;
+  h += `<div class="step"><h3><span class="n">${n0}</span>${iShared ? 'What I shared' : 'Write privately'}</h3>`;
+  if (iShared && cache.mine && !S.editing[id]) {
+    h += K.prompts.map(([k, q]) => cache.mine[k] ? `<div class="ans"><div class="q">${esc(q)}</div><div class="a">${esc(cache.mine[k])}</div></div>` : '').join('');
+    h += `<div class="resp">${!both ? `<button data-action="sess-withdraw" data-id="${id}">Withdraw before ${esc(P)} shares</button>` : ''}<button data-action="sess-reshare" data-id="${id}">Edit and share again</button></div>`;
+  } else {
+    h += `<p style="color:var(--muted);font-size:13px;margin-top:0">Only you can see this until you choose to share. Skip anything you like.</p>`;
+    h += K.prompts.map(([k, q]) => `<div class="prompt"><label>${esc(q)}</label><textarea data-draft="${k}" data-sid="${id}" placeholder="Private">${esc(draft[k] || '')}</textarea></div>`).join('');
+    h += `<button class="btn block" data-action="sess-share" data-id="${id}">Share my answers with ${esc(P)}</button>
+      <div class="src-note">${theyShared ? `${esc(P)} has shared. Their answers appear once you share yours.` : `${esc(P)}'s answers stay hidden until you both share. The database enforces this.`}</div>`;
+  }
+  h += `</div>`;
+  if (both) {
+    const th = cache.theirs || {};
+    h += `<div class="step"><h3><span class="n">${n0 + 1}</span>Side by side</h3><p style="font-size:13px;color:var(--muted);margin-top:0">${x.kind === 'cycle' ? 'Look for the loop, not a culprit.' : 'Listen first. Try to understand before solving anything.'}</p>`;
+    if (x.kind === 'cycle') h += `<div class="split">${[['You', cache.mine || {}], [P, th]].map(([who, A]) => `<div class="col" style="background:#fff;padding:0"><b style="padding:0 2px">${esc(who)}</b><div class="cycle">${K.prompts.map(([k, q], i) => `${i ? '<div class="arr">↓</div>' : ''}<div class="node"><small>${esc(q)}</small>${esc(A[k] || '—')}</div>`).join('')}<div class="arr">↺ back to the start</div></div></div>`).join('')}</div>`;
+    else h += K.prompts.map(([k, q]) => `<div class="ans"><div class="q">${esc(q)}</div><div class="split"><div class="col"><b>You</b>${esc((cache.mine || {})[k] || '—')}</div><div class="col"><b>${esc(P)}</b>${esc(th[k] || '—')}</div></div></div>`).join('');
+    h += `</div>`;
+    if (x.kind === 'talk') {
+      h += `<div class="step"><h3><span class="n">${n0 + 2}</span>What I heard</h3><p style="font-size:13px;color:var(--muted);margin-top:0">Reflect back what ${esc(P)} said, in your own words. Try “What I hear you saying is…”</p>
+        <textarea class="sfield" data-sid="${id}" data-f="heard" style="width:100%;min-height:70px;border:1px solid var(--line);border-radius:14px;padding:10px;background:var(--bg)">${esc((x.heard || {})[S.me] || '')}</textarea>
+        ${(x.heard || {})[S.partner] ? `<div class="theirs"><b>${esc(P)} heard</b>${esc(x.heard[S.partner])}</div>` : ''}</div>`;
+      h += `<div class="step"><h3><span class="n">${n0 + 3}</span>Where we are</h3>
+        <div class="prompt"><label>Common ground</label><textarea class="sfield" data-sid="${id}" data-f="common">${esc(x.common || '')}</textarea></div>
+        <div class="prompt"><label>Still different, and that's okay for now</label><textarea class="sfield" data-sid="${id}" data-f="differences">${esc(x.differences || '')}</textarea></div>
+        <div class="resp"><button data-action="sess-commit" data-id="${id}">Make a commitment</button><button data-action="sess-status" data-id="${id}" data-s="later">Revisit later</button><button data-action="sess-status" data-id="${id}" data-s="closed">Done for now</button></div>
+        <div class="src-note">Both of you can edit these. Nobody has to agree to anything.</div></div>`;
+    } else if (x.kind === 'compromise') {
+      h += `<div class="step"><h3><span class="n">${n0 + 2}</span>Our first small step</h3><div class="prompt"><textarea class="sfield" data-sid="${id}" data-f="firstStep" placeholder="Something small you'll both try">${esc(x.firstStep || '')}</textarea></div>
+        <button class="btn block" data-action="sess-commit" data-id="${id}">Turn it into a shared commitment</button><div class="src-note">Compromise based on core needs and flexible areas is a Gottman concept, described in our own words.</div></div>`;
+    } else {
+      h += `<div class="step"><h3><span class="n">${n0 + 2}</span>Where could either of us step out of the loop?</h3><div class="prompt"><textarea class="sfield" data-sid="${id}" data-f="common">${esc(x.common || '')}</textarea></div><div class="src-note">Original Us exercise. Edit your side any time with “Edit and share again.”</div></div>`;
+    }
+  } else if (iShared) h += `<div class="card empty" style="padding:18px">Waiting for ${esc(P)}. No rush: they'll share when they're ready, or not at all.</div>`;
+  return h;
+}
+
+/* listening */
+function listenHTML() {
+  const L = S.listen, P = nameOf(S.partner), me = nameOf(S.me);
+  const spk = L.speaker === 'me' ? me : P, lst = L.speaker === 'me' ? P : me;
+  const steps = [
+    ['Speaker shares', `${spk} talks about one concern, using “I” statements. ${lst} just listens, without interrupting, defending or fixing.`],
+    ['Listener reflects', `${lst} says back what they heard, in their own words:`, ['What I hear you saying is…', 'It sounds like you felt…', 'What matters most here is…']],
+    ['Speaker confirms', `${spk} says what landed, corrects anything missed, or adds context. Repeat steps 1 to 3 until ${spk} feels understood.`],
+    ['Switch, when you’re both ready', `Swap roles only when both of you want to. Agreement isn’t the goal. Understanding is.`],
+  ];
+  return `<button class="back" data-action="back">‹ Talk</button>
+    <div class="hcard"><h3>Listening exercise</h3><p>Who's speaking first?</p><div class="toggle" style="margin:6px 0 0"><button data-action="listen-who" data-v="me" class="${L.speaker === 'me' ? 'on' : ''}">${esc(me)}</button><button data-action="listen-who" data-v="them" class="${L.speaker === 'them' ? 'on' : ''}">${esc(P)}</button></div></div>
+    ${steps.map(([t, p, stems], i) => `<div class="step" style="${i === L.step ? 'outline:2px solid #cbbdf2' : 'opacity:' + (i < L.step ? '.6' : '1')}"><h3><span class="n">${i + 1}</span>${esc(t)}</h3><p>${esc(p)}</p>${(stems || []).map(x => `<div class="stem">${esc(x)}</div>`).join('')}</div>`).join('')}
+    <div class="resp" style="margin-bottom:12px"><button data-action="listen-step" data-v="-1">Back</button><button class="on" data-action="listen-step" data-v="1">Next step</button><button data-action="listen-swap">Switch speakers</button><button data-action="pause">Pause</button></div>
+    ${label('Speaker-listener reflection is a Gottman concept. This guide is written for Us.')}`;
+}
+
+/* four horsemen + gentle startup */
+function startupWarnings(t) {
+  const w = [];
+  if (/\b(always|never)\b/i.test(t)) w.push('“Always” and “never” tend to sound like criticism. Try describing this one time.');
+  if (/\byou('re| are) (so|such|being)\b/i.test(t) || /\b(lazy|selfish|stupid|ridiculous|crazy|useless|pathetic)\b/i.test(t)) w.push('Describe the situation, not your partner’s character.');
+  if (/\bwhatever\b|\bseriously\?/i.test(t)) w.push('That can read as contempt. Say what you feel instead.');
+  return w;
+}
+function horseHTML() {
+  const g = S.gentle, sentence = `I feel ${g.feel || '___'} about ${g.about || '___'}.${g.need ? ' I need ' + g.need + '.' : ''}`;
+  const warns = startupWarnings([g.feel, g.about, g.need].join(' '));
+  return `<button class="back" data-action="back">‹ Talk</button>
+    ${HORSEMEN.map(x => `<div class="hcard"><h3>${esc(x.name)}</h3><p>${esc(x.what)}</p><div class="ex">${esc(x.bad)}</div><div class="lab">Antidote: ${esc(x.anti)}</div><p>${esc(x.how)}</p><div class="ex good">${esc(x.good)}</div></div>`).join('')}
+    ${label('The Four Horsemen and their antidotes are a Gottman concept. Descriptions and examples are written for Us.')}
+    <div class="step" style="margin-top:12px"><h3>Draft a gentle start</h3>
+      <label class="field"><span>I feel…</span><input id="gFeel" value="${esc(g.feel)}" placeholder="worried"></label>
+      <label class="field"><span>about… (the situation, not the person)</span><input id="gAbout" value="${esc(g.about)}" placeholder="how tight money is this month"></label>
+      <label class="field"><span>I need / Would you… (optional)</span><input id="gNeed" value="${esc(g.need)}" placeholder="us to look at the budget together this weekend"></label>
+      <div class="startup" id="gOut">${esc(sentence)}</div><div id="gWarn">${warns.map(w => `<div class="warnline">${esc(w)}</div>`).join('')}</div>
+      <div class="resp"><button data-action="g-copy">Copy</button><button data-action="g-save">Save privately</button><button data-action="g-talk">Start a conversation with this</button></div>
+      ${label('Your draft stays on your device until you save or share it.')}</div>`;
+}
+
+/* aftermath */
+function afterHTML() {
+  const A = S.after;
+  let h = `<button class="back" data-action="back">‹ Talk</button>
+    <div class="step"><h3>After a fight</h3><p style="color:var(--muted);font-size:13px;margin-top:0">For you alone. Write when you're calm enough, and share only what you choose. If you don't feel safe, skip this and get support first.</p>
+    ${AFTERMATH.map(([k, q]) => `<div class="prompt"><label>${esc(q)}</label><textarea data-after="${k}">${esc(A[k] || '')}</textarea></div>`).join('')}
+    <button class="btn block" data-action="after-save">Save privately</button>${label('Prompts from your Relationship Hub plan. Processing a fight afterward is a Gottman concept.')}</div>`;
+  if (S.afterList.length) h += `<div class="card"><div class="chead"><h3>My reflections</h3><span class="meta">private</span></div>${S.afterList.map(e => `<div class="fitem"><div class="fmain"><b>${esc(when(e.ts))}</b><div class="note">${esc((e.answers || {}).happened || (e.answers || {}).felt || '')}</div><div class="resp"><button data-action="after-share" data-id="${e.id}">Share some of this…</button><button data-action="after-del" data-id="${e.id}">Delete</button></div></div></div>`).join('')}</div>`;
+  return h;
+}
+function openAfterShare(e) {
+  const P = nameOf(S.partner);
+  openSheet(`<h2>Share with ${esc(P)}</h2><p style="margin:-6px 0 12px;color:var(--muted)">Check only what you want ${esc(P)} to see. “Not ready to share” is always fine.</p>
+    ${AFTERMATH.filter(([k]) => (e.answers || {})[k]).map(([k, q]) => `<label class="opt"><input type="checkbox" data-ash="${k}"><span><b>${esc(q)}</b><small>${esc(e.answers[k])}</small></span></label>`).join('')}
+    <div class="field"><span>Ending with</span>
+      <label class="opt"><input type="radio" name="areq" value="none" checked><span><b>Just sharing</b></span></label>
+      <label class="opt"><input type="radio" name="areq" value="repair"><span><b>I'd like to repair</b></span></label>
+      <label class="opt"><input type="radio" name="areq" value="revisit"><span><b>I'd like to revisit this later</b></span></label></div>
+    <button class="btn block" data-action="after-send" data-id="${e.id}">Share</button>`);
+}
+
+/* repair + compromise */
+function repairHTML() {
+  const q = (S.repairQ || '').toLowerCase();
+  let h = `<button class="back" data-action="back">‹ Talk</button>
+    <div class="step"><h3>Compromise guide</h3><p style="font-size:14px;margin-top:0">Each of you writes your core need and where you can bend, privately. Then you see both and pick one small first step with a review date.</p><button class="btn block" data-action="new-compromise">Start a compromise</button></div>
+    <label class="search">${'<svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4-4"/></svg>'}<input id="repQ" placeholder="Search repair phrases" value="${esc(S.repairQ || '')}" autocomplete="off"></label>`;
+  for (const [cat, list] of Object.entries(REPAIRS)) {
+    const hits = list.filter(x => !q || x.toLowerCase().includes(q) || cat.toLowerCase().includes(q));
+    if (hits.length) h += `<div class="card"><div class="chead"><h3>${esc(cat)}</h3></div>${hits.map(x => `<div class="phrase"><span>${esc(x)}</span><button data-action="rep-send" data-t="${esc(x)}">Send</button></div>`).join('')}</div>`;
+  }
+  h += label('Repair attempts are a Gottman concept. These phrases are original to Us. No phrase is a magic fix or an obligation to forgive.');
+  return h;
+}
+
+/* new session sheet */
+function openNewSession(kind, topic, prefill) {
+  const K = KINDS[kind];
+  openSheet(`<h2>New ${esc(K.name.toLowerCase())}</h2>
+    <label class="field"><span>Topic</span><input id="sTopic" maxlength="80" value="${esc(topic || '')}" placeholder="${kind === 'cycle' ? 'When plans change last minute' : kind === 'compromise' ? 'How we split weekend chores' : 'Holiday plans with family'}"></label>
+    <div class="src-note" style="margin:-6px 0 12px">Keep it neutral and about one thing. ${esc(nameOf(S.partner))} sees the topic.</div>
+    ${kind === 'talk' ? `<div class="field"><span>My goal (optional)</span><div class="words" id="sGoals">${GOALS.map(o => `<button data-action="pick-goal" data-v="${esc(o)}">${esc(o)}</button>`).join('')}</div></div>` : ''}
+    <button class="btn block" data-action="sess-create" data-kind="${kind}">Start</button>`);
+  S.newGoal = ''; S.prefill = prefill || null;
+}
+
 function safetyCard() {
   return `<div class="safe"><h3>${ic('shield')} If things feel unsafe</h3>
     <p>Stop any conversation and get to a safe place. This app isn't a crisis service or a therapist.</p>
@@ -655,7 +961,7 @@ function checkinHTML() {
   }
   const nTheirs = theirDoc ? Object.keys(theirDoc.answers || {}).length : 0;
   h += `<button class="btn block" data-action="ci-share">${iShared ? 'Update what I’ve shared' : 'Share the checked answers'}</button>
-    <div class="src-note">${nTheirs ? (iShared ? `${esc(nameOf(S.partner))} shared ${nTheirs} answer${nTheirs > 1 ? 's' : ''}.` : `${esc(nameOf(S.partner))} shared ${nTheirs} answer${nTheirs > 1 ? 's' : ''}. Share yours to see them, so you both open up at the same time.`) : 'Answers save privately as you type.'} Questions from your Relationship Hub plan.</div></div>`;
+    <div class="src-note">${nTheirs ? (iShared ? `${esc(nameOf(S.partner))} shared ${nTheirs} answer${nTheirs > 1 ? 's' : ''}.` : `${esc(nameOf(S.partner))} shared ${nTheirs} answer${nTheirs > 1 ? 's' : ''}. Share yours to see them, so you both open up at the same time.`) : 'Answers save privately as you type.'} The weekly check-in structure comes from the spec; the wording is original.</div></div>`;
   const C = S.commitments;
   const groups = [['Waiting', C.filter(c => c.status === 'proposed')], ['Active', C.filter(c => c.status === 'active')], ['Finished', C.filter(c => c.status === 'done' || c.status === 'released').slice(0, 10)]];
   h += `<div class="card"><div class="chead"><h3>Commitments</h3><button class="linkbtn" data-action="commit-new">+ New</button></div>`;
@@ -687,27 +993,44 @@ function fail(e) {
 
 /* ----- Feeling logger ----- */
 function openLogger(q, existing) {
-  S.draft = existing ? { ...existing, share: 'private' } : { quad: q || '', label: '', intensity: 0, contexts: [], body: '', note: '', support: '', share: 'private', shareWhat: 'label', status: '' };
+  S.draft = existing ? { ...existing, share: 'private' } : { quad: q || '', label: '', intensity: 0, contexts: [], who: [], where: '', sleep: '', moved: '', body: '', note: '', support: '', share: 'private', shareWhat: 'label', status: '', picking: true, search: '' };
   drawLogger();
 }
+const tileBtn = (w, q, i, d) => `<button data-action="lw" data-w="${esc(w)}" class="${d.label === w ? 'on' : ''}" style="background:${tileColor(q, i)}">${esc(w)}</button>`;
+function wordPicker(d) {
+  const sq = (d.search || '').trim().toLowerCase();
+  if (sq) {
+    const hits = Object.entries(QUADS).flatMap(([q, x]) => x.words.map((w, i) => ({ w, q, i }))).filter(o => o.w.includes(sq));
+    return `<div class="tiles">${hits.map(o => tileBtn(o.w, o.q, o.i, d)).join('') || '<span class="src-note" style="grid-column:1/-1">No match. Try another word.</span>'}</div>`;
+  }
+  if (!d.quad) {
+    const panel = q => { const [top, left] = QLAYOUT[q]; let dots = ''; for (let r = 0; r < 6; r++) for (let c = 0; c < 6; c++) { const rr = top ? r : 5 - r, cc = left ? c : 5 - c; dots += `<i style="background:${tileColor(q, rr * 6 + cc)}"></i>`; } return `<button class="qd" data-action="lq" data-q="${q}" style="background:${tileColor(q, 33)}"><b>${esc(QUADS[q].name)}</b><span class="dots">${dots}</span></button>`; };
+    return `<div class="axis"><span>↑ More energy</span><span></span></div><div class="fmap">${['uh', 'ph', 'ul', 'pl'].map(panel).join('')}</div><div class="axis"><span>← Unpleasant</span><span>Pleasant →</span></div>`;
+  }
+  return `<div class="zoomhead"><button data-action="lq" data-q="">‹ All feelings</button><b>${esc(QUADS[d.quad].name)}</b></div><div class="tiles">${QUADS[d.quad].words.map((w, i) => tileBtn(w, d.quad, i, d)).join('')}</div>`;
+}
+const chipRow = (list, sel, action, multi) => `<div class="words">${list.map(v => `<button data-action="${action}" data-v="${esc(v)}" class="${(multi ? sel.includes(v) : sel === v) ? 'on' : ''}">${esc(v)}</button>`).join('')}</div>`;
 function drawLogger() {
   const d = S.draft, P = nameOf(S.partner);
-  const search = ($('#fSearch') || {}).value || '';
-  let words = d.quad ? QUADS[d.quad].words : [];
-  if (search.trim()) words = Object.values(QUADS).flatMap(x => x.words).filter(w => w.includes(search.trim().toLowerCase()));
   const near = d.label && NEAR[d.label] ? NEAR[d.label].filter(w => w !== d.label) : [];
   const preview = d.share === 'private' ? '' : d.share === 'status' ? `<div class="preview"><div class="lab">${esc(P)} will see</div><b>${esc(nameOf(S.me))} shared a status</b><div>${esc(d.status || 'Rough day, but I’m okay')}</div></div>`
-    : `<div class="preview"><div class="lab">${esc(P)} will see</div><b>${esc(nameOf(S.me))} is feeling ${esc(d.label || '…')}</b>${d.shareWhat !== 'label' && d.contexts.length ? `<div style="font-size:13px;color:var(--muted)">${esc(d.contexts.join(', '))}</div>` : ''}${d.shareWhat !== 'label' && d.note ? `<div>${esc(d.note)}</div>` : ''}${d.shareWhat === 'support' && d.support ? `<div class="bubble" style="background:#fff">${esc(d.support)}</div>` : ''}<div style="font-size:12px;color:var(--muted);margin-top:6px">Intensity, body notes${d.shareWhat === 'label' ? ', context and notes' : ''} stay private.</div></div>`;
-  const html = `<h2>${d.id ? 'Share this feeling' : 'How are you feeling?'}</h2>
-    ${d.id ? '' : `<div class="quad" style="margin-bottom:10px">${Object.entries(QUADS).map(([k, x]) => `<button class="q-${k}" data-action="lq" data-q="${k}" style="${d.quad === k ? 'outline:3px solid var(--ink);outline-offset:-3px' : ''}">${esc(x.name)}</button>`).join('')}</div>
-    <label class="search" style="box-shadow:none;border:1px solid var(--line);height:42px">${'<svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4-4"/></svg>'}<input id="fSearch" placeholder="Search feelings" value="${esc(search)}" autocomplete="off"></label>
-    <div class="words">${words.map(w => `<button data-action="lw" data-w="${esc(w)}" class="${d.label === w ? 'on' : ''}">${esc(w)}</button>`).join('') || '<span class="src-note">Pick a group above, or search.</span>'}</div>
-    ${near.length ? `<div class="src-note">Close to ${esc(d.label)}: </div><div class="words">${near.map(w => `<button class="near" data-action="lw" data-w="${esc(w)}">${esc(w)}</button>`).join('')}</div>` : ''}
-    <div class="field" style="margin-top:12px"><span>How strong? (optional)</span><div class="scale">${[1, 2, 3, 4, 5].map(n => `<button data-action="li" data-n="${n}" class="${d.intensity === n ? 'on' : ''}">${n}</button>`).join('')}</div></div>
+    : `<div class="preview"><div class="lab">${esc(P)} will see</div><b>${esc(nameOf(S.me))} is feeling ${esc(d.label || '…')}</b>${d.shareWhat !== 'label' && d.contexts.length ? `<div style="font-size:13px;color:var(--muted)">${esc(d.contexts.join(', '))}</div>` : ''}${d.shareWhat !== 'label' && d.note ? `<div>${esc(d.note)}</div>` : ''}${d.shareWhat === 'support' && d.support ? `<div class="bubble" style="background:#fff">${esc(d.support)}</div>` : ''}<div style="font-size:12px;color:var(--muted);margin-top:6px">Intensity, body notes, who and where${d.shareWhat === 'label' ? ', context and notes' : ''} stay private.</div></div>`;
+  let picker = '';
+  if (!d.id) {
+    if (d.label && !d.picking) picker = `<div class="chosen" style="background:${tileColor(d.quad, QUADS[d.quad].words.indexOf(d.label))}"><b>${esc(d.label)}</b><button data-action="lrepick">Change</button></div>${near.length ? `<div class="src-note">Or closer to: </div><div class="words">${near.map(w => `<button class="near" data-action="lw" data-w="${esc(w)}">${esc(w)}</button>`).join('')}</div>` : ''}`;
+    else picker = `<label class="search" style="box-shadow:none;border:1px solid var(--line);height:42px"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4-4"/></svg><input id="fSearch" placeholder="Search 144 feelings" value="${esc(d.search || '')}" autocomplete="off"></label>${wordPicker(d)}`;
+  }
+  const details = (d.id || (d.label && !d.picking)) ? `
+    ${d.id ? '' : `<div class="field" style="margin-top:4px"><span>How strong? (optional)</span><div class="scale">${[1, 2, 3, 4, 5].map(n => `<button data-action="li" data-n="${n}" class="${d.intensity === n ? 'on' : ''}">${n}</button>`).join('')}</div></div>
     <div class="field"><span>What's it about? (optional)</span><div class="words">${CONTEXTS.map(c => `<button data-action="lc" data-c="${c}" class="${d.contexts.includes(c) ? 'on' : ''}">${c}</button>`).join('')}</div></div>
+    <details class="more" ${(d.who || []).length || d.where || d.sleep || d.moved ? 'open' : ''}><summary>Who, where, sleep, movement (optional)</summary>
+      <div class="field"><span>Who's with you?</span>${chipRow(WHO, d.who || [], 'lwho', true)}</div>
+      <div class="field"><span>Where are you?</span>${chipRow(WHERE, d.where || '', 'lwhere', false)}</div>
+      <div class="field"><span>Sleep last night</span>${chipRow(SLEEP, d.sleep || '', 'lsleep', false)}</div>
+      <div class="field"><span>Moved your body today?</span>${chipRow(['yes', 'no'], d.moved || '', 'lmoved', false)}</div></details>
     <label class="field"><span>What happened? (optional)</span><textarea id="fNote" placeholder="A few words for yourself">${esc(d.note)}</textarea></label>
     <label class="field"><span>Where do you feel it? (optional)</span><input id="fBody" placeholder="tight chest, tired eyes…" value="${esc(d.body)}"></label>
-    <div class="field"><span>What might help? (optional)</span><div class="words">${SUPPORT.map(s => `<button data-action="ls" data-s="${esc(s)}" class="${d.support === s ? 'on' : ''}">${esc(s)}</button>`).join('')}</div></div>`}
+    <div class="field"><span>What might help? (optional)</span><div class="words">${SUPPORT.map(x => `<button data-action="ls" data-s="${esc(x)}" class="${d.support === x ? 'on' : ''}">${esc(x)}</button>`).join('')}</div></div>`}
     <div class="field"><span>Who sees this?</span>
       <label class="opt"><input type="radio" name="vis" value="private" ${d.share === 'private' ? 'checked' : ''}><span><b>Private</b><small>Only you. ${esc(P)} can't see it, and nothing tells them it exists.</small></span></label>
       <label class="opt"><input type="radio" name="vis" value="share" ${d.share === 'share' ? 'checked' : ''}><span><b>Share with ${esc(P)}</b><small>You choose what's included below.</small></span></label>
@@ -717,11 +1040,12 @@ function drawLogger() {
     ${d.share === 'status' ? `<label class="field"><span>Your status</span><input id="fStatus" maxlength="100" placeholder="Rough day, but I'm okay" value="${esc(d.status)}"></label>` : ''}
     ${preview}
     <div class="err" id="fErr"></div>
-    <button class="btn block" data-action="feel-save">${d.id ? 'Share' : d.share === 'private' ? 'Save privately' : 'Save and share'}</button>
-    <div class="src-note">Inspired by the general idea of mood-and-energy check-ins. Emotion words are an original list.</div>`;
+    <button class="btn block" data-action="feel-save">${d.id ? 'Share' : d.share === 'private' ? 'Save privately' : 'Save and share'}</button>` : '';
+  const html = `<h2>${d.id ? 'Share this feeling' : 'How are you feeling?'}</h2>${picker}${details}
+    <div class="src-note">The energy-and-pleasantness map follows a common way of sorting emotions. The 144 words are an original list.</div>`;
   const keepScroll = $('#sheet').scrollTop;
   if (sheetOpen) { $('#sheetIn').innerHTML = '<div class="grab"></div>' + html; $('#sheet').scrollTop = keepScroll; } else openSheet(html);
-  const fs = $('#fSearch'); if (fs && search) { fs.focus(); fs.setSelectionRange(search.length, search.length); }
+  const fs = $('#fSearch'); if (fs && d.search) { fs.focus(); fs.setSelectionRange(d.search.length, d.search.length); }
 }
 function captureLogger() {
   const d = S.draft; if (!d) return;
@@ -734,10 +1058,10 @@ async function saveFeeling() {
   if (!d.id && !d.label) { err.textContent = 'Pick a feeling word first.'; return; }
   if (d.share === 'status' && !d.status.trim()) { err.textContent = 'Write a short status, or choose Private.'; return; }
   const db = S.db, id = d.id || uid(), ts = d.ts || Date.now();
-  const priv = { id, ts, quad: d.quad, label: d.label, intensity: d.intensity || null, contexts: d.contexts, body: d.body.trim(), note: d.note.trim(), support: d.support, sharedId: d.sharedId || null };
+  const priv = { id, ts, quad: d.quad, label: d.label, intensity: d.intensity || null, contexts: d.contexts, who: d.who || [], where: d.where || '', sleep: d.sleep || '', moved: d.moved || '', body: (d.body || '').trim(), note: (d.note || '').trim(), support: d.support || '', sharedId: d.sharedId || null };
   try {
     if (d.share !== 'private') {
-      const sid = d.sharedId || uid();
+      d.note = d.note || ''; const sid = d.sharedId || uid();
       const shared = { author: S.me, ts, sharedAt: Date.now(), mode: d.share === 'status' ? 'status' : 'feeling', quad: d.quad, responses: {}, seenBy: [] };
       if (d.share === 'status') shared.status = d.status.trim();
       else {
@@ -769,15 +1093,15 @@ function openPause(existing) {
 }
 
 /* ----- Commitment sheet ----- */
-function openCommit(existing) {
-  const c = existing || {}, P = nameOf(S.partner);
+function openCommit(existing, pre) {
+  const c = existing || pre || {}, P = nameOf(S.partner);
   const ownerSel = existing ? ((c.owners || []).length === 2 ? 'both' : c.owners[0] === S.me ? 'me' : 'them') : 'me';
   openSheet(`<h2>${existing ? 'Adjust commitment' : 'New commitment'}</h2>
     <label class="field"><span>What's the commitment?</span><input id="cText" maxlength="140" placeholder="Phone-free dinner on Tuesdays" value="${esc(c.text || '')}"></label>
     ${existing ? '' : `<div class="field"><span>Whose is it?</span>
-      <label class="opt"><input type="radio" name="cOwn" value="me" checked><span><b>Mine</b><small>Active right away.</small></span></label>
+      <label class="opt"><input type="radio" name="cOwn" value="me" ${(pre || {}).owner === 'both' ? '' : 'checked'}><span><b>Mine</b><small>Active right away.</small></span></label>
       <label class="opt"><input type="radio" name="cOwn" value="them"><span><b>Suggest one for ${esc(P)}</b><small>Only becomes active if ${esc(P)} accepts it.</small></span></label>
-      <label class="opt"><input type="radio" name="cOwn" value="both"><span><b>Both of us</b><small>Active once ${esc(P)} accepts too.</small></span></label></div>`}
+      <label class="opt"><input type="radio" name="cOwn" value="both" ${(pre || {}).owner === 'both' ? 'checked' : ''}><span><b>Both of us</b><small>Active once ${esc(P)} accepts too.</small></span></label></div>`}
     <label class="field"><span>Review date (optional)</span><input id="cDue" type="date" value="${esc(c.due || '')}"></label>
     <label class="field"><span>Note (optional)</span><input id="cNote" maxlength="140" value="${esc(c.note || '')}"></label>
     <div class="err" id="cErr"></div>
@@ -814,7 +1138,8 @@ async function privacyCheck() {
 }
 async function exportData() {
   const db = S.db, me = S.me, data = { exportedAt: new Date().toISOString(), account: me };
-  for (const c of ['feelings', 'checkins', 'prefs']) { const s = await db.collection(`private/${me}/${c}`).get(); data['private_' + c] = s.docs.map(d => ({ id: d.id, ...d.data() })); }
+  for (const c of ['feelings', 'checkins', 'prefs', 'aftermath', 'drafts', 'startups']) { const s = await db.collection(`private/${me}/${c}`).get(); data['private_' + c] = s.docs.map(d => ({ id: d.id, ...d.data() })); }
+  data.shared_posts = S.posts.filter(p => p.author === me);
   data.shared_feelings = S.shared.filter(f => f.author === me);
   data.pauses = S.pauses.filter(p => p.author === me);
   data.checkins_shared = Object.values(S.checkins).filter(c => c.author === me);
@@ -826,22 +1151,49 @@ async function wipe(t) {
   if (!t.dataset.armed) { t.dataset.armed = '1'; t.textContent = 'Tap again to delete everything private'; return; }
   t.disabled = true;
   const db = S.db;
-  for (const c of ['feelings', 'checkins', 'prefs']) { const s = await db.collection(`private/${S.me}/${c}`).get(); for (const d of s.docs) await d.ref.delete(); }
+  for (const c of ['feelings', 'checkins', 'prefs', 'aftermath', 'drafts', 'startups']) { const s = await db.collection(`private/${S.me}/${c}`).get(); for (const d of s.docs) await d.ref.delete(); }
   closeSheet(); toast('Your private entries are deleted');
 }
 
 /* ================= actions ================= */
 document.addEventListener('input', ev => {
   const t = ev.target;
-  if (t.id === 'fSearch') { captureLogger(); drawLogger(); return; }
+  if (t.id === 'fSearch') { captureLogger(); S.draft.search = t.value; drawLogger(); return; }
   if (t.dataset && t.dataset.ci) saveCheckinDebounced();
+  if (t.dataset && t.dataset.draft) { const sid = t.dataset.sid; S.drafts[sid] = { ...(S.drafts[sid] || {}), [t.dataset.draft]: t.value }; saveDraftDebounced(sid); }
+  if (t.dataset && t.dataset.after) S.after[t.dataset.after] = t.value;
+  if (t.id === 'gFeel' || t.id === 'gAbout' || t.id === 'gNeed') {
+    S.gentle = { feel: $('#gFeel').value.trim(), about: $('#gAbout').value.trim(), need: $('#gNeed').value.trim() };
+    const g = S.gentle; $('#gOut').textContent = `I feel ${g.feel || '___'} about ${g.about || '___'}.${g.need ? ' I need ' + g.need + '.' : ''}`;
+    $('#gWarn').innerHTML = startupWarnings([g.feel, g.about, g.need].join(' ')).map(w => `<div class="warnline">${esc(w)}</div>`).join('');
+  }
+  if (t.id === 'repQ') { S.repairQ = t.value; $('#main').innerHTML = repairHTML(); const r = $('#repQ'); r.focus(); r.setSelectionRange(t.value.length, t.value.length); }
 });
 document.addEventListener('change', ev => {
   const t = ev.target;
   if (t.name === 'vis') { captureLogger(); S.draft.share = t.value; drawLogger(); }
   if (t.dataset && t.dataset.cishare) saveCheckinDebounced();
+  if (t.classList && t.classList.contains('sfield')) saveSessionField(t.dataset.sid, t.dataset.f, t.value);
 });
-document.addEventListener('focusout', ev => { if (ev.target.dataset && ev.target.dataset.ci) setTimeout(render, 50); });
+const draftT = {};
+function saveDraftDebounced(sid) { clearTimeout(draftT[sid]); draftT[sid] = setTimeout(() => S.db.doc(`private/${S.me}/drafts/${sid}`).set({ answers: S.drafts[sid] || {}, updatedAt: Date.now() }).catch(fail), 700); }
+function saveSessionField(sid, f, v) {
+  const x = S.sessions.find(z => z.id === sid); if (!x) return;
+  const patch = f === 'heard' ? { heard: { ...(x.heard || {}), [S.me]: v } } : { [f]: v };
+  S.db.doc('us_sessions/' + sid).update(patch).catch(fail);
+}
+async function loadSession(sid) {
+  const x = S.sessions.find(z => z.id === sid); if (!x) return;
+  if (!S.drafts[sid]) { try { const d = await S.db.doc(`private/${S.me}/drafts/${sid}`).get(); S.drafts[sid] = d.exists ? (d.data().answers || {}) : {}; } catch (e) { S.drafts[sid] = {}; } }
+  const sb = x.sharedBy || [], c = { key: sb.slice().sort().join('|') };
+  try {
+    if (sb.includes(S.me)) { const m = await S.db.doc(`us_sessions/${sid}/answers/${S.me}`).get(); c.mine = m.exists ? m.data().answers : null; }
+    if (sb.includes(S.me) && sb.includes(S.partner)) { const t = await S.db.doc(`us_sessions/${sid}/answers/${S.partner}`).get(); c.theirs = t.exists ? t.data().answers : null; }
+  } catch (e) { fail(e); }
+  S.sessAns[sid] = c; renderSoft();
+}
+function openSession(sid) { S.view = { t: 'session', id: sid }; S.tab = 'talk'; render(); window.scrollTo({ top: 0 }); loadSession(sid); }
+document.addEventListener('focusout', () => setTimeout(() => { if (S.pendingRender && !typingInMain()) { S.pendingRender = false; render(); } }, 350));
 let ciT;
 function saveCheckinDebounced() { clearTimeout(ciT); ciT = setTimeout(saveCheckin, 700); }
 async function saveCheckin() {
@@ -863,7 +1215,7 @@ async function savePrefs(patch) { S.prefs = { ...S.prefs, ...patch }; try { awai
 
 document.addEventListener('click', ev => {
   const t = ev.target.closest('[data-action],[data-tab]'); if (!t) return;
-  if (t.dataset.tab && !t.dataset.action) { S.tab = t.dataset.tab; if (sheetOpen) closeSheet(); render(); window.scrollTo({ top: 0 }); markSeen(); return; }
+  if (t.dataset.tab && !t.dataset.action) { if (t.dataset.tab !== 'talk' || S.tab === 'talk') S.view = null; S.tab = t.dataset.tab; if (sheetOpen) closeSheet(); render(); window.scrollTo({ top: 0 }); markSeen(); return; }
   const a = t.dataset.action, id = t.dataset.id, db = S.db;
   const run = p => p.catch(fail);
   switch (a) {
@@ -874,8 +1226,13 @@ document.addEventListener('click', ev => {
     case 'refl-next': S.refl++; return render();
     case 'refl-save': { const i = +t.dataset.i, list = S.prefs.savedReflections || []; savePrefs({ savedReflections: list.includes(i) ? list.filter(x => x !== i) : [...list, i] }).then(render); return; }
     case 'log': return openLogger(t.dataset.q || '');
-    case 'lq': captureLogger(); S.draft.quad = t.dataset.q; if ($('#fSearch')) $('#fSearch').value = ''; return drawLogger();
-    case 'lw': captureLogger(); S.draft.label = t.dataset.w; S.draft.quad = quadOf(t.dataset.w); return drawLogger();
+    case 'lq': captureLogger(); S.draft.quad = t.dataset.q; S.draft.search = ''; S.draft.picking = true; return drawLogger();
+    case 'lw': captureLogger(); S.draft.label = t.dataset.w; S.draft.quad = quadOf(t.dataset.w); S.draft.picking = false; S.draft.search = ''; $('#sheet').scrollTop = 0; return drawLogger();
+    case 'lrepick': captureLogger(); S.draft.picking = true; return drawLogger();
+    case 'lwho': { captureLogger(); const v = t.dataset.v, w = S.draft.who || []; S.draft.who = w.includes(v) ? w.filter(x => x !== v) : [...w, v]; return drawLogger(); }
+    case 'lwhere': captureLogger(); S.draft.where = S.draft.where === t.dataset.v ? '' : t.dataset.v; return drawLogger();
+    case 'lsleep': captureLogger(); S.draft.sleep = S.draft.sleep === t.dataset.v ? '' : t.dataset.v; return drawLogger();
+    case 'lmoved': captureLogger(); S.draft.moved = S.draft.moved === t.dataset.v ? '' : t.dataset.v; return drawLogger();
     case 'li': captureLogger(); S.draft.intensity = S.draft.intensity === +t.dataset.n ? 0 : +t.dataset.n; return drawLogger();
     case 'lc': { captureLogger(); const c = t.dataset.c, cs = S.draft.contexts; S.draft.contexts = cs.includes(c) ? cs.filter(x => x !== c) : [...cs, c]; return drawLogger(); }
     case 'ls': captureLogger(); S.draft.support = S.draft.support === t.dataset.s ? '' : t.dataset.s; return drawLogger();
@@ -920,6 +1277,58 @@ document.addEventListener('click', ev => {
     case 'c-edit': return openCommit(S.commitments.find(x => x.id === id));
     case 'c-save-edit': return run(db.doc('us_commitments/' + id).update({ text: $('#cText').value.trim(), due: $('#cDue').value || null, note: $('#cNote').value.trim() }).then(() => { closeSheet(); toast('Saved'); }));
     case 'privacy-check': return privacyCheck();
+    case 'back': S.view = null; render(); return window.scrollTo({ top: 0 });
+    case 'view-listen': S.view = 'listen'; S.listen = { speaker: 'me', step: 0 }; render(); return window.scrollTo({ top: 0 });
+    case 'view-horse': S.view = 'horse'; render(); return window.scrollTo({ top: 0 });
+    case 'view-after': S.view = 'after'; render(); return window.scrollTo({ top: 0 });
+    case 'view-repair': S.view = 'repair'; render(); return window.scrollTo({ top: 0 });
+    case 'new-talk': return openNewSession('talk');
+    case 'new-cycle': return openNewSession('cycle');
+    case 'new-compromise': return openNewSession('compromise');
+    case 'pick-goal': S.newGoal = S.newGoal === t.dataset.v ? '' : t.dataset.v; document.querySelectorAll('#sGoals button').forEach(b => b.classList.toggle('on', b.dataset.v === S.newGoal)); return;
+    case 'sess-create': {
+      const topic = $('#sTopic').value.trim(); if (!topic) { $('#sTopic').focus(); return toast('Add a topic first'); }
+      const sid = uid(), kind = t.dataset.kind;
+      const doc = { kind, topic, createdBy: S.me, createdAt: Date.now(), goals: S.newGoal ? { [S.me]: S.newGoal } : {}, sharedBy: [], heard: {}, common: '', differences: '', firstStep: '', status: 'open' };
+      return run((async () => { await db.doc('us_sessions/' + sid).set(doc); if (S.prefill) { S.drafts[sid] = S.prefill; await db.doc(`private/${S.me}/drafts/${sid}`).set({ answers: S.prefill, updatedAt: Date.now() }); } closeSheet(); setTimeout(() => openSession(sid), 300); })());
+    }
+    case 'open-sess': return openSession(id);
+    case 'sess-goal': { const x = S.sessions.find(z => z.id === id); const g = { ...(x.goals || {}) }; g[S.me] = g[S.me] === t.dataset.v ? '' : t.dataset.v; return run(db.doc('us_sessions/' + id).update({ goals: g })); }
+    case 'sess-status': return run(db.doc('us_sessions/' + id).update({ status: t.dataset.s }).then(() => { toast(t.dataset.s === 'closed' ? 'Closed' : t.dataset.s === 'later' ? 'Marked to revisit later' : 'Reopened'); if (t.dataset.s === 'closed') { S.view = null; render(); } }));
+    case 'sess-share': {
+      const x = S.sessions.find(z => z.id === id), K = KINDS[x.kind] || KINDS.talk, dr = S.drafts[id] || {}, out = {};
+      for (const [k] of K.prompts) if ((dr[k] || '').trim()) out[k] = dr[k].trim();
+      if (!Object.keys(out).length) return toast('Write at least one answer first');
+      return run((async () => { await db.doc(`us_sessions/${id}/answers/${S.me}`).set({ answers: out, sharedAt: Date.now() }); await db.doc('us_sessions/' + id).update({ sharedBy: [...new Set([...(x.sharedBy || []), S.me])] }); S.editing[id] = false; toast('Shared'); await loadSession(id); })());
+    }
+    case 'sess-withdraw': {
+      const x = S.sessions.find(z => z.id === id);
+      return run((async () => { const mine = (S.sessAns[id] || {}).mine; if (mine) S.drafts[id] = { ...mine }; await db.doc(`us_sessions/${id}/answers/${S.me}`).delete(); await db.doc('us_sessions/' + id).update({ sharedBy: (x.sharedBy || []).filter(e => e !== S.me) }); toast('Withdrawn. Your answers are private again.'); await loadSession(id); })());
+    }
+    case 'sess-reshare': { const mine = (S.sessAns[id] || {}).mine; if (mine) S.drafts[id] = { ...(S.drafts[id] || {}), ...mine }; S.editing[id] = true; return render(); }
+    case 'sess-commit': { const x = S.sessions.find(z => z.id === id); return openCommit(null, { text: x.kind === 'compromise' ? (x.firstStep || '') : '', note: 'From: ' + x.topic, owner: 'both' }); }
+    case 'listen-who': S.listen.speaker = t.dataset.v; S.listen.step = 0; return render();
+    case 'listen-step': S.listen.step = Math.max(0, Math.min(3, S.listen.step + +t.dataset.v)); return render();
+    case 'listen-swap': S.listen.speaker = S.listen.speaker === 'me' ? 'them' : 'me'; S.listen.step = 0; render(); return toast('Switched speakers');
+    case 'g-copy': { const tx = $('#gOut').textContent; (navigator.clipboard ? navigator.clipboard.writeText(tx) : Promise.reject()).then(() => toast('Copied')).catch(() => toast('Select the text to copy')); return; }
+    case 'g-save': return run(db.doc(`private/${S.me}/startups/${uid()}`).set({ ...S.gentle, text: $('#gOut').textContent, ts: Date.now() }).then(() => toast('Saved privately')));
+    case 'g-talk': return openNewSession('talk', S.gentle.about, { felt: S.gentle.feel, need: S.gentle.need });
+    case 'after-save': {
+      const ans = Object.fromEntries(Object.entries(S.after).filter(([, v]) => (v || '').trim()));
+      if (!Object.keys(ans).length) return toast('Write something first');
+      return run(db.doc(`private/${S.me}/aftermath/${uid()}`).set({ ts: Date.now(), answers: ans }).then(() => { S.after = {}; render(); toast('Saved privately'); }));
+    }
+    case 'after-del': { if (!t.dataset.armed) { t.dataset.armed = '1'; t.textContent = 'Tap again'; return; } return run(db.doc(`private/${S.me}/aftermath/${id}`).delete()); }
+    case 'after-share': return openAfterShare(S.afterList.find(e => e.id === id));
+    case 'after-send': {
+      const e = S.afterList.find(z => z.id === id), out = {};
+      document.querySelectorAll('[data-ash]').forEach(c => { if (c.checked) out[c.dataset.ash] = e.answers[c.dataset.ash]; });
+      const request = (document.querySelector('input[name="areq"]:checked') || {}).value || 'none';
+      if (!Object.keys(out).length && request === 'none') return toast('Pick at least one answer, or a request');
+      return run(db.doc('us_shared/' + uid()).set({ type: 'aftermath', author: S.me, ts: Date.now(), answers: out, request, responses: {} }).then(() => { closeSheet(); toast(`Shared with ${nameOf(S.partner)}`); }));
+    }
+    case 'rep-send': return run(db.doc('us_shared/' + uid()).set({ type: 'repair', author: S.me, ts: Date.now(), text: t.dataset.t, responses: {} }).then(() => toast(`Sent to ${nameOf(S.partner)}`)));
+    case 'post-resp': { const p = S.posts.find(z => z.id === id); const r = { ...(p.responses || {}) }; if (r[S.me] && r[S.me].text === t.dataset.r) delete r[S.me]; else r[S.me] = { text: t.dataset.r, at: Date.now() }; return run(db.doc('us_shared/' + id).update({ responses: r }).then(() => toast('Sent'))); }
     case 'export': return exportData().catch(fail);
     case 'wipe': return wipe(t).catch(fail);
   }
@@ -966,7 +1375,7 @@ function start(u, em) {
   S.me = em; S.partner = Object.keys(ALLOWED).find(e => e !== em);
   S.names[em] = (u.displayName || '').split(' ')[0] || ALLOWED[em];
   const db = firebase.firestore(); S.db = db;
-  const soft = () => render();
+  const soft = () => renderSoft();
   const failed = e => { if (e && e.code === 'permission-denied') { S.fatal = 'Your account can’t open this space yet.'; render(); } };
   let pending = 4; const ready = () => { if (--pending <= 0) { S.loaded = true; render(); } };
   db.collection(`private/${em}/feelings`).orderBy('ts', 'desc').limit(300).onSnapshot(s => { S.myFeelings = s.docs.map(d => ({ id: d.id, ...d.data() })); if (!S.loaded) ready(); else soft(); }, failed);
@@ -976,6 +1385,13 @@ function start(u, em) {
   db.collection('us_checkins').where('week', '==', weekId()).onSnapshot(s => { S.checkins = Object.fromEntries(s.docs.map(d => [d.id, d.data()])); soft(); }, failed);
   db.doc(`private/${em}/checkins/${weekId()}`).get().then(d => { if (d.exists) { S.myCheckin = d.data(); soft(); } }).catch(() => {});
   db.doc(`private/${em}/prefs/main`).get().then(d => { if (d.exists) { S.prefs = d.data(); soft(); } }).catch(() => {});
+  db.collection('us_sessions').orderBy('createdAt', 'desc').limit(50).onSnapshot(s => {
+    S.sessions = s.docs.map(d => ({ id: d.id, ...d.data() }));
+    const v = S.view; if (v && v.t === 'session') { const x = S.sessions.find(z => z.id === v.id), c = S.sessAns[v.id]; if (x && (!c || c.key !== (x.sharedBy || []).slice().sort().join('|'))) loadSession(v.id); }
+    soft();
+  }, failed);
+  db.collection('us_shared').orderBy('ts', 'desc').limit(100).onSnapshot(s => { S.posts = s.docs.map(d => ({ id: d.id, ...d.data() })); soft(); }, failed);
+  db.collection(`private/${em}/aftermath`).orderBy('ts', 'desc').limit(50).onSnapshot(s => { S.afterList = s.docs.map(d => ({ id: d.id, ...d.data() })); soft(); }, failed);
   db.collection('people').onSnapshot(s => { s.docs.forEach(d => { if (d.data().name) S.names[d.id] = d.data().name; }); soft(); }, () => {});
   db.doc('people/' + em).set({ name: S.names[em], updatedAt: Date.now() }, { merge: true }).catch(() => {});
 }
