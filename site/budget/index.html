@@ -242,6 +242,10 @@ svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stro
 .icard .a button{border:0;border-radius:12px;padding:0 14px;font-weight:700;font-size:14px}
 .icard .add{background:var(--green);color:#fff}
 .icard .skip{background:var(--bg);color:var(--muted)}
+.gadd{display:flex;gap:8px;margin:0 0 12px}.gadd input{flex:1;border:1px solid var(--line);background:#fff;border-radius:16px;padding:13px 14px;font:inherit;font-size:16px}.gadd .btn{padding:0 16px}
+.gfreq{display:flex;gap:6px;overflow-x:auto;margin:-2px 0 12px;padding-bottom:2px;scrollbar-width:none}.gfreq button{flex:none;border:1px dashed #c9d2c2;background:transparent;border-radius:999px;padding:6px 11px;font:inherit;font-size:13px;color:var(--text);cursor:pointer;text-transform:capitalize}
+.grow{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}.grow:last-child{border-bottom:0}.gchk{width:26px;height:26px;border-radius:50%;border:2px solid #b9c4b2;background:#fff;flex:none;display:grid;place-items:center;cursor:pointer;color:#fff;padding:0}.gchk svg{width:16px;height:16px}.grow.done .gchk{background:var(--green);border-color:var(--green)}.gmain{flex:1;text-align:left;background:none;border:0;padding:0;font:inherit;cursor:pointer;min-width:0}.gmain b{display:block;font-size:16px;color:var(--ink);font-weight:600}.gmain small{color:var(--muted);font-size:13px}.gq{font-weight:500;color:var(--muted);font-size:14px}.grow.done .gmain b{text-decoration:line-through;color:var(--muted);font-weight:500}.gst{font-size:11px;font-weight:700;color:var(--muted);background:var(--bg);border-radius:999px;padding:3px 8px}.gcount{display:inline-grid;place-items:center;min-width:18px;height:18px;border-radius:9px;background:var(--lime);color:var(--forest);font-size:11px;margin-left:4px;padding:0 5px}
+.gbud{padding:12px 16px}.gbud .t{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;color:var(--muted);margin-bottom:8px}.gbud .t b{font-size:20px;color:var(--ink)}.gbud .t b.neg{color:#c0392b}.gbud .s{font-size:12px;color:var(--muted);margin-top:6px}
 .forchips{display:flex;gap:6px;flex-wrap:wrap;grid-column:1 / -1;margin-top:6px}.forchips button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;font-weight:600;color:var(--text);cursor:pointer}.forchips button.on{background:var(--forest);border-color:var(--forest);color:#fff}.who.sh{background:#f6d7dc;color:#b23a52}
 .icard .ib-note{grid-column:1 / -1;width:100%;border:1px solid var(--line);background:#fff;border-radius:12px;padding:9px 10px;font-size:14px;margin-top:6px}
 .icard.busy{opacity:.5;pointer-events:none}
@@ -539,8 +543,8 @@ function donutChart(slices, centerTop, centerBottom) {
 }
 
 /* ---------- render ---------- */
-const TABS = [['budget', 'Budget', 'grid'], ['expenses', 'Spent', 'receipt'], ['inbox', 'Inbox', 'bank'], ['plan', 'Plan', 'clipboard'], ['report', 'Report', 'pie']];
-const TITLES = { budget: 'Budget', expenses: 'Spending', inbox: 'Bank inbox', plan: 'Plan', report: 'Report' };
+const TABS = [['budget', 'Budget', 'grid'], ['expenses', 'Spent', 'receipt'], ['inbox', 'Inbox', 'bank'], ['list', 'List', 'cart'], ['report', 'Report', 'pie']];
+const TITLES = { budget: 'Budget', expenses: 'Spending', inbox: 'Bank inbox', plan: 'Plan', report: 'Report', list: 'Grocery list' };
 function render() {
   $('#monthLabel').textContent = monthLabel(S.cur);
   $('#title').textContent = TITLES[S.tab];
@@ -550,6 +554,7 @@ function render() {
 function renderSoft() {
   if (S.tab === 'plan' && S.draft) { renderBanner(); renderChrome(); $('#monthLabel').textContent = monthLabel(S.cur); }
   else if (S.tab === 'inbox' && document.activeElement && document.activeElement.classList.contains('ib-note')) { renderBanner(); renderChrome(); }
+  else if (S.tab === 'list' && document.activeElement && document.activeElement.id === 'gIn') { const v = document.activeElement.value; render(); const i = $('#gIn'); if (i) { i.value = v; i.focus(); } }
   else if (S.tab === 'expenses' && document.activeElement && document.activeElement.id === 'q') { const el = $('#expList'); if (el) el.innerHTML = expListHTML(); }
   else render();
 }
@@ -580,6 +585,7 @@ function renderMain() {
   if (!S.monthsLoaded) { main.innerHTML = '<div class="stats"><div class="skel"></div><div class="skel"></div></div><div class="skel" style="height:220px"></div>'; return; }
   const md = monthDoc();
   if (S.tab === 'inbox') { main.innerHTML = inboxHTML(); return; }
+  if (S.tab === 'list') { main.innerHTML = listHTML(); return; }
   if (!md) { main.innerHTML = noMonthHTML(); return; }
   if (S.tab === 'budget') main.innerHTML = budgetHTML(md);
   else if (S.tab === 'expenses') main.innerHTML = expensesHTML();
@@ -1046,6 +1052,7 @@ function openSettings() {
   const row = (k, title, desc, sub = false, disabled = false) => `<label class="sw ${sub ? 'sub' : ''}"><span class="t"><b>${title}</b><small>${desc}</small></span><input type="checkbox" data-set="${k}" ${st[k] ? 'checked' : ''} ${disabled || !S.canWrite ? 'disabled' : ''}></label>`;
   openSheet(`<h2>Settings</h2>
     <div class="acct"><span class="t">Signed in as<b>${esc(S.email || '')}</b></span><button class="btn sec" style="padding:8px 14px" data-action="signout">Sign out</button></div>
+    <button class="btn block" style="margin-bottom:10px" data-action="open-plan">Edit monthly plan</button>
     <a class="btn sec block" style="text-align:center;text-decoration:none;margin-bottom:10px" href="/us/">Open Us</a>
     <p style="margin:4px 0 8px;color:var(--muted);font-size:13px">These apply for both of you.</p>
     ${row('rollover', 'Rollover', 'Money left in a category carries into next month. You can turn it off for single lines in Plan.')}
@@ -1059,6 +1066,115 @@ function openSettings() {
     <textarea id="impIn" placeholder="Paste here" style="width:100%;height:90px;border-radius:12px;border:1px solid var(--line);padding:8px;font-size:12px"></textarea>
     <button class="btn block" style="margin-top:8px" data-action="import">Import</button></div>` : ''}`);
 }
+
+/* ================= Grocery list (shared, live) ================= */
+S.groc = []; S.grocMeta = { aisles: {}, counts: {} }; S.gStore = 'aldi';
+const G_STORES = [['aldi', 'Aldi'], ['meijer', 'Meijer']];
+const G_AISLES = ['Produce', 'Bakery', 'Meat & seafood', 'Dairy & eggs', 'Deli', 'Pantry', 'Snacks', 'Frozen', 'Drinks', 'Household', 'Personal care', 'Pets', 'Other'];
+const G_KEYS = [
+  ['Produce', /\b(apple|banana|berr|grape|lemon|lime|orange|avocado|lettuce|spinach|kale|salad|tomato|potato|onion|garlic|pepper|carrot|celery|broccoli|cucumber|zucchini|squash|mushroom|herb|cilantro|parsley|basil|fruit|veggie|vegetable|corn|peach|pear|melon|pineapple|mango|cabbage|ginger)/],
+  ['Bakery', /\b(bread|bagel|bun|roll|tortilla|muffin|croissant|pita|naan|english muffin|cake|donut)/],
+  ['Meat & seafood', /\b(chicken|beef|steak|pork|bacon|sausage|turkey|ham|ground|salmon|shrimp|fish|tilapia|tuna steak|meatball|brat|hot dog)/],
+  ['Dairy & eggs', /\b(milk|egg|cheese|yogurt|yoghurt|butter|cream|sour cream|creamer|cottage|half and half)/],
+  ['Deli', /\b(deli|lunch ?meat|salami|pepperoni|hummus|rotisserie)/],
+  ['Frozen', /\b(frozen|ice cream|pizza|waffle|fries|popsicle|ice\b)/],
+  ['Snacks', /\b(chip|cracker|cookie|pretzel|popcorn|granola|bar\b|bars\b|candy|chocolate|nuts?\b|trail mix)/],
+  ['Drinks', /\b(coffee|tea\b|juice|soda|pop\b|water|sparkling|la croix|gatorade|beer|wine|kombucha)/],
+  ['Pantry', /\b(rice|pasta|noodle|cereal|oat|flour|sugar|salt|spice|oil|vinegar|sauce|ketchup|mustard|mayo|dressing|soup|bean|can\b|canned|peanut butter|jelly|jam|honey|syrup|broth|stock|tuna|seasoning|baking)/],
+  ['Household', /\b(paper towel|toilet paper|tp\b|napkin|trash bag|foil|wrap|zip|dish|detergent|laundry|soap|sponge|cleaner|bleach|wipes|battery|light ?bulb)/],
+  ['Personal care', /\b(shampoo|conditioner|toothpaste|toothbrush|floss|deodorant|lotion|razor|tampon|pad\b|pads\b|vitamin|medicine|tylenol|advil|band ?aid)/],
+  ['Pets', /\b(dog|cat|litter|kibble|treats)/],
+];
+const gKey = n => n.trim().toLowerCase().replace(/\s+/g, ' ');
+function gAisle(name) { const k = gKey(name); if (S.grocMeta.aisles[k]) return S.grocMeta.aisles[k]; const hit = G_KEYS.find(([, re]) => re.test(k)); return hit ? hit[0] : 'Other'; }
+function gParse(line) {
+  let s = line.trim().replace(/^(?:[-*•]\s*|\d+[.)]\s+)/, '').trim(); if (!s) return null;
+  let qty = '', m = s.match(/^(\d+\s*(?:x|lbs?|oz|pk|pack|ct|dozen|gal)?)\s+(.+)$/i) || s.match(/^(.+?)\s+x\s*(\d+)$/i);
+  if (m) { if (/^\d/.test(m[1])) { qty = m[1]; s = m[2]; } else { s = m[1]; qty = m[2]; } }
+  return { name: s.charAt(0).toUpperCase() + s.slice(1), qty };
+}
+function grocBudget() {
+  const md = monthDoc(); if (!md) return '';
+  const l = (md.lines || []).find(x => /grocer/i.test(x.name)); if (!l) return '';
+  const st = lineState(S.cur, l.id); if (!st) return '';
+  const left = st.avail - st.spent, pct = st.avail > 0 ? Math.min(100, Math.max(0, st.spent / st.avail * 100)) : 0;
+  return `<div class="card gbud"><div class="t"><span>${esc(l.name)} left this month</span><b class="num ${left < 0 ? 'neg' : ''}">${left < 0 ? '−' : ''}${fmt(Math.abs(left))}</b></div><span class="lbar"><i class="${left < 0 ? 'neg' : pct > 90 ? 'warn' : ''}" style="width:${pct}%"></i></span><div class="s num">${fmt(st.spent)} of ${fmt(st.avail)} spent</div></div>`;
+}
+function gRow(it) {
+  const p = personLabel(it.by), stl = (G_STORES.find(x => x[0] === it.store) || [, 'Any'])[1];
+  return `<div class="grow ${it.checked ? 'done' : ''}"><button class="gchk" data-action="g-check" data-id="${esc(it.id)}" aria-label="${it.checked ? 'Uncheck' : 'Check off'} ${esc(it.name)}">${it.checked ? ic('check') : ''}</button>
+    <button class="gmain" data-action="g-edit" data-id="${esc(it.id)}"><b>${esc(it.name)}${it.qty ? ` <span class="gq">${esc(it.qty)}</span>` : ''}</b>${it.note ? `<small>${esc(it.note)}</small>` : ''}</button>
+    ${S.gStore === 'all' ? `<span class="gst">${esc(stl)}</span>` : ''}<i class="who ${p.cls}" title="Added by ${esc(p.name)}">${esc(p.initial)}</i></div>`;
+}
+function listHTML() {
+  const inStore = it => S.gStore === 'all' || it.store === S.gStore || it.store === 'any';
+  const items = S.groc.filter(inStore), todo = items.filter(i => !i.checked), cart = items.filter(i => i.checked);
+  const counts = id => S.groc.filter(i => !i.checked && (i.store === id)).length;
+  let h = `<div class="chips">${[...G_STORES, ['all', 'Both']].map(([k, l]) => `<button data-action="g-store" data-v="${k}" class="${S.gStore === k ? 'on' : ''}">${esc(l)}${k !== 'all' && counts(k) ? ` <span class="gcount">${counts(k)}</span>` : ''}</button>`).join('')}</div>`;
+  h += grocBudget();
+  h += `<form id="gAdd" class="gadd" autocomplete="off"><input id="gIn" placeholder="Add to ${esc(S.gStore === 'meijer' ? 'Meijer' : 'Aldi')} list…" enterkeyhint="done" aria-label="Add item"><button class="btn" type="submit">${ic('plus')}</button></form>`;
+  const onList = new Set(S.groc.filter(i => !i.checked).map(i => gKey(i.name)));
+  const freq = Object.entries(S.grocMeta.counts || {}).filter(([k]) => !onList.has(k)).sort((a, b) => b[1] - a[1]).slice(0, 10);
+  if (freq.length) h += `<div class="gfreq">${freq.map(([k]) => `<button data-action="g-quick" data-n="${esc(k)}">+ ${esc(k)}</button>`).join('')}</div>`;
+  if (!todo.length && !cart.length) return h + `<div class="card empty"><h3>The list is empty</h3>Type an item above and press Enter. You can paste several lines at once.</div>`;
+  const byA = {}; for (const it of todo) (byA[it.aisle || gAisle(it.name)] ||= []).push(it);
+  for (const a of G_AISLES.filter(x => byA[x])) h += `<div class="dayhead"><span>${esc(a)}</span><span>${byA[a].length}</span></div><div class="card" style="padding:2px 14px">${byA[a].sort((x, y) => (x.addedAt || 0) - (y.addedAt || 0)).map(gRow).join('')}</div>`;
+  if (cart.length) h += `<div class="dayhead"><span>In the cart · ${cart.length}</span><button class="linkbtn" data-action="g-clear">Clear cart</button></div><div class="card" style="padding:2px 14px">${cart.sort((x, y) => (y.checkedAt || 0) - (x.checkedAt || 0)).map(gRow).join('')}</div>`;
+  return h;
+}
+async function gAddLines(raw) {
+  const lines = raw.split(/\n|,(?![^(]*\))/).map(gParse).filter(Boolean); if (!lines.length) return;
+  const store = S.gStore === 'all' ? 'aldi' : S.gStore, cnt = { ...(S.grocMeta.counts || {}) };
+  for (const { name, qty } of lines) {
+    const k = gKey(name), dup = S.groc.find(i => !i.checked && gKey(i.name) === k && i.store === store);
+    if (dup) { toast(`${name} is already on the list`); continue; }
+    await S.db.collection('grocery').doc(uid()).set({ name, qty, note: '', aisle: gAisle(name), store, by: S.me || null, addedAt: Date.now(), checked: false });
+    cnt[k] = (cnt[k] || 0) + 1;
+  }
+  S.db.doc('meta/grocery').set({ counts: cnt }, { merge: true }).catch(() => {});
+}
+function openGItem(it) {
+  openSheet(`<h2>Edit item</h2><form id="gForm" autocomplete="off">
+    <label class="field"><span>Item</span><input id="gName" maxlength="60" value="${esc(it.name)}"></label>
+    <label class="field"><span>Quantity (optional)</span><input id="gQty" maxlength="20" value="${esc(it.qty || '')}" placeholder="2, 1 lb, a dozen"></label>
+    <label class="field"><span>Note (optional)</span><input id="gNote" maxlength="80" value="${esc(it.note || '')}" placeholder="ripe ones, the big tub"></label>
+    <label class="field"><span>Aisle</span><select id="gAisleSel">${G_AISLES.map(a => `<option ${a === (it.aisle || gAisle(it.name)) ? 'selected' : ''}>${esc(a)}</option>`).join('')}</select></label>
+    <div class="field"><span>Store</span><div class="forchips">${[...G_STORES, ['any', 'Either']].map(([k, l]) => `<button type="button" data-gstore="${k}" class="${(it.store || 'aldi') === k ? 'on' : ''}">${esc(l)}</button>`).join('')}</div></div>
+    <button class="btn block" type="submit">Save</button>
+    <button class="btn danger block" type="button" id="gDel" style="margin-top:10px">Remove from list</button></form>`);
+  let store = it.store || 'aldi';
+  document.querySelectorAll('[data-gstore]').forEach(b => b.onclick = () => { store = b.dataset.gstore; document.querySelectorAll('[data-gstore]').forEach(x => x.classList.toggle('on', x === b)); });
+  $('#gForm').onsubmit = async ev => {
+    ev.preventDefault(); const name = $('#gName').value.trim(); if (!name) return;
+    const aisle = $('#gAisleSel').value;
+    try {
+      await S.db.doc('grocery/' + it.id).update({ name, qty: $('#gQty').value.trim(), note: $('#gNote').value.trim(), aisle, store });
+      if (aisle !== gAisle(name) || aisle !== (it.aisle || '')) S.db.doc('meta/grocery').set({ aisles: { [gKey(name)]: aisle } }, { merge: true }).catch(() => {});
+      closeSheet();
+    } catch (e) { handleWriteError(e); }
+  };
+  $('#gDel').onclick = () => S.db.doc('grocery/' + it.id).delete().then(closeSheet).catch(e => handleWriteError(e));
+}
+document.addEventListener('submit', ev => {
+  if (ev.target.id !== 'gAdd') return; ev.preventDefault();
+  const inp = $('#gIn'), v = inp.value; if (!v.trim()) return; inp.value = '';
+  gAddLines(v).catch(e => handleWriteError(e)); setTimeout(() => $('#gIn') && $('#gIn').focus(), 50);
+});
+document.addEventListener('paste', ev => {
+  if (!ev.target || ev.target.id !== 'gIn') return;
+  const txt = (ev.clipboardData || window.clipboardData).getData('text'); if (!/\n/.test(txt)) return;
+  ev.preventDefault(); gAddLines(txt).then(() => toast('Added')).catch(e => handleWriteError(e));
+});
+document.addEventListener('click', ev => {
+  const t = ev.target.closest('[data-action]'); if (!t) return;
+  const a = t.dataset.action;
+  if (a === 'g-store') { S.gStore = t.dataset.v; render(); }
+  if (a === 'g-check') { const it = S.groc.find(i => i.id === t.dataset.id); if (it) S.db.doc('grocery/' + it.id).update(it.checked ? { checked: false, checkedAt: null } : { checked: true, checkedAt: Date.now(), checkedBy: S.me || null }).catch(e => handleWriteError(e)); }
+  if (a === 'g-edit') { const it = S.groc.find(i => i.id === t.dataset.id); if (it) openGItem(it); }
+  if (a === 'g-quick') gAddLines(t.dataset.n).catch(e => handleWriteError(e));
+  if (a === 'g-clear') { const done = S.groc.filter(i => i.checked && (S.gStore === 'all' || i.store === S.gStore || i.store === 'any')); Promise.all(done.map(i => S.db.doc('grocery/' + i.id).delete())).then(() => toast(`Cleared ${done.length}`)).catch(e => handleWriteError(e)); }
+  if (a === 'open-plan') { S.tab = 'plan'; if (sheetOpen) closeSheet(); render(); window.scrollTo({ top: 0 }); }
+});
 
 /* ---------- write errors ---------- */
 function handleWriteError(e, errEl) {
@@ -1409,6 +1525,8 @@ function start(u, em) {
   S.me = em; S.email = em; S.isOwner = em === OWNER; S.canSync = S.isOwner;
   S.names[em] = (u.displayName || '').split(' ')[0] || ALLOWED[em];
   const db = firebase.firestore(); S.db = db;
+  if (location.hash === '#list') S.tab = 'list';
+  try { db.enablePersistence && db.enablePersistence({ synchronizeTabs: true }).catch(() => {}); } catch (e) {}
   const timer = setTimeout(() => { if (!S.monthsLoaded) { S.stale = true; renderSoft(); } }, 10000);
   const fail = err => { if (err && err.code === 'permission-denied') { S.fatal = 'Your account doesn\u2019t have access to this budget yet.'; render(); } };
   db.collection('months').onSnapshot(snap => {
@@ -1419,6 +1537,8 @@ function start(u, em) {
   }, err => { clearTimeout(timer); S.monthsLoaded = true; fail(err); if (!S.fatal) S.fatal = 'Couldn\u2019t load your budget. Reload to try again.'; render(); });
   db.collection('expenses').onSnapshot(snap => { S.allExp = snap.docs.map(d => ({ id: d.id, ...d.data() })); S.expLoaded = true; deriveMonth(); renderSoft(); }, err => { S.expLoaded = true; fail(err); renderSoft(); });
   db.collection('receipts').onSnapshot(snap => { S.receipts = snap.docs.map(d => ({ id: d.id, ...d.data() })); renderSoft(); }, fail);
+  db.collection('grocery').onSnapshot(snap => { S.groc = snap.docs.map(d => ({ id: d.id, ...d.data() })); if (S.tab === 'list') renderSoft(); }, fail);
+  db.doc('meta/grocery').onSnapshot(snap => { S.grocMeta = { aisles: {}, counts: {}, ...(snap.exists ? snap.data() : {}) }; if (S.tab === 'list') renderSoft(); }, fail);
   db.doc('meta/settings').onSnapshot(snap => { S.settings = snap.exists ? snap.data() : {}; renderSoft(); }, fail);
   db.collection('inbox').where('status', '==', 'new').onSnapshot(snap => { S.inbox = snap.docs.map(d => ({ id: d.id, ...d.data() })); renderSoft(); }, fail);
   db.doc('meta/rules').onSnapshot(snap => { S.rules = (snap.exists && snap.data().merchants) || {}; if (S.tab === 'inbox') renderSoft(); }, fail);

@@ -1,22 +1,35 @@
 {
- "name": "Our Budget",
- "short_name": "Budget",
- "start_url": "/budget/",
- "scope": "/budget/",
- "display": "standalone",
- "background_color": "#1f4d22",
- "theme_color": "#1f4d22",
- "icons": [
-  {
-   "src": "icon-192.png",
-   "sizes": "192x192",
-   "type": "image/png"
-  },
-  {
-   "src": "icon-512.png",
-   "sizes": "512x512",
-   "type": "image/png",
-   "purpose": "any maskable"
-  }
- ]
+  "name": "Our Budget",
+  "short_name": "Budget",
+  "start_url": "/budget/",
+  "scope": "/budget/",
+  "display": "standalone",
+  "background_color": "#1f4d22",
+  "theme_color": "#1f4d22",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Grocery list",
+      "short_name": "List",
+      "url": "/budget/#list",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
 }
