@@ -242,6 +242,7 @@ svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stro
 .icard .a button{border:0;border-radius:12px;padding:0 14px;font-weight:700;font-size:14px}
 .icard .add{background:var(--green);color:#fff}
 .icard .skip{background:var(--bg);color:var(--muted)}
+.forchips{display:flex;gap:6px;flex-wrap:wrap;grid-column:1 / -1;margin-top:6px}.forchips button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;font-weight:600;color:var(--text);cursor:pointer}.forchips button.on{background:var(--forest);border-color:var(--forest);color:#fff}.who.sh{background:#f6d7dc;color:#b23a52}
 .icard .ib-note{grid-column:1 / -1;width:100%;border:1px solid var(--line);background:#fff;border-radius:12px;padding:9px 10px;font-size:14px;margin-top:6px}
 .icard.busy{opacity:.5;pointer-events:none}
 
@@ -444,6 +445,12 @@ function personLabel(id) {
   return { name: isMe ? 'You' : (first || 'Partner'), initial: (first || (isMe ? 'Y' : 'P'))[0].toUpperCase(), cls: isMe ? '' : 'p2' };
 }
 function resolveNames() {}
+/* who an expense is FOR (not who logged it). Missing = shared. */
+const forOf = e => (e && e.forWho && ALLOWED[e.forWho]) ? e.forWho : 'shared';
+const firstName = em => (S.names[em] || ALLOWED[em] || '').split(' ')[0] || 'Partner';
+const FOR_OPTS = () => [['shared', 'Shared'], ...Object.keys(ALLOWED).map(em => [em, firstName(em)])];
+function forLabel(e) { const f = forOf(e); return f === 'shared' ? { name: 'Shared', initial: '\u2665', cls: 'sh' } : { name: firstName(f), initial: firstName(f)[0].toUpperCase(), cls: f === S.me ? '' : 'p2' }; }
+const forChips = (cur, attr) => `<div class="forchips">${FOR_OPTS().map(([v, l]) => `<button type="button" ${attr}="${esc(v)}" class="${cur === v ? 'on' : ''}">${esc(l)}</button>`).join('')}</div>`;
 
 /* ---------- charts ---------- */
 let chartSeq = 0;
@@ -740,21 +747,20 @@ function lineHTML(l, sp, car, col) {
 /* ----- Spent ----- */
 function expenseRowHTML(e) {
   const md = S.months[e.month]; const lm = lineMap(md);
-  const p = personLabel(e.by);
+  const p = forLabel(e), lb = personLabel(e.by);
   const ln = lm[e.lineId]?.name || 'Uncategorized';
   const col = lineColor(md, e.lineId);
   const c = cents(e.amount);
   return `<button class="erow" data-action="edit" data-id="${esc(e.id)}">
     <span class="cav" style="background:${col}22;color:${col}">${esc(ln.trim()[0] || '?').toUpperCase()}</span>
-    <span class="emain"><b>${esc(e.note || ln)}</b><span><i class="who ${p.cls}">${esc(p.initial)}</i>${esc(e.note ? ln : p.name)}${e.merchant && e.merchant !== e.note ? ' · ' + esc(e.merchant) : ''}${e.source === 'lmcu' ? '<i class="tag">BANK</i>' : ''}</span></span>
+    <span class="emain"><b>${esc(e.note || ln)}</b><span><i class="who ${p.cls}" title="For ${esc(p.name)}">${esc(p.initial)}</i>${esc(e.note ? ln + ' \u00b7 ' + p.name : p.name)}${e.merchant && e.merchant !== e.note ? ' · ' + esc(e.merchant) : ''}${e.source === 'lmcu' ? '<i class="tag">BANK</i>' : ''}</span></span>
     <span class="eamt num ${c < 0 ? 'refund' : ''}">${c < 0 ? '+' + fmt(-c) : fmt(c)}</span>
   </button>`;
 }
 const sortExp = arr => [...arr].sort((a, b) => (b.date || '').localeCompare(a.date || '') || (b.createdAt || 0) - (a.createdAt || 0));
 function filteredExpenses() {
   let list = S.efAll ? S.allExp : S.expenses;
-  if (S.ef === 'me') list = list.filter(e => e.by && e.by === S.me);
-  else if (S.ef === 'partner') list = list.filter(e => e.by && e.by !== S.me);
+  if (S.ef === 'shared' || ALLOWED[S.ef]) list = list.filter(e => forOf(e) === S.ef);
   else if (S.ef === 'bank') list = list.filter(e => e.source === 'lmcu');
   if (S.efCat) list = list.filter(e => e.lineId === S.efCat);
   const q = S.q.trim().toLowerCase();
@@ -779,7 +785,7 @@ function expensesHTML() {
   const catOpts = `<option value="">All categories</option>` + groupsOf(md.lines).map(g => `<optgroup label="${esc(g.name)}">${g.lines.map(l => `<option value="${esc(l.id)}" ${S.efCat === l.id ? 'selected' : ''}>${esc(l.name)}</option>`).join('')}</optgroup>`).join('');
   return `<label class="search">${ic('search')}<input id="q" placeholder="Search spending…" value="${esc(S.q)}" autocomplete="off"></label>
     <div class="chips">
-      ${[['all', 'All'], ['me', 'You'], ['partner', 'Partner'], ['bank', 'Bank']].map(([v, l]) => `<button data-action="ef" data-v="${v}" class="${S.ef === v ? 'on' : ''}">${l}</button>`).join('')}
+      ${[['all', 'All'], ...FOR_OPTS(), ['bank', 'Bank']].map(([v, l]) => `<button data-action="ef" data-v="${v}" class="${S.ef === v ? 'on' : ''}">${l}</button>`).join('')}
       <button data-action="efall" class="${S.efAll ? 'on' : ''}">All months</button>
       <select id="efCat" aria-label="Category">${catOpts}</select>
     </div>
@@ -974,12 +980,14 @@ function openExpense(exp, presetLine) {
       <label class="field"><div class="amtbig"><span>$</span><input id="fAmt" class="num" inputmode="decimal" placeholder="0.00" value="${esc(amtVal)}" aria-label="Amount"></div></label>
       <label class="field"><span>Category</span><select id="fLine">${opts}</select></label>
       <label class="field"><span>What was it? (optional)</span><input id="fNote" maxlength="120" placeholder="e.g. Meijer groceries" value="${esc(exp?.note || '')}"></label>
+      <div class="field"><span>Who is it for?</span>${forChips(exp ? forOf(exp) : 'shared', 'data-for')}</div>
       <label class="field"><span>Date</span><input id="fDate" type="date" min="${m}-01" max="${m}-${pad(daysIn(m))}" value="${esc(date)}"></label>
       <div class="err" id="fErr"></div>
       <button class="btn block" id="fSave" type="submit">${exp ? 'Save changes' : 'Add expense'}</button>
       ${exp ? `<button class="btn danger block" type="button" id="fDel" style="margin-top:10px">Delete expense</button>` : ''}
     </form>`);
-  let refund = isRefund;
+  let refund = isRefund, forWho = exp ? forOf(exp) : 'shared';
+  document.querySelectorAll('#expForm [data-for]').forEach(x => x.onclick = () => { forWho = x.dataset.for; document.querySelectorAll('#expForm [data-for]').forEach(y => y.classList.toggle('on', y === x)); });
   document.querySelectorAll('.toggle button').forEach(b => b.onclick = () => { refund = b.dataset.kind === 'refund'; document.querySelectorAll('.toggle button').forEach(x => x.classList.toggle('on', x === b)); });
   if (!exp) setTimeout(() => $('#fAmt')?.focus(), 280);
   $('#expForm').onsubmit = async ev => {
@@ -989,7 +997,7 @@ function openExpense(exp, presetLine) {
     if (isNaN(n) || n <= 0) { err.textContent = 'Enter an amount.'; return; }
     if (!lineId) { err.textContent = 'Pick a category.'; return; }
     const amount = refund ? -n : n, id = exp ? exp.id : uid();
-    const body = { ...(exp ? Object.fromEntries(Object.entries(exp).filter(([k]) => k !== 'id')) : {}), month: m, lineId, amount, note: $('#fNote').value.trim(), date: $('#fDate').value || date, by: exp ? (exp.by || null) : (S.me || null), createdAt: exp?.createdAt || Date.now(), updatedAt: Date.now() };
+    const body = { ...(exp ? Object.fromEntries(Object.entries(exp).filter(([k]) => k !== 'id')) : {}), month: m, lineId, amount, note: $('#fNote').value.trim(), forWho, date: $('#fDate').value || date, by: exp ? (exp.by || null) : (S.me || null), createdAt: exp?.createdAt || Date.now(), updatedAt: Date.now() };
     const btn = $('#fSave'); btn.disabled = true; btn.textContent = 'Saving…';
     try {
       await S.db.collection('expenses').doc(id).set(body);
@@ -1105,6 +1113,8 @@ document.addEventListener('change', ev => {
 });
 
 document.addEventListener('click', ev => {
+  const ib = ev.target.closest('[data-ibfor]');
+  if (ib) { const c = ib.closest('.icard'); (S.ibFor ||= {})[c.dataset.id] = ib.dataset.ibfor; c.querySelectorAll('[data-ibfor]').forEach(x => x.classList.toggle('on', x === ib)); return; }
   const t = ev.target.closest('[data-action],[data-tab]');
   if (!t) return;
   if (t.dataset.tab && !t.dataset.action) { S.tab = t.dataset.tab; if (sheetOpen) closeSheet(); render(); window.scrollTo({ top: 0 }); return; }
@@ -1245,7 +1255,7 @@ function inboxHTML() {
     else if (S.canWrite) {
       const cats = groupsOf(md.lines).map(g => `<optgroup label="${esc(it.deposit ? 'Refund to ' + g.name : g.name)}">${g.lines.map(l => `<option value="${esc(l.id)}" ${l.id === sug ? 'selected' : ''}>${esc(l.name)}</option>`).join('')}</optgroup>`).join('');
       const incs = it.deposit && ST().income ? `<optgroup label="Income received">${(md.income || []).map(i => `<option value="inc:${esc(i.id)}" ${'inc:' + i.id === sug ? 'selected' : ''}>${esc(i.name)}</option>`).join('')}</optgroup>` : '';
-      ctl = `<div class="a"><select class="${sug ? 'sug' : ''}" aria-label="Category"><option value="">${it.deposit ? 'Income or refund…' : 'Choose category'}</option>${incs}${cats}</select><button class="add" data-action="ib-add">Add</button><button class="skip" data-action="ib-skip">Skip</button><input class="ib-note" maxlength="80" enterkeyhint="done" placeholder="Add a note, like \u201cpre workout\u201d (optional)" value="${esc(S.ibNotes[it.id] || '')}"></div>`;
+      ctl = `<div class="a"><select class="${sug ? 'sug' : ''}" aria-label="Category"><option value="">${it.deposit ? 'Income or refund…' : 'Choose category'}</option>${incs}${cats}</select><button class="add" data-action="ib-add">Add</button><button class="skip" data-action="ib-skip">Skip</button>${forChips((S.ibFor || {})[it.id] || 'shared', 'data-ibfor')}<input class="ib-note" maxlength="80" enterkeyhint="done" placeholder="Add a note, like \u201cpre workout\u201d (optional)" value="${esc(S.ibNotes[it.id] || '')}"></div>`;
     }
     h += `<div class="icard" data-id="${esc(it.id)}">
       <div class="t"><span>${esc(it.label)}</span><span class="amt num ${it.deposit ? 'in' : ''}">${it.deposit ? '+' : ''}${fmt(cents(it.amount))}</span></div>
@@ -1255,7 +1265,7 @@ function inboxHTML() {
 }
 async function addInboxItem(item, target) {
   const m = monthOf(item.date);
-  const memo = (S.ibNotes[item.id] || '').trim();
+  const memo = (S.ibNotes[item.id] || '').trim(), forWho = (S.ibFor || {})[item.id] || 'shared';
   if (target.startsWith('inc:')) {
     const rid = 'lmcu-' + item.id;
     await S.db.collection('receipts').doc(rid).set({ month: m, incomeId: target.slice(4), amount: item.amount, date: item.date, by: S.me || null, source: 'lmcu', inboxId: item.id, createdAt: Date.now(), ...(memo ? { memo } : {}) });
@@ -1263,7 +1273,7 @@ async function addInboxItem(item, target) {
     return;
   }
   const id = 'lmcu-' + item.id;
-  await S.db.collection('expenses').doc(id).set({ month: m, lineId: target, amount: item.deposit ? -item.amount : item.amount, note: memo || item.label, merchant: item.label, date: item.date, by: S.me || null, source: 'lmcu', inboxId: item.id, createdAt: Date.now(), updatedAt: Date.now() });
+  await S.db.collection('expenses').doc(id).set({ month: m, lineId: target, amount: item.deposit ? -item.amount : item.amount, note: memo || item.label, merchant: item.label, forWho, date: item.date, by: S.me || null, source: 'lmcu', inboxId: item.id, createdAt: Date.now(), updatedAt: Date.now() });
   await S.db.doc('inbox/' + item.id).update({ status: 'added', expenseId: id, target });
   delete S.ibNotes[item.id];
 }
