@@ -1110,6 +1110,7 @@ function listHTML() {
   const inStore = it => S.gStore === 'all' || it.store === S.gStore || it.store === 'any';
   const items = S.groc.filter(inStore), todo = items.filter(i => !i.checked), cart = items.filter(i => i.checked);
   const counts = id => S.groc.filter(i => !i.checked && (i.store === id)).length;
+  if (S.grocErr) return `<div class="card empty">${esc(S.grocErr)}</div>`;
   let h = `<div class="chips">${[...G_STORES, ['all', 'Both']].map(([k, l]) => `<button data-action="g-store" data-v="${k}" class="${S.gStore === k ? 'on' : ''}">${esc(l)}${k !== 'all' && counts(k) ? ` <span class="gcount">${counts(k)}</span>` : ''}</button>`).join('')}</div>`;
   h += grocBudget();
   h += `<form id="gAdd" class="gadd" autocomplete="off"><input id="gIn" placeholder="Add to ${esc(S.gStore === 'meijer' ? 'Meijer' : 'Aldi')} list…" enterkeyhint="done" aria-label="Add item"><button class="btn" type="submit">${ic('plus')}</button></form>`;
@@ -1537,8 +1538,8 @@ function start(u, em) {
   }, err => { clearTimeout(timer); S.monthsLoaded = true; fail(err); if (!S.fatal) S.fatal = 'Couldn\u2019t load your budget. Reload to try again.'; render(); });
   db.collection('expenses').onSnapshot(snap => { S.allExp = snap.docs.map(d => ({ id: d.id, ...d.data() })); S.expLoaded = true; deriveMonth(); renderSoft(); }, err => { S.expLoaded = true; fail(err); renderSoft(); });
   db.collection('receipts').onSnapshot(snap => { S.receipts = snap.docs.map(d => ({ id: d.id, ...d.data() })); renderSoft(); }, fail);
-  db.collection('grocery').onSnapshot(snap => { S.groc = snap.docs.map(d => ({ id: d.id, ...d.data() })); if (S.tab === 'list') renderSoft(); }, fail);
-  db.doc('meta/grocery').onSnapshot(snap => { S.grocMeta = { aisles: {}, counts: {}, ...(snap.exists ? snap.data() : {}) }; if (S.tab === 'list') renderSoft(); }, fail);
+  db.collection('grocery').onSnapshot(snap => { S.groc = snap.docs.map(d => ({ id: d.id, ...d.data() })); S.grocErr = null; if (S.tab === 'list') renderSoft(); }, err => { S.grocErr = 'The grocery list couldn\u2019t load. Pull down or reload to try again.'; if (S.tab === 'list') renderSoft(); });
+  db.doc('meta/grocery').onSnapshot(snap => { S.grocMeta = { aisles: {}, counts: {}, ...(snap.exists ? snap.data() : {}) }; if (S.tab === 'list') renderSoft(); }, () => {});
   db.doc('meta/settings').onSnapshot(snap => { S.settings = snap.exists ? snap.data() : {}; renderSoft(); }, fail);
   db.collection('inbox').where('status', '==', 'new').onSnapshot(snap => { S.inbox = snap.docs.map(d => ({ id: d.id, ...d.data() })); renderSoft(); }, fail);
   db.doc('meta/rules').onSnapshot(snap => { S.rules = (snap.exists && snap.data().merchants) || {}; if (S.tab === 'inbox') renderSoft(); }, fail);
