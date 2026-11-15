@@ -1095,10 +1095,12 @@ function gParse(line) {
 }
 function grocBudget() {
   const md = monthDoc(); if (!md) return '';
-  const l = (md.lines || []).find(x => /grocer/i.test(x.name)); if (!l) return '';
+  const lines = md.lines || [], pick = S.grocMeta.lineName;
+  const l = (pick && lines.find(x => x.name === pick)) || lines.find(x => /grocer/i.test(x.name)) || lines.find(x => /^food\b|food$/i.test(x.name));
+  if (!l || S.gPicking) return `<div class="card gbud"><div class="t"><span>Which category is groceries?</span></div><select id="gLine" style="width:100%;border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;font:inherit"><option value="">Choose a category\u2026</option>${groupsOf(lines).map(g => `<optgroup label="${esc(g.name)}">${g.lines.map(x => `<option>${esc(x.name)}</option>`).join('')}</optgroup>`).join('')}</select><div class="s">Shows how much is left in it at the top of the list.</div></div>`;
   const st = lineState(S.cur, l.id); if (!st) return '';
   const left = st.avail - st.spent, pct = st.avail > 0 ? Math.min(100, Math.max(0, st.spent / st.avail * 100)) : 0;
-  return `<div class="card gbud"><div class="t"><span>${esc(l.name)} left this month</span><b class="num ${left < 0 ? 'neg' : ''}">${left < 0 ? '−' : ''}${fmt(Math.abs(left))}</b></div><span class="lbar"><i class="${left < 0 ? 'neg' : pct > 90 ? 'warn' : ''}" style="width:${pct}%"></i></span><div class="s num">${fmt(st.spent)} of ${fmt(st.avail)} spent</div></div>`;
+  return `<div class="card gbud"><div class="t"><span>${esc(l.name)} left this month</span><b class="num ${left < 0 ? 'neg' : ''}">${left < 0 ? '−' : ''}${fmt(Math.abs(left))}</b></div><span class="lbar"><i class="${left < 0 ? 'neg' : pct > 90 ? 'warn' : ''}" style="width:${pct}%"></i></span><div class="s num">${fmt(st.spent)} of ${fmt(st.avail)} spent \u00b7 <button class="linkbtn" data-action="g-line" style="font-size:12px">change</button></div></div>`;
 }
 function gRow(it) {
   const p = personLabel(it.by), stl = (G_STORES.find(x => x[0] === it.store) || [, 'Any'])[1];
@@ -1115,7 +1117,9 @@ function listHTML() {
   h += grocBudget();
   h += `<form id="gAdd" class="gadd" autocomplete="off"><input id="gIn" placeholder="Add to ${esc(S.gStore === 'meijer' ? 'Meijer' : 'Aldi')} list…" enterkeyhint="done" aria-label="Add item"><button class="btn" type="submit">${ic('plus')}</button></form>`;
   const onList = new Set(S.groc.filter(i => !i.checked).map(i => gKey(i.name)));
-  const freq = Object.entries(S.grocMeta.counts || {}).filter(([k]) => !onList.has(k)).sort((a, b) => b[1] - a[1]).slice(0, 10);
+  const STARTER = ['milk', 'eggs', 'bread', 'bananas', 'butter', 'cheese', 'chicken', 'coffee', 'yogurt', 'apples', 'onions', 'paper towels'];
+  const cnt = { ...Object.fromEntries(STARTER.map((k, i) => [k, 0.5 - i / 100])), ...(S.grocMeta.counts || {}) };
+  const freq = Object.entries(cnt).filter(([k]) => !onList.has(k)).sort((a, b) => b[1] - a[1]).slice(0, 10);
   if (freq.length) h += `<div class="gfreq">${freq.map(([k]) => `<button data-action="g-quick" data-n="${esc(k)}">+ ${esc(k)}</button>`).join('')}</div>`;
   if (!todo.length && !cart.length) return h + `<div class="card empty"><h3>The list is empty</h3>Type an item above and press Enter. You can paste several lines at once.</div>`;
   const byA = {}; for (const it of todo) (byA[it.aisle || gAisle(it.name)] ||= []).push(it);
@@ -1161,6 +1165,7 @@ document.addEventListener('submit', ev => {
   const inp = $('#gIn'), v = inp.value; if (!v.trim()) return; inp.value = '';
   gAddLines(v).catch(e => handleWriteError(e)); setTimeout(() => $('#gIn') && $('#gIn').focus(), 50);
 });
+document.addEventListener('change', ev => { if (ev.target.id === 'gLine' && ev.target.value) S.gPicking = false, S.grocMeta.lineName = ev.target.value, render(), S.db.doc('meta/grocery').set({ lineName: ev.target.value }, { merge: true }).catch(e => handleWriteError(e)); });
 document.addEventListener('paste', ev => {
   if (!ev.target || ev.target.id !== 'gIn') return;
   const txt = (ev.clipboardData || window.clipboardData).getData('text'); if (!/\n/.test(txt)) return;
@@ -1174,6 +1179,7 @@ document.addEventListener('click', ev => {
   if (a === 'g-edit') { const it = S.groc.find(i => i.id === t.dataset.id); if (it) openGItem(it); }
   if (a === 'g-quick') gAddLines(t.dataset.n).catch(e => handleWriteError(e));
   if (a === 'g-clear') { const done = S.groc.filter(i => i.checked && (S.gStore === 'all' || i.store === S.gStore || i.store === 'any')); Promise.all(done.map(i => S.db.doc('grocery/' + i.id).delete())).then(() => toast(`Cleared ${done.length}`)).catch(e => handleWriteError(e)); }
+  if (a === 'g-line') { S.gPicking = true; render(); }
   if (a === 'open-plan') { S.tab = 'plan'; if (sheetOpen) closeSheet(); render(); window.scrollTo({ top: 0 }); }
 });
 
