@@ -1,0 +1,5 @@
+/gridiron-iq/clips/*
+  Cache-Control: public, max-age=86400
+
+/gridiron-iq/frames/*
+  Cache-Control: public, max-age=86400

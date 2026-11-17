@@ -769,7 +769,7 @@ function runSteps(steps,onDone,defF){
 
 /* ---------- video player with film controls ---------- */
 function Player(clip){
-  const v=el('video',{src:`clips/${clip.id}.mp4`,poster:`clips/${clip.id}.jpg`,preload:'auto',playsinline:'',muted:''});v.muted=true;
+  const v=el('video',{src:`clips/${clip.id}.mp4`,poster:`clips/${clip.id}.jpg`,preload:'metadata',playsinline:'',muted:''});v.muted=true;
   const scrub=el('input',{type:'range',min:0,max:1000,value:0,'aria-label':'Position in the clip'});
   const play=el('button',{class:'cbtn main',onclick:()=>v.paused?v.play().catch(()=>{}):v.pause()},'Play');
   const speeds=el('span',{class:'row'});let rate=1;
@@ -808,7 +808,7 @@ function learn(){
   function paint(){
     chips.replaceChildren(...['All','Offense','Defense'].map(k=>el('button',{class:'chip','aria-pressed':side===k,onclick:()=>{side=k;paint();}},k)));
     grid.replaceChildren(...LESSONS.filter(L=>side==='All'||L.side===side).map(L=>el('button',{class:'card lcard',onclick:()=>openLesson(L)},[
-      el('div',{class:'thumb',style:`background-image:url(${FR[L.f].src});background-position:${L.pos}`},el('span',{class:'badge'+(S.done[L.id]?' done':''),'aria-label':S.done[L.id]?'Completed':'Lesson '+(LESSONS.indexOf(L)+1)},S.done[L.id]?'✓':LESSONS.indexOf(L)+1)),
+      el('div',{class:'thumb',style:`background-image:url(${FR[L.f].src.replace('frames/','frames/s_')});background-position:${L.pos}`},el('span',{class:'badge'+(S.done[L.id]?' done':''),'aria-label':S.done[L.id]?'Completed':'Lesson '+(LESSONS.indexOf(L)+1)},S.done[L.id]?'✓':LESSONS.indexOf(L)+1)),
       el('h3',{},L.title),el('p',{},L.blurb),el('div',{class:'facts'},[el('span',{},L.side),el('span',{},L.steps.length+' steps')])])));
   }
   paint();
@@ -837,7 +837,7 @@ function practice(){
     el('div',{class:'thumb',style:pos},el('span',{class:'badge done','aria-hidden':'true'},badge)),el('h3',{},h),el('p',{},p),el('div',{class:'facts'},facts.map(f=>el('span',{},f)))]);
   app.replaceChildren(el('div',{class:'grid'},[
     card(`background-image:url(clips/p14.jpg);background-size:cover;background-position:center`,'▶','Call the coverage','See the defense before the snap, name the coverage, then watch the play to check yourself.',['6 clips a round',passN+' pass plays'],coverageRound),
-    card('background-image:url(frames/c1.jpg);background-size:cover;background-position:center','▶','Quick reads','Find positions by alignment, count the front and read the shell on your annotated frames.',['10 reads',drillPool().length+' in the pool'],quickRound)]));
+    card('background-image:url(frames/s_c1.jpg);background-size:cover;background-position:center','▶','Quick reads','Find positions by alignment, count the front and read the shell on your annotated frames.',['10 reads',drillPool().length+' in the pool'],quickRound)]));
 }
 function quickRound(){
   const pool=drillPool().sort(()=>Math.random()-.5).slice(0,10);
