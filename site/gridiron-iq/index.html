@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#15161c">
+<meta name="robots" content="noindex, nofollow">
+<title>Gridiron IQ</title>
+<link rel="icon" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eef0f5; --card:#fff; --ink:#1b1d28; --ink2:#6f7380; --mute:#9a9eaa; --line:#eceef3; --tint:#f5f6f9;
+  --accent:#f47a36; --accent-soft:#fdeee4; --good:#1e9e6a; --good-soft:#e4f6ed; --bad:#e04b4b; --bad-soft:#fdeaea;
+  --shadow:0 14px 34px rgba(27,29,40,.09);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:400 15px/1.55 "Plus Jakarta Sans",system-ui,sans-serif}
+h1,h2,h3{margin:0;font-weight:700;line-height:1.2;letter-spacing:-.01em}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+/* dark header */
+.hero{background:linear-gradient(135deg,#15161c 0%,#272932 55%,#3b3d47 100%);color:#fff;padding:20px 28px 176px;border-radius:0 0 32px 32px}
+.hero-in{max-width:1400px;margin:0 auto}
+.bar-top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:34px}
+.brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:800;font-size:19px;letter-spacing:-.01em}
+.mark{width:30px;height:30px;border-radius:10px;background:var(--accent);display:grid;place-items:center}
+.mark i{display:block;width:14px;height:2.5px;background:#fff;border-radius:2px;box-shadow:0 -5px 0 #fff,0 5px 0 #fff}
+nav{display:flex;gap:6px}
+nav a{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.62);text-decoration:none;padding:9px 16px;border-radius:99px;font-weight:600;font-size:14px}
+nav a svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+nav a:hover{color:#fff}
+nav a[aria-current]{background:rgba(255,255,255,.14);color:#fff}
+.hero small{display:block;color:rgba(255,255,255,.6);font-size:14px;margin-bottom:4px}
+.hero h1{font-size:30px}
+.hero p{margin:10px 0 0;color:rgba(255,255,255,.7);max-width:62ch}
+.back{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.14);border:0;color:#fff;border-radius:99px;padding:7px 14px;font-weight:600;font-size:13px;margin-bottom:14px}
+.back:hover{background:rgba(255,255,255,.22)}
+
+main{max-width:1456px;margin:-152px auto 0;padding:0 28px 48px;position:relative}
+.card{background:var(--card);border-radius:24px;box-shadow:var(--shadow)}
+.sec{display:flex;justify-content:space-between;align-items:baseline;margin:0 4px 14px}
+.sec h2{font-size:18px}
+.sec span{color:var(--accent);font-weight:600;font-size:14px}
+.sec.onhero h2{color:#fff}
+
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 14px}
+.chip{background:#fff;border:0;border-radius:99px;padding:9px 18px;font-size:14px;font-weight:600;color:var(--ink);box-shadow:0 6px 16px rgba(27,29,40,.07)}
+.chip[aria-pressed=true]{background:var(--accent);color:#fff}
+
+/* lesson cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:20px}
+.lcard{border:0;padding:10px 10px 16px;text-align:left;display:flex;flex-direction:column;justify-content:flex-start;align-items:stretch;width:100%;transition:transform .15s}
+.lcard:hover{transform:translateY(-3px)}
+.thumb{position:relative;aspect-ratio:16/10;border-radius:18px;background:#111 no-repeat;background-size:230%;box-shadow:0 10px 20px rgba(27,29,40,.18)}
+.badge{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:50%;background:rgba(27,29,40,.6);backdrop-filter:blur(4px);display:grid;place-items:center;color:#fff;font-weight:700;font-size:13px}
+.badge.done{background:var(--accent)}
+.lcard h3{font-size:17px;margin:14px 6px 6px}
+.lcard p{margin:0 6px 10px;color:var(--ink2);font-size:13.5px;line-height:1.45}
+.facts{display:flex;gap:14px;margin:0 6px;font-size:13px;color:var(--ink2)}
+.facts span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:3px;background:var(--accent);margin-right:6px}
+
+/* the frame */
+.work{display:grid;grid-template-columns:minmax(0,1fr) 410px;gap:22px;align-items:start}
+.stage{position:relative;background:#000;border-radius:24px;overflow:hidden;line-height:0;container-type:inline-size;box-shadow:var(--shadow)}
+.stage img{width:100%;height:auto;display:block}
+.stage svg{position:absolute;inset:0;width:100%;height:100%}
+.hit{fill:transparent;cursor:pointer;outline:none}
+.hit:focus-visible{stroke:#fff;stroke-width:5;stroke-dasharray:10 8}
+.stage.tap .hit:hover{fill:rgba(255,255,255,.14)}
+.ring{fill:none;stroke-width:4}
+.ring.o{stroke:#ff9a52} .ring.d{stroke:#fff;stroke-dasharray:11 6}
+.ring.hi{stroke-width:7;fill:rgba(244,122,54,.28)}
+.ring.wrong{stroke:#ff5a5a;stroke-dasharray:none;fill:rgba(224,75,75,.25)}
+.guide{stroke:#fff;stroke-width:3.5;stroke-dasharray:10 9;fill:none;opacity:.9}
+.route{stroke:#ff9a52;stroke-width:5;fill:none;stroke-linecap:round}
+.lab{position:absolute;transform:translate(-50%,0);white-space:nowrap;pointer-events:none;
+  font:700 clamp(8px,1.3cqw,12.5px)/1.25 "Plus Jakarta Sans",sans-serif;padding:.22em .7em;border-radius:99px}
+.lab.o{background:var(--accent);color:#fff}
+.lab.d{background:#fff;color:var(--ink);border-radius:.5em;transform:translate(-50%,-100%)}
+.lab.note{background:rgba(23,24,31,.88);color:#fff;font-weight:600}
+.lab.gap{background:rgba(23,24,31,.88);color:#fff;min-width:1.9em;text-align:center}
+.lab.gap.open{background:#fff;color:var(--accent);outline:.16em dashed var(--accent)}
+.cap{color:var(--mute);font-size:13px;margin:10px 8px 0}
+
+/* the side sheet */
+.sheet{background:#fff;border-radius:24px;box-shadow:var(--shadow);padding:22px}
+.sheet h2{font-size:22px;margin-bottom:10px}
+.sheet h3{font-size:16px;margin:18px 0 6px}
+.sheet p{margin:0 0 12px;color:var(--ink2);max-width:60ch}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:14px;font-size:13px;color:var(--mute);font-weight:600}
+.meta b{color:var(--ink);font-weight:700;margin-right:8px}
+.pill{background:var(--accent);color:#fff;border-radius:99px;padding:5px 13px;font-weight:700;font-size:13px;white-space:nowrap}
+.q{font-weight:700;font-size:19px;line-height:1.35;margin:0 0 14px;color:var(--ink) !important}
+.opts{display:grid;gap:10px;margin:0 0 14px}
+.opt{display:flex;align-items:center;gap:12px;background:var(--tint);border:1.5px solid transparent;border-radius:16px;padding:11px 14px;text-align:left;font-weight:600;line-height:1.4}
+.opt .let{flex:none;width:36px;height:36px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:800}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt:disabled{cursor:default;color:var(--mute)}
+.opt.picked{color:var(--ink)}
+.opt.g1{background:var(--good-soft);border-color:var(--good)} .opt.g1 .let{background:var(--good);color:#fff}
+.opt.g5{background:var(--accent-soft);border-color:var(--accent)} .opt.g5 .let{background:var(--accent);color:#fff}
+.opt.g0{background:var(--bad-soft);border-color:var(--bad)} .opt.g0 .let{background:var(--bad);color:#fff}
+.opt.best:not(.picked){color:var(--ink);border:1.5px dashed var(--good)}
+.fb{border-radius:16px;padding:12px 16px;margin:0 0 16px;color:var(--ink);line-height:1.5}
+.fb.g1{background:var(--good-soft)} .fb.g5{background:var(--accent-soft)} .fb.g0{background:var(--bad-soft)}
+.fb b{display:block;margin-bottom:2px}
+.fb.g1 b{color:var(--good)} .fb.g5 b{color:#c9581a} .fb.g0 b{color:var(--bad)}
+.btn{background:var(--ink);color:#fff;border:0;border-radius:99px;padding:13px 26px;font-weight:700;box-shadow:0 10px 22px rgba(27,29,40,.22)}
+.btn.ghost{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line)}
+.btn.orange{background:var(--accent);box-shadow:0 10px 22px rgba(244,122,54,.3)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.tapcue{display:flex;align-items:center;gap:12px;background:var(--tint);border-radius:16px;padding:11px 14px;font-weight:600;color:var(--ink) !important}
+.tapcue::before{content:"";flex:none;width:36px;height:36px;border-radius:50%;background:var(--accent-soft);box-shadow:inset 0 0 0 9px var(--accent-soft),inset 0 0 0 12px var(--accent)}
+.kind{display:inline-block;font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px;background:var(--tint);color:var(--ink2)}
+.kind.frame{background:var(--accent-soft);color:#c9581a}
+dl{margin:0} dt{font-weight:700;margin-top:14px;margin-bottom:4px} dd{margin:0;color:var(--ink2)}
+.fine{font-size:13px;color:var(--mute) !important;margin-top:14px !important}
+
+/* progress and captures */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+.bar{height:10px;background:var(--tint);border-radius:99px;overflow:hidden;margin:6px 0 4px}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:99px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:10px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child th,tr:last-child td{border-bottom:0}
+th{color:var(--mute);font-weight:600;width:32%}
+td.n{white-space:nowrap;color:var(--accent);font-weight:700;text-align:right}
+ol.shots{list-style:none;padding:0;margin:0;counter-reset:s}
+ol.shots li{counter-increment:s;display:grid;grid-template-columns:36px 1fr;gap:2px 12px;padding:10px 0;font-weight:600}
+ol.shots li::before{content:counter(s);grid-row:1/3;width:36px;height:36px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:800}
+ol.shots small{grid-column:2;color:var(--ink2);font-weight:400;font-size:13.5px}
+
+
+/* video */
+.vwrap{background:#000;border-radius:24px;overflow:hidden;box-shadow:var(--shadow);line-height:0}
+.vwrap video{width:100%;height:auto;display:block;aspect-ratio:16/9;background:#000}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 4px 0}
+.ctrl input[type=range]{flex:1 1 180px;accent-color:var(--accent);min-width:140px}
+.cbtn{background:#fff;border:0;border-radius:99px;padding:8px 15px;font-weight:700;font-size:13.5px;box-shadow:0 6px 16px rgba(27,29,40,.07)}
+.cbtn[aria-pressed=true]{background:var(--ink);color:#fff}
+.cbtn.main{background:var(--accent);color:#fff;min-width:78px}
+.tabs{display:flex;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+@media(max-width:760px){.vwrap{border-radius:18px}}
+@media(max-width:980px){.work,.cols{grid-template-columns:1fr}}
+@media(max-width:760px){
+  body{padding-bottom:88px}
+  .hero{padding:18px 18px 150px;border-radius:0 0 26px 26px}
+  .bar-top{margin-bottom:24px}
+  .hero h1{font-size:24px}
+  main{padding:0 14px 24px;margin-top:-132px}
+  nav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:#fff;justify-content:space-around;gap:0;padding:8px 6px calc(10px + env(safe-area-inset-bottom,0px));border-radius:22px 22px 0 0;box-shadow:0 -8px 28px rgba(27,29,40,.1)}
+  nav a{flex-direction:column;gap:3px;padding:8px 6px;font-size:11px;color:var(--mute);position:relative;border-radius:12px}
+  nav a svg{width:23px;height:23px}
+  nav a:hover{color:var(--ink)}
+  nav a[aria-current]{background:none;color:var(--accent)}
+  nav a[aria-current]::before{content:"";position:absolute;top:-8px;left:50%;width:22px;height:3px;margin-left:-11px;border-radius:0 0 3px 3px;background:var(--accent)}
+  .stage{border-radius:18px}
+  .sheet{padding:18px}
+}
+@media(prefers-reduced-motion:reduce){.lcard{transition:none}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="hero-in">
+  <div class="bar-top">
+    <a class="brand" href="#learn"><span class="mark"><i></i></span>Gridiron IQ</a>
+    <nav id="nav" aria-label="Sections"></nav>
+  </div>
+  <div id="hero"></div>
+</div></header>
+<main id="app"></main>
+
+<script>
+const CLIPS=[{"id": "p01", "side": "Offense", "type": "pass", "off": "Four Verticals", "sure": 1, "def": "Cover 2", "fam": "c2", "snap": 0.95}, {"id": "p02", "side": "Offense", "type": "pass", "off": "Four Verticals", "sure": 0, "def": "Cover 3", "fam": "c3", "snap": 3.0}, {"id": "p03", "side": "Offense", "type": "pass", "off": "Shotgun pass", "sure": 0, "def": "Cover 2", "fam": "c2", "snap": 0.95}, {"id": "p04", "side": "Offense", "type": "pass", "off": "I-formation pass", "sure": 0, "def": "Man Blitz", "fam": "c0", "snap": 0.35}, {"id": "p05", "side": "Offense", "type": "pass", "off": "Empty-set pass", "sure": 0, "def": "Man Blitz", "fam": "c0", "snap": 2.15}, {"id": "p06", "side": "Offense", "type": "run", "off": "Inside zone run", "sure": 1, "def": "Cover 2", "fam": "c2", "snap": 1.35}, {"id": "p07", "side": "Offense", "type": "run", "off": "Counter", "sure": 1, "def": "Cover 2 Man", "fam": "c2m", "snap": 0.35}, {"id": "p08", "side": "Offense", "type": "run", "off": "Read Option", "sure": 1, "def": "Cover 2 Man", "fam": "c2m", "snap": 0.75}, {"id": "p10", "side": "Offense", "type": "pass", "off": "Jet Touch Pass, with motion", "sure": 1, "def": "Cover 2 Man", "fam": "c2m", "snap": 3.0}, {"id": "p11", "side": "Offense", "type": "pass", "off": "Jet Touch Pass, with motion", "sure": 1, "def": "Cover 4 Quarters", "fam": "c4", "snap": 3.0}, {"id": "p12", "side": "Defense", "type": "pass", "off": "Four Verticals", "sure": 0, "def": "Cover 3", "fam": "c3", "snap": 1.15}, {"id": "p13", "side": "Defense", "type": "pass", "off": "Shotgun pass", "sure": 0, "def": "Cover 2", "fam": "c2", "snap": 1.15}, {"id": "p14", "side": "Defense", "type": "pass", "off": "Crossing-route pass", "sure": 0, "def": "Cover 1", "fam": "c1", "snap": 1.55}, {"id": "p15", "side": "Defense", "type": "pass", "off": "Empty-set pass", "sure": 0, "def": "Cover 4 Quarters", "fam": "c4", "snap": 1.55}, {"id": "p16", "side": "Defense", "type": "run", "off": "Counter", "sure": 1, "def": "Cover 3", "fam": "c3", "snap": 1.35}, {"id": "p17", "side": "Defense", "type": "run", "off": "Inside zone run", "sure": 1, "def": "Cover 3", "fam": "c3", "snap": 1.35}, {"id": "p18", "side": "Defense", "type": "pass", "off": "Strong I quick pass", "sure": 0, "def": "Zone Blitz 2 Deep", "fam": "zb", "snap": 1.35}, {"id": "p19", "side": "Defense", "type": "pass", "off": "Jet Touch Pass, with motion", "sure": 1, "def": "Man Blitz", "fam": "c0", "snap": 1.55}];
+const FAM={
+ c1:{name:'Cover 1',shell:1,what:'One deep safety in the middle of the field, man coverage underneath.',watch:'Watch the lone safety stay in the middle while the other defenders turn and run with a receiver.'},
+ c2:{name:'Cover 2',shell:2,what:'Two deep safeties split the field in halves. The corners sit short in the flats.',watch:'Watch both safeties widen and back up while the corners stay low.'},
+ c2m:{name:'Cover 2 Man',shell:2,what:'Two deep safeties, with man coverage on every receiver underneath them.',watch:'Watch the two safeties stay deep while the underneath defenders turn their backs to the quarterback and chase.'},
+ c3:{name:'Cover 3',shell:1,what:'Three deep defenders: both corners and one safety. Four defenders underneath.',watch:'Watch the corners bail to the deep outside thirds and one safety take the middle.'},
+ c4:{name:'Cover 4',shell:2,what:'Four deep defenders: both corners and both safeties, each with a quarter of the field.',watch:'Watch both safeties and both corners stay on top of anything vertical.'},
+ c0:{name:'Man blitz',shell:1,what:'Extra rushers with man coverage behind them and one safety deep at most.',watch:'Count the rushers at the snap, then find the one safety rotating to the deep middle.'},
+ zb:{name:'Zone blitz',shell:2,what:'Five rushers, two deep safeties, and zone defenders dropping underneath.',watch:'Watch which second-level defender rushes and which lineman or backer drops out.'}
+};
+
+
+/* ---------- annotated frames from the practice clips (coordinates in a 1600 x 900 frame) ---------- */
+const ROLE={
+ qb:['Distributes the ball, manages the offense, reads the defense.','Shell, leverage, pressure, safety rotation, the progression, the throw window.'],
+ rb:['Runs the ball, protects the quarterback, releases as a receiver.','Run track and aiming point, the mesh with the QB, who he must block before he releases.'],
+ ol:['Protects the quarterback and opens run lanes.','The front, slide direction, combo blocks, double teams, stunt pickup.'],
+ c:['Snaps the ball and sets the protection.','Identifies the front and the linebacker the line counts from.'],
+ te:['Blocks, releases into routes, helps in protection, creates mismatches.','Edge technique, seam access, whether to chip and release.'],
+ wr:['Creates separation, blocks, and runs routes on time.','Split, release, leverage of the defender over him, coverage indicators.'],
+ h:['Lead blocks, inserts, or releases as a receiver.','His insert or kick-out path, the defensive edge.'],
+ cb:['Defends the outside receiver and controls leverage.','Receiver split, release, cushion, inside or outside leverage.'],
+ s:['Deep help, range, run support, and post-snap communication.','The shell he is showing, the quarterback\'s eyes, route distribution.'],
+ lb:['Fits the run; on pass, drops to a zone, matches a receiver or rushes, by call.','Guards and backfield flow, then his landmark or his man.'],
+ dl:['Controls a gap, disrupts blocks, compresses the pocket.','The blocker\'s first step, double teams, his rush lane.'],
+ edge:['Sets the edge, rushes the passer, keeps contain.','The tackle or tight end\'s block, backfield action, his rush lane.']
+};
+// player: [id, side, tag, name, hit cx,cy,rx,ry, feet x,y, kind, where he is in this frame]
+const FR={
+a1:{src:'frames/a1.jpg',title:'Four Verticals against Cover 2, before the snap',clip:'p01',P:[
+ ['qb','o','QB #14','quarterback',805,615,38,80,800,692,'qb','In the shotgun, 5 yards behind the center. He wears yellow; the rest of the offense is in navy.'],
+ ['rb','o','RB #23','running back',945,675,36,70,945,748,'rb','Beside the quarterback, offset to his right.'],
+ ['lt','o','LT','left tackle',615,535,38,46,612,578,'ol','The end of the line on the left. Nobody is attached outside him.'],
+ ['lg','o','LG','left guard',705,530,34,44,705,572,'ol','Between the left tackle and the center.'],
+ ['c','o','C','center',800,518,32,38,800,562,'c','Over the ball, in the middle of the field between the hashes.'],
+ ['rg','o','RG','right guard',890,530,34,44,890,572,'ol','Between the center and the right tackle.'],
+ ['rt','o','RT #54','right tackle',985,530,34,44,985,572,'ol','Has the tight end attached outside him.'],
+ ['te','o','TE','tight end',1070,530,32,44,1070,570,'te','On the line, attached to the right tackle.'],
+ ['wing','o','Wing','wing',1185,550,32,50,1185,596,'te','A step off the line, just outside the tight end. He can block like a tight end or release like a receiver.'],
+ ['cbL','d','CB','cornerback on the left',65,410,34,45,68,442,'cb','About 5 yards off a receiver the camera cuts off.'],
+ ['cbR','d','CB','cornerback on the right',1535,410,34,45,1530,442,'cb','About 5 yards off a receiver the camera cuts off.'],
+ ['sL','d','Safety','safety on the left hash',557,335,24,36,557,366,'s','About 11 yards deep, on the hash.'],
+ ['sR','d','Safety','safety on the right hash',1040,335,24,36,1040,366,'s','About 11 yards deep, on the hash.'],
+ ['lbL','d','LB','linebacker on the left',655,410,30,38,658,442,'lb','5 yards deep, over the left guard.'],
+ ['lbR','d','LB','linebacker on the right',855,405,30,38,855,442,'lb','5 yards deep, just right of the center.'],
+ ['deL','d','DE','defensive end on the left',530,480,34,30,532,506,'edge','Hand down, wide of the left tackle.'],
+ ['dtL','d','DT','defensive tackle on the left',765,472,28,26,765,498,'dl','In the gap between the center and left guard.'],
+ ['dtR','d','DT','defensive tackle on the right',915,472,28,26,918,498,'dl','In the gap between the right guard and right tackle.'],
+ ['deR','d','DE','defensive end on the right',1030,472,28,26,1030,498,'edge','Hand down, between the right tackle and tight end.'],
+ ['sam','d','LB','standing linebacker on the line',1135,458,28,40,1135,498,'lb','On the line standing up, over the tight end and wing.']],
+ L:{ghost:{name:'Off-screen receivers',lines:[[68,442,2,474],[1530,442,1598,474]],notes:[[8,484,'Receiver off screen','l'],[1592,484,'Receiver off screen','r']]},
+  shell:{name:'Safety depth',rings:['sL','sR'],notes:[[557,374,'11 yards'],[1040,374,'11 yards'],[800,262,'Nobody deep in the middle']]},
+  front:{name:'The front',rings:['deL','dtL','dtR','deR','sam'],notes:[[1265,446,'Standing up, on the line']]},
+  lbs:{name:'Linebackers',rings:['lbL','lbR'],notes:[[757,356,'5 yards deep']]},
+  verts:{name:'Four Verticals',arrows:[[0,471,283,300],[1600,471,1317,300],[1070,520,955,300],[1185,540,1016,300]],notes:[[800,220,'Four routes straight up the field']]}}},
+a2:{src:'frames/a2.jpg',title:'Four Verticals against Cover 2, two seconds after the snap',clip:'p01',P:[
+ ['qb','o','QB','quarterback',805,625,30,60,800,682,'qb','At the top of his drop.'],
+ ['wl','o','WR','receiver on the left sideline',207,395,22,32,207,432,'wr','Running straight up the left sideline.'],
+ ['wr','o','WR','receiver on the right sideline',1275,378,22,30,1275,410,'wr','Running straight up the right sideline.'],
+ ['cl','d','CB','cornerback on the left',258,412,22,30,260,442,'cb','Trailing the receiver from underneath.'],
+ ['s2l','d','Safety','safety on the left',508,330,18,26,510,354,'s','Backing up over the left half of the field.'],
+ ['s2r','d','Safety','safety on the right',1093,330,18,26,1093,354,'s','Backing up over the right half of the field.'],
+ ['mk','d','LB','linebacker in the deep middle',812,345,18,28,812,374,'lb','Has turned and run to the deep middle, between the safeties.'],
+ ['lbu','d','LB','underneath linebacker',645,390,24,30,648,418,'lb','Dropping to a short zone.']],
+ L:{tampa:{name:'Deep defenders',rings:['s2l','s2r','mk'],lines:[[510,354,207,432]],notes:[[345,462,'About 12 yards apart'],[812,384,'Linebacker running to the deep middle']]}}},
+b1:{src:'frames/b1.jpg',title:'Cover 1, before the snap',clip:'p14',P:[
+ ['qb','o','QB #14','quarterback',805,610,38,80,800,692,'qb','In the shotgun. In this clip the offense wears white and the quarterback wears yellow.'],
+ ['rb','o','RB #23','running back',945,675,36,70,945,748,'rb','Beside the quarterback, offset to his right.'],
+ ['lt','o','LT #71','left tackle',615,515,36,46,612,560,'ol','The end of the line on the left.'],
+ ['lg','o','LG #55','left guard',708,515,34,44,708,556,'ol','Between the left tackle and the center.'],
+ ['c','o','C #53','center',800,512,32,42,800,550,'c','Over the ball, in the middle of the field.'],
+ ['rg','o','RG','right guard',890,512,34,44,890,554,'ol','Between the center and the right tackle.'],
+ ['rt','o','RT #54','right tackle',985,512,34,44,985,556,'ol','The end of the line on the right.'],
+ ['wl','o','Wing #42','wing on the left',535,550,36,52,538,600,'te','A step off the line outside the left tackle.'],
+ ['wr','o','Wing #80','wing on the right',1065,555,34,50,1065,600,'te','A step off the line outside the right tackle.'],
+ ['cbL','d','CB','cornerback on the left',178,372,34,40,182,400,'cb','About 8 yards off a receiver the camera cuts off.'],
+ ['cbR','d','CB','cornerback on the right',1420,368,34,40,1415,397,'cb','About 8 yards off a receiver the camera cuts off.'],
+ ['fs','d','FS','free safety',800,285,20,30,800,310,'s','The only deep defender: about 16 yards off the ball, dead center.'],
+ ['sam','d','LB','standing linebacker on the left edge',495,468,30,32,498,496,'lb','Walked up on the line outside the left tackle, over the wing.'],
+ ['dt1','d','DT','defensive tackle you control',640,478,30,26,645,502,'dl','The player with the ring: you. In the gap between the left tackle and left guard.'],
+ ['mike','d','LB','linebacker right behind the line',703,446,26,30,705,476,'lb','Two yards off the ball, behind the tackles.'],
+ ['dt2','d','DT','defensive tackle over the center',765,472,26,24,765,498,'dl','Shaded on the center\'s left shoulder.'],
+ ['dt3','d','DT','defensive tackle on the right',920,472,28,24,922,498,'dl','In the gap between the right guard and right tackle.'],
+ ['deR','d','DE','defensive end on the right',1040,472,28,24,1042,498,'edge','Hand down outside the right tackle.'],
+ ['will','d','LB','linebacker at 5 yards',930,402,28,36,930,440,'lb','5 yards deep, behind the right side of the line.'],
+ ['ss','d','SS','safety who has come down',1075,398,28,38,1077,440,'s','5 yards deep, lined up over the right wing. He is not a deep player on this call.']],
+ L:{one:{name:'Deep safety',rings:['fs'],notes:[[800,236,'About 16 yards deep, dead center']]},
+  down:{name:'Safety down',rings:['ss'],notes:[[1160,356,'Safety down at 5 yards']]},
+  ghost:{name:'Off-screen receivers',lines:[[182,400,2,446],[1415,397,1598,446]],notes:[[8,456,'Receiver off screen','l'],[1592,456,'Receiver off screen','r']]},
+  front:{name:'The front',rings:['sam','dt1','dt2','dt3','deR','mike']}}},
+b2:{src:'frames/b2.jpg',title:'Cover 1, two seconds after the snap',clip:'p14',P:[
+ ['fs','d','FS','free safety',800,305,16,24,800,324,'s','Still alone in the deep middle.'],
+ ['lbrb','d','LB','defender running with the back',1145,435,22,30,1147,462,'lb','Chasing the running back to the flat.'],
+ ['rb','o','RB #23','running back',1215,472,22,32,1215,502,'rb','Released to the right flat.'],
+ ['cbl','d','CB','cornerback on the left',412,352,20,28,412,378,'cb','Running with his receiver.'],
+ ['wl','o','WR','receiver on the left',375,368,20,30,375,398,'wr','Running up the left side.']],
+ L:{man:{name:'Man coverage',rings:['fs','lbrb','cbl'],notes:[[790,476,'Two crossers, each with a defender on his hip'],[1215,556,'A defender runs with the back'],[800,336,'Free safety still alone in the middle']]}}},
+c1:{src:'frames/c1.jpg',title:'Inside zone against Cover 3, before the snap',clip:'p17',P:[
+ ['qb','o','QB #14','quarterback',805,610,38,80,800,692,'qb','In the shotgun. The offense wears white here and the quarterback wears yellow.'],
+ ['rb','o','RB #23','running back',650,675,36,70,652,748,'rb','Beside the quarterback, offset to his left.'],
+ ['lt','o','LT','left tackle',615,515,36,45,612,558,'ol','The end of the line on the left.'],
+ ['lg','o','LG','left guard',708,515,34,44,708,556,'ol','Between the left tackle and the center.'],
+ ['c','o','C #53','center',800,512,32,42,800,550,'c','Over the ball, in the middle of the field.'],
+ ['rg','o','RG','right guard',890,512,34,44,890,554,'ol','Between the center and the right tackle.'],
+ ['rt','o','RT','right tackle',982,508,30,38,982,548,'ol','Has the tight end attached outside him.'],
+ ['te','o','TE','tight end',1070,518,32,42,1072,558,'te','On the line, attached to the right tackle.'],
+ ['h','o','H #44','extra blocker behind the line',950,572,30,48,950,614,'h','A yard behind the right guard and tackle. He is a lead blocker on this play.'],
+ ['cbL','d','CB','cornerback on the left',185,372,34,40,190,400,'cb','About 8 yards off a receiver the camera cuts off.'],
+ ['cbR','d','CB','cornerback on the right',1415,368,34,40,1410,397,'cb','About 8 yards off a receiver the camera cuts off.'],
+ ['fs','d','FS','free safety',800,283,20,30,800,310,'s','The only deep defender, about 16 yards off, in the middle of the field.'],
+ ['sam','d','LB','standing linebacker on the left edge',525,460,30,38,528,496,'lb','On the line standing up, wide of the left tackle.'],
+ ['dt1','d','DT','defensive tackle you control',640,478,30,26,645,502,'dl','The player with the ring: you. In the gap between the left tackle and left guard.'],
+ ['dt2','d','DT','defensive tackle over the center',765,472,26,24,765,498,'dl','Shaded on the center\'s left shoulder.'],
+ ['dt3','d','DT','defensive tackle on the right',920,472,28,24,922,498,'dl','In the gap between the right guard and right tackle.'],
+ ['deR','d','DE','defensive end on the right',1040,472,28,24,1042,498,'edge','Between the right tackle and tight end.'],
+ ['mike','d','LB','linebacker on the left',722,402,28,36,724,440,'lb','5 yards deep, over the left guard.'],
+ ['will','d','LB','linebacker on the right',930,402,28,36,932,440,'lb','5 yards deep, behind the right guard.'],
+ ['ss','d','SS','safety who has come down',1195,428,28,36,1197,464,'s','4 yards deep, a couple of yards outside the tight end. He is the edge player to that side.']],
+ L:{gaps:{name:'Gaps',rings:['sam','dt1','dt2','dt3','deR'],gaps:[[560,'C',0],[661,'B',0],[754,'A',0],[845,'A',1],[935,'B',0],[1025,'C',0],[1128,'Edge',1]],gy:542},
+  down:{name:'Safety down',rings:['ss'],notes:[[1290,388,'Safety down outside the tight end']]},
+  one:{name:'Deep safety',rings:['fs'],notes:[[800,236,'One deep safety']]},
+  lbs:{name:'Linebackers',rings:['mike','will'],notes:[[826,356,'5 yards deep']]}}},
+c2:{src:'frames/c2.jpg',title:'Inside zone against Cover 3, one second after the snap',clip:'p17',P:[
+ ['edge','d','LB','unblocked defender on the left',410,440,30,60,408,512,'lb','Nobody blocked him. He is the backside edge player.'],
+ ['lead','o','H #44','lead blocker',1090,405,28,50,1092,486,'h','Leading through the right side.'],
+ ['fs','d','FS','free safety',790,265,18,26,790,300,'s','Still deep in the middle, reading run.'],
+ ['qb','o','QB #14','quarterback',800,545,40,70,800,640,'qb','Has just handed the ball off.']],
+ L:{flow:{name:'Blocks',rings:['edge','lead'],notes:[[740,350,'Double team'],[985,338,'Double team'],[400,530,'Unblocked on the back side']]}}}
+};
+const pOf=(f,id)=>{const a=FR[f].P.find(p=>p[0]===id);return {id:a[0],s:a[1],tag:a[2],name:a[3],hit:a.slice(4,8),ft:a.slice(8,10),kind:a[10],here:a[11]};};
+const ids=(f,s)=>FR[f].P.filter(p=>!s||p[1]===s).map(p=>p[0]);
+
+/* ---------- stage: real frame + overlays ---------- */
+function el(t,a={},kids=[]){const e=document.createElement(t);for(const k in a){if(k==='class')e.className=a[k];else if(k==='html')e.innerHTML=a[k];else if(k.startsWith('on'))e.addEventListener(k.slice(2),a[k]);else e.setAttribute(k,a[k]);}
+  [].concat(kids).forEach(k=>k!=null&&k!==false&&e.append(k));return e;}
+const NS='http://www.w3.org/2000/svg';
+function sv(t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e;}
+const W=1600,H=900;
+function Stage(f){
+  const F=FR[f];
+  const svg=sv('svg',{viewBox:`0 0 ${W} ${H}`,preserveAspectRatio:'none'});
+  svg.innerHTML='<defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#ff9a52"/></marker></defs>';
+  const defs=svg.firstChild,labs=el('div');
+  const root=el('div',{class:'stage'},[el('img',{src:F.src,alt:F.title,width:W,height:H}),svg,labs]);
+  const pct=(x,y)=>`left:${x/W*100}%;top:${y/H*100}%`;
+  function note(x,y,text,cls,align){const n=el('div',{class:'lab '+cls,style:pct(x,y)},text);if(align==='l')n.style.transform='none';if(align==='r')n.style.transform='translate(-100%,0)';labs.append(n);}
+  function draw(o={}){
+    svg.replaceChildren(defs);labs.replaceChildren();
+    root.classList.toggle('tap',!!o.onTap);
+    const ring=new Set(o.rings||[]),hi=new Set(o.hi||[]),wrong=new Set(o.wrong||[]),lab=new Set(o.labels||[]);
+    (o.layers||[]).forEach(k=>{const L=F.L[k];if(!L)return;
+      (L.rings||[]).forEach(id=>ring.add(id));
+      (L.lines||[]).forEach(l=>svg.append(sv('line',{class:'guide',x1:l[0],y1:l[1],x2:l[2],y2:l[3]})));
+      (L.arrows||[]).forEach(l=>svg.append(sv('line',{class:'route',x1:l[0],y1:l[1],x2:l[2],y2:l[3],'marker-end':'url(#ah)'})));
+      (L.notes||[]).forEach(n=>note(n[0],n[1],n[2],'note',n[3]));
+      (L.gaps||[]).forEach(g=>note(g[0],L.gy,g[1]+(g[2]?' open':''),'gap'+(g[2]?' open':'')));
+    });
+    const P=F.P.map(a=>pOf(f,a[0]));
+    P.forEach(p=>{
+      if(ring.has(p.id)||hi.has(p.id)||wrong.has(p.id))
+        svg.append(sv('ellipse',{class:`ring ${p.s}${hi.has(p.id)?' hi':''}${wrong.has(p.id)?' wrong':''}`,cx:p.ft[0],cy:p.ft[1],rx:p.hit[2]*1.15,ry:p.hit[2]*.36}));
+      if(lab.has(p.id)){const at=p.s==='o'?[p.ft[0],p.ft[1]+14]:[p.hit[0],p.hit[1]-p.hit[3]-4];note(at[0],at[1],p.tag,p.s);}
+    });
+    if(o.onTap) P.forEach((p,i)=>{
+      const h=sv('ellipse',{class:'hit',cx:p.hit[0],cy:p.hit[1],rx:p.hit[2],ry:p.hit[3],tabindex:0,role:'button','aria-label':'Player '+(i+1)});
+      h.addEventListener('click',()=>o.onTap(p.id));
+      h.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();o.onTap(p.id);}});
+      svg.append(h);
+    });
+  }
+  return {root,draw};
+}
+
+/* ---------- lessons ---------- */
+// step kinds: info · tap (ok: ids) · choice (opts: [text, grade 1|.5|0, why]) · clip. f: frame id (defaults to the lesson's)
+const A1O=ids('a1','o'),C1O=ids('c1','o');
+const LESSONS=[
+{id:'count',f:'a1',pos:'50% 62%',side:'Offense',unit:'Personnel and formation',title:'Count to eleven',blurb:'Nine players on screen. Find the other two, then name the formation.',steps:[
+ {k:'info',ph:'Introduce',h:'Count before you read',body:['Every pre-snap read starts with a count. The offense has eleven players, and where they stand tells you the personnel grouping and the formation.','The camera does not always show all eleven. When it doesn\'t, the defense tells you where the missing players are.']},
+ {k:'choice',ph:'Observe',dim:'rec',q:'How many offensive players can you see? The offense is in navy and its quarterback wears yellow.',opts:[['8',0,'Count again: five linemen, a tight end, a wing, the back and the quarterback.'],['9',1,'Five linemen, a tight end, a wing, the back and the quarterback.'],['10',0,'Nine are in the frame. The two players out wide are defenders in white.']],after:{rings:A1O,labels:A1O}},
+ {k:'tap',ph:'Identify',dim:'rec',q:'Two players are missing. Tap a defender who gives one away.',ok:['cbL','cbR'],
+  yes:'Each corner is alone out wide, squared up to a receiver the camera cuts off. That accounts for both missing players.',
+  no:'Look at the two corners at the edges of the frame. Each is alone out wide, facing a receiver the camera cuts off.',after:{layers:['ghost'],labels:['cbL','cbR'],hi:['cbL','cbR']}},
+ {k:'choice',ph:'Identify',dim:'rec',q:'So what is the formation?',opts:[['Shotgun, a receiver wide on each side, tight end and wing to the right',1,'One back beside the quarterback, two receivers split wide, and two players tight to the line on the right.'],['Shotgun, three receivers to the right',0,'The two players right of the tackle are tight to the line, not split out.'],['Under center, two backs',0,'The quarterback is 5 yards behind the center with one back beside him.']],after:{layers:['ghost'],rings:['te','wing','rb'],labels:['te','wing','rb']}},
+ {k:'choice',ph:'Identify',dim:'rec',q:'One back, two receivers, two players tight to the line. If both of those are tight ends, which personnel grouping is it?',opts:[['10',0,'10 is one back and no tight ends.'],['11',.5,'That is the answer if the wing is really a receiver. Alignment alone cannot tell you; the substitution screen can.'],['12',1,'First digit is backs, second is tight ends: one back, two tight ends. If the wing is really a receiver it is 11.'],['21',0,'21 is two backs and one tight end.']],after:{rings:['rb','te','wing'],labels:['rb','te','wing']}},
+ {k:'info',ph:'Review',h:'What you just read',body:['Shotgun, one back, a receiver wide on each side, and a tight end and wing to the right. The ball is in the middle of the field, so neither side has extra room.','The habit to keep: when you cannot find eleven, read the defense. A defender standing alone is covering someone.'],show:{layers:['ghost'],labels:A1O,rings:A1O}}
+]},
+{id:'offpos',f:'c1',pos:'50% 78%',side:'Offense',unit:'Positions',title:'Who is who on offense',blurb:'Find each position in the view you actually play from.',steps:[
+ {k:'info',ph:'Introduce',h:'Positions by where they stand',body:['You see the offense from behind. Numbers help, but alignment is what tells you a position: who is over the ball, who is attached to the line, who is in the backfield.','In this clip the offense wears white and the quarterback wears yellow.']},
+ {k:'tap',ph:'Identify',dim:'rec',q:'Tap the center.',ok:['c'],yes:'Over the ball, between the guards. He sets the protection.',no:'The center is the lineman over the ball, #53.',after:{labels:['lt','lg','c','rg','rt']}},
+ {k:'tap',ph:'Identify',dim:'rec',q:'Tap the left tackle.',ok:['lt'],yes:'The end of the line on the left. He protects the quarterback\'s edge on that side.',no:'The left tackle is the last lineman on the left.',after:{labels:['lt','lg','c','rg','rt']}},
+ {k:'tap',ph:'Identify',dim:'rec',q:'Tap the tight end.',ok:['te'],yes:'On the line outside the right tackle. He can block or release.',no:'The tight end is the sixth man on the line, outside the right tackle.',after:{labels:['rt','te']}},
+ {k:'tap',ph:'Identify',dim:'rec',q:'Tap the running back.',ok:['rb'],yes:'Beside the quarterback in the shotgun, offset to his left.',no:'The running back is #23, standing next to the quarterback.',after:{labels:['qb','rb']}},
+ {k:'tap',ph:'Identify',dim:'rec',q:'One more blocker is hiding behind the right side of the line. Tap him.',ok:['h'],yes:'#44, an H-back. From there he can lead through a gap, block the end, or slip out for a pass.',no:'It is #44, a yard behind the right guard and tackle. He is an H-back: an extra blocker who can also release.',after:{labels:['h','rg','rt'],hi:['h']}},
+ {k:'choice',ph:'Review',dim:'asg',q:'Which statement about the tight end is the right way to think?',opts:[['He is a blocker on this play.',0,'You cannot know that from alignment. Attached tight ends block, release and chip.'],['His job depends on the play call.',1,'A position does not have one universal job. The call decides whether he blocks, releases or does both.'],['He is the primary receiver because he is attached.',0,'Alignment creates a matchup, not a guarantee. The call decides the progression.']],after:{labels:C1O}}
+]},
+{id:'front',f:'a1',pos:'50% 50%',side:'Offense',unit:'Fronts and box count',title:'Read the front',blurb:'Hands down, the standing backer, and what seven in the box means.',steps:[
+ {k:'info',ph:'Introduce',h:'Start with who is on the line',body:['The front is the group of defenders close enough to play the run or rush the passer right now. Linemen have a hand near the ground. Anyone else standing on the line is a question to answer before the snap.','Here the defense is in white.']},
+ {k:'choice',ph:'Observe',dim:'rec',q:'How many defenders are down in a lineman\'s stance?',opts:[['Three',0,'There are two ends and two tackles.'],['Four',1,'Two ends and two tackles: a four-down front.'],['Five',0,'The fifth man on the line is standing up.']],after:{rings:['deL','dtL','dtR','deR'],labels:['deL','dtL','dtR','deR']}},
+ {k:'tap',ph:'Identify',dim:'rec',q:'A fifth defender is on the line, standing up. Tap him.',ok:['sam'],yes:'He is over the tight end and wing, the side with the extra blockers. He can rush, set the edge or drop into coverage.',no:'He is on the right, standing over the tight end and wing. The other standing defenders are 5 yards or more off the ball.',after:{layers:['front'],labels:['sam']}},
+ {k:'tap',ph:'Identify',dim:'rec',q:'Tap one of the two linebackers behind the line.',ok:['lbL','lbR'],yes:'Two linebackers at 5 yards, stacked behind the tackles.',no:'The two linebackers are 5 yards deep, directly behind the defensive tackles.',after:{layers:['lbs'],labels:['lbL','lbR']}},
+ {k:'choice',ph:'Predict',dim:'dec',q:'Five on the line and two linebackers make seven in the box. The offense has seven blockers on or near the line. What does that tell you?',opts:[['The run game is even, and nobody extra is coming',1,'Seven for seven, and both safeties are deep. Nothing in this picture says blitz.'],['A blitz is coming',0,'Nobody extra has walked up, and both safeties are 11 yards deep.'],['The defense is light against the run',.5,'It is even, not light. The two deep safeties are the defenders who are not helping on the run.']],after:{layers:['front','lbs','shell']}},
+ {k:'info',ph:'Review',h:'A picture, not a promise',body:['Four down, a standing backer on the strong side, two linebackers at 5 yards. That is the picture before the snap. The next read is the players behind them.'],show:{layers:['front','lbs'],labels:['sam','lbL','lbR']}}
+]},
+{id:'shell',f:'a1',pos:'50% 30%',side:'Offense',unit:'Coverage shells',title:'One high or two high',blurb:'Count the deep safeties on two of your plays, then watch each one develop.',steps:[
+ {k:'info',ph:'Introduce',h:'Count the deep safeties',body:['One deep safety in the middle means the middle of the field is closed: think Cover 1 or Cover 3. Two deep safeties means it is open: think Cover 2 or Cover 4.','Depth is the tell. A safety at 10 yards or more is showing deep.']},
+ {k:'tap',ph:'Observe',dim:'rec',q:'Tap a deep safety.',ok:['sL','sR'],yes:'Two safeties, each about 11 yards deep, each on a hash.',no:'The safeties are the two defenders about 11 yards deep, one on each hash.',after:{layers:['shell'],labels:['sL','sR'],hi:['sL','sR']}},
+ {k:'choice',ph:'Identify',dim:'rec',q:'How many deep safeties, and is the middle of the field open or closed?',opts:[['One, closed',0,'There are two, and neither is standing in the middle.'],['Two, open',1,'Two high. Nobody is in the deep middle before the snap.'],['None',0,'Two defenders are 11 yards deep.']],after:{layers:['shell']}},
+ {k:'clip',ph:'Reveal',clip:'p01',h:'Watch the two safeties',body:['The defense called Cover 2. Press Snap, then step forward a frame at a time: both safeties back up and widen to their halves of the field.']},
+ {k:'tap',ph:'Observe',f:'b1',dim:'rec',q:'A different play. The defense is in navy here. Tap the deepest defender.',ok:['fs'],yes:'One safety, about 16 yards deep, in the exact middle of the field.',no:'The deepest defender is the safety in the middle of the field, about 16 yards off the ball.',after:{layers:['one'],labels:['fs']}},
+ {k:'choice',ph:'Identify',f:'b1',dim:'rec',q:'How many deep safeties, and is the middle open or closed?',opts:[['One, closed',1,'One high. The middle of the field has a defender standing in it.'],['Two, open',0,'Only one defender is deeper than 8 yards.'],['None',0,'The free safety is 16 yards deep.']],after:{layers:['one']}},
+ {k:'tap',ph:'Predict',f:'b1',dim:'rec',q:'Every defense has two safeties. Tap the one who has come down.',ok:['ss'],yes:'He is 5 yards deep over the right wing. A safety that low is playing man or the run, not deep zone.',no:'He is on the right, 5 yards deep over the wing. A safety that low is playing man or the run, not deep zone.',after:{layers:['one','down'],labels:['fs','ss']}},
+ {k:'clip',ph:'Reveal',clip:'p14',h:'Watch the one safety',body:['The defense called Cover 1. The free safety stays in the middle while everyone else turns and runs with a receiver.']},
+ {k:'info',ph:'Review',h:'Recognition before reaction',body:['Two high on the hashes, or one high in the middle. That single count narrows the coverage before the ball is snapped, and the first second after the snap confirms it.'],f:'b1',show:{layers:['one','down'],labels:['fs','ss']}}
+]},
+{id:'verts',f:'a1',pos:'50% 40%',side:'Offense',unit:'Play study',title:'Four Verticals against Cover 2',blurb:'Your own rep: the read before the snap, the picture after it, and the full play.',steps:[
+ {k:'info',ph:'Introduce',h:'The call',body:['You called Four Verticals: four receivers run straight up the field. The defense called Cover 2.','The idea is simple arithmetic. Four deep routes, two deep safeties.'],show:{layers:['shell','verts']}},
+ {k:'choice',ph:'Predict',dim:'rec',q:'Two deep safeties against four vertical routes. Which defenders are under the most stress?',opts:[['The safeties: each has two routes on his half and can take only one',1,'That is the whole play. Each safety is caught between the outside route and the seam on his side.'],['The corners',.5,'They are stressed too, but they have a safety over the top. The safeties have nobody behind them.'],['The defensive line',0,'They rush either way. The stress is on the deep defenders.']],after:{layers:['shell','verts'],hi:['sL','sR']}},
+ {k:'choice',ph:'Decide',dim:'dec',q:'What do you watch as you drop back?',opts:[['One safety, and throw to whichever of his two routes he leaves',1,'Pick a side before the snap and read that safety. He cannot be right twice.'],['Both safeties at once',.5,'You cannot track both. Pick a side and read one.'],['The pass rush',0,'Feel the rush. Your eyes belong on the safety.'],['Your favorite receiver',0,'That turns a read into a guess.']],after:{layers:['shell','verts']}},
+ {k:'tap',ph:'Observe',f:'a2',dim:'rec',q:'Two seconds after the snap. Tap the defender who has run to the deep middle.',ok:['mk'],yes:'A linebacker has dropped between the safeties. That is the Tampa 2 version of Cover 2, and it takes away the middle seam.',no:'He is in the center of the field, between the two safeties. A linebacker has dropped there: the Tampa 2 version of Cover 2, which takes away the middle seam.',after:{layers:['tampa'],labels:['mk','s2l','s2r']}},
+ {k:'choice',ph:'Decide',f:'a2',dim:'dec',q:'With the middle taken away, where is the space?',opts:[['Down a sideline, outside the safety',1,'On the left, the safety is about 12 yards inside the receiver. A ball thrown now fits between the corner underneath and the safety over the top.'],['The deep middle',0,'Three defenders are converging there.'],['A short dump to the back',.5,'Safe, and sometimes right. But this picture has a deep throw open.']],after:{layers:['tampa'],labels:['wl','cl','s2l'],hi:['wl']}},
+ {k:'clip',ph:'Reveal',clip:'p01',h:'Now watch your rep',body:['See which way each safety goes and where the ball ends up. Judge the decision first and the result second: a sound read can still lose to a great play.']},
+ {k:'info',ph:'Review',h:'What carries over',body:['Against two high safeties, vertical routes make each safety choose. Read one of them. If a linebacker runs the middle, the sideline windows open up.'],f:'a2',show:{layers:['tampa']}}
+]},
+{id:'cover1',f:'b1',pos:'50% 34%',side:'Defense',unit:'Play study',title:'Cover 1 from the defense',blurb:'One deep safety and everyone else in man. See what the call asks of each player.',steps:[
+ {k:'info',ph:'Introduce',h:'The call',body:['You are the defense, in navy, and you called Cover 1. The player with the ring is the one you control, a defensive tackle.','Cover 1 is man coverage across the board with one safety deep in the middle as the only help.']},
+ {k:'tap',ph:'Observe',dim:'rec',q:'Tap the only deep defender.',ok:['fs'],yes:'The free safety, about 16 yards deep in the middle. He is the help for everyone.',no:'It is the free safety, about 16 yards deep in the middle of the field.',after:{layers:['one'],labels:['fs']}},
+ {k:'choice',ph:'Identify',dim:'rec',q:'How many receivers can go out for a pass on this play?',opts:[['Three',0,'Count the two wings and the back as well as the two receivers out wide.'],['Four',0,'Two receivers wide, two wings, and the running back.'],['Five',1,'Two receivers wide and off screen, a wing on each side, and the running back. Each one needs a defender.']],after:{layers:['ghost'],rings:['wl','wr','rb'],labels:['wl','wr','rb','cbL','cbR']}},
+ {k:'tap',ph:'Identify',dim:'asg',q:'Tap the defender lined up to cover the right wing, #80.',ok:['ss'],yes:'The strong safety has come down to 5 yards, right over him. That is why only one safety is deep.',no:'It is the safety at 5 yards, directly over #80. He came down to take the wing, which is why only one safety is deep.',after:{layers:['down','one'],labels:['ss','wr'],hi:['ss']}},
+ {k:'choice',ph:'Predict',dim:'asg',q:'A corner gets beaten deep down the sideline. Who can help him?',opts:[['The free safety, and it is a long run from the middle',1,'He is the only deep help, and the sideline is the farthest point from where he stands. That is the risk in Cover 1.'],['Nobody',.5,'Close to true. The free safety is the only help, and he has a long way to go.'],['The nearest linebacker',0,'The linebackers have their own men or are rushing.']],after:{layers:['one'],labels:['cbL','cbR','fs']}},
+ {k:'choice',ph:'Decide',dim:'dec',q:'You are the defensive tackle. What is your job on this call?',opts:[['Rush through your gap and stay in your lane',1,'Man coverage holds up only as long as the rush gets home. Stay in your lane so the quarterback has nowhere to step up.'],['Drop back and help in coverage',0,'Nobody is asking the tackle to cover. Leaving the rush gives the quarterback all day.'],['Chase the first receiver who crosses in front of you',0,'He already has a defender. Your man is the quarterback.']],after:{hi:['dt1'],labels:['dt1']}},
+ {k:'tap',ph:'Observe',f:'b2',dim:'rec',q:'Two seconds after the snap. Tap the free safety.',ok:['fs'],yes:'Still alone in the deep middle. Everyone else is running with a receiver.',no:'He is still in the deep middle, alone. Everyone else is running with a receiver.',after:{layers:['man'],labels:['fs','lbrb','rb']}},
+ {k:'clip',ph:'Reveal',clip:'p14',h:'Now watch your rep',body:['Two receivers cross in the middle and each is chased by a defender. A defender leaves to follow the back. Those are the signs of man coverage, from either side of the ball.']},
+ {k:'info',ph:'Review',h:'What carries over',body:['One safety deep in the middle and defenders with their backs to the quarterback: that is Cover 1. On offense, crossing routes and the sideline shot are how you attack it. On defense, the rush has to get there.'],f:'b2',show:{layers:['man']}}
+]},
+{id:'zone',f:'c1',pos:'50% 52%',side:'Defense',unit:'Play study',title:'Stopping inside zone',blurb:'Gaps, the extra safety, and what the tackle you control has to do.',steps:[
+ {k:'info',ph:'Introduce',h:'The call',body:['You are the defense, in navy, in Cover 3. The offense runs inside zone with a lead blocker.','Run defense is about gaps. Every space between blockers needs a defender assigned to it.']},
+ {k:'choice',ph:'Observe',dim:'rec',q:'How many defenders are on the line of scrimmage?',opts:[['Four',0,'Count the linebacker standing wide on the left edge.'],['Five',1,'Four linemen and a linebacker standing on the left edge.'],['Six',0,'The safety on the right is 4 yards back, off the line.']],after:{rings:['sam','dt1','dt2','dt3','deR'],labels:['sam','dt1','dt2','dt3','deR']}},
+ {k:'tap',ph:'Identify',dim:'rec',q:'A safety has walked down outside the tight end. Tap him.',ok:['ss'],yes:'With one safety deep, the other becomes an extra run defender. He is the edge player on that side.',no:'He is on the right, 4 yards deep and outside the tight end. With one safety deep, the other becomes an extra run defender.',after:{layers:['down','one'],labels:['ss','fs']}},
+ {k:'choice',ph:'Identify',dim:'asg',q:'Which gaps have no defender lined up in them right now?',opts:[['Both A gaps',0,'A tackle is shaded on the center\'s left, so the left A gap is taken.'],['The right A gap, and the edge outside the tight end',1,'Nobody is between the center and right guard, and nobody is on the line outside the tight end.'],['The left B gap and the left C gap',0,'You are in the left B gap, and the standing linebacker has the left edge.']],after:{layers:['gaps']}},
+ {k:'choice',ph:'Predict',dim:'asg',q:'Who is responsible for those two open spaces?',opts:[['The linebacker behind the right A gap, and the safety who came down',1,'Second-level players fill what the line does not cover. The linebacker fits the A gap; the safety sets the edge.'],['The defensive tackles',0,'They already have gaps. Leaving one to chase another opens a new hole.'],['The corners',0,'They are out wide on the receivers.']],after:{layers:['gaps','lbs','down'],hi:['will','ss']}},
+ {k:'choice',ph:'Decide',dim:'dec',q:'You are the tackle in the left B gap. The line in front of you steps to your left as one. What do you do?',opts:[['Stay in your gap and fight across the blocker\'s face',1,'Zone blocking wants you to get washed past your gap. Hold it, stay square, and the back has one less place to go.'],['Run around the block to chase the ball',.5,'It works when you are fast enough. When you are not, you have just opened your gap for a cutback.'],['Back off the line and wait',0,'That gives the blockers free movement and the back a head start.']],after:{layers:['gaps'],hi:['dt1'],labels:['dt1']}},
+ {k:'tap',ph:'Observe',f:'c2',dim:'rec',q:'One second after the snap. Tap the lead blocker.',ok:['lead'],yes:'#44 is leading through the right side. The linebacker filling that gap has to meet him.',no:'It is #44, on the right, heading upfield ahead of the back.',after:{layers:['flow'],labels:['lead','edge']}},
+ {k:'choice',ph:'Decide',f:'c2',dim:'asg',q:'The defender on the left edge is unblocked, and the play is going away from him. What is his job?',opts:[['Close down the line and watch for the cutback or the quarterback keeping it',1,'He is the backside player. If he runs flat out for the ball, the cutback lane and the quarterback are both free.'],['Sprint across the field to the ball',.5,'He might make the tackle, but he gives up the cutback and anything coming back his way.'],['Drop into pass coverage',0,'The ball has been handed off.']],after:{layers:['flow'],hi:['edge']}},
+ {k:'clip',ph:'Reveal',clip:'p17',h:'Now watch your rep',body:['Step through the first second. Watch the double teams, the lead blocker, and whether each gap ends up with a defender in it.']},
+ {k:'info',ph:'Review',h:'What carries over',body:['Count the gaps, know which one is yours, and stay in it. The players who make the tackle on inside zone are usually the ones the line left free: a linebacker, or the safety who came down.'],f:'c2',show:{layers:['flow']}}
+]}
+];
+
+
+/* ---------- second batch: eight more plays ---------- */
+Object.assign(FR,{
+m1:{src:'frames/m1.jpg',title:'Shift and motion against man, before the snap',clip:'p10',P:[
+ ['w3','o','WR #3','receiver #3',225,535,36,70,225,602,'wr','The widest of three players on the left that you can see.'],
+ ['w80','o','#80','receiver #80',400,525,34,65,405,590,'te','Second from the outside on the left.'],
+ ['w42','o','#42','receiver #42',525,510,34,58,525,564,'te','Tight to the left tackle.'],
+ ['qb','o','QB #14','quarterback',805,605,38,80,800,690,'qb','In the shotgun.'],
+ ['rb','o','RB #23','running back',945,665,36,70,945,742,'rb','Beside the quarterback, on his right.'],
+ ['lbL','d','LB','linebacker on the left',735,400,28,36,737,438,'lb','5 yards deep behind the left guard.'],
+ ['lbR','d','LB','linebacker on the right',945,400,28,36,947,438,'lb','5 yards deep behind the right guard.'],
+ ['sL','d','Safety','safety on the left',500,300,20,30,502,330,'s','Deep on the left hash.'],
+ ['sR','d','Safety','safety on the right',1050,300,20,30,1050,330,'s','Deep on the right hash.']],
+ L:{three:{name:'Three to the left',rings:['w3','w80','w42']},lbs:{name:'Linebackers',rings:['lbL','lbR']}}},
+m2:{src:'frames/m2.jpg',title:'Shift and motion against man, after the shift',clip:'p10',P:[
+ ['w42','o','#42','receiver #42',1075,515,34,50,1072,562,'te','Has shifted across and is now tight to the right tackle.'],
+ ['w80','o','#80','receiver #80',1185,535,34,55,1185,584,'te','Has shifted across to the right.'],
+ ['w3','o','WR #3','receiver #3',400,545,34,45,395,588,'wr','In motion toward the quarterback.'],
+ ['qb','o','QB #14','quarterback',800,600,36,70,795,678,'qb','In the shotgun.'],
+ ['rb','o','RB #23','running back',945,665,36,70,945,742,'rb','Beside the quarterback.'],
+ ['d1','d','LB','defender now over #42',990,368,22,34,990,404,'lb','Followed the shift across the formation.'],
+ ['d2','d','LB','defender now over #80',1065,362,22,34,1065,400,'lb','Followed the shift across the formation.'],
+ ['d3','d','DB','defender running across',625,348,24,34,628,386,'cb','On the move, going with the motion.'],
+ ['sL','d','Safety','safety on the left',460,305,20,28,462,334,'s','Still deep on the left.'],
+ ['sR','d','Safety','safety on the right',1050,300,20,30,1050,330,'s','Still deep on the right.']],
+ L:{travel:{name:'Defenders who moved',rings:['d1','d2','d3'],notes:[[1028,262,'Came across with #42 and #80'],[625,250,'Running with the motion']]},deep:{name:'Safeties',rings:['sL','sR']}}},
+m3:{src:'frames/m3.jpg',title:'Shift and motion against zone, before the snap',clip:'p11',P:[
+ ['w3','o','WR #3','receiver #3',225,535,36,70,225,602,'wr','The widest of three on the left.'],
+ ['w80','o','#80','receiver #80',400,525,34,65,405,590,'te','Second from the outside on the left.'],
+ ['w42','o','#42','receiver #42',525,510,34,58,525,564,'te','Tight to the left tackle.'],
+ ['cbR','d','CB','cornerback on the right',1185,405,24,36,1187,440,'cb','On the right side with no receiver in front of him.'],
+ ['cbL','d','CB','cornerback on the left',175,365,28,36,180,396,'cb','8 yards off, over the three receivers.'],
+ ['lbL','d','LB','linebacker on the left',550,410,26,36,552,446,'lb','5 yards deep, shaded toward the three receivers.'],
+ ['lbR','d','LB','linebacker in the middle',735,400,28,36,737,438,'lb','5 yards deep behind the left guard.']],
+ L:{empty:{name:'Corner with no receiver',rings:['cbR'],notes:[[1300,452,'Nobody to cover on his side']]},three:{name:'Three to the left',rings:['w3','w80','w42']}}},
+m4:{src:'frames/m4.jpg',title:'Shift and motion against zone, after the shift',clip:'p11',P:[
+ ['w42','o','#42','receiver #42',1075,515,34,50,1072,562,'te','Has shifted across to the right tackle.'],
+ ['w80','o','#80','receiver #80',1185,535,34,55,1185,584,'te','Has shifted across to the right.'],
+ ['w3','o','WR #3','receiver #3',345,538,34,45,340,582,'wr','In motion toward the quarterback.'],
+ ['cbR','d','CB','cornerback on the right',1255,385,24,36,1257,414,'cb','In almost the same spot he was in before the shift.'],
+ ['cbL','d','CB','cornerback on the left',175,365,28,36,180,396,'cb','Has not moved, even though the receivers left.'],
+ ['nb','d','DB','defender on the left edge',360,455,28,36,365,494,'cb','Still on the left, where the receivers used to be.'],
+ ['lbL','d','LB','linebacker in the middle',735,400,26,36,735,440,'lb','Has slid over one gap.'],
+ ['lbR','d','LB','linebacker on the right',1010,405,26,36,1010,442,'lb','Has slid over one gap toward the shift.'],
+ ['sL','d','Safety','safety on the left',495,315,20,28,497,346,'s','Deep, about where he started.'],
+ ['sR','d','Safety','safety on the right',935,320,20,28,935,350,'s','Deep, about where he started.']],
+ L:{stay:{name:'Defenders who stayed',rings:['cbL','nb','cbR'],notes:[[250,410,'Stayed on the left'],[1330,424,'Stayed on the right']]},slide:{name:'Linebackers',rings:['lbL','lbR'],notes:[[872,456,'Slid over, did not run across']]}}},
+z1:{src:'frames/z1.jpg',title:'Man Blitz, before the snap',clip:'p04',P:[
+ ['hb','o','RB #23','running back',800,725,36,70,800,792,'rb','Deep behind the quarterback in the I-formation.'],
+ ['fb','o','FB #44','fullback',960,585,32,55,960,642,'h','Offset to the right, between the quarterback and the running back.'],
+ ['qb','o','QB #14','quarterback',800,512,28,36,800,552,'qb','Under center.'],
+ ['te','o','TE','tight end',1070,522,32,42,1070,564,'te','On the line outside the right tackle.'],
+ ['wing','o','Wing','wing',1185,555,32,45,1185,600,'te','A step off the line outside the tight end.'],
+ ['lt','o','LT','left tackle',615,522,36,46,612,568,'ol','The end of the line on the left.'],
+ ['cbL','d','CB','cornerback on the left',210,372,30,40,212,402,'cb','8 yards off a receiver the camera cuts off.'],
+ ['cbR','d','CB','cornerback on the right',1185,398,24,36,1187,434,'cb','6 yards off, over the wing.'],
+ ['sL','d','Safety','safety on the left',548,335,22,32,548,366,'s','11 yards deep on the left hash.'],
+ ['sR','d','Safety','safety on the right',1048,335,22,32,1048,366,'s','11 yards deep on the right hash.'],
+ ['lbL','d','LB','linebacker on the left',695,405,28,36,697,442,'lb','5 yards deep. He is rushing on this call.'],
+ ['lbR','d','LB','linebacker on the right',985,405,28,36,985,442,'lb','5 yards deep. He is rushing on this call.'],
+ ['de1','d','DE','defensive end on the left',520,465,28,30,522,496,'edge','Wide of the left tackle.'],
+ ['dt0','d','DT','defensive tackle on the left',585,474,26,24,587,500,'dl','Just inside the end.'],
+ ['dt1','d','DT','defensive tackle in the middle',760,470,26,24,762,497,'dl','On the center\'s left shoulder.'],
+ ['dt2','d','DT','defensive tackle on the right',915,470,28,24,917,497,'dl','Between the right guard and tackle.'],
+ ['de2','d','DE','defensive end on the right',1130,470,28,26,1132,498,'edge','Over the tight end and wing.']],
+ L:{line:{name:'On the line',rings:['de1','dt0','dt1','dt2','de2']},lbs:{name:'Linebackers',rings:['lbL','lbR'],notes:[[840,360,'Both are coming']]},shell:{name:'Safeties',rings:['sL','sR'],notes:[[800,290,'Two deep before the snap']]},backs:{name:'Backs',rings:['fb','hb']}}},
+z2:{src:'frames/z2.jpg',title:'Man Blitz, a second and a half after the snap',clip:'p04',P:[
+ ['fs','d','Safety','safety in the deep middle',770,393,18,26,770,422,'s','Has rotated to the middle of the field. He is the only deep help.'],
+ ['wl','o','WR','receiver on the left',322,452,24,34,322,492,'wr','Running his route on the left, one on one.'],
+ ['fb','o','FB #44','fullback',835,605,26,36,838,648,'h','Stayed in to block a rusher.'],
+ ['qb','o','QB #14','quarterback',805,640,30,50,800,692,'qb','Already has to get rid of the ball.']],
+ L:{one:{name:'Deep help',rings:['fs'],notes:[[770,436,'One safety deep, everyone else in man']]},rush:{name:'The rush',notes:[[800,530,'Six rushers against six blockers']]}}},
+t1:{src:'frames/t1.jpg',title:'Four Verticals against Cover 3, before the snap',clip:'p12',P:[
+ ['w6','o','WR #6','receiver #6',215,535,34,70,212,606,'wr','Split out on the left. Another receiver is outside him, off screen.'],
+ ['qb','o','QB #14','quarterback',805,605,38,80,800,690,'qb','In the shotgun. The offense wears white here.'],
+ ['rb','o','RB #23','running back',945,665,36,70,945,742,'rb','Beside the quarterback.'],
+ ['te','o','TE','tight end',1070,515,32,42,1072,562,'te','On the line outside the right tackle.'],
+ ['fs','d','FS','free safety',800,275,20,30,800,304,'s','About 17 yards deep in the middle of the field.'],
+ ['cbL','d','CB','cornerback on the left',180,362,30,38,183,394,'cb','8 yards off a receiver the camera cuts off.'],
+ ['cbR','d','CB','cornerback on the right',1420,355,30,38,1417,390,'cb','8 yards off a receiver the camera cuts off.'],
+ ['nb','d','DB','defender over #6',315,455,30,36,320,492,'cb','3 yards off the slot receiver.'],
+ ['lbL','d','LB','linebacker on the left',725,400,28,36,727,440,'lb','5 yards deep.'],
+ ['lbR','d','LB','linebacker on the right',930,400,28,36,932,440,'lb','5 yards deep.'],
+ ['ss','d','SS','safety who has come down',1195,420,26,36,1197,457,'s','5 yards deep outside the tight end.'],
+ ['dt1','d','DT','defensive tackle you control',640,472,30,26,645,502,'dl','The player with the ring: you.']],
+ L:{one:{name:'Deep safety',rings:['fs'],notes:[[800,318,'One deep safety']]},corners:{name:'Corners',rings:['cbL','cbR'],notes:[[183,406,'Deep third'],[1417,402,'Deep third']]},down:{name:'Safety down',rings:['ss']}}},
+t2:{src:'frames/t2.jpg',title:'Four Verticals against Cover 3, two seconds after the snap',clip:'p12',P:[
+ ['fs','d','FS','free safety',800,310,16,24,800,334,'s','Deep in the middle with a seam route on each side of him.'],
+ ['cbl','d','CB','cornerback on the left',370,355,18,26,370,382,'cb','Has backed up to the deep left third.'],
+ ['cbr','d','CB','cornerback on the right',1250,345,18,26,1252,372,'cb','Has backed up to the deep right third.'],
+ ['seamL','o','#6','receiver on the left seam',492,378,18,30,492,414,'wr','Running up the left seam.'],
+ ['seamR','o','#80','receiver on the right seam',965,378,18,30,965,414,'te','Running up the right seam.'],
+ ['wl','o','WR','receiver on the left sideline',225,375,18,28,225,410,'wr','Running up the left sideline.'],
+ ['wr','o','WR','receiver on the right sideline',1380,378,18,28,1380,412,'wr','Running up the right sideline.'],
+ ['u2','d','LB','underneath linebacker on the left',695,425,22,30,697,457,'lb','Dropping to a short zone.'],
+ ['u3','d','LB','underneath linebacker on the right',930,415,22,30,932,449,'lb','Dropping to a short zone.']],
+ L:{deep:{name:'Three deep',rings:['cbl','fs','cbr'],notes:[[800,214,'One safety, two seams']]},seams:{name:'Seam routes',rings:['seamL','seamR'],lines:[[492,414,800,334],[965,414,800,334]]}}},
+r1:{src:'frames/r1.jpg',title:'Read Option, before the snap',clip:'p08',P:[
+ ['qb','o','QB #14','quarterback',805,600,38,80,800,686,'qb','In the shotgun.'],
+ ['rb','o','RB #23','running back',650,660,36,70,652,737,'rb','On the quarterback\'s left. He will cross in front and run to the right.'],
+ ['h','o','H #44','extra blocker behind the line',950,565,30,48,950,614,'h','Behind the right guard and tackle.'],
+ ['lt','o','LT','left tackle',620,522,36,46,617,568,'ol','The end of the line on the left.'],
+ ['te','o','TE','tight end',1070,522,32,42,1072,566,'te','On the line outside the right tackle.'],
+ ['de1','d','DE','defensive end on the left',522,462,28,30,524,494,'edge','Wide of the left tackle, on the side the run is going away from.'],
+ ['dt0','d','DT','defensive tackle on the left',590,472,26,24,592,500,'dl','Just inside the end.'],
+ ['dt1','d','DT','defensive tackle in the middle',760,468,26,24,762,497,'dl','On the center\'s left shoulder.'],
+ ['dt2','d','DT','defensive tackle on the right',915,468,28,24,917,497,'dl','Between the right guard and tackle.'],
+ ['de2','d','DE','defensive end on the right',1100,468,28,26,1102,498,'edge','Outside the tight end.'],
+ ['lbL','d','LB','linebacker on the left',725,400,28,36,727,440,'lb','5 yards deep.'],
+ ['lbR','d','LB','linebacker on the right',930,400,28,36,932,440,'lb','5 yards deep.'],
+ ['sL','d','Safety','safety on the left',578,300,20,30,578,332,'s','Deep on the left hash.'],
+ ['sR','d','Safety','safety on the right',1050,300,20,30,1050,332,'s','Deep on the right hash.']],
+ L:{key:{name:'The read',rings:['de1'],notes:[[400,524,'Left unblocked on purpose']]},run:{name:'Run direction',arrows:[[660,640,930,560]],notes:[[1120,668,'The back runs to the right']]}}},
+r2:{src:'frames/r2.jpg',title:'Read Option, one second after the snap',clip:'p08',P:[
+ ['key','d','DE','unblocked end',490,415,30,55,482,478,'edge','Nobody blocked him. The game marks him on the ground as the read.'],
+ ['qb','o','QB #14','quarterback',795,530,40,75,790,622,'qb','Holding the ball out to the back while he reads the end.'],
+ ['lead','o','H #44','lead blocker',1035,430,30,55,1035,492,'h','Leading to the right.']],
+ L:{key:{name:'The read',rings:['key'],notes:[[470,296,'Unblocked: he is the read']]}}},
+k1:{src:'frames/k1.jpg',title:'Counter against Cover 3, before the snap',clip:'p16',P:[
+ ['w6','o','WR #6','receiver #6',215,535,34,70,212,606,'wr','Split out on the left.'],
+ ['qb','o','QB #14','quarterback',805,600,38,80,800,686,'qb','In the shotgun. The offense wears white here.'],
+ ['rb','o','RB #23','running back',945,662,36,70,945,738,'rb','On the quarterback\'s right.'],
+ ['te','o','TE','tight end',1070,515,32,42,1072,562,'te','On the line outside the right tackle.'],
+ ['fs','d','FS','free safety',800,275,20,30,800,304,'s','Deep in the middle.'],
+ ['nb','d','DB','defender over #6',315,450,30,36,320,488,'cb','3 yards off the slot receiver.'],
+ ['lbL','d','LB','linebacker on the left',725,400,28,36,727,440,'lb','5 yards deep behind the left guard.'],
+ ['lbR','d','LB','linebacker on the right',930,400,28,36,932,440,'lb','5 yards deep behind the right guard.'],
+ ['ss','d','SS','safety who has come down',1195,420,26,36,1197,457,'s','5 yards deep outside the tight end.'],
+ ['dt1','d','DT','defensive tackle you control',640,472,30,26,645,502,'dl','The player with the ring: you, on the left side of the line.']],
+ L:{lbs:{name:'Linebackers',rings:['lbL','lbR']},you:{name:'You',rings:['dt1']}}},
+k2:{src:'frames/k2.jpg',title:'Counter against Cover 3, one second after the snap',clip:'p16',P:[
+ ['pull1','o','Puller','pulling lineman in front',690,440,34,50,695,492,'ol','Has left his spot on the right and is running left behind the line.'],
+ ['pull2','o','Puller','second pulling lineman',745,458,34,50,750,508,'ol','Following the first puller to the left.'],
+ ['rb','o','RB #23','running back',975,548,40,70,1000,628,'rb','Took a step right and is now coming back left behind the pullers.'],
+ ['qb','o','QB #14','quarterback',820,525,40,75,800,622,'qb','Handing the ball off.'],
+ ['lbA','d','LB','linebacker on the left',640,372,26,40,640,416,'lb','Has to meet the pullers.'],
+ ['lbB','d','LB','linebackers on the right',868,372,36,40,870,416,'lb','Have to get back across once they see the pull.']],
+ L:{pull:{name:'Pullers',rings:['pull1','pull2'],arrows:[[760,500,560,480]],notes:[[590,566,'Two linemen pulling left']]},back:{name:'The back',rings:['rb'],notes:[[1180,668,'Stepped right first, now coming back']]}}},
+q1:{src:'frames/q1.jpg',title:'Cover 4 against an empty backfield, before the snap',clip:'p15',P:[
+ ['qb','o','QB #14','quarterback',800,650,36,75,798,728,'qb','Alone in the backfield.'],
+ ['rbw','o','RB #23','running back, split out wide',200,545,34,65,200,612,'rb','Lined up as a receiver on the left.'],
+ ['w80','o','#80','receiver #80',1090,548,34,55,1090,600,'te','Just outside the right tackle, off the line.'],
+ ['w6','o','WR #6','receiver #6',1450,548,34,65,1450,612,'wr','Split wide on the right.'],
+ ['sL','d','Safety','safety on the left',485,313,20,30,485,346,'s','12 yards deep on the left.'],
+ ['sR','d','Safety','safety on the right',1075,313,20,30,1075,346,'s','12 yards deep on the right.'],
+ ['cbL','d','CB','cornerback on the left',130,365,30,36,133,396,'cb','8 yards off a receiver the camera cuts off.'],
+ ['cbR','d','CB','cornerback on the right',1470,360,30,36,1467,394,'cb','8 yards off a receiver the camera cuts off.'],
+ ['nbL','d','DB','underneath defender on the left',400,410,28,38,402,447,'cb','5 yards off, over the back who split out.'],
+ ['nbR','d','DB','underneath defender on the right',1235,405,28,38,1235,444,'cb','5 yards off, between #80 and #6.'],
+ ['lb','d','LB','linebacker in the middle',790,385,28,38,790,426,'lb','The only linebacker left in the middle.'],
+ ['dtU','d','DE','defensive end you control',495,476,30,28,498,504,'edge','The player with the ring: you, wide on the left.']],
+ L:{shell:{name:'Safeties',rings:['sL','sR']},corners:{name:'Corners',rings:['cbL','cbR']},empty:{name:'Empty backfield',rings:['rbw'],notes:[[800,770,'Nobody beside the quarterback']]}}},
+q2:{src:'frames/q2.jpg',title:'Cover 4 against an empty backfield, two seconds after the snap',clip:'p15',P:[
+ ['d1','d','CB','deep defender on the left sideline',365,320,16,24,365,347,'cb','The corner, deep on the left quarter.'],
+ ['s2L','d','Safety','deep defender on the left hash',610,325,16,24,610,352,'s','The safety, deep on the inside left quarter.'],
+ ['s2R','d','Safety','deep defender on the right hash',958,300,16,24,958,327,'s','The safety, deep on the inside right quarter.'],
+ ['d4','d','CB','deep defender on the right sideline',1265,330,16,24,1265,357,'cb','The corner, deep on the right quarter.'],
+ ['lbm','d','LB','linebacker underneath',760,365,18,26,760,394,'lb','One of only three defenders underneath.'],
+ ['qb','o','QB #14','quarterback',800,610,30,60,800,678,'qb','In the pocket.']],
+ L:{four:{name:'Four deep',rings:['d1','s2L','s2R','d4'],notes:[[800,222,'Four defenders across the deep field']]},under:{name:'Underneath',rings:['lbm'],notes:[[760,440,'Only three defenders short']]}}},
+y1:{src:'frames/y1.jpg',title:'Zone blitz, before the snap',clip:'p18',P:[
+ ['hb','o','RB #23','running back',800,725,36,70,800,792,'rb','Deep behind the quarterback in the I-formation.'],
+ ['fb','o','FB #44','fullback',962,585,32,55,962,642,'h','Offset to the right.'],
+ ['qb','o','QB #14','quarterback',800,505,28,36,800,550,'qb','Under center. The offense wears white here.'],
+ ['wing','o','Wing','wing',1185,548,32,45,1185,597,'te','A step off the line outside the tight end.'],
+ ['user','d','LB','linebacker you control',655,410,28,38,657,450,'lb','The player with the ring: you, 4 yards deep on the left.'],
+ ['lb2','d','LB','linebacker on the right',855,405,28,36,855,442,'lb','5 yards deep.'],
+ ['sL','d','Safety','safety on the left',595,335,20,30,595,367,'s','12 yards deep on the left hash.'],
+ ['sR','d','Safety','safety on the right',1060,350,20,30,1060,382,'s','11 yards deep on the right hash.'],
+ ['deL','d','DE','defensive end on the left',525,470,28,28,527,500,'edge','Wide on the left.'],
+ ['d2','d','DT','defensive tackle on the left',675,472,24,24,678,500,'dl','Inside the left tackle.'],
+ ['nose','d','DT','defensive tackle over the center',790,466,24,22,790,492,'dl','Over the center.'],
+ ['d4','d','DT','defensive tackle on the right',915,468,26,24,917,497,'dl','Between the right guard and tackle.'],
+ ['d5','d','DE','defensive end on the right',1040,468,28,24,1042,497,'edge','Inside the tight end.'],
+ ['cbR','d','CB','cornerback on the right',1295,440,30,34,1295,474,'cb','4 yards off, over the wing.']],
+ L:{line:{name:'On the line',rings:['deL','d2','nose','d4','d5']},shell:{name:'Safeties',rings:['sL','sR']},you:{name:'You',rings:['user']}}},
+y2:{src:'frames/y2.jpg',title:'Zone blitz, a second and a half after the snap',clip:'p18',P:[
+ ['user','d','LB','linebacker you control',640,420,24,36,645,452,'lb','Dropping toward the yellow circle the game draws for your zone.'],
+ ['s2L','d','Safety','safety on the left',548,360,16,24,548,387,'s','Deep on the left half.'],
+ ['s2R','d','Safety','safety on the right',1050,365,16,24,1050,392,'s','Deep on the right half.'],
+ ['rb','o','RB #23','running back',330,765,36,60,335,832,'rb','Releasing to the left flat.'],
+ ['qb','o','QB #14','quarterback',805,625,30,60,805,688,'qb','Dropping back.']],
+ L:{zone:{name:'Your zone',rings:['user'],lines:[[645,452,575,392]],notes:[[420,372,'Your zone landmark']]},deep:{name:'Two deep',rings:['s2L','s2R']}}},
+d1:{src:'frames/d1.jpg',title:'Cover 2 with a disguise, before the snap',clip:'p13',P:[
+ ['w3','o','WR #3','receiver #3',225,535,34,70,225,602,'wr','Split out on the left.'],
+ ['qb','o','QB #14','quarterback',805,600,38,80,800,686,'qb','In the shotgun. The offense wears white here.'],
+ ['rb','o','RB #23','running back',945,662,36,70,945,738,'rb','Beside the quarterback.'],
+ ['te','o','TE','tight end',1070,512,32,42,1072,562,'te','On the line outside the right tackle.'],
+ ['wing','o','Wing','wing',1185,540,32,48,1185,590,'te','A step off the line outside the tight end.'],
+ ['s','d','Safety','deepest defender',658,275,20,30,658,306,'s','17 yards deep, shaded left of the middle. He is the only deep defender showing.'],
+ ['cbL','d','CB','cornerback on the left',180,365,30,38,183,396,'cb','8 yards off a receiver the camera cuts off.'],
+ ['nb','d','DB','defender over #3',370,420,28,38,372,457,'cb','5 yards off the slot receiver.'],
+ ['lbL','d','LB','linebacker on the left',655,400,28,36,657,440,'lb','5 yards deep.'],
+ ['lbR','d','LB','linebacker on the right',855,405,28,36,857,442,'lb','5 yards deep.'],
+ ['sam','d','LB','standing linebacker on the right edge',1135,450,28,40,1137,492,'lb','On the line over the tight end.'],
+ ['cbR','d','CB','cornerback on the right',1295,440,30,34,1295,474,'cb','4 yards off the wing.'],
+ ['dtU','d','DE','defensive end you control',555,470,30,28,558,502,'edge','The player with the ring: you.']],
+ L:{one:{name:'Deep safety',rings:['s'],notes:[[658,318,'The only deep defender showing']]}}},
+d2:{src:'frames/d2.jpg',title:'Cover 2 with a disguise, two seconds after the snap',clip:'p13',P:[
+ ['h1','d','DB','deep defender on the left half',465,320,16,24,465,347,'s','Deep over the left half of the field.'],
+ ['h2','d','DB','deep defender on the right half',905,310,16,24,905,337,'s','Deep over the right half of the field.'],
+ ['mid','d','LB','defender running down the middle',808,335,16,26,808,364,'lb','Running the deep middle between the two halves.'],
+ ['qb','o','QB #14','quarterback',805,615,30,60,803,682,'qb','In the pocket.']],
+ L:{halves:{name:'Deep defenders',rings:['h1','h2','mid'],notes:[[465,360,'Deep half'],[905,350,'Deep half'],[808,400,'Middle runner']]}}}
+});
+
+LESSONS.push(
+{id:'motion',f:'m1',pos:'30% 60%',side:'Offense',unit:'Motion and shifts',title:'Motion tells you man or zone',blurb:'The same shift against two coverages. Watch who moves with it.',steps:[
+ {k:'info',ph:'Introduce',h:'Make the defense move',body:['When you shift or motion a player, the defense has to react. How it reacts tells you the coverage before the ball is snapped.','In man coverage a defender travels with his receiver. In zone, defenders hold their areas and only slide.'],show:{layers:['three'],labels:['w3','w80','w42']}},
+ {k:'choice',ph:'Observe',dim:'rec',nd:1,q:'Before anything moves, how many receivers can you see left of the tackle?',opts:[['Two',0,'#3, #80 and #42 are all on the left.'],['Three',1,'#3, #80 and #42. Nobody is on the right yet.'],['Four',0,'Three are visible.']],after:{layers:['three'],labels:['w3','w80','w42']}},
+ {k:'tap',ph:'Identify',f:'m2',dim:'rec',nd:1,q:'#42 and #80 have shifted to the right, and #3 is in motion. Tap a defender who went with them.',ok:['d1','d2','d3'],yes:'He was on the other side a moment ago. Two defenders crossed the formation with #42 and #80, and a third is running with the motion.',no:'Look above #42 and #80 on the right: two defenders came across with them. A third is running across with the motion.',after:{layers:['travel'],labels:['w42','w80','w3']}},
+ {k:'choice',ph:'Identify',f:'m2',dim:'rec',nd:1,q:'Defenders crossing the formation with receivers means what?',opts:[['Man coverage',1,'Each defender has a man, so when the man moves, he moves.'],['Zone coverage',0,'Zone defenders stay with their area, not with a receiver.'],['A blitz',0,'It tells you coverage, not pressure.']],after:{layers:['travel','deep']}},
+ {k:'clip',ph:'Reveal',clip:'p10',h:'Watch them travel',body:['The defense called Cover 2 Man. Watch the defenders run across with the shift, then turn and chase after the snap.']},
+ {k:'info',ph:'Observe',f:'m3',h:'Same shift, different call',body:['The same formation again. This time notice the corner on the right before anything moves: he is lined up with no receiver in front of him.'],show:{layers:['empty','three'],labels:['cbR']}},
+ {k:'tap',ph:'Identify',f:'m4',dim:'rec',nd:1,q:'After the same shift. Tap a corner who is still where he started.',ok:['cbL','cbR'],yes:'Both corners held their side. The receivers left and nobody followed them.',no:'Both corners are still out wide where they started. The receivers left and nobody followed.',after:{layers:['stay','slide'],labels:['w42','w80','w3']}},
+ {k:'choice',ph:'Identify',f:'m4',dim:'rec',nd:1,q:'Nobody ran across; the linebackers just slid over a gap. Man or zone?',opts:[['Man',0,'In man, defenders would have crossed with #42 and #80.'],['Zone',1,'They adjusted their areas instead of chasing receivers.']],after:{layers:['stay','slide']}},
+ {k:'clip',ph:'Reveal',clip:'p11',h:'Watch them stay',body:['The defense called Cover 4. The defenders slide and stay, then drop to areas after the snap.']},
+ {k:'info',ph:'Review',f:'m4',h:'What carries over',body:['One motion before the snap answers the man-or-zone question for free. Man: someone runs with him. Zone: they point, slide and stay.'],show:{layers:['stay','slide']}}
+]},
+{id:'blitz',f:'z1',pos:'50% 44%',side:'Offense',unit:'Pressure',title:'Spot the blitz',blurb:'A blitz that does not look like one, and what to do when it comes.',steps:[
+ {k:'info',ph:'Introduce',h:'Count who can rush',body:['You are in the I-formation with the quarterback under center. The defense called Man Blitz.','Before the snap, count the defenders on the line and the ones close enough to add on.']},
+ {k:'choice',ph:'Observe',dim:'rec',q:'How many defenders are on the line of scrimmage?',opts:[['Four',0,'There are two ends and three inside players.'],['Five',1,'Five on the line.'],['Six',0,'The linebackers are 5 yards back.']],after:{layers:['line']}},
+ {k:'choice',ph:'Predict',dim:'rec',nd:1,q:'Five on the line, two linebackers at 5 yards, two safeties at 11. Does this look like a blitz?',opts:[['Not clearly. It could be an ordinary defense',1,'Right. Nothing here gives it away, and both linebackers are coming anyway. Good defenses hide it.'],['Yes, obviously',0,'Nobody extra has walked up and both safeties are deep. It is disguised.'],['No, it cannot be a blitz',.5,'It does not look like one, but you can never rule it out from the picture alone.']],after:{layers:['line','lbs','shell']}},
+ {k:'tap',ph:'Identify',dim:'rec',nd:1,q:'Tap one of the two linebackers who will rush.',ok:['lbL','lbR'],yes:'Both linebackers come. With five on the line, that makes seven possible rushers.',no:'They are the two defenders 5 yards deep behind the line. Both come on this call.',after:{layers:['lbs'],labels:['lbL','lbR']}},
+ {k:'choice',ph:'Predict',dim:'asg',q:'Your five linemen can block five. Who has to pick up the extra rushers?',opts:[['The fullback and the running back',1,'Backs are the adjustable part of the protection. If they both stay in, you have blockers but fewer receivers.'],['The receivers',0,'They are running routes.'],['Nobody; throw before they arrive',.5,'Sometimes that is the answer, but only if a route is built to be open right away.']],after:{layers:['backs','lbs'],labels:['fb','hb']}},
+ {k:'tap',ph:'Observe',f:'z2',dim:'rec',nd:1,q:'A second and a half after the snap. Tap the only defender deep in the middle.',ok:['fs'],yes:'One safety rotated to the middle. Everyone else is rushing or locked on a receiver.',no:'He is in the middle of the field near the 15. One safety rotated there; everyone else is rushing or in man.',after:{layers:['one','rush'],labels:['fs']}},
+ {k:'choice',ph:'Decide',f:'z2',dim:'dec',q:'Against a blitz with man coverage behind it, which throw wins?',opts:[['A quick one to a receiver who beats his man right away',1,'The ball has to be out before the rush arrives, and man coverage means one good release is enough.'],['A slow-developing deep route',0,'You will not have the time.'],['Hold the ball and scramble',.5,'It can work, but with this many rushers you are betting on your legs.']],after:{layers:['one'],labels:['wl'],hi:['wl']}},
+ {k:'clip',ph:'Reveal',clip:'p04',h:'Now watch your rep',body:['Count the rushers as they come and see how long you have before the ball has to be gone.']},
+ {k:'clip',ph:'Reveal',clip:'p05',h:'A second blitz',body:['Your other rep against Man Blitz, from an empty backfield. With no back to help, the ball has to come out even faster. This clip starts in the wide play-art view.']},
+ {k:'info',ph:'Review',f:'z2',h:'What carries over',body:['You will not always see a blitz coming. Know before the snap who your backs are blocking and which route is your quick answer, so the decision is already made.'],show:{layers:['one','rush']}}
+]},
+{id:'c3',f:'t1',pos:'50% 30%',side:'Defense',unit:'Play study',title:'Four Verticals against Cover 3',blurb:'The one-high version of the same play: four deep routes against three deep defenders.',steps:[
+ {k:'info',ph:'Introduce',h:'The call',body:['You are the defense, in navy, in Cover 3. The offense runs four receivers straight up the field.','Cover 3 puts three defenders deep: the free safety in the middle and a corner on each outside third.']},
+ {k:'tap',ph:'Observe',dim:'rec',q:'Tap the only deep safety.',ok:['fs'],yes:'The free safety, about 17 yards deep in the middle.',no:'It is the free safety, about 17 yards deep in the middle of the field.',after:{layers:['one'],labels:['fs']}},
+ {k:'choice',ph:'Identify',dim:'asg',q:'Cover 3 has three deep defenders. Who are the other two?',opts:[['The two corners, backing up to the outside thirds',1,'Each corner takes a deep third and the free safety takes the middle third.'],['The two linebackers',0,'They play underneath.'],['The safety who came down',0,'He is an underneath defender on this call.']],after:{layers:['one','corners','down'],labels:['cbL','cbR','fs']}},
+ {k:'choice',ph:'Predict',dim:'rec',q:'Four vertical routes against three deep defenders. Who is in the bind?',opts:[['The free safety: a seam route on each side of him',1,'The corners each have one route. The free safety has two, and he can only break on one.'],['The corners',.5,'They are tested, but each has just one deep route to play.'],['The defensive line',0,'They rush either way.']],after:{layers:['one'],hi:['fs']}},
+ {k:'tap',ph:'Observe',f:'t2',dim:'rec',nd:1,q:'Two seconds in. Tap a receiver running up a seam.',ok:['seamL','seamR'],yes:'A seam on each side of the free safety, exactly as drawn up.',no:'The seams are the two inside vertical routes, one on each side of the free safety.',after:{layers:['deep','seams'],labels:['seamL','seamR','fs']}},
+ {k:'choice',ph:'Decide',f:'t2',dim:'dec',q:'Switch sides for a moment. As the quarterback, where does the ball go?',opts:[['To the seam the free safety turns away from',1,'Look him off or just read his hips. Whichever seam he leaves is open behind the linebackers.'],['Down a sideline',.5,'The corners are already on top of those routes. Against Cover 2 that throw is there; against Cover 3 the seams are.'],['Straight down the middle',0,'That is where the free safety is standing.']],after:{layers:['deep','seams']}},
+ {k:'choice',ph:'Decide',f:'t2',dim:'asg',q:'Back on defense. What helps the free safety most?',opts:[['Underneath defenders bumping the seam routes, and a rush that gets home',1,'A seam runner who gets knocked off his path arrives late, and a hurried quarterback cannot wait for it.'],['The corners leaving their thirds to help inside',0,'That opens the sidelines.'],['The free safety guessing a side early',.5,'When he guesses right it is an interception. When he guesses wrong it is a touchdown.']],after:{layers:['deep'],labels:['u2','u3']}},
+ {k:'clip',ph:'Reveal',clip:'p12',h:'Now watch your rep on defense',body:['Follow the free safety. See which seam he favors and whether the underneath defenders slow the routes down.']},
+ {k:'clip',ph:'Reveal',clip:'p02',h:'And your rep on offense',body:['The same matchup with you at quarterback. This clip starts in the wide view, so you can see all four routes and all three deep defenders.']},
+ {k:'info',ph:'Review',f:'t2',h:'What carries over',body:['Same play, different answer. Against two high, the sidelines open. Against one high, the seams do. Count the safeties first and you know where to look.'],show:{layers:['deep','seams']}}
+]},
+{id:'option',f:'r1',pos:'46% 60%',side:'Offense',unit:'Run game',title:'Read Option',blurb:'One defender is left unblocked on purpose. Read him and you are always right.',steps:[
+ {k:'info',ph:'Introduce',h:'Block ten with nine',body:['On a read option the line leaves one defender unblocked, and the quarterback reads him instead. Whatever he does, you do the opposite.','The back starts on the left and runs across to the right.'],show:{layers:['run'],labels:['rb','qb']}},
+ {k:'choice',ph:'Predict',dim:'rec',q:'The run is going right. Which defender does the line leave unblocked?',opts:[['The end on the left, away from the run',1,'The backside end. Leaving him lets the left tackle go block someone more dangerous.'],['The end on the right',0,'The play is going at him. He has to be blocked.'],['A linebacker',0,'On this play the read is the backside end.']],after:{layers:['run','key']}},
+ {k:'tap',ph:'Identify',dim:'rec',nd:1,q:'Tap that defender.',ok:['de1'],yes:'The end lined up wide on the left. Your eyes go to him at the snap.',no:'He is the end lined up widest on the left side of the defensive line.',after:{layers:['key'],labels:['de1']}},
+ {k:'choice',ph:'Decide',dim:'dec',q:'At the snap he crashes hard toward the running back. What do you do?',opts:[['Keep the ball and run where he came from',1,'He took himself out of the play. The space he left is yours.'],['Hand it off',0,'He is running straight to the back.'],['Throw it away',0,'There is a free run available.']],after:{layers:['key'],hi:['de1']}},
+ {k:'choice',ph:'Decide',dim:'dec',q:'This time he stays put, shoulders square, eyes on you. What do you do?',opts:[['Hand it off',1,'He is waiting for you. The back runs away from him with every other defender blocked.'],['Keep it',0,'He is sitting right where you would go.'],['Wait and see',.5,'The mesh lasts a moment. Decide by the time the back clears you.']],after:{layers:['key','run']}},
+ {k:'tap',ph:'Observe',f:'r2',dim:'rec',nd:1,q:'One second after the snap. The game marks the read on the ground. Tap the unblocked defender.',ok:['key'],yes:'Nobody touched him, and the purple marker beside him shows he is the read.',no:'He is on the left, standing free next to the purple marker on the ground.',after:{layers:['key'],labels:['key','qb']}},
+ {k:'clip',ph:'Reveal',clip:'p08',h:'Now watch your rep',body:['Step through the mesh a frame at a time. Watch the end, then check whether give or keep was the right answer.']},
+ {k:'info',ph:'Review',f:'r2',h:'What carries over',body:['Find the unblocked defender before the snap and watch only him. Crash means keep. Stay means give.'],show:{layers:['key']}}
+]},
+{id:'counter',f:'k1',pos:'50% 50%',side:'Defense',unit:'Run game',title:'Reading Counter',blurb:'The back steps one way and the linemen pull the other. Learn which one to believe.',steps:[
+ {k:'info',ph:'Introduce',h:'A run built on a lie',body:['You are the defense, in navy. Counter starts with a step one way to move the linebackers, then comes back the other way behind pulling linemen.','You control the tackle with the ring, on the left side of the line.'],show:{layers:['you','lbs']}},
+ {k:'choice',ph:'Predict',dim:'rec',nd:1,q:'Before the snap, can you tell which way this run is going?',opts:[['No. You have to read it after the snap',1,'The picture is the same one you get on a dozen plays. The line tells you after the snap.'],['Yes, to the tight end side',.5,'A fair guess, and exactly the guess Counter is designed to punish.'],['Yes, to the left',0,'Nothing before the snap says so.']],after:{layers:['lbs']}},
+ {k:'tap',ph:'Observe',f:'k2',dim:'rec',nd:1,q:'One second in. Two linemen have left their spots and are running behind the line. Tap one.',ok:['pull1','pull2'],yes:'A guard and a second blocker pulling from the right side to the left.',no:'They are the two blurred white jerseys just left of the quarterback, running to the left behind the line.',after:{layers:['pull'],labels:['pull1','pull2']}},
+ {k:'choice',ph:'Identify',f:'k2',dim:'asg',q:'Linemen pulling to the left tells you what?',opts:[['The ball is going left, behind them',1,'Pullers take you to the ball. Nobody pulls away from the play.'],['It is a pass',0,'Linemen do not run sideways on a pass.'],['The ball is going right, where the back stepped',0,'The step was the fake.']],after:{layers:['pull','back']}},
+ {k:'choice',ph:'Decide',f:'k2',dim:'dec',q:'You are a linebacker. The back steps right and the linemen pull left. Which do you believe?',opts:[['The linemen',1,'A back can fake. Three hundred pounds running across the formation cannot.'],['The back',0,'His first step is the bait.'],['Neither; hold your spot',.5,'Better than chasing the fake, but the pullers are coming and you will be late.']],after:{layers:['pull','back'],labels:['lbA','lbB']}},
+ {k:'choice',ph:'Decide',dim:'dec',q:'You are the tackle on the left, where the play ends up. A blocker hits you from the side. What do you do?',opts:[['Stay low, hold your ground and squeeze the hole',1,'Counter needs a lane for the pullers. Close it and they pile up behind the line.'],['Run straight upfield',.5,'You might get a tackle for loss. You might also leave the exact lane the pullers want.'],['Back out and look for the ball',0,'That hands them the gap.']],after:{layers:['you'],hi:['dt1'],labels:['dt1']}},
+ {k:'clip',ph:'Reveal',clip:'p16',h:'Now watch your rep on defense',body:['Watch the back\'s first step, then the pullers. See how long the linebackers take to get back across.']},
+ {k:'clip',ph:'Reveal',clip:'p07',h:'And your rep on offense',body:['Your own Counter call, from the wide view. Follow the pulling linemen and you will find the ball.']},
+ {k:'info',ph:'Review',f:'k2',h:'What carries over',body:['On any run, the linemen tell the truth. If they pull, go where they go.'],show:{layers:['pull','back']}}
+]},
+{id:'quarters',f:'q1',pos:'50% 34%',side:'Defense',unit:'Coverage',title:'Quarters against an empty backfield',blurb:'Four defenders deep, and what that leaves open underneath.',steps:[
+ {k:'info',ph:'Introduce',h:'The call',body:['You are the defense, in navy, in Cover 4. Four defenders each take a deep quarter of the field.','The offense has emptied the backfield: all five eligible players are lined up as receivers.']},
+ {k:'choice',ph:'Observe',dim:'rec',q:'Where is the running back?',opts:[['Split out wide on the left',1,'#23 is lined up as a receiver. Nobody is beside the quarterback.'],['Behind the quarterback',0,'The backfield is empty.'],['Off screen',0,'He is on the left, #23.']],after:{layers:['empty'],labels:['rbw','qb']}},
+ {k:'tap',ph:'Identify',dim:'rec',q:'Tap one of the two safeties.',ok:['sL','sR'],yes:'Two safeties, 12 yards deep.',no:'The safeties are the two defenders about 12 yards deep, inside the corners.',after:{layers:['shell'],labels:['sL','sR']}},
+ {k:'choice',ph:'Predict',dim:'rec',q:'Cover 2 and Cover 4 both start with two safeties deep. What is different after the snap?',opts:[['In Cover 4 the corners drop deep too',1,'Four across the back. In Cover 2 the corners stay short and only the safeties are deep.'],['In Cover 4 the safeties come down',0,'They stay deep.'],['Nothing',0,'The corners play it very differently.']],after:{layers:['shell','corners']}},
+ {k:'tap',ph:'Observe',f:'q2',dim:'rec',nd:1,q:'Two seconds in, four defenders are deep. Tap one of the two in the middle.',ok:['s2L','s2R'],yes:'The safeties take the two inside quarters and the corners take the outside ones.',no:'The two inside deep defenders are the safeties, one near each hash.',after:{layers:['four'],labels:['d1','s2L','s2R','d4']}},
+ {k:'choice',ph:'Identify',f:'q2',dim:'asg',q:'Four deep and four rushing leaves three defenders underneath. What does the offense get?',opts:[['Short throws in front of the deep defenders',1,'Quarters gives up the short stuff to take away the deep ball. You rally up and tackle.'],['The deep ball',0,'Four defenders are waiting for it.'],['Nothing at all',0,'Three defenders cannot cover the whole short field.']],after:{layers:['four','under']}},
+ {k:'choice',ph:'Decide',dim:'dec',q:'The backfield is empty. What do you know before the snap?',opts:[['No handoff is coming, and nobody extra is there to block',1,'It is a pass or a quarterback run, and five blockers is all they have. A fast rush matters.'],['A run up the middle is likely',0,'There is no back to hand it to.'],['Nothing useful',0,'An empty backfield tells you a lot.']],after:{layers:['empty'],hi:['dtU'],labels:['dtU']}},
+ {k:'clip',ph:'Reveal',clip:'p15',h:'Now watch your rep',body:['Watch all four deep defenders back up together, and see where the quarterback finds room.']},
+ {k:'info',ph:'Review',f:'q2',h:'What carries over',body:['Two high before the snap can become two deep or four deep. Watch the corners: if they bail, it is Cover 4 and the short throws are open.'],show:{layers:['four','under']}}
+]},
+{id:'zoneblitz',f:'y1',pos:'50% 44%',side:'Defense',unit:'Pressure',title:'Zone blitz',blurb:'Five rush, zones behind them, and your job when the call says drop.',steps:[
+ {k:'info',ph:'Introduce',h:'Pressure without man coverage',body:['You are the defense, in navy, and you control the linebacker with the ring. The call is a zone blitz with two safeties deep.','Five defenders rush. The rest drop to zones.']},
+ {k:'choice',ph:'Observe',dim:'rec',nd:1,q:'How many defenders are on the line of scrimmage?',opts:[['Four',0,'Count again: two ends and three inside.'],['Five',1,'Five on the line, the same number that will rush.'],['Six',0,'You and the other linebacker are 4 to 5 yards back.']],after:{layers:['line']}},
+ {k:'choice',ph:'Predict',dim:'rec',nd:1,q:'From the offense\'s side: five on the line, two linebackers, two safeties deep. Blitz or not?',opts:[['It could be either',1,'That is the value of it. The offense sees a normal front and has to guess.'],['Definitely a blitz',0,'Nothing before the snap proves it.'],['Definitely not',0,'Five on the line means five can come.']],after:{layers:['line','shell','you']}},
+ {k:'tap',ph:'Observe',f:'y2',dim:'rec',nd:1,q:'After the snap. Tap the linebacker you control.',ok:['user'],yes:'You are dropping, not rushing. The yellow circle is the zone the game wants you in.',no:'He has the ring under him, just left of the middle. He is dropping toward the yellow circle.',after:{layers:['zone','deep'],labels:['user']}},
+ {k:'choice',ph:'Decide',f:'y2',dim:'asg',q:'Your assignment is a zone. What do you do?',opts:[['Get to the landmark, face the quarterback and break on throws into your area',1,'Zone defenders watch the quarterback and cover grass until the ball tells them where to go.'],['Chase the nearest receiver wherever he runs',.5,'That is man coverage. In zone you pass him on when he leaves your area.'],['Rush the quarterback',0,'Five others have that job. Your zone would be empty.']],after:{layers:['zone']}},
+ {k:'choice',ph:'Decide',f:'y2',dim:'dec',q:'Switch sides. As the quarterback, where is the quick answer to this?',opts:[['A short throw into an area a rusher just left',1,'Every rusher came from somewhere. The spot he vacated is open until a zone defender gets there.'],['A deep shot',0,'Two safeties are still deep.'],['Hold it and wait',0,'Five rushers will not give you the time.']],after:{layers:['zone','deep'],labels:['rb']}},
+ {k:'clip',ph:'Reveal',clip:'p18',h:'Now watch your rep',body:['Count the rushers, then watch your linebacker drop to his landmark.']},
+ {k:'info',ph:'Review',f:'y2',h:'What carries over',body:['When the call says zone, play the area and the quarterback\'s eyes. Leaving it to chase a receiver is how zone blitzes give up big plays.'],show:{layers:['zone','deep']}}
+]},
+{id:'disguise',f:'d1',pos:'46% 30%',side:'Defense',unit:'Coverage',title:'Cover 2 with a disguise',blurb:'One safety showing before the snap, two deep after it.',steps:[
+ {k:'info',ph:'Introduce',h:'Show one thing, play another',body:['You are the defense, in navy, and you called a version of Cover 2. Look at what the offense sees before the snap.']},
+ {k:'tap',ph:'Observe',dim:'rec',q:'Tap the deepest defender.',ok:['s'],yes:'One safety, 17 yards deep, shaded a little left of the middle.',no:'He is 17 yards deep, a little left of the middle of the field.',after:{layers:['one'],labels:['s']}},
+ {k:'choice',ph:'Identify',dim:'rec',nd:1,q:'From the quarterback\'s side of the ball, what does this look like?',opts:[['One high',1,'A single deep safety. A quarterback counting safeties would expect Cover 1 or Cover 3.'],['Two high',0,'Only one defender is deeper than 8 yards.'],['No deep safety',0,'One is 17 yards deep.']],after:{layers:['one']}},
+ {k:'tap',ph:'Observe',f:'d2',dim:'rec',nd:1,q:'Two seconds in. Tap one of the defenders now deep over a half of the field.',ok:['h1','h2'],yes:'Two deep halves after all. The second deep defender came from somewhere the quarterback was not looking.',no:'There is one deep on the left and one deep on the right. The single safety became two deep halves.',after:{layers:['halves'],labels:['h1','h2','mid']}},
+ {k:'choice',ph:'Identify',f:'d2',dim:'asg',q:'A third defender is running down the middle between them. What does that make this coverage?',opts:[['Tampa 2: two deep halves and a middle runner',1,'The same coverage you saw from the offense side in the Four Verticals lesson.'],['Cover 3',.5,'Three defenders are deep, but two of them are on halves, not thirds, and the middle one is a linebacker.'],['Cover 1',0,'Nobody is in man.']],after:{layers:['halves']}},
+ {k:'choice',ph:'Decide',f:'d2',dim:'dec',q:'Why go to the trouble of disguising it?',opts:[['So the quarterback reads one high and throws into two-deep coverage',1,'His pre-snap plan is built for the wrong coverage, and he has a second or less to fix it.'],['To confuse your own players',0,'They know the call.'],['To stop the run',0,'The disguise is about the pass.']],after:{layers:['halves']}},
+ {k:'clip',ph:'Reveal',clip:'p13',h:'Now watch your rep',body:['Start at the pre-snap frame, then step forward from the snap and watch the deep defenders change the picture.']},
+ {k:'info',ph:'Review',f:'d2',h:'What carries over',body:['The pre-snap picture is a first guess. On offense, confirm it in the first second after the snap. On defense, a late rotation is one of the cheapest ways to win a down.'],show:{layers:['halves']}}
+]}
+);
+
+
+/* ---------- progress (one browser only) ---------- */
+const DIM={rec:'Recognition',asg:'Assignment',dec:'Decision'};
+const KEY='gridiron-iq-v2';
+let S={dims:{rec:[0,0],asg:[0,0],dec:[0,0]},done:{},miss:{}};
+try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.dims)S=Object.assign(S,s);}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function record(dim,grade,q){S.dims[dim][0]+=grade;S.dims[dim][1]+=1;
+  if(grade<1)S.miss[q]=(S.miss[q]||0)+1;else if(S.miss[q]){S.miss[q]-=1;if(!S.miss[q])delete S.miss[q];}save();}
+
+/* ---------- step runner (lessons and practice share it) ---------- */
+function runSteps(steps,onDone,defF){
+  const left=el('div'),sheet=el('div',{class:'sheet'});
+  let i=0,earned=0,graded=0,st=null,curF=null;
+  const wrap=el('div',{class:'work'},[left,sheet]);
+  function frame(f){f=f||defF;if(curF!==f){st=Stage(f);curF=f;left.replaceChildren(st.root,el('p',{class:'cap'},FR[f].title+'. Overlays are drawn on the real frame.'));}return st;}
+  function next(){i++;i<steps.length?show():onDone({earned,graded,sheet,left});}
+  function head(s){return el('div',{class:'meta'},[el('span',{},[el('b',{},s.ph||'Drill'),s.dim?DIM[s.dim]:'']),el('span',{class:'pill'},`${i+1} of ${steps.length}`)]);}
+  function nextBtn(){const b=el('button',{class:'btn',onclick:next},i+1<steps.length?'Next':'Finish');setTimeout(()=>b.focus({preventScroll:true}),0);return b;}
+  function fb(g,title,why){return el('div',{class:'fb g'+(g===1?1:g?5:0),role:'status'},[el('b',{},title),why]);}
+  function show(){const s=steps[i];sheet.replaceChildren(head(s));
+    if(s.k==='info'){frame(s.f).draw(s.show||{});
+      sheet.append(el('h2',{},s.h),...s.body.map(t=>el('p',{},t)),nextBtn());}
+    if(s.k==='clip'){const c=CLIPS.find(x=>x.id===s.clip),pl=Player(c);curF=null;
+      left.replaceChildren(pl.root,el('p',{class:'cap'},clipTitle(c)+'. Your recording, starting just before the snap.'));
+      sheet.append(el('h2',{},s.h),...s.body.map(t=>el('p',{},t)),el('div',{class:'row'},[nextBtn(),el('button',{class:'btn ghost',onclick:pl.restart},'Play from the start')]));}
+    if(s.k==='choice'){const stg=frame(s.f);stg.draw(s.before||{});
+      const box=el('div',{class:'opts'});
+      s.opts.forEach((o,n)=>box.append(el('button',{class:'opt',onclick:e=>{
+        [...box.children].forEach((b,j)=>{b.disabled=true;if(s.opts[j][1]===1)b.classList.add('best');});
+        e.currentTarget.classList.add('picked','g'+(o[1]===1?1:o[1]?5:0));
+        earned+=o[1];graded++;record(s.dim,o[1],s.q);stg.draw(s.after||{});
+        sheet.append(fb(o[1],o[1]===1?'Sound.':o[1]?'Acceptable, with a catch.':'Not this one.',o[2]),nextBtn());
+      }},[el('span',{class:'let'},'ABCD'[n]),el('span',{},o[0])])));
+      sheet.append(el('p',{class:'q'},s.q),box);}
+    if(s.k==='tap'){const f=s.f||defF,stg=frame(f);
+      sheet.append(el('p',{class:'q'},s.q),el('p',{class:'tapcue'},'Tap a player in the frame.'));
+      stg.draw({onTap:id=>{const ok=s.ok.includes(id);earned+=ok?1:0;graded++;record(s.dim,ok?1:0,s.q);
+        const a=Object.assign({},s.after||{});a.hi=(a.hi||[]).concat(s.ok);
+        if(!ok){a.wrong=[id];a.labels=(a.labels||[]).concat(id);}
+        stg.draw(a);sheet.lastChild.remove();
+        sheet.append(fb(ok?1:0,ok?'That\'s him.':`You tapped the ${pOf(f,id).name}.`,ok?s.yes:s.no),nextBtn());}});}
+  }
+  show();return wrap;
+}
+
+/* ---------- video player with film controls ---------- */
+function Player(clip){
+  const v=el('video',{src:`clips/${clip.id}.mp4`,poster:`clips/${clip.id}.jpg`,preload:'auto',playsinline:'',muted:''});v.muted=true;
+  const scrub=el('input',{type:'range',min:0,max:1000,value:0,'aria-label':'Position in the clip'});
+  const play=el('button',{class:'cbtn main',onclick:()=>v.paused?v.play().catch(()=>{}):v.pause()},'Play');
+  const speeds=el('span',{class:'row'});let rate=1;
+  function paintSpeeds(){speeds.replaceChildren(...[[1,'Full speed'],[.5,'Half'],[.25,'Quarter']].map(r=>el('button',{class:'cbtn','aria-pressed':rate===r[0],onclick:()=>{rate=r[0];v.playbackRate=rate;paintSpeeds();}},r[1])));}
+  paintSpeeds();
+  let tgt=0;const now=()=>v.seeking?tgt:v.currentTime;const go=t=>{v.pause();tgt=Math.max(0,Math.min(t,(v.duration||99)-.03));v.currentTime=tgt;};
+  v.addEventListener('play',()=>play.textContent='Pause');v.addEventListener('pause',()=>play.textContent='Play');
+  v.addEventListener('timeupdate',()=>{if(v.duration)scrub.value=v.currentTime/v.duration*1000;});
+  scrub.addEventListener('input',()=>{if(v.duration){v.pause();v.currentTime=scrub.value/1000*v.duration;}});
+  v.addEventListener('click',()=>play.click());
+  const root=el('div',{},[el('div',{class:'vwrap'},v),el('div',{class:'ctrl'},[play,
+    el('button',{class:'cbtn',onclick:()=>go(0)},'Pre-snap'),el('button',{class:'cbtn',onclick:()=>go(clip.snap)},'Snap'),
+    el('button',{class:'cbtn','aria-label':'Back one frame',onclick:()=>go(now()-1/30)},'‹ Frame'),el('button',{class:'cbtn','aria-label':'Forward one frame',onclick:()=>go(now()+1/30)},'Frame ›'),scrub]),
+    el('div',{class:'ctrl'},speeds)]);
+  return {root,v,restart:()=>{v.currentTime=0;v.playbackRate=rate;v.play().catch(()=>{});}};
+}
+const clipTitle=c=>`${c.off} against ${c.def}`;
+
+/* ---------- views ---------- */
+const app=document.getElementById('app'),heroEl=document.getElementById('hero');
+const VIEWS={learn:'Learn',practice:'Practice','film-room':'Film room',progress:'Progress',captures:'Captures'};
+const ICON={learn:'<path d="M12 6.5C10.5 5 8 4.5 4 4.5v13c4 0 6.5.5 8 2 1.5-1.5 4-2 8-2v-13c-4 0-6.5.5-8 2zM12 6.5v13"/>',
+ practice:'<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".6"/>',
+ 'film-room':'<rect x="3" y="5" width="18" height="14" rx="3.5"/><path d="M10.5 9.5v5l4-2.5z"/>',
+ progress:'<path d="M5 20v-8M12 20V4M19 20v-5"/>',
+ captures:'<path d="M4 8.5h3l1.800-3h6.400l1.800 3h3v10.5H4z"/><circle cx="12" cy="13.5" r="3.200"/>'};
+function hero(small,title,intro,back){
+  heroEl.replaceChildren(...[back&&el('button',{class:'back',onclick:back[1]},'‹ '+back[0]),el('small',{},small),el('h1',{},title),intro&&el('p',{},intro)].filter(Boolean));
+}
+const fmt=n=>Number.isInteger(n)?n:n.toFixed(1);
+
+function learn(){
+  hero('Film study','Read the game you play','Short lessons built on your own practice footage. Each shows you a cue, asks for a read, then explains it.');
+  let side='All';
+  const grid=el('div',{class:'grid'}),chips=el('div',{class:'chips'});
+  function paint(){
+    chips.replaceChildren(...['All','Offense','Defense'].map(k=>el('button',{class:'chip','aria-pressed':side===k,onclick:()=>{side=k;paint();}},k)));
+    grid.replaceChildren(...LESSONS.filter(L=>side==='All'||L.side===side).map(L=>el('button',{class:'card lcard',onclick:()=>openLesson(L)},[
+      el('div',{class:'thumb',style:`background-image:url(${FR[L.f].src});background-position:${L.pos}`},el('span',{class:'badge'+(S.done[L.id]?' done':''),'aria-label':S.done[L.id]?'Completed':'Lesson '+(LESSONS.indexOf(L)+1)},S.done[L.id]?'✓':LESSONS.indexOf(L)+1)),
+      el('h3',{},L.title),el('p',{},L.blurb),el('div',{class:'facts'},[el('span',{},L.side),el('span',{},L.steps.length+' steps')])])));
+  }
+  paint();
+  const doneN=LESSONS.filter(L=>S.done[L.id]).length;
+  app.replaceChildren(el('div',{class:'sec onhero'},[el('h2',{},'Lessons'),el('span',{},`${doneN} of ${LESSONS.length} completed`)]),chips,grid);
+}
+function openLesson(L){
+  hero(`${L.side} lesson, ${L.unit.toLowerCase()}`,L.title,null,['All lessons',learn]);
+  app.replaceChildren(runSteps(L.steps,r=>{S.done[L.id]=true;save();
+    const nx=LESSONS[LESSONS.indexOf(L)+1];
+    r.sheet.replaceChildren(el('div',{class:'meta'},[el('span',{},[el('b',{},'Lesson complete')]),el('span',{class:'pill'},`${fmt(r.earned)} of ${r.graded}`)]),
+      el('h2',{},L.title),el('p',{},`You earned ${fmt(r.earned)} of ${r.graded} on the graded reads.`),
+      el('div',{class:'row'},[nx?el('button',{class:'btn',onclick:()=>openLesson(nx)},'Next: '+nx.title):el('button',{class:'btn',onclick:()=>go('practice')},'Go to practice'),el('button',{class:'btn ghost',onclick:learn},'All lessons')]));},L.f));
+  window.scrollTo(0,0);
+}
+
+function drillPool(){
+  const taps=['a1','b1','c1'].flatMap(f=>FR[f].P.map(a=>pOf(f,a[0])).map(p=>({k:'tap',f,dim:'rec',q:`Tap the ${p.name}.`,ok:[p.id],yes:p.here,no:`The ${p.name} is marked now. ${p.here}`,after:{labels:[p.id]}})));
+  const qs=LESSONS.flatMap(L=>L.steps.filter(s=>(s.k==='tap'||s.k==='choice')&&!s.nd&&!/^(A different|Two players|Two seconds|One second|One more|So what|Every defense|A fifth|With the middle|Who is responsible|The defender on)/.test(s.q)).map(s=>Object.assign({f:L.f},s,{ph:'Drill'})));
+  return taps.concat(qs);
+}
+function practice(){
+  hero('Reps','Practice','Two kinds of reps: call the coverage on your own clips, or quick reads on the annotated frames.');
+  const passN=CLIPS.filter(c=>c.type==='pass').length;
+  const card=(pos,badge,h,p,facts,fn)=>el('button',{class:'card lcard',onclick:fn},[
+    el('div',{class:'thumb',style:pos},el('span',{class:'badge done','aria-hidden':'true'},badge)),el('h3',{},h),el('p',{},p),el('div',{class:'facts'},facts.map(f=>el('span',{},f)))]);
+  app.replaceChildren(el('div',{class:'grid'},[
+    card(`background-image:url(clips/p14.jpg);background-size:cover;background-position:center`,'▶','Call the coverage','See the defense before the snap, name the coverage, then watch the play to check yourself.',['6 clips a round',passN+' pass plays'],coverageRound),
+    card('background-image:url(frames/c1.jpg);background-size:cover;background-position:center','▶','Quick reads','Find positions by alignment, count the front and read the shell on your annotated frames.',['10 reads',drillPool().length+' in the pool'],quickRound)]));
+}
+function quickRound(){
+  const pool=drillPool().sort(()=>Math.random()-.5).slice(0,10);
+  hero('Reps','Quick reads',null,['Practice',practice]);
+  app.replaceChildren(runSteps(pool,r=>{r.left.replaceChildren();
+    r.sheet.replaceChildren(el('div',{class:'meta'},[el('span',{},[el('b',{},'Round finished')]),el('span',{class:'pill'},`${fmt(r.earned)} of ${r.graded}`)]),
+      el('h2',{},`You got ${fmt(r.earned)} of ${r.graded}`),
+      el('div',{class:'row'},[el('button',{class:'btn',onclick:quickRound},'Run another round'),el('button',{class:'btn ghost',onclick:()=>go('progress')},'See my progress')]));}));
+  window.scrollTo(0,0);
+}
+function coverageRound(){
+  const list=CLIPS.filter(c=>c.type==='pass').sort(()=>Math.random()-.5).slice(0,6);
+  let i=0,earned=0;
+  hero('Reps','Call the coverage',null,['Practice',practice]);
+  const left=el('div'),sheet=el('div',{class:'sheet'});
+  app.replaceChildren(el('div',{class:'work'},[left,sheet]));
+  function show(){
+    const c=list[i],f=FAM[c.fam],pl=Player(c);
+    left.replaceChildren(pl.root,el('p',{class:'cap'},'The clip is paused before the snap. Step through it or scrub if you want a closer look.'));
+    const others=Object.keys(FAM).filter(k=>k!==c.fam).sort(()=>Math.random()-.5).slice(0,3);
+    const keys=[c.fam,...others].sort((a,b)=>Object.keys(FAM).indexOf(a)-Object.keys(FAM).indexOf(b));
+    const box=el('div',{class:'opts'});
+    keys.forEach((k,n)=>box.append(el('button',{class:'opt',onclick:e=>{
+      const g=k===c.fam?1:FAM[k].shell===f.shell?.5:0;earned+=g;record('rec',g,'Call the coverage: '+f.name);
+      [...box.children].forEach((b,j)=>{b.disabled=true;if(keys[j]===c.fam)b.classList.add('best');});
+      e.currentTarget.classList.add('picked','g'+(g===1?1:g?5:0));
+      sheet.append(el('div',{class:'fb g'+(g===1?1:g?5:0),role:'status'},[el('b',{},g===1?'That was the call.':g?'Right shell, different coverage.':'Not this one.'),
+        `The defense called ${c.def}. ${f.what}`]),el('p',{},f.watch),
+        el('div',{class:'row'},[el('button',{class:'btn',onclick:()=>{i++;i<list.length?show():done();}},i+1<list.length?'Next clip':'Finish'),el('button',{class:'btn ghost',onclick:pl.restart},'Watch again')]));
+      pl.restart();
+    }},[el('span',{class:'let'},'ABCD'[n]),el('span',{},FAM[k].name)])));
+    sheet.replaceChildren(el('div',{class:'meta'},[el('span',{},[el('b',{},'Predict'),'Recognition']),el('span',{class:'pill'},`${i+1} of ${list.length}`)]),
+      el('p',{class:'q'},'What coverage is the defense about to play?'),box);
+  }
+  function done(){left.replaceChildren();
+    sheet.replaceChildren(el('div',{class:'meta'},[el('span',{},[el('b',{},'Round finished')]),el('span',{class:'pill'},`${fmt(earned)} of ${list.length}`)]),
+      el('h2',{},`You got ${fmt(earned)} of ${list.length}`),el('p',{},'Naming the exact coverage before the snap is hard, and defenses disguise. Getting the shell right, one deep or two, is the read that matters most.'),
+      el('div',{class:'row'},[el('button',{class:'btn',onclick:coverageRound},'Run another round'),el('button',{class:'btn ghost',onclick:()=>go('film-room')},'Open the film room')]));}
+  show();window.scrollTo(0,0);
+}
+
+function film(){
+  hero('Your captures','Film room','Every play you recorded, with slow motion and frame-by-frame stepping. The annotated frames are here too.');
+  let side='All';
+  const grid=el('div',{class:'grid'}),chips=el('div',{class:'chips'});
+  function paint(){
+    chips.replaceChildren(...['All','Offense','Defense','Annotated frames'].map(k=>el('button',{class:'chip','aria-pressed':side===k,onclick:()=>{if(k==='Annotated frames')return freeze();side=k;paint();}},k==='Offense'?'You on offense':k==='Defense'?'You on defense':k)));
+    grid.replaceChildren(...CLIPS.filter(c=>side==='All'||c.side===side).map(c=>el('button',{class:'card lcard',onclick:()=>openClip(c)},[
+      el('div',{class:'thumb',style:`background-image:url(clips/${c.id}.jpg);background-size:cover;background-position:center`},el('span',{class:'badge','aria-hidden':'true'},'▶')),
+      el('h3',{},clipTitle(c)),el('div',{class:'facts'},[el('span',{},c.side==='Offense'?'You on offense':'You on defense'),el('span',{},c.type==='run'?'Run':'Pass')])])));
+  }
+  paint();
+  app.replaceChildren(el('div',{class:'sec onhero'},[el('h2',{},'Clips'),el('span',{},CLIPS.length+' plays')]),chips,grid);
+}
+function openClip(c){
+  const f=FAM[c.fam],pl=Player(c);
+  hero(c.side==='Offense'?'You on offense':'You on defense',clipTitle(c),null,['All clips',film]);
+  const sheet=el('div',{class:'sheet'},[el('div',{class:'meta'},[el('span',{},[el('b',{},'Play card')]),el('span',{class:'pill'},c.type==='run'?'Run':'Pass')]),
+    el('dl',{},[el('dt',{},el('span',{class:'kind frame'},'Offense')),el('dd',{},c.off+(c.sure?'':'. This name is my best read of your play-call screen, not confirmed.')),
+      el('dt',{},el('span',{class:'kind frame'},'Defense')),el('dd',{},c.def+', from the play-call screen.'),
+      el('dt',{},el('span',{class:'kind'},'Football principle')),el('dd',{},f.what),
+      el('dt',{},el('span',{class:'kind'},'What to watch')),el('dd',{},c.type==='run'?'Watch the offensive line\'s first steps, then which defender ends up unblocked at the point of attack.':f.watch)]),
+    el('p',{class:'fine'},'Use Pre-snap and Snap to jump, then step a frame at a time through the first second of the play.')]);
+  app.replaceChildren(el('div',{class:'work'},[pl.root,sheet]));window.scrollTo(0,0);
+}
+function freeze(f){
+  f=f||'a1';const F=FR[f];
+  hero('Annotated frames',F.title,'Turn overlays on and off, or tap any player for his card.',['All clips',film]);
+  const st=Stage(f),sheet=el('div',{class:'sheet'});
+  const on={off:false,def:false};Object.keys(F.L).forEach(k=>on[k]=false);let sel=null;
+  const names=Object.assign({off:'Offense labels',def:'Defense labels'},Object.fromEntries(Object.entries(F.L).map(([k,v])=>[k,v.name])));
+  const chips=el('div',{class:'chips'}),pick=el('div',{class:'chips'},Object.keys(FR).map(k=>el('button',{class:'chip','aria-pressed':k===f,onclick:()=>freeze(k)},FR[k].title.replace(/, before the snap$/,', pre-snap').replace(/, (a second|two seconds|one second).*$/,', post-snap'))));
+  function redraw(){
+    st.draw({layers:Object.keys(F.L).filter(k=>on[k]),labels:[].concat(on.off?ids(f,'o'):[],on.def?ids(f,'d'):[],sel?[sel]:[]),hi:sel?[sel]:[],onTap:id=>{sel=id;redraw();}});
+    chips.replaceChildren(...Object.keys(names).map(k=>el('button',{class:'chip','aria-pressed':on[k],onclick:()=>{on[k]=!on[k];redraw();}},names[k])));
+    if(sel){const p=pOf(f,sel),r=ROLE[p.kind];
+      sheet.replaceChildren(el('div',{class:'meta'},[el('span',{},[el('b',{},'Player card')]),el('span',{class:'pill'},p.s==='o'?'Offense':'Defense')]),el('h2',{},p.tag),
+        el('dl',{},[el('dt',{},el('span',{class:'kind frame'},'In this frame')),el('dd',{},p.here),
+          el('dt',{},el('span',{class:'kind'},'Football principle')),el('dd',{},r[0]),
+          el('dt',{},el('span',{class:'kind'},'What he reads')),el('dd',{},r[1])]),
+        el('p',{class:'fine'},'A position\'s job depends on the play call. This card describes alignment and typical role.'));
+    }else sheet.replaceChildren(el('h2',{},'Freeze frame'),el('p',{},'Tap any player in the frame to see where he is lined up, his typical role, and what he reads.'),
+        el('div',{class:'row'},el('button',{class:'btn',onclick:()=>openClip(CLIPS.find(c=>c.id===F.clip))},'Watch this play')));
+  }
+  redraw();
+  app.replaceChildren(el('div',{class:'sec onhero'},[el('h2',{},'Frames and overlays')]),pick,chips,el('div',{class:'work'},[st.root,sheet]));window.scrollTo(0,0);
+}
+
+function progress(){
+  hero('Skill profile','Progress','Scores track the quality of your reads and decisions. Saved in this browser only.');
+  const a=el('div',{class:'sheet'},[el('h2',{},'Skill profile')]);
+  Object.keys(DIM).forEach(d=>{const [c,n]=S.dims[d],pc=n?Math.round(c/n*100):0;
+    a.append(el('h3',{},DIM[d]),el('div',{class:'bar'},el('i',{style:`width:${pc}%`})),el('p',{class:'fine',style:'margin-top:0 !important'},n?`${pc}% across ${n} reads`:'No reads yet'));});
+  const doneN=LESSONS.filter(L=>S.done[L.id]).length,nx=LESSONS.find(L=>!S.done[L.id]);
+  a.append(el('p',{style:'margin-top:16px'},`${doneN} of ${LESSONS.length} lessons completed.`),
+    el('div',{class:'row'},[el('button',{class:'btn',onclick:()=>nx?openLesson(nx):go('practice')},nx?'Next up: '+nx.title:'Run a practice round'),
+      el('button',{class:'btn ghost',onclick:()=>{S={dims:{rec:[0,0],asg:[0,0],dec:[0,0]},done:{},miss:{}};save();progress();}},'Reset progress')]));
+  const b=el('div',{class:'sheet'},[el('h2',{},'What is beating me')]);
+  const miss=Object.entries(S.miss).sort((x,y)=>y[1]-x[1]).slice(0,8);
+  if(miss.length){const t=el('table');miss.forEach(m=>t.append(el('tr',{},[el('td',{},m[0]),el('td',{class:'n'},m[1]+(m[1]>1?' misses':' miss'))])));b.append(t);}
+  else b.append(el('p',{},'Nothing missed yet. Run a lesson or a practice round and the reads you get wrong will be listed here.'));
+  app.replaceChildren(el('div',{class:'cols'},[a,b]));
+}
+
+function captures(){
+  hero('Library','Captures','Every lesson and drill is built on your own practice-mode footage. This is what is in the library and what would help next.');
+  const t=el('table');
+  
+  const ann={};Object.values(FR).forEach(F=>ann[F.clip]=1);['p02','p05','p07'].forEach(k=>ann[k]=1);
+  CLIPS.forEach((c,n)=>t.append(el('tr',{},[el('th',{},'Clip '+(n+1)),el('td',{},`${clipTitle(c)}. ${c.side==='Offense'?'You on offense':'You on defense'}, ${c.type}.${c.sure?'':' Offense name unconfirmed.'}${ann[c.id]?' Used in the lessons.':''}`)])));
+  const shots=[['The same plays with a three-second hold in the normal gameplay view','Several clips were snapped straight from the wide play-art view, so the pre-snap picture from your playing angle is missing.'],
+   ['Your defense as you see it in a real game','The defense clips are filmed from behind the offense. If your games use a camera behind the defense, a few plays from that view would open defense-side lessons.'],
+   ['A Smash or Flood concept against Cover 2 and Cover 3','The two concepts from the list that are not in the library yet.'],
+   ['One play with a clear disguise','A defense that shows two deep and rotates to one, or the reverse, for a disguise lesson.'],
+   ['The play calls in a note','A line per clip with the exact offense and defense play names, so nothing is left as my best read.']];
+  const ol=el('ol',{class:'shots'});shots.forEach(s=>ol.append(el('li',{},[s[0],el('small',{},s[1])])));
+  app.replaceChildren(el('div',{class:'cols'},[
+    el('div',{class:'sheet'},[el('h2',{},`In the library: ${CLIPS.length} clips`),t]),
+    el('div',{class:'sheet'},[el('h2',{},'Capture next'),ol,el('p',{class:'fine'},'Recorded in practice mode at 1080p. Controller prompts and menu paths are left out of the app until they are checked in the game.')])]));
+}
+
+const RENDER={learn,practice,'film-room':film,progress,captures};
+function go(v){if(location.hash==='#'+v)route();else location.hash=v;}
+function route(){const v=RENDER[location.hash.slice(1)]?location.hash.slice(1):'learn';
+  document.getElementById('nav').replaceChildren(...Object.keys(VIEWS).map(k=>{const a=el('a',{href:'#'+k,html:`<svg viewBox="0 0 24 24" aria-hidden="true">${ICON[k]}</svg><span>${VIEWS[k]}</span>`});if(k===v)a.setAttribute('aria-current','page');return a;}));
+  RENDER[v]();window.scrollTo(0,0);}
+addEventListener('hashchange',route);route();
+</script>
+</body>
+</html>
