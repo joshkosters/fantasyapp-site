@@ -24,6 +24,7 @@ games=[
  ('crew-chief','NASCAR Crew Chief','sports','Sports · Coming 2027','Build a crew. Out-wrench your friends.','','background:var(--yellow)','live'),
  ('nascar','Fantasy NASCAR','sports','Sports · Weekly','Pick 3 drivers a week. A, B, C.','','background:var(--card);border:2px solid var(--ink)','live'),
  ('m3','Mystery game','mystery','Game 05','Something new.','','background:var(--dark2);color:var(--cream)','mystery'),
+ ('gridiron-iq','Gridiron IQ','learn','Learn · Football IQ','Read defenses with real game film.','wide','background:var(--ink);color:var(--cream)','live'),
  ('m4','Mystery game','mystery','Game 06 · Unlocks in 4 weeks','Something new.','wide','background:var(--orange)','mystery'),
 ]
 def gcard(g):
