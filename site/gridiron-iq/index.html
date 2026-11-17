@@ -157,6 +157,12 @@ svg.bz{width:100%;height:auto;display:block;font-family:"Plus Jakarta Sans",sans
 .bcap{margin:10px 0 4px !important;color:var(--ink) !important;font-size:14.5px;line-height:1.5}
 .bkey{margin:0 !important;font-size:12.5px;color:var(--mute) !important;line-height:1.45}
 .bbig{padding:18px}
+.ctx{margin:0 0 12px !important;background:var(--tint);border-radius:14px;padding:10px 14px;color:var(--ink2) !important;font-size:14px;line-height:1.5}
+.ctx b{color:var(--ink)}
+.ptr{fill:#f47a36;stroke:#fff;stroke-width:3;stroke-linejoin:round}
+.lfig .stage{border-radius:16px;box-shadow:none}
+.lfig .lab{font-size:clamp(7px,2.1cqw,12.5px)}
+button.link{background:none;border:0;padding:0;color:var(--accent);font-weight:700;font-size:inherit;text-decoration:underline}
 /* coverage guide */
 .guide-card{margin-top:4px}
 .gsec h4{margin:16px 0 6px;font-size:14px;font-weight:800;color:var(--ink)}
@@ -308,10 +314,22 @@ function BeaterViz(k){
   paint();
   return el('div',{class:'bviz'},[tabs,fig,cap,el('p',{class:'bkey'},'Orange: your routes. White: defenders and the areas they cover. Dotted lines: man coverage. Red: rushers. The circle is where the ball goes.')]);
 }
+/* ---------- what each coverage looks like, on your own frames ---------- */
+const LOOK={c1:[['b1',['one','down']],['b2',['man']]],c2:[['a1',['shell']],['a2',['tampa']]],c2m:[['m2',['travel','deep']]],c3:[['t1',['one','corners','down']],['t2',['deep']]],
+ c4:[['q1',['shell','corners']],['q2',['four','under']]],c0:[['z1',['lbs','shell']],['z2',['one']]],zb:[['y1',['line','shell']],['y2',['zone','deep']]]};
+function LookViz(k){
+  let i=0;const L=LOOK[k],tabs=el('div',{class:'chips btabs'}),fig=el('div',{class:'lfig'}),cap=el('p',{class:'bkey'});
+  function paint(){const [f,layers]=L[i],st=Stage(f);st.draw({layers});
+    tabs.replaceChildren(...L.map((x,n)=>el('button',{class:'chip','aria-pressed':n===i,onclick:()=>{i=n;paint();}},/before|after the shift/.test(FR[x[0]].title)?'Before the snap':'After the snap')));
+    fig.replaceChildren(st.root);
+    cap.replaceChildren('Your clip: '+FR[f].title+'. ',el('button',{class:'link',onclick:()=>freeze(f)},'Open full size'));}
+  paint();return el('div',{class:'bviz'},[L.length>1?tabs:null,fig,cap]);
+}
 function famGuide(k,full){const f=FAM[k];
   const list=(t,arr,cls)=>el('div',{class:'gsec '+(cls||'')},[el('h4',{},t),el('ul',{},arr.map(x=>el('li',{},x)))]);
   return el('div',{class:'guide-card'},[
     full&&el('p',{},f.what),
+    el('div',{class:'gsec'},[el('h4',{},'What it looks like')]),LookViz(k),
     list('How to spot it',f.spot),
     full&&el('p',{class:'gconf'},[el('b',{},'After the snap: '),f.confirm]),
     el('div',{class:'gsec'},[el('h4',{},'See the beaters')]),BeaterViz(k),
@@ -458,7 +476,7 @@ function Stage(f){
   function draw(o={}){
     svg.replaceChildren(defs);labs.replaceChildren();
     root.classList.toggle('tap',!!o.onTap);
-    const ring=new Set(o.rings||[]),hi=new Set(o.hi||[]),wrong=new Set(o.wrong||[]),lab=new Set(o.labels||[]);
+    const pt=new Set(o.point||[]);const ring=new Set(o.rings||[]),hi=new Set((o.hi||[]).concat(o.point||[])),wrong=new Set(o.wrong||[]),lab=new Set(o.labels||[]);
     (o.layers||[]).forEach(k=>{const L=F.L[k];if(!L)return;
       (L.rings||[]).forEach(id=>ring.add(id));
       (L.lines||[]).forEach(l=>svg.append(sv('line',{class:'guide',x1:l[0],y1:l[1],x2:l[2],y2:l[3]})));
@@ -470,6 +488,7 @@ function Stage(f){
     P.forEach(p=>{
       if(ring.has(p.id)||hi.has(p.id)||wrong.has(p.id))
         svg.append(sv('ellipse',{class:`ring ${p.s}${hi.has(p.id)?' hi':''}${wrong.has(p.id)?' wrong':''}`,cx:p.ft[0],cy:p.ft[1],rx:p.hit[2]*1.15,ry:p.hit[2]*.36}));
+      if(pt.has(p.id)){const x=p.hit[0],y=p.hit[1]-p.hit[3]-(lab.has(p.id)&&p.s==='d'?40:6);svg.append(sv('path',{class:'ptr',d:`M${x-17} ${y-28}h34l-17 28z`}));}
       if(lab.has(p.id)){const at=p.s==='o'?[p.ft[0],p.ft[1]+14]:[p.hit[0],p.hit[1]-p.hit[3]-4];note(at[0],at[1],p.tag,p.s);}
     });
     if(o.onTap) P.forEach((p,i)=>{
@@ -583,7 +602,7 @@ m2:{src:'frames/m2.jpg',title:'Shift and motion against man, after the shift',cl
  ['d3','d','DB','defender running across',625,348,24,34,628,386,'cb','On the move, going with the motion.'],
  ['sL','d','Safety','safety on the left',460,305,20,28,462,334,'s','Still deep on the left.'],
  ['sR','d','Safety','safety on the right',1050,300,20,30,1050,330,'s','Still deep on the right.']],
- L:{travel:{name:'Defenders who moved',rings:['d1','d2','d3'],notes:[[1028,262,'Came across with #42 and #80'],[625,250,'Running with the motion']]},deep:{name:'Safeties',rings:['sL','sR']}}},
+ L:{travel:{name:'Defenders who moved',rings:['d1','d2','d3'],notes:[[1150,300,'Came across with #42 and #80'],[560,262,'Running with the motion']]},deep:{name:'Safeties',rings:['sL','sR']}}},
 m3:{src:'frames/m3.jpg',title:'Shift and motion against zone, before the snap',clip:'p11',P:[
  ['w3','o','WR #3','receiver #3',225,535,36,70,225,602,'wr','The widest of three on the left.'],
  ['w80','o','#80','receiver #80',400,525,34,65,405,590,'te','Second from the outside on the left.'],
@@ -856,6 +875,32 @@ LESSONS.push(
 );
 
 
+const NAVY_D='The defense is in navy and the offense in white; the quarterback wears yellow.',WHITE_D='The defense is in white and the offense in navy; the quarterback wears yellow.';
+// [question starts with, setup shown in Practice, players to point at, overlays to show]
+const CTX={
+ count:[['One back, two receivers','Shotgun, one back beside the quarterback, a receiver wide on each side off screen, and the two marked players tight to the line on the right.',['te','wing']]],
+ offpos:[['Tap the',NAVY_D],['Which statement about the tight end','The tight end is marked: on the line, outside the right tackle.',['te']]],
+ front:[['How many defenders are down',WHITE_D],['Tap one of the two linebackers',WHITE_D],['Five on the line and two','The seven defenders near the line are marked. '+WHITE_D,['deL','dtL','dtR','deR','sam','lbL','lbR']]],
+ shell:[['Tap a deep safety',WHITE_D],['How many deep safeties, and is the middle of the field',WHITE_D],['How many deep safeties, and is the middle open',NAVY_D]],
+ verts:[['Two deep safeties against four','You called Four Verticals: four receivers run straight up the field, as drawn. The defense, in white, is in Cover 2.',null,['verts']],['What do you watch','You called Four Verticals against Cover 2: four deep routes against two deep safeties.',null,['verts']]],
+ cover1:[['Tap the only deep defender',NAVY_D],['How many receivers can go out','The offense is in white. One more receiver is off screen on each side.'],['Tap the defender lined up to cover','The defense, in navy, is in Cover 1: man coverage with one deep safety.'],
+   ['A corner gets beaten','The defense, in navy, is in Cover 1: man coverage with one deep safety. The two corners are marked.',['cbL','cbR']],['You are the defensive tackle','The defense is in Cover 1, with man coverage behind you. Your player is marked.',['dt1']]],
+ zone:[['How many defenders are on the line',NAVY_D],['A safety has walked down',NAVY_D],['Which gaps',NAVY_D+' Gaps are lettered from the center outward: A, B, C.'],['You are the tackle in the left B gap','The offense is running inside zone. Your player is marked.',['dt1']]],
+ blitz:[['How many defenders are on the line',WHITE_D],['Your five linemen','The defense, in white, is sending both marked linebackers along with the five on the line.',['lbL','lbR']],['Against a blitz with man','A second and a half after the snap: six rushers, one safety deep, and man coverage on every receiver.',['fs']]],
+ c3:[['Tap the only deep safety',NAVY_D],['Cover 3 has three deep','The defense is in navy. The free safety, marked, is one of the three.',['fs']],['Four vertical routes against three','The defense, in navy, is in Cover 3: the free safety and both corners play deep. The offense sends four receivers straight up the field.'],
+   ['Switch sides for a moment','Two seconds after the snap against Cover 3. The free safety and the two receivers running up the seams beside him are marked.',['fs','seamL','seamR']],['Back on defense','Two seconds after the snap in Cover 3. The free safety, marked, has a seam route on each side of him.',['fs','seamL','seamR']]],
+ option:[['The run is going right','A read option: the line leaves one defender unblocked on purpose and the quarterback reads him. The back runs to the right, as drawn. '+WHITE_D,null,['run']],
+   ['At the snap he crashes','A read option to the right. The marked defensive end is left unblocked on purpose. He is the player you read.',['de1'],['run']],['This time he stays put','A read option to the right. The marked defensive end is left unblocked on purpose. He is the player you read.',['de1'],['run']]],
+ counter:[['Linemen pulling to the left','One second after the snap. The two marked offensive linemen have left their spots and are running to the left behind the line.',['pull1','pull2']],
+   ['You are a linebacker','One second after the snap. The marked running back stepped right; the two marked linemen are pulling left.',['pull1','pull2','rb']],['You are the tackle on the left','The offense runs Counter: a fake one way, then back to your side behind pulling linemen. Your player is marked.',['dt1']]],
+ quarters:[['Where is the running back','The offense is in white. The running back wears #23.'],['Tap one of the two safeties',NAVY_D],['Cover 2 and Cover 4 both start','The defense is in navy. Its two deep safeties are marked.',['sL','sR']],
+   ['Four deep and four rushing','Two seconds after the snap in Cover 4. The four deep defenders are marked.',['d1','s2L','s2R','d4']],['The backfield is empty','You are on defense, in navy. The quarterback is marked, and nobody is lined up beside him.',['qb']]],
+ zoneblitz:[['How many defenders are on the line',NAVY_D],['Your assignment is a zone','After the snap on a zone blitz. You control the marked linebacker; the yellow circle on the field is your zone.',['user']],
+   ['Switch sides. As the quarterback','A zone blitz: five defenders rush, the two marked safeties stay deep, and the rest drop to short zones.',['s2L','s2R']]],
+ disguise:[['Tap the deepest defender',NAVY_D],['A third defender is running','Two seconds after the snap. Two defenders are deep over the halves of the field and a third is between them; all three are marked.',['h1','h2','mid']],
+   ['Why go to the trouble','Before the snap this defense showed one deep safety. Two seconds later it has the three marked defenders deep.',['h1','h2','mid']]]
+};
+LESSONS.forEach(L=>L.steps.forEach(st=>{if(!st.q)return;const c=(CTX[L.id]||[]).find(x=>st.q.startsWith(x[0]));st.from=L.title;if(c){st.ctx=c[1];st.focus=c[2];st.fl=c[3];}}));
 const LFAM={shell:['c2','c1'],verts:['c2'],cover1:['c1'],motion:['c2m','c4'],blitz:['c0'],c3:['c3'],quarters:['c4'],zoneblitz:['zb'],disguise:['c2']};
 LESSONS.forEach(L=>(LFAM[L.id]||[]).forEach(k=>L.steps.splice(L.steps.length-1,0,{k:'beat',ph:'Attack it',fam:k})));
 
@@ -877,6 +922,7 @@ function runSteps(steps,onDone,defF){
   function next(){i++;i<steps.length?show():onDone({earned,graded,sheet,left});}
   function head(s){return el('div',{class:'meta'},[el('span',{},[el('b',{},s.ph||'Drill'),s.dim?DIM[s.dim]:'']),el('span',{class:'pill'},`${i+1} of ${steps.length}`)]);}
   function nextBtn(){const b=el('button',{class:'btn',onclick:next},i+1<steps.length?'Next':'Finish');setTimeout(()=>b.focus({preventScroll:true}),0);return b;}
+  function setup(s){return s.drill&&(s.ctx||s.from)?el('p',{class:'ctx'},[s.from?el('b',{},'From “'+s.from+'”. '):null,s.ctx||'']):null;}
   function fb(g,title,why){return el('div',{class:'fb g'+(g===1?1:g?5:0),role:'status'},[el('b',{},title),why]);}
   function show(){const s=steps[i];sheet.replaceChildren(head(s));
     if(s.k==='info'){frame(s.f).draw(s.show||{});
@@ -888,17 +934,17 @@ function runSteps(steps,onDone,defF){
       left.replaceChildren(el('div',{class:'sheet bbig'},BeaterViz(s.fam)));
       const li=(t,arr,c)=>el('div',{class:'gsec '+c},[el('h4',{},t),el('ul',{},arr.map(x=>el('li',{},x)))]);
       sheet.append(el('h2',{},'How to beat '+f.name),el('p',{},f.what),li('Do',f.dos,'good'),li('Don\'t',f.donts,'bad'),el('div',{style:'height:16px'}),nextBtn());}
-    if(s.k==='choice'){const stg=frame(s.f);stg.draw(s.before||{});
+    if(s.k==='choice'){const stg=frame(s.f);const pre=Object.assign({},s.before||{});if(s.focus){pre.point=s.focus;pre.labels=(pre.labels||[]).concat(s.focus);}if(s.fl)pre.layers=(pre.layers||[]).concat(s.fl);stg.draw(pre);
       const box=el('div',{class:'opts'});
       s.opts.forEach((o,n)=>box.append(el('button',{class:'opt',onclick:e=>{
         [...box.children].forEach((b,j)=>{b.disabled=true;if(s.opts[j][1]===1)b.classList.add('best');});
         e.currentTarget.classList.add('picked','g'+(o[1]===1?1:o[1]?5:0));
-        earned+=o[1];graded++;record(s.dim,o[1],s.q);stg.draw(s.after||{});
+        earned+=o[1];graded++;record(s.dim,o[1],s.q);const post=Object.assign({},s.after||{});if(s.focus)post.point=s.focus;stg.draw(post);
         sheet.append(fb(o[1],o[1]===1?'Sound.':o[1]?'Acceptable, with a catch.':'Not this one.',o[2]),nextBtn());
       }},[el('span',{class:'let'},'ABCD'[n]),el('span',{},o[0])])));
-      sheet.append(el('p',{class:'q'},s.q),box);}
+      sheet.append(setup(s),el('p',{class:'q'},s.q),box);}
     if(s.k==='tap'){const f=s.f||defF,stg=frame(f);
-      sheet.append(el('p',{class:'q'},s.q),el('p',{class:'tapcue'},'Tap a player in the frame.'));
+      sheet.append(setup(s),el('p',{class:'q'},s.q),el('p',{class:'tapcue'},'Tap a player in the frame.'));
       stg.draw({onTap:id=>{const ok=s.ok.includes(id);earned+=ok?1:0;graded++;record(s.dim,ok?1:0,s.q);
         const a=Object.assign({},s.after||{});a.hi=(a.hi||[]).concat(s.ok);
         if(!ok){a.wrong=[id];a.labels=(a.labels||[]).concat(id);}
@@ -967,8 +1013,8 @@ function openLesson(L){
 }
 
 function drillPool(){
-  const taps=['a1','b1','c1'].flatMap(f=>FR[f].P.map(a=>pOf(f,a[0])).map(p=>({k:'tap',f,dim:'rec',q:`Tap the ${p.name}.`,ok:[p.id],yes:p.here,no:`The ${p.name} is marked now. ${p.here}`,after:{labels:[p.id]}})));
-  const qs=LESSONS.flatMap(L=>L.steps.filter(s=>(s.k==='tap'||s.k==='choice')&&!s.nd&&!/^(A different|Two players|Two seconds|One second|One more|So what|Every defense|A fifth|With the middle|Who is responsible|The defender on)/.test(s.q)).map(s=>Object.assign({f:L.f},s,{ph:'Drill'})));
+  const taps=['a1','b1','c1'].flatMap(f=>FR[f].P.map(a=>pOf(f,a[0])).map(p=>({k:'tap',f,dim:'rec',drill:1,ctx:f==='a1'?WHITE_D:NAVY_D,q:`Tap the ${p.name}.`,ok:[p.id],yes:p.here,no:`The ${p.name} is marked now. ${p.here}`,after:{labels:[p.id]}})));
+  const qs=LESSONS.flatMap(L=>L.steps.filter(s=>(s.k==='tap'||s.k==='choice')&&!s.nd&&!/^(A different|Two players|Two seconds|One second|One more|So what|Every defense|A fifth|With the middle|Who is responsible|The defender on)/.test(s.q)).map(s=>Object.assign({f:L.f},s,{ph:'Drill',drill:1})));
   return taps.concat(qs);
 }
 function practice(){
