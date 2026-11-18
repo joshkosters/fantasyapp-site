@@ -1,0 +1,56 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Visitors can add one signup; nobody can read, change or delete from the web.
+    match /signups/{id} {
+      allow create: if request.resource.data.keys().hasOnly(['email','createdAt','interest'])
+        && request.resource.data.email is string
+        && request.resource.data.email.size() < 200
+        && request.resource.data.email.matches('^[^@ ]+@[^@ ]+\\.[^@ ]+$')
+        && (!('interest' in request.resource.data)
+            || (request.resource.data.interest is string && request.resource.data.interest.size() < 40));
+      allow read, update, delete: if false;
+    }
+
+    // ----- CFB 27 MAC Dynasty hub (fantasyapp.io/dynasty) -----
+    function signedIn() { return request.auth != null; }
+    function commish() {
+      return signedIn() && request.auth.token.email_verified == true
+        && request.auth.token.email.lower() == 'joshkosters@gmail.com';
+    }
+
+    // League data (draft, season, scores, stats): anyone can read, only the commissioner writes.
+    match /dynasty/{doc} {
+      allow read: if true;
+      allow write: if commish();
+    }
+
+    // Each signed-in coach says which coach they are. Only they (or the commissioner) can change it.
+    match /dynasty_members/{uid} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['coach', 'name', 'email'])
+        && request.resource.data.coach is string && request.resource.data.coach.size() < 30;
+      allow write: if commish();
+    }
+
+    // Each coach's own "I played my game this week" check.
+    match /dynasty_ready/{uid} {
+      allow read: if true;
+      allow write: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['coach', 'week', 'done']);
+    }
+
+    // League chat: signed-in people read and post as themselves; authors and the commissioner can delete.
+    match /dynasty_chat/{id} {
+      allow read: if signedIn();
+      allow create: if signedIn()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.text is string
+        && request.resource.data.text.size() > 0 && request.resource.data.text.size() <= 600
+        && request.resource.data.ts == request.time
+        && (request.resource.data.get('sys', false) == false || commish());
+      allow delete: if signedIn() && (resource.data.uid == request.auth.uid || commish());
+    }
+  }
+}
