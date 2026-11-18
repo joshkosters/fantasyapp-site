@@ -3,357 +3,384 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0A1230">
+<meta name="theme-color" content="#0B1230">
 <title>College Football 27 · MAC Dynasty</title>
 <link rel="icon" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Graduate&family=Outfit:wght@400;500;600;700;800;900&family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Graduate&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --y:#FFE14F; --y2:#FFF0A3; --yd:#C9A800;
-  --navy:#192853; --ice:#ECF4F7;
-  --bg:#08102B; --bg2:#0C163A; --card:#111C45; --card2:#18265A; --card3:#21326D;
-  --line:rgba(236,244,247,.08); --line2:rgba(236,244,247,.14);
-  --text:#ECF4F7; --mute:#9DB0CC; --dim:#62759C;
-  --sky:#3B8BFF; --mint:#5BE3A6; --coral:#FF6F6F; --lav:#A9A2F5;
-  --tc:#FFE14F; --tc2:#192853;
-  --r:28px; --r2:20px;
+  --y:#FFE14F; --yd:#E9C62E; --navy:#192853; --ice:#ECF4F7;
+  --bg:#0A1029; --rail:#070C20; --side:#0E1533; --panel:#131C40; --panel2:#1A2550; --panel3:#233168;
+  --line:rgba(236,244,247,.07); --line2:rgba(236,244,247,.13);
+  --text:#ECF4F7; --mute:#97A6C4; --dim:#5E6D92;
+  --win:#36C77E; --loss:#EF5350; --draw:#8892AE;
+  --r:16px; --r2:12px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{background:var(--bg);color:var(--text);font-family:Outfit,system-ui,sans-serif;font-size:15px;-webkit-font-smoothing:antialiased}
-body{min-height:100vh;padding-bottom:calc(30px + env(safe-area-inset-bottom));position:relative;overflow-x:hidden}
-body::before{content:"";position:fixed;inset:0;z-index:-2;
-  background:
-   radial-gradient(900px 520px at 80% -8%, rgba(25,40,83,1), transparent 70%),
-   radial-gradient(700px 500px at 105% 105%, rgba(255,225,79,.10), transparent 70%),
-   radial-gradient(600px 420px at -10% 40%, color-mix(in srgb,var(--tc) 10%,transparent), transparent 70%),
-   var(--bg)}
-body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.07;mix-blend-mode:overlay;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+[hidden]{display:none!important}
+html,body{background:#05081a;color:var(--text);font-family:Poppins,system-ui,sans-serif;font-size:14px;-webkit-font-smoothing:antialiased}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
-a{color:inherit}
+a{color:inherit;text-decoration:none}
 svg{display:block}
-.lbl{font:600 11.5px/1 Outfit;letter-spacing:.13em;text-transform:uppercase;color:var(--mute)}
-.cond{font-family:"Barlow Condensed",sans-serif;font-weight:800;text-transform:uppercase;letter-spacing:.01em}
+img{display:block}
+.mute{color:var(--mute)} .dim{color:var(--dim)} .y{color:var(--y)} .win{color:var(--win)} .loss{color:var(--loss)}
 
-/* ---------- HEADER ---------- */
-header{position:sticky;top:0;z-index:30;padding:env(safe-area-inset-top) 0 0;background:linear-gradient(180deg,rgba(8,16,43,.96),rgba(8,16,43,.82));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-.hwrap{max-width:1200px;margin:0 auto;padding:14px 20px 12px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
-.brand{display:flex;flex-direction:column;gap:4px;white-space:nowrap}
-.wm{font:400 24px/1 Graduate,serif;color:var(--ice);-webkit-text-stroke:1.2px var(--ice);paint-order:stroke fill;letter-spacing:.5px}
-.wm b{color:var(--y);-webkit-text-stroke-color:var(--y);font-weight:400}
-.sub{display:flex;gap:8px;align-items:center}
-.sub .cond{color:var(--y);font-size:14px;letter-spacing:.12em}
-.sub .lbl{font-size:10.5px}
-.me{margin-left:auto;display:flex;align-items:center;gap:8px}
-.mepill{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line2);border-radius:999px;padding:5px 12px 5px 6px}
-.mepill img,.mepill .badge{width:26px;height:26px}
-.mepill select{background:none;border:0;color:var(--text);font:700 14px Outfit;appearance:none;-webkit-appearance:none;padding-right:14px;cursor:pointer;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M1 1l4 4 4-4' stroke='%239DB0CC' stroke-width='1.6' fill='none'/></svg>");background-repeat:no-repeat;background-position:right center}
-.mepill select option{background:#111C45}
-nav{max-width:1200px;margin:0 auto;padding:0 20px 12px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
-nav::-webkit-scrollbar{display:none}
-nav a{display:flex;align-items:center;gap:7px;text-decoration:none;padding:9px 15px;border-radius:999px;font:600 14px Outfit;color:var(--mute);white-space:nowrap;background:rgba(236,244,247,.04);border:1px solid transparent}
-nav a svg{width:16px;height:16px;opacity:.85}
-nav a:hover{color:var(--text);background:rgba(236,244,247,.08)}
-nav a.on{background:var(--y);color:var(--navy);font-weight:700}
-nav a .dot{width:7px;height:7px;border-radius:50%;background:var(--coral)}
+/* ---------- SHELL ---------- */
+.mc.cp .tm span{font-size:11.5px}.mc.cp .sc{font-size:19px;min-width:54px}
+.app{display:grid;grid-template-columns:72px 230px minmax(0,1fr);min-height:100vh;background:linear-gradient(90deg,var(--rail) 72px,var(--side) 72px 302px,var(--bg) 302px)}
+.rail{background:var(--rail);display:flex;flex-direction:column;align-items:center;gap:12px;padding:20px 0;position:sticky;top:0;height:100vh;border-right:1px solid var(--line)}
+.rail .rb{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--panel);border:2px solid transparent;transition:.15s;position:relative}
+.rail .rb img{width:30px;height:30px;object-fit:contain}
+.rail .rb:hover{background:var(--panel2)}
+.rail .rb.on{border-color:var(--y);background:var(--panel2)}
+.rail .rb.conf{background:#fff;border-radius:50%}
+.rail .rb.conf img{width:32px;height:32px}
+.rail .rb .badge{width:30px;height:30px;font-size:8px}
+.rail .rb.add{color:var(--mute);font-size:22px;font-weight:400}
+.rail .sep{width:28px;height:1px;background:var(--line2);margin:2px 0}
+.rail .rb[data-tip]:hover::after{content:attr(data-tip);position:absolute;left:54px;top:50%;transform:translateY(-50%);background:var(--panel3);padding:5px 9px;border-radius:8px;font-size:12px;font-weight:600;white-space:nowrap;z-index:5}
+.side{background:var(--side);padding:26px 18px 20px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;border-right:1px solid var(--line)}
+.brand .wm{font:400 19px/1.05 Graduate,serif;color:var(--ice);-webkit-text-stroke:.9px var(--ice);paint-order:stroke fill;letter-spacing:.3px}
+.brand .wm b{font-weight:400;color:var(--y);-webkit-text-stroke-color:var(--y)}
+.brand small{display:block;color:var(--mute);font-size:12px;margin-top:6px;font-weight:500}
+.snav{margin-top:34px;display:flex;flex-direction:column;gap:3px;margin-left:-18px;margin-right:-18px}
+.snav a{display:flex;align-items:center;gap:14px;padding:11px 22px;font-weight:500;color:var(--mute);position:relative;transition:.12s}
+.snav a svg{width:19px;height:19px}
+.snav a:hover{color:var(--text);background:rgba(236,244,247,.03)}
+.snav a.on{color:var(--text);background:linear-gradient(90deg,rgba(255,225,79,.13),rgba(255,225,79,.02));font-weight:600}
+.snav a.on svg{color:var(--y)}
+.snav a.on::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:3px;border-radius:0 3px 3px 0;background:var(--y)}
+.snav .cnt{margin-left:auto;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--y);color:var(--navy);font-size:11px;font-weight:700;display:grid;place-items:center}
+.promo{margin-top:auto;border-radius:14px;padding:16px;background:radial-gradient(160px 120px at 100% 0%,rgba(255,225,79,.35),transparent 70%),linear-gradient(160deg,#2a3a7a,#1a2550);border:1px solid rgba(255,225,79,.2)}
+.promo b{display:block;font-weight:600;font-size:13.5px;line-height:1.35}
+.promo p{color:var(--mute);font-size:12px;margin-top:4px;line-height:1.4}
+.promo .pbtn{margin-top:12px;display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600}
+.promo .pbtn i{width:20px;height:20px;border-radius:50%;background:var(--y);color:var(--navy);display:grid;place-items:center;font-style:normal;font-size:11px}
+.mainwrap{min-width:0;display:flex;flex-direction:column}
+.top{display:flex;align-items:center;gap:16px;padding:26px 30px 6px}
+.top h1{font-size:22px;font-weight:700;letter-spacing:-.01em}
+.top .sub{color:var(--mute);font-size:12.5px;margin-top:2px}
+.top .right{margin-left:auto;display:flex;align-items:center;gap:16px}
+.uchip{display:flex;align-items:center;gap:10px;padding:4px 4px 4px 4px;border-radius:12px}
+.uchip .av{width:38px;height:38px;border-radius:50%;background:var(--panel2);display:grid;place-items:center;overflow:hidden;border:2px solid var(--panel3)}
+.uchip .av img{width:28px;height:28px;object-fit:contain}
+.uchip b{display:block;font-weight:600;font-size:13.5px}
+.uchip small{display:block;color:var(--mute);font-size:11.5px}
+.uchip select{background:var(--panel);color:var(--text);border:1px solid var(--line2);border-radius:8px;font:600 12px Poppins;padding:3px 6px;margin-top:2px}
+.bell{position:relative;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;color:var(--mute)}
+.bell:hover{color:var(--text);background:var(--panel)}
+.bell svg{width:20px;height:20px}
+.bell .dot{position:absolute;top:8px;right:9px;width:8px;height:8px;border-radius:50%;background:var(--loss);box-shadow:0 0 0 2px var(--bg)}
+.burger{display:none;width:40px;height:40px;border-radius:10px;place-items:center;background:var(--panel)}
+.burger svg{width:20px;height:20px}
+main{padding:18px 30px 40px;min-width:0}
+.banner{margin:12px 30px 0;border-radius:12px;background:rgba(255,225,79,.08);border:1px solid rgba(255,225,79,.3);color:var(--y);font-size:12.5px;font-weight:500;padding:9px 12px 9px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.banner button{font-size:12px;font-weight:600;border:1px solid var(--y);border-radius:8px;padding:4px 10px}
+.bottomnav{display:none}
 
-main{max-width:1200px;margin:0 auto;padding:22px 20px 30px}
-.banner{max-width:1200px;margin:14px auto 0;padding:0 20px}
-.banner div{border-radius:16px;background:rgba(255,225,79,.1);border:1px solid rgba(255,225,79,.35);color:var(--y);font:600 13px Outfit;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px}
-.banner button{font:700 12px Outfit;border:1px solid var(--y);border-radius:999px;padding:5px 12px}
+/* ---------- GRID ---------- */
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:22px;align-items:start}
+.stack{display:grid;gap:20px;align-content:start;min-width:0}
+.two{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:16px}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.sh{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.sh h2,.sh h3{font-size:16px;font-weight:600}
+.sh a,.sh .va{font-size:12px;color:var(--text);display:flex;align-items:center;gap:4px;font-weight:500}
+.sh a svg{width:14px;height:14px}
+.ptitle{margin:2px 0 18px}
+.ptitle h2{font-size:24px;font-weight:700}
+.ptitle p{color:var(--mute);font-size:13px;margin-top:2px}
 
-/* ---------- LAYOUT ---------- */
-.grid{display:grid;gap:16px;align-content:start}
-.g2{grid-template-columns:1fr 1fr}
-.g3{grid-template-columns:repeat(3,1fr)}
-.gHome{grid-template-columns:1.55fr 1fr}
-.coaches{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
-@media(max-width:880px){.g2,.g3,.gHome{grid-template-columns:1fr}}
-.ptitle{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin:6px 0 18px;flex-wrap:wrap}
-.ptitle h2{font:900 44px/.92 "Barlow Condensed";text-transform:uppercase;letter-spacing:.005em}
-.ptitle h2 em{font-style:normal;color:var(--y)}
-.ptitle p{color:var(--mute);font-weight:500;max-width:420px}
-.sect{display:flex;align-items:center;justify-content:space-between;margin:26px 0 12px}
-.sect h3{font:800 22px "Barlow Condensed";text-transform:uppercase;letter-spacing:.02em}
-.sect a{font:600 13px Outfit;color:var(--y);text-decoration:none}
+/* ---------- PANELS ---------- */
+.panel{background:var(--panel);border-radius:var(--r);border:1px solid var(--line);padding:18px}
+.panel.flat{padding:0;overflow:hidden}
+.panel .ph{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 18px 12px}
+.panel .ph h3{font-size:15px;font-weight:600}
+.sub2{background:var(--panel2);border-radius:var(--r2);border:1px solid var(--line)}
+.empty{color:var(--mute);text-align:center;padding:26px 12px;line-height:1.5;font-size:13px}
+.empty b{display:block;color:var(--text);font-size:15px;font-weight:600;margin-bottom:4px}
 
-/* ---------- CARDS ---------- */
-.card{position:relative;border-radius:var(--r);background:linear-gradient(180deg,rgba(236,244,247,.055),rgba(236,244,247,.015)) ,var(--card);border:1px solid var(--line);overflow:hidden;padding:22px}
-.card.flat{padding:0}
-.card .ch{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}
-.card .ch h3{font:800 20px "Barlow Condensed";text-transform:uppercase;letter-spacing:.02em}
-.glowY{background:radial-gradient(420px 220px at 55% 70%,rgba(255,225,79,.42),transparent 70%),linear-gradient(160deg,#3a3510,#1c1a0b 70%);border-color:rgba(255,225,79,.18)}
-.glowB{background:linear-gradient(180deg,#1C4FAE,#0F2F78 60%,#0B2461);border-color:rgba(59,139,255,.35)}
-.glowT{background:radial-gradient(380px 240px at 85% 0%,color-mix(in srgb,var(--gt) 55%,transparent),transparent 70%),linear-gradient(180deg,rgba(236,244,247,.05),rgba(236,244,247,.01)),var(--card)}
-.glowL{background:linear-gradient(180deg,#1b1f45,#3b335f);border-color:rgba(169,162,245,.25)}
-.big{font:800 64px/.9 Outfit;letter-spacing:-.035em}
-.big.xl{font-size:88px}
-.big.md{font-size:44px}
-.big.sm{font-size:32px;letter-spacing:-.02em}
-.y{color:var(--y)} .mint{color:var(--mint)} .coral{color:var(--coral)} .mute{color:var(--mute)}
-.empty{color:var(--mute);text-align:center;padding:26px 10px;font-weight:500;line-height:1.5}
-.empty b{display:block;color:var(--text);font:800 22px "Barlow Condensed";text-transform:uppercase;margin-bottom:4px}
-
-/* chips (transit) */
-.chips{display:flex;gap:8px;flex-wrap:wrap}
-.chips.scroll{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
-.chips.scroll::-webkit-scrollbar{display:none}
-.chip{display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border-radius:14px;background:rgba(236,244,247,.07);border:1px solid var(--line);font:700 14px Outfit;white-space:nowrap;color:var(--text)}
-.chip svg{width:16px;height:16px}
-.chip.on{background:var(--y);color:var(--navy);border-color:var(--y)}
-.chip.sm{padding:5px 10px;font-size:12px;border-radius:10px;gap:5px}
-.chip.sm svg{width:13px;height:13px}
-.chip.gold{background:rgba(255,225,79,.14);border-color:rgba(255,225,79,.35);color:var(--y)}
-.chip.ghost{background:transparent}
-.tag{display:inline-flex;align-items:center;gap:5px;font:800 11px Outfit;letter-spacing:.08em;text-transform:uppercase;padding:4px 8px;border-radius:8px;background:var(--mint);color:#06301e}
-.tag.y{background:var(--y);color:var(--navy)}
-.tag.dim{background:rgba(236,244,247,.1);color:var(--mute)}
-.tag.coral{background:var(--coral);color:#3a0b0b}
-
-/* logos / badges */
-.logo{width:40px;height:40px;object-fit:contain;flex:none}
-.logo.sm{width:28px;height:28px}.logo.lg{width:84px;height:84px}.logo.xl{width:150px;height:150px}
-.badge{--c1:#333;--c2:#999;width:40px;height:40px;flex:none;border-radius:50%;background:var(--c1);color:#fff;display:grid;place-items:center;font:800 11px Outfit;letter-spacing:-.02em;box-shadow:inset 0 0 0 3px var(--c2)}
-.badge.sm{width:28px;height:28px;font-size:8.5px;box-shadow:inset 0 0 0 2px var(--c2)}
-.badge.lg{width:84px;height:84px;font-size:22px;box-shadow:inset 0 0 0 5px var(--c2)}
-.badge.xl{width:150px;height:150px;font-size:38px;box-shadow:inset 0 0 0 8px var(--c2)}
-.who{display:inline-flex;align-items:center;gap:5px;font:700 11px Outfit;letter-spacing:.06em;text-transform:uppercase;color:var(--navy);background:var(--y);padding:3px 8px;border-radius:7px}
-
-/* buttons */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:700 15px Outfit;padding:13px 22px;border-radius:16px;background:var(--y);color:var(--navy);text-decoration:none;transition:transform .12s, filter .15s}
+/* ---------- HERO ---------- */
+.hero{position:relative;border-radius:var(--r);overflow:hidden;min-height:228px;padding:30px 30px 26px;display:flex;flex-direction:column;justify-content:center;
+  background:linear-gradient(110deg,#16224f 0%,#1d2c66 45%,#2b3f8f 100%);border:1px solid rgba(255,225,79,.12)}
+.hero::before{content:"";position:absolute;right:-60px;top:-40px;width:360px;height:360px;background:linear-gradient(135deg,rgba(255,225,79,.35),rgba(255,225,79,0) 60%);transform:rotate(20deg);border-radius:40px}
+.hero::after{content:"";position:absolute;right:120px;bottom:-120px;width:260px;height:260px;background:linear-gradient(135deg,rgba(236,244,247,.07),transparent 70%);transform:rotate(35deg);border-radius:30px}
+.hero .hc{position:relative;z-index:2;max-width:56%}
+.hero .kick{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;color:var(--y);background:rgba(255,225,79,.12);border-radius:20px;padding:4px 10px;margin-bottom:12px}
+.hero h2{font-size:28px;font-weight:700;line-height:1.15;letter-spacing:-.01em}
+.hero .meta{display:flex;flex-wrap:wrap;gap:4px 16px;margin-top:12px;color:rgba(236,244,247,.8);font-size:12.5px}
+.hero .meta span{display:flex;align-items:center;gap:7px}
+.hero .meta svg{width:15px;height:15px}
+.hero .cta{margin-top:18px}
+.hero .logos{position:absolute;right:34px;top:50%;transform:translateY(-50%);z-index:1;display:flex;align-items:center}
+.hero .logos img,.hero .logos .badge{width:132px;height:132px;filter:drop-shadow(0 18px 30px rgba(0,0,0,.5))}
+.hero .logos .l2{margin-left:-30px}
+.hero .dots{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:6px;z-index:3}
+.hero .dots button{width:7px;height:7px;border-radius:4px;background:rgba(236,244,247,.35);transition:.2s}
+.hero .dots button.on{width:20px;background:var(--y)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:600;font-size:13px;padding:10px 16px;border-radius:10px;background:var(--y);color:var(--navy);transition:filter .15s, transform .1s;white-space:nowrap}
 .btn:hover{filter:brightness(1.06)} .btn:active{transform:scale(.97)}
 .btn:disabled{opacity:.4;cursor:not-allowed}
-.btn.ghost{background:rgba(236,244,247,.08);color:var(--text);border:1px solid var(--line2)}
-.btn.sm{padding:9px 14px;font-size:13px;border-radius:12px}
-.btn svg{width:18px;height:18px}
-.iconbtn{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:rgba(236,244,247,.08)}
+.btn svg{width:16px;height:16px}
+.btn.ghost{background:var(--panel2);color:var(--text);border:1px solid var(--line2)}
+.btn.sm{padding:7px 12px;font-size:12px;border-radius:9px}
+.btn .arr{width:20px;height:20px;border-radius:50%;background:var(--navy);color:var(--y);display:grid;place-items:center;margin-right:-4px}
+.btn .arr svg{width:12px;height:12px}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:6px 12px;border-radius:20px;background:var(--y);color:var(--navy)}
+.pill.ghost{background:var(--panel2);color:var(--text);border:1px solid var(--line2)}
+select.pill{appearance:none;-webkit-appearance:none;border:0;padding-right:28px;font-family:Poppins;cursor:pointer;
+  background:var(--y) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M1 1l4 4 4-4' stroke='%23192853' stroke-width='1.8' fill='none'/></svg>") no-repeat right 11px center}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;padding:3px 7px;border-radius:6px;background:var(--panel3);color:var(--mute);letter-spacing:.02em}
+.tag.live{background:rgba(54,199,126,.15);color:var(--win)}
+.tag.live::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--win)}
+.tag.y{background:rgba(255,225,79,.14);color:var(--y)}
+.tag.final{background:rgba(236,244,247,.08);color:var(--mute)}
+.who{display:inline-flex;align-items:center;font-size:10.5px;font-weight:600;color:var(--navy);background:var(--y);padding:1px 7px;border-radius:5px;line-height:1.6}
+.who.alt{background:var(--panel3);color:var(--mute)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chips.scroll{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+.chips.scroll::-webkit-scrollbar{display:none}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:9px;background:var(--panel);border:1px solid var(--line2);font-size:12.5px;font-weight:500;color:var(--mute);white-space:nowrap}
+.chip img{width:18px;height:18px;object-fit:contain}
+.chip.on{background:var(--y);color:var(--navy);border-color:var(--y);font-weight:600}
+.chip svg{width:14px;height:14px}
 
-/* ---------- SEASON ARC (golden hour) ---------- */
-.arc{min-height:220px;display:flex;flex-direction:column;justify-content:space-between}
-.arc .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-.arc .top .t1{font:800 30px/1 Outfit;letter-spacing:-.02em}
-.arc .top .t1 small{display:block;font:600 12px Outfit;letter-spacing:.13em;color:rgba(236,244,247,.7);margin-top:8px;text-transform:uppercase}
-.arc .top .t2{font:900 30px/.9 "Barlow Condensed";text-transform:uppercase;color:rgba(255,225,79,.75);text-align:right}
-.arc svg{width:100%;height:96px;margin:6px 0 2px;overflow:visible}
-.arc .bot{display:flex;justify-content:space-between;align-items:center}
-.arc .bot b{font:800 18px Outfit;color:var(--y);text-transform:uppercase;letter-spacing:.02em}
-.arc .bot svg{width:30px;height:30px;margin:0}
+/* logos */
+.logo{width:36px;height:36px;object-fit:contain;flex:none}
+.logo.xs{width:20px;height:20px}.logo.sm{width:26px;height:26px}.logo.md{width:46px;height:46px}.logo.lg{width:64px;height:64px}.logo.xl{width:150px;height:150px}
+.badge{--c1:#333;--c2:#999;width:36px;height:36px;flex:none;border-radius:50%;background:var(--c1);color:#fff;display:grid;place-items:center;font-weight:700;font-size:10px;letter-spacing:-.02em;box-shadow:inset 0 0 0 3px var(--c2)}
+.badge.xs{width:20px;height:20px;font-size:6px;box-shadow:inset 0 0 0 1.5px var(--c2)}
+.badge.sm{width:26px;height:26px;font-size:7.5px;box-shadow:inset 0 0 0 2px var(--c2)}
+.badge.md{width:46px;height:46px;font-size:12px}
+.badge.lg{width:64px;height:64px;font-size:16px;box-shadow:inset 0 0 0 4px var(--c2)}
+.badge.xl{width:150px;height:150px;font-size:36px;box-shadow:inset 0 0 0 8px var(--c2)}
 
-/* ---------- BOARDING PASS MATCHUP (flight) ---------- */
-.pass{border-radius:var(--r);padding:22px 24px;position:relative;overflow:hidden;border:1px solid var(--line);
-  background:radial-gradient(260px 180px at 0% 50%,color-mix(in srgb,var(--a) 50%,transparent),transparent 75%),radial-gradient(260px 180px at 100% 50%,color-mix(in srgb,var(--h) 50%,transparent),transparent 75%),linear-gradient(180deg,#1a2251,#2c2a5c)}
-.pass.marquee{border-color:rgba(255,225,79,.4)}
-.pass .prow{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.pass .prow .lbl{color:rgba(236,244,247,.62)}
-.pass .pmid{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;margin:18px 0}
-.pass .pt{display:flex;align-items:center;gap:12px;min-width:0}
-.pass .pt.r{flex-direction:row-reverse;text-align:right}
-.pass .code{font:800 42px/.9 Outfit;letter-spacing:-.03em}
-.pass .score{font:800 52px/.9 Outfit;letter-spacing:-.04em}
-.pass .score.l{opacity:.45}
-.pass .nm{font:600 12px Outfit;letter-spacing:.1em;text-transform:uppercase;color:rgba(236,244,247,.62);margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pass .mid{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:110px}
-.pass .route{display:flex;align-items:center;gap:8px;width:100%}
-.pass .route i{flex:1;height:2px;background-image:radial-gradient(circle,rgba(236,244,247,.5) 1px,transparent 1.5px);background-size:7px 2px}
-.pass .route svg{width:28px;height:28px;color:var(--y)}
-.pass .mid .lbl{color:rgba(236,244,247,.7)}
-.pass.compact{padding:16px 18px}
-.pass.compact .pmid{margin:12px 0}
-.pass.compact .code{font-size:30px}
-.pass.compact .score{font-size:38px}
-.pass.compact .mid{min-width:70px}
-.pass.compact .logo{width:34px;height:34px}
-.pass.compact .badge{width:34px;height:34px}
-@media(max-width:560px){.pass .code{font-size:30px}.pass .score{font-size:40px}.pass .mid{min-width:64px}.pass .logo.lg,.pass .badge.lg{width:52px;height:52px}}
+/* ---------- MATCH CARDS ---------- */
+.mc{background:var(--panel2);border-radius:var(--r2);border:1px solid var(--line);padding:12px 14px;display:flex;flex-direction:column;gap:10px;transition:border-color .15s}
+.mc.marquee{border-color:rgba(255,225,79,.4);background:linear-gradient(180deg,rgba(255,225,79,.06),transparent 60%),var(--panel2)}
+.mc .mh{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--mute);font-weight:500}
+.mc .mr{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px}
+.mc .tm{display:flex;flex-direction:column;align-items:center;gap:5px;text-align:center;min-width:0}
+.mc .tm span{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.mc .sc{font-size:22px;font-weight:700;letter-spacing:.02em;text-align:center;min-width:66px}
+.mc .sc small{display:block;font-size:10px;color:var(--mute);font-weight:500;letter-spacing:0}
+.mc .sc .l{opacity:.45}
+.mc .mf{display:flex;justify-content:space-between;align-items:center;gap:8px;border-top:1px solid var(--line);padding-top:9px;font-size:11.5px}
+.mc .mf .c{display:flex;align-items:center;gap:6px;min-width:0}
+.mc .mf .rec{color:var(--mute);white-space:nowrap}.mc.cp .mf .rec{display:none}
 
-/* ---------- COACH SPARK CARDS (steps) ---------- */
-.ccard{padding:20px 20px 0;min-height:200px;display:flex;flex-direction:column;cursor:pointer;transition:transform .15s}
-.ccard:hover{transform:translateY(-2px)}
-.ccard .row{display:flex;justify-content:space-between;align-items:flex-start}
-.ccard .rec{font:800 40px/.95 Outfit;letter-spacing:-.03em;margin-top:6px}
-.ccard .lbl{margin-top:2px}
-.ccard .spark{margin:auto -20px 0;height:88px}
-.ccard .spark svg{width:100%;height:100%}
-.ccard.me{border-color:rgba(255,225,79,.55);box-shadow:0 0 0 1px rgba(255,225,79,.25) inset}
+/* live card */
+.livec{display:flex;flex-direction:column;justify-content:space-between;height:100%}
+.livec .lh{display:flex;justify-content:space-between;align-items:flex-start}
+.livec .lh b{display:block;font-size:13px;font-weight:600}
+.livec .lh small{color:var(--mute);font-size:11.5px}
+.livec .lr{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin:16px 0}
+.livec .lr .tm{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;font-weight:600;text-align:center}
+.livec .lr .big{font-size:30px;font-weight:700}
+.livec .lf{display:flex;justify-content:space-between;align-items:center}
+.livec .lf a{display:flex;align-items:center;gap:4px;font-weight:600;font-size:12.5px}
+.livec .lf svg{width:14px;height:14px}
 
-/* ---------- READY (humidity) ---------- */
-.ready .rlist{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
-.ready .rp{display:flex;align-items:center;gap:7px;padding:8px 12px 8px 8px;border-radius:14px;background:rgba(8,16,43,.35);border:1px solid rgba(236,244,247,.15);font:700 14px Outfit}
-.ready .rp i{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:rgba(236,244,247,.15);font-style:normal;font-size:12px}
-.ready .rp.done{background:rgba(236,244,247,.95);color:#0B2461}
-.ready .rp.done i{background:#0B2461;color:#fff}
-.ready .rp:disabled{cursor:default}
-.ready{padding-bottom:58px}.ready .rlist{position:relative;z-index:1}.ready .wave{position:absolute;left:0;right:0;bottom:0;height:56px;pointer-events:none;opacity:.6}
-
-/* ---------- WEEK TILES (transit) ---------- */
-.tiles{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;padding:4px 2px 20px;scroll-snap-type:x proximity}
-.tiles::-webkit-scrollbar{display:none}
-.tile{flex:none;width:108px;height:120px;border-radius:24px;background:var(--card);border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;position:relative;scroll-snap-align:center}
-.tile b{font:800 46px/.9 Outfit;letter-spacing:-.03em;color:#cfe0ff}
-.tile span{font:500 13px Outfit;color:var(--mute)}
-.tile .tag{position:absolute;bottom:-9px;font-size:9.5px;padding:3px 7px}
-.tile.on{background:var(--y);border-color:var(--y)}
-.tile.on b,.tile.on span{color:var(--navy)}
-.tile.on::after{content:"";position:absolute;bottom:-12px;left:50%;width:26px;height:14px;transform:translateX(-50%);background:var(--y);clip-path:polygon(0 0,100% 0,50% 100%)}
-.tile.on .tag{display:none}
-.tile .star{position:absolute;top:10px;right:12px;width:16px;height:16px;color:var(--y)}
-.tile.on .star{color:var(--navy)}
-
-/* ---------- TIMELINE (transit dotted) ---------- */
-.tl{position:relative;padding-left:34px}
-.tl::before{content:"";position:absolute;left:12px;top:8px;bottom:8px;width:6px;background-image:radial-gradient(circle,var(--tcl,var(--y)) 2.6px,transparent 3px);background-size:6px 13px;background-repeat:repeat-y;opacity:.8}
-.tl .node{position:relative;margin-bottom:14px}
-.tl .node::before{content:"";position:absolute;left:-30px;top:20px;width:14px;height:14px;border-radius:50%;background:var(--bg);border:3px solid var(--tcl,var(--y))}
-.tl .node.past::before{background:var(--tcl,var(--y))}
-.tl .wkl{font:600 12px Outfit;letter-spacing:.13em;text-transform:uppercase;color:var(--mute);margin:0 0 6px 2px}
-
-/* ---------- TABLES ---------- */
+/* ---------- TABLE ---------- */
 table{width:100%;border-collapse:collapse}
-th{font:600 11px Outfit;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);text-align:left;padding:12px 12px}
-td{padding:11px 12px;border-top:1px solid var(--line);font-weight:500;white-space:nowrap}
-td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
-td.b{font-weight:800;font-size:17px}
+th{font-size:11px;font-weight:500;color:var(--mute);text-align:left;padding:10px 12px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+td{padding:10px 12px;font-weight:500;white-space:nowrap;font-size:13px}
+tbody tr{border-top:1px solid var(--line)}
+tbody tr:nth-child(odd){background:rgba(236,244,247,.018)}
+td.n,th.n{text-align:center;font-variant-numeric:tabular-nums}
+td.b{font-weight:700}
 tr.user td:first-child{box-shadow:inset 3px 0 0 var(--y)}
-tr.me td{background:rgba(255,225,79,.07)}
-.tc{display:flex;align-items:center;gap:11px}
-.tc .nm{font-weight:700}
-.rank{color:var(--dim);font-weight:700;width:30px}
+tr.me{background:rgba(255,225,79,.07)!important}
+.tc{display:flex;align-items:center;gap:10px}
+.tc .nm{font-weight:600;text-transform:uppercase;font-size:12.5px;letter-spacing:.01em}
+.pos{display:flex;align-items:center;gap:6px;font-weight:600}
+.pos svg{width:11px;height:11px}
+.form{display:flex;gap:4px}
+.form i{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:10px;font-weight:700;color:#fff}
+.form i.W{background:var(--win)} .form i.L{background:var(--loss)} .form i.N{background:var(--panel3);color:var(--dim)}
 .scroll{overflow-x:auto}
 
-/* ---------- STRAVA CHART ---------- */
-.strava{padding:24px 24px 0;background:linear-gradient(180deg,#141b3d,#0e1431);}
-.strava .hd{display:flex;justify-content:space-between;align-items:flex-start}
-.strava .chart{margin:10px -24px 0;position:relative}
-.strava .chart svg{width:100%;height:auto;overflow:visible}
-.strip{height:44px;overflow:hidden;background:linear-gradient(90deg,var(--y),#FFEE96);color:var(--navy);display:flex;align-items:center;white-space:nowrap}
-.strip .run{display:flex;gap:28px;align-items:center;font:900 19px "Barlow Condensed";text-transform:uppercase;letter-spacing:.04em;padding-left:20px;animation:run 40s linear infinite}
-.strip .run i{font-style:normal;font-weight:700;opacity:.55}
-.strip.card{padding:0;border:0}
-@keyframes run{to{transform:translateX(-50%)}}
-@media (prefers-reduced-motion:reduce){.strip .run{animation:none}}
+/* ---------- LISTS (right column) ---------- */
+.lcard{background:var(--panel);border-radius:var(--r);border:1px solid var(--line);padding:14px;display:flex;flex-direction:column;gap:10px;cursor:pointer;transition:border-color .15s}
+.lcard:hover{border-color:var(--line2)}
+.lcard.me{border-color:rgba(255,225,79,.45)}
+.lcard .lt{display:flex;align-items:center;gap:11px}
+.lcard .lt .av{width:42px;height:42px;border-radius:50%;background:var(--panel2);display:grid;place-items:center;position:relative;flex:none}
+.lcard .lt .av .badge,.lcard .lt .av img{width:30px;height:30px}
+.lcard .lt b{display:block;font-size:13.5px;font-weight:600}
+.lcard .lt small{display:block;color:var(--mute);font-size:11.5px}
+.lcard .lt .when{margin-left:auto;text-align:right}
+.lcard .lb{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--mute)}
+.lcard .lb b{color:var(--text);font-weight:600}
+.lcard .lb .ic{display:flex;gap:6px}
+.lcard .lb .ic span{width:22px;height:22px;border-radius:50%;background:var(--panel2);display:grid;place-items:center}
+.lcard .lb .ic span img{width:15px;height:15px}
+.lcard .lb .ic span.W{background:rgba(54,199,126,.2)} .lcard .lb .ic span.L{background:rgba(239,83,80,.2)}
 
-/* ---------- LEADERS ---------- */
-.leaders{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-@media(max-width:700px){.leaders{grid-template-columns:1fr}}
-.ldr .top{display:flex;align-items:center;gap:10px;margin-top:12px}
-.ldr .pn{font-weight:700;line-height:1.15}
-.ldr .pn small{display:block;color:var(--mute);font-weight:500;font-size:12px}
-.ldr ol{list-style:none;margin-top:14px;border-top:1px solid var(--line);padding-top:10px;display:grid;gap:6px}
-.ldr li{display:flex;justify-content:space-between;color:var(--mute);font-size:13px;font-weight:500}
-.ldr li b{color:var(--text);font-variant-numeric:tabular-nums}
+.top1{border-radius:var(--r);overflow:hidden;border:1px solid var(--line);background:var(--panel)}
+.top1 .feat{position:relative;margin:12px;border-radius:12px;padding:18px 16px;min-height:118px;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;
+  background:radial-gradient(180px 140px at 85% 30%,color-mix(in srgb,var(--tc) 70%,transparent),transparent 75%),linear-gradient(135deg,#2a3a7a,#18224d)}
+.top1 .feat img.bg,.top1 .feat .badge.bg{position:absolute;right:12px;top:12px;width:84px;height:84px;opacity:.95}
+.top1 .feat b{font-size:16px;font-weight:700;position:relative}
+.top1 .feat small{color:rgba(236,244,247,.8);font-size:12px;position:relative}
+.top1 .feat .stat{font-size:12.5px;font-weight:600;color:var(--y);margin-top:2px;position:relative}
+.top1 .row{display:flex;align-items:center;gap:10px;padding:10px 16px;border-top:1px solid var(--line);font-size:12.5px}
+.top1 .row .nm{font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top1 .row .v{font-weight:600}
+.top1 .row.hl{background:var(--panel2)}
+
+/* ---------- WEEK NAV ---------- */
+.wknav{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.wknav .arrow{width:34px;height:34px;border-radius:9px;background:var(--panel);border:1px solid var(--line2);display:grid;place-items:center}
+.wknav .arrow svg{width:16px;height:16px}
+.wknav .arrow:disabled{opacity:.35}
+.wkstrip{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px 0}
+.wkstrip::-webkit-scrollbar{display:none}
+.wkstrip button{min-width:44px;height:44px;border-radius:10px;background:var(--panel);border:1px solid var(--line);font-weight:600;font-size:13px;color:var(--mute);position:relative}
+.wkstrip button small{display:block;font-size:8.5px;font-weight:500;letter-spacing:.06em;margin-top:-3px}
+.wkstrip button.on{background:var(--y);color:var(--navy);border-color:var(--y)}
+.wkstrip button.cur:not(.on){border-color:rgba(255,225,79,.5);color:var(--text)}
+.wkstrip button .s{position:absolute;top:-4px;right:-4px;width:12px;height:12px;color:var(--y)}
+.wkstrip button.on .s{color:var(--navy);top:3px;right:3px}
+
+/* timeline */
+.tl{position:relative;padding-left:30px}
+.tl::before{content:"";position:absolute;left:9px;top:10px;bottom:10px;width:2px;background:linear-gradient(var(--line2),var(--line2))}
+.tl .node{position:relative;margin-bottom:12px}
+.tl .node::before{content:"";position:absolute;left:-26px;top:16px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--dim)}
+.tl .node.past::before{background:var(--tcl,var(--y));border-color:var(--tcl,var(--y))}
+.tl .node.cur::before{border-color:var(--y);box-shadow:0 0 0 4px rgba(255,225,79,.18)}
+.tl .wkl{font-size:11.5px;color:var(--mute);margin:0 0 6px;font-weight:500}
 
 /* ---------- WHEEL ---------- */
-.draft{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px;align-items:start}
-@media(max-width:960px){.draft{grid-template-columns:1fr}}
-.wheelcard{display:flex;flex-direction:column;align-items:center;gap:18px;padding:26px 20px}
-.clock{display:flex;align-items:center;gap:10px;font:700 16px Outfit}
-.clock .big{font-size:40px}
-.wheelbox{position:relative;width:min(540px,100%);aspect-ratio:1}
-#wheel{width:100%;height:100%;display:block;filter:drop-shadow(0 24px 50px rgba(0,0,0,.55))}
-.pointer{position:absolute;top:-10px;left:50%;width:40px;height:50px;margin-left:-20px;z-index:3;background:var(--y);clip-path:path("M0 0 H40 V18 L20 50 L0 18 Z");border-radius:6px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.6))}
+.draft{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:20px;align-items:start}
+.wheelcard{display:flex;flex-direction:column;align-items:center;gap:16px;padding:24px 18px}
+.clock{display:flex;align-items:center;gap:10px;font-weight:600}
+.wheelbox{position:relative;width:min(520px,100%);aspect-ratio:1}
+#wheel{width:100%;height:100%;display:block;filter:drop-shadow(0 20px 40px rgba(0,0,0,.5))}
+.pointer{position:absolute;top:-10px;left:50%;width:36px;height:46px;margin-left:-18px;z-index:3;background:var(--y);clip-path:polygon(0 0,100% 0,100% 40%,50% 100%,0 40%);filter:drop-shadow(0 4px 8px rgba(0,0,0,.6))}
 .pointer.tick{animation:tick .09s}
 @keyframes tick{50%{transform:rotate(-12deg)}}
-.hub{position:absolute;inset:38%;border-radius:50%;background:radial-gradient(circle at 40% 30%,#24356f,#0b1435);border:4px solid var(--y);display:grid;place-items:center;text-align:center;z-index:2;box-shadow:0 0 0 8px rgba(8,16,43,.6),0 0 40px rgba(255,225,79,.25)}
-.hub b{display:block;font:800 clamp(18px,3.4vw,28px)/.95 Outfit;letter-spacing:-.02em}
-.hub small{display:block;font:600 9.5px Outfit;letter-spacing:.14em;color:var(--mute);text-transform:uppercase;margin-bottom:4px}
-.board .node .slot{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:18px;background:rgba(236,244,247,.04);border:1px solid var(--line)}
-.board .node.next .slot{background:rgba(255,225,79,.1);border-color:rgba(255,225,79,.45)}
-.board .slot .nm{font:800 18px Outfit;flex:1}
-.board .slot .nm small{display:block;font:500 12.5px Outfit;color:var(--mute)}
+.hub{position:absolute;inset:38%;border-radius:50%;background:radial-gradient(circle at 40% 30%,#26357a,#0b1435);border:4px solid var(--y);display:grid;place-items:center;text-align:center;z-index:2;box-shadow:0 0 0 7px rgba(10,16,41,.7)}
+.hub b{display:block;font-weight:700;font-size:clamp(16px,3vw,24px);line-height:1}
+.hub small{display:block;font-size:9px;letter-spacing:.12em;color:var(--mute);text-transform:uppercase;margin-bottom:4px;font-weight:600}
+.board .slot{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;background:var(--panel2);border:1px solid var(--line)}
+.board .node.next .slot{border-color:rgba(255,225,79,.5);background:linear-gradient(90deg,rgba(255,225,79,.1),transparent),var(--panel2)}
+.board .slot .nm{font-weight:600;flex:1;font-size:14px}
+.board .slot .nm small{display:block;font-weight:400;font-size:12px;color:var(--mute)}
 .board .node.out{opacity:.5}
 .pool{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
-.pteam{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:16px;background:rgba(236,244,247,.05);border:1px solid var(--line);text-align:left;font:700 13.5px/1.15 Outfit}
-.pteam small{display:block;font:500 11.5px Outfit;color:var(--mute)}
-.pteam.ex{opacity:.35}
-.pteam.ex span{text-decoration:line-through}
+.pteam{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:11px;background:var(--panel2);border:1px solid var(--line);text-align:left;font-weight:600;font-size:12.5px;line-height:1.2}
+.pteam small{display:block;font-weight:400;font-size:11px;color:var(--mute)}
+.pteam.ex{opacity:.35}.pteam.ex span{text-decoration:line-through}
 .pteam.taken{border-color:rgba(255,225,79,.4)}
 .pteam:disabled{cursor:default}
-.tg{font:700 11px Outfit;border-radius:10px;padding:6px 10px;background:rgba(236,244,247,.08);border:1px solid var(--line2)}
-.tg.in{color:var(--mint);border-color:rgba(91,227,166,.4)}
+.tg{font-size:11px;font-weight:600;border-radius:8px;padding:5px 9px;background:var(--panel3);border:1px solid var(--line2)}
+.tg.in{color:var(--win);border-color:rgba(54,199,126,.4)}
 
-/* reveal + modal */
-.ov{position:fixed;inset:0;z-index:60;display:none;place-items:center;background:rgba(4,8,22,.78);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:20px}
+/* overlays */
+.ov{position:fixed;inset:0;z-index:60;display:none;place-items:center;background:rgba(3,6,20,.78);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:20px}
 .ov.show{display:grid}
-.rcard{width:min(460px,100%);border-radius:36px;padding:34px 28px 28px;text-align:center;border:1px solid rgba(236,244,247,.15);
-  background:radial-gradient(360px 280px at 50% 30%,color-mix(in srgb,var(--r1) 75%,transparent),transparent 75%),linear-gradient(180deg,#151f4c,#0b1332);animation:pop .55s cubic-bezier(.2,1.4,.4,1)}
+.rcard{width:min(440px,100%);border-radius:22px;padding:30px 26px 24px;text-align:center;border:1px solid rgba(236,244,247,.14);
+  background:radial-gradient(320px 260px at 50% 30%,color-mix(in srgb,var(--r1) 70%,transparent),transparent 75%),linear-gradient(180deg,#18245a,#0c1332);animation:pop .55s cubic-bezier(.2,1.4,.4,1)}
 @keyframes pop{from{transform:scale(.7);opacity:0}}
-.rcard .lbl{color:rgba(236,244,247,.75)}
-.rcard .coach{font:800 40px/1 Outfit;letter-spacing:-.02em;margin:10px 0 18px}
-.rcard .logo.xl,.rcard .badge.xl{margin:0 auto 16px;filter:drop-shadow(0 12px 30px rgba(0,0,0,.5))}
-.rcard .school{font:900 48px/.9 "Barlow Condensed";text-transform:uppercase}
-.rcard .chips{justify-content:center;margin:16px 0 22px}
-.mcard{width:min(420px,100%)}
-.mcard p{color:var(--mute);margin:8px 0 18px;line-height:1.45}
+.rcard .lbl{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--y);font-weight:600}
+.rcard .coach{font-size:34px;font-weight:700;margin:8px 0 16px}
+.rcard .logo.xl,.rcard .badge.xl{margin:0 auto 14px;filter:drop-shadow(0 12px 30px rgba(0,0,0,.5))}
+.rcard .school{font-size:28px;font-weight:700}
+.rcard .chips{justify-content:center;margin:12px 0 20px}
+.mcard{width:min(400px,100%)}
+.mcard h3{font-size:18px}
+.mcard p{color:var(--mute);margin:8px 0 18px;line-height:1.5}
 .mcard .row{display:flex;gap:10px;justify-content:flex-end}
 
 /* ---------- CHAT ---------- */
-.chat{display:flex;flex-direction:column;height:calc(100vh - 230px);min-height:460px;padding:0}
-.msgs{flex:1;overflow-y:auto;padding:20px 18px;display:flex;flex-direction:column;gap:10px}
-.msg{display:flex;gap:10px;align-items:flex-end;max-width:82%}
-.msg .bub{background:var(--card2);border:1px solid var(--line);border-radius:20px 20px 20px 6px;padding:10px 14px;line-height:1.4;font-weight:500;word-wrap:break-word;overflow-wrap:anywhere}
-.msg .meta{font:600 11px Outfit;color:var(--mute);margin:0 0 4px 4px;display:flex;gap:6px;align-items:center}
+.chat{display:flex;flex-direction:column;height:calc(100vh - 190px);min-height:440px;padding:0;overflow:hidden}
+.msgs{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:10px}
+.msg{display:flex;gap:10px;align-items:flex-end;max-width:78%}
+.msg .bub{background:var(--panel2);border:1px solid var(--line);border-radius:16px 16px 16px 5px;padding:9px 13px;line-height:1.45;overflow-wrap:anywhere}
+.msg .meta{font-size:11px;color:var(--mute);margin:0 0 4px 3px;display:flex;gap:6px;align-items:center}
 .msg.mine{align-self:flex-end;flex-direction:row-reverse}
-.msg.mine .bub{background:var(--y);color:var(--navy);border-color:var(--y);border-radius:20px 20px 6px 20px}
-.msg.mine .meta{justify-content:flex-end;margin:0 4px 4px 0}
-.msg .del{opacity:0;font-size:11px;color:var(--mute);padding:0 4px}
+.msg.mine .bub{background:var(--y);color:var(--navy);border-color:var(--y);border-radius:16px 16px 5px 16px;font-weight:500}
+.msg.mine .meta{justify-content:flex-end;margin:0 3px 4px 0}
+.msg .del{opacity:0;font-size:11px;color:var(--mute)}
 .msg:hover .del{opacity:1}
 .msg.sys{align-self:center;max-width:100%}
-.msg.sys .bub{background:transparent;border:1px dashed var(--line2);color:var(--mute);font-size:13px;border-radius:14px;text-align:center}
-.dayline{align-self:center;font:600 11px Outfit;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin:8px 0}
-.compose{display:flex;gap:10px;padding:14px;border-top:1px solid var(--line);background:rgba(8,16,43,.4)}
-.compose textarea{flex:1;resize:none;height:48px;max-height:120px;border-radius:16px;border:1px solid var(--line2);background:var(--bg2);color:var(--text);font:500 15px Outfit;padding:13px 16px;outline:none}
+.msg.sys .bub{background:rgba(255,225,79,.07);border:1px dashed rgba(255,225,79,.3);color:var(--y);font-size:12.5px;border-radius:10px;text-align:center}
+.dayline{align-self:center;font-size:11px;color:var(--dim);margin:6px 0;font-weight:500}
+.compose{display:flex;gap:10px;padding:12px;border-top:1px solid var(--line);background:var(--panel)}
+.compose textarea{flex:1;resize:none;height:44px;border-radius:11px;border:1px solid var(--line2);background:var(--bg);color:var(--text);font:400 14px Poppins;padding:11px 14px;outline:none}
 .compose textarea:focus{border-color:rgba(255,225,79,.5)}
-.compose .btn{padding:0 18px}
-.gate{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:40px 20px;flex:1}
-.gate .chips{justify-content:center}
+.gate{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:40px 20px;flex:1}
+.gate h3{font-size:20px}
 .gate p{color:var(--mute);max-width:360px;line-height:1.5}
+.gate .chips{justify-content:center}
 
 /* rules */
-.rules li{list-style:none;display:flex;gap:16px;padding:14px 0;border-top:1px solid var(--line)}
+.rules li{list-style:none;display:flex;gap:16px;padding:13px 18px;border-top:1px solid var(--line)}
 .rules li:first-child{border-top:0}
-.rules .rk{font:600 12px Outfit;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);width:160px;flex:none;padding-top:2px}
+.rules .rk{color:var(--mute);width:170px;flex:none;font-weight:500}
 .rules .rv{font-weight:600}
-.rules .rv.tbd{color:var(--dim);font-weight:500;font-style:italic}
-
-.h2h td.c{text-align:center;font-weight:800}
+.rules .rv.tbd{color:var(--dim);font-weight:400;font-style:italic}
+.h2h td.c{text-align:center;font-weight:700}
 .h2h td.self{background:repeating-linear-gradient(135deg,transparent 0 6px,rgba(236,244,247,.04) 6px 12px)}
-.h2h td.w{color:var(--mint)} .h2h td.l{color:var(--coral)}
-
-.foot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:30px;color:var(--dim);font-size:12.5px;font-weight:500}
-.foot button{font:600 12.5px Outfit;color:var(--mute);border:1px solid var(--line2);border-radius:10px;padding:7px 12px}
-.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;transition:.25s;background:var(--card2);border:1px solid var(--line2);border-radius:14px;padding:11px 18px;font-weight:600;z-index:80;pointer-events:none}
+.h2h td.w{color:var(--win)} .h2h td.l{color:var(--loss)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;transition:.25s;background:var(--panel3);border:1px solid var(--line2);border-radius:12px;padding:10px 16px;font-weight:500;z-index:80;pointer-events:none}
 .toast.show{opacity:1;transform:translateX(-50%)}
-@media(max-width:560px){
-  .hwrap{padding:12px 16px 10px}.wm{font-size:20px}main{padding:16px 14px 30px}nav{padding:0 14px 10px}
-  .ptitle h2{font-size:36px}.big{font-size:52px}.big.xl{font-size:70px}.card{padding:18px;border-radius:24px}
-  .chat{height:calc(100vh - 210px)}
-  .pass .nm{display:none}.pass{padding:18px}.pass .logo.lg,.pass .badge.lg{width:44px;height:44px}.pass .pt{gap:8px}
-  .coaches{grid-template-columns:1fr 1fr;gap:12px}.ccard{min-height:170px;padding:16px 16px 0}.ccard .rec{font-size:32px}.ccard .spark{margin:auto -16px 0;height:70px}.ccard .lbl[style]{display:none}.ccard .logo{width:30px;height:30px}
+.scrim{display:none}
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:1180px){.cols{grid-template-columns:minmax(0,1fr)}.cols>.stack:last-child{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}}
+@media(max-width:960px){
+  .app{grid-template-columns:minmax(0,1fr);background:var(--bg)}
+  .rail{display:none}
+  .side{position:fixed;left:0;top:0;bottom:0;width:260px;z-index:70;transform:translateX(-100%);transition:transform .25s}
+  body.drawer .side{transform:none}
+  body.drawer .scrim{display:block;position:fixed;inset:0;background:rgba(3,6,20,.6);z-index:65}
+  .burger{display:grid}
+  .top{padding:16px 16px 4px;gap:12px}.top h1{font-size:18px}.top .sub{display:none}
+  .uchip .txt{display:none}
+  main{padding:14px 16px 96px}.banner{margin:10px 16px 0}
+  .two,.draft{grid-template-columns:minmax(0,1fr)}
+  .hero{min-height:200px;padding:22px 20px}.hero .hc{max-width:62%}.hero h2{font-size:21px}.hero .logos{right:-20px}.hero .logos img,.hero .logos .badge{width:110px;height:110px}
+  .bottomnav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(14,21,51,.96);backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
+  .bottomnav a,.bottomnav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:500;color:var(--mute);padding:6px 0;position:relative}
+  .bottomnav svg{width:21px;height:21px}
+  .bottomnav .on{color:var(--y)}
+  .bottomnav .dot{position:absolute;top:4px;left:calc(50% + 6px);width:8px;height:8px;border-radius:50%;background:var(--loss)}
+  .chat{height:calc(100vh - 230px)}
 }
+@media(max-width:560px){.g2,.g3{grid-template-columns:minmax(0,1fr)}.mc .sc{font-size:20px;min-width:56px}.hero .hc{max-width:100%}.hero .logos{opacity:.28;right:-30px}.hero .logos img,.hero .logos .badge{width:120px;height:120px}.hm{display:none}}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 </head>
 <body>
-<header>
-  <div class="hwrap">
-    <div class="brand">
-      <div class="wm">College Football <b>27</b></div>
-      <div class="sub"><span class="cond">MAC Dynasty</span><span class="lbl" id="seasonLbl">Season 1</span></div>
+<div class="app">
+  <aside class="rail" id="rail"></aside>
+  <aside class="side" id="side">
+    <a class="brand" href="#home"><div class="wm">College Football <b>27</b></div><small>MAC Dynasty · <span id="seasonLbl">Season 1</span></small></a>
+    <nav class="snav" id="snav"></nav>
+    <div class="promo" id="promo"></div>
+  </aside>
+  <div class="mainwrap">
+    <div class="top">
+      <button class="burger" id="burger" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <div><h1 id="hello">Welcome back, Coach!</h1><div class="sub" id="hellosub">Here's what's happening in the MAC.</div></div>
+      <div class="right"><a class="bell" href="#chat" id="bell" aria-label="Chat"></a><div class="uchip" id="uchip"></div></div>
     </div>
-    <div class="me"><div class="mepill" id="mepill"><span id="meLogo"></span><select id="me" aria-label="Viewing as"></select></div></div>
+    <div class="banner" id="demoBanner" hidden><span>Sample data preview — not your real season</span><button id="demoOff">Exit preview</button></div>
+    <main id="view"></main>
   </div>
-  <nav id="nav"></nav>
-</header>
-<div class="banner" id="demoBanner" hidden><div><span>Sample data preview — not your real season</span><button id="demoOff">Exit preview</button></div></div>
-<main id="view"></main>
+</div>
+<div class="scrim" id="scrim"></div>
+<nav class="bottomnav" id="bnav"></nav>
 <div class="ov" id="reveal"><div class="rcard" id="rcard"></div></div>
-<div class="ov" id="modal"><div class="card mcard"><h3 class="cond" style="font-size:24px" id="mTitle"></h3><p id="mBody"></p><div class="row"><button class="btn ghost sm" id="mNo">Cancel</button><button class="btn sm" id="mYes">Confirm</button></div></div></div>
-
+<div class="ov" id="modal"><div class="panel mcard"><h3 id="mTitle"></h3><p id="mBody"></p><div class="row"><button class="btn ghost sm" id="mNo">Cancel</button><button class="btn sm" id="mYes">Confirm</button></div></div></div>
 <script>
 /* ======================= ICONS ======================= */
 const I = {
@@ -433,9 +460,9 @@ function allGames(d){const o=[];(d.season.weeks||[]).forEach(w=>(w.games||[]).fo
 const isFinal=g=>g.final&&g.hs!=null&&g.as!=null;
 const isConf=g=>!!(TEAMS[g.home]&&TEAMS[g.away])&&g.conf!==false;
 function currentWeek(d){const ws=d.season.weeks||[];if(!ws.length)return null;if(d.season.currentWeek!=null)return d.season.currentWeek;const o=ws.find(w=>(w.games||[]).some(g=>!isFinal(g)));return o?o.week:ws[ws.length-1].week}
-function standings(d){
+function standings(d,upto){
   const rows={};Object.keys(TEAMS).filter(c=>!TEAMS[c].optional||allGames(d).some(g=>g.home===c||g.away===c)).forEach(c=>rows[c]={code:c,cw:0,cl:0,w:0,l:0,pf:0,pa:0,streak:""});
-  allGames(d).filter(isFinal).sort((a,b)=>a.week-b.week).forEach(g=>{const conf=isConf(g);
+  allGames(d).filter(g=>isFinal(g)&&(upto==null||g.week<=upto)).sort((a,b)=>a.week-b.week).forEach(g=>{const conf=isConf(g);
     [[g.home,g.hs,g.as],[g.away,g.as,g.hs]].forEach(([c,f,a])=>{const r=rows[c];if(!r)return;const won=f>a;r.pf+=f;r.pa+=a;won?r.w++:r.l++;if(conf){won?r.cw++:r.cl++}const s=won?"W":"L";r.streak=r.streak[0]===s?s+(parseInt(r.streak.slice(1))+1):s+"1"})});
   const p=(w,l)=>w+l?w/(w+l):0;
   return Object.values(rows).sort((a,b)=>p(b.cw,b.cl)-p(a.cw,a.cl)||b.cw-a.cw||p(b.w,b.l)-p(a.w,a.l)||(b.pf-b.pa)-(a.pf-a.pa)||T(a.code).school.localeCompare(T(b.code).school));
@@ -448,256 +475,274 @@ function teamGames(d,c){return allGames(d).filter(g=>g.home===c||g.away===c).sor
 function ptsSeries(d,c){return teamGames(d,c).filter(isFinal).map(g=>({wk:g.week,v:g.home===c?g.hs:g.as,o:g.home===c?g.as:g.hs,opp:g.home===c?g.away:g.home}))}
 function readyMap(d,wk){const done={...((d.ready&&d.ready.week===wk&&d.ready.done)||{})};(d.readyMembers||[]).forEach(r=>{if(r.week===wk&&r.done&&r.coach)done[r.coach]=true});return done}
 
-/* ======================= CHART HELPERS ======================= */
-function smooth(pts){if(pts.length<2)return "";let d=`M${pts[0][0]},${pts[0][1]}`;for(let i=0;i<pts.length-1;i++){const p0=pts[i-1]||pts[i],p1=pts[i],p2=pts[i+1],p3=pts[i+2]||p2;const c1x=p1[0]+(p2[0]-p0[0])/6,c1y=p1[1]+(p2[1]-p0[1])/6,c2x=p2[0]-(p3[0]-p1[0])/6,c2y=p2[1]-(p3[1]-p1[1])/6;d+=` C${c1x},${c1y} ${c2x},${c2y} ${p2[0]},${p2[1]}`}return d}
-let gid=0;
-function spark(vals,color){
-  const W=300,H=90; if(vals.length<2) vals=vals.length?[vals[0]*.8,vals[0]]:[10,14,12,18,16,22];
-  const mx=Math.max(...vals)*1.1,mn=Math.min(...vals)*.6; const pts=vals.map((v,i)=>[i*(W/(vals.length-1)),H-((v-mn)/(mx-mn||1))*(H-14)-6]);
-  const id="sg"+(gid++); const line=smooth(pts);
-  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${color}" stop-opacity=".45"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></linearGradient></defs>
-  <path d="${line} L${W},${H} L0,${H} Z" fill="url(#${id})"/><path d="${line}" fill="none" stroke="${color}" stroke-width="3.5" style="filter:drop-shadow(0 0 6px ${color})" vector-effect="non-scaling-stroke"/></svg>`;
-}
-function stravaChart(series,color,unit){
-  const W=Math.max(340,Math.min(1160,window.innerWidth-28)),H=Math.max(240,Math.min(320,W*.42)),padT=60,padB=70; const n=series.length;
-  if(!n) return `<div class="empty" style="padding:50px 10px"><b>No games yet</b>Points per game shows up here after week 1.</div>`;
-  const mx=Math.max(...series.map(s=>s.v))*1.15||1; const step=W/(n+1);
-  const pts=series.map((s,i)=>[step*(i+1),padT+(1-s.v/mx)*(H-padT-padB)]);
-  const peak=series.reduce((b,s,i)=>s.v>series[b].v?i:b,0); const id="st"+(gid++);
-  const line="M0,"+(H-padB)+" L"+pts.map(p=>p.join(",")).join(" L")+" L"+W+","+(H-padB);
-  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${color}" stop-opacity=".55"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></linearGradient></defs>
-  ${pts.map((p,i)=>`<line x1="${p[0]}" y1="${i===peak?p[1]:padT-10}" x2="${p[0]}" y2="${H-padB}" stroke="${i===peak?color:"rgba(236,244,247,.08)"}" stroke-width="${i===peak?2:1}"/>`).join("")}
-  <path d="${line} L${W},${H-padB} L0,${H-padB}Z" fill="url(#${id})"/>
-  <path d="${line}" fill="none" stroke="${color}" stroke-width="5" stroke-linejoin="round" style="filter:drop-shadow(0 0 8px ${color})"/>
-  <circle cx="${pts[peak][0]}" cy="${pts[peak][1]}" r="18" fill="${color}" opacity=".25"/><circle cx="${pts[peak][0]}" cy="${pts[peak][1]}" r="8" fill="${color}"/>
-  <text x="${pts[peak][0]+(peak>n*.7?-16:16)}" y="${pts[peak][1]-4}" text-anchor="${peak>n*.7?"end":"start"}" fill="#ECF4F7" font-family="Outfit" font-weight="700" font-size="26">${series[peak].v} ${unit}</text>
-  ${series.map((s,i)=>`<text transform="translate(${pts[i][0]-6},${H-padB+14}) rotate(90)" fill="${i===peak?"#ECF4F7":"#9DB0CC"}" font-family="Outfit" font-weight="600" font-size="15" letter-spacing="1.5">WK${s.wk}</text>`).join("")}
-  </svg>`;
-}
-function arc(pct){ // golden hour arc
-  const x0=10,y0=70,cx=300,cy=10,x1=590,y1=74; const t=Math.max(.02,Math.min(1,pct));
-  const bx=(1-t)**2*x0+2*(1-t)*t*cx+t*t*x1, by=(1-t)**2*y0+2*(1-t)*t*cy+t*t*y1;
-  return `<svg viewBox="0 0 600 90" preserveAspectRatio="none"><defs><radialGradient id="ag"><stop offset="0" stop-color="#FFE14F" stop-opacity=".9"/><stop offset="1" stop-color="#FFE14F" stop-opacity="0"/></radialGradient></defs>
-  <path d="M${x0},${y0} Q${cx},${cy} ${x1},${y1}" fill="none" stroke="rgba(236,244,247,.14)" stroke-width="12" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
-  <path d="M${x0},${y0} Q${x0+(cx-x0)*t},${y0+(cy-y0)*t} ${bx},${by}" fill="none" stroke="#FFE14F" stroke-width="12" stroke-linecap="round" vector-effect="non-scaling-stroke" style="filter:drop-shadow(0 0 10px rgba(255,225,79,.8))"/>
-  <ellipse cx="${bx}" cy="${by}" rx="70" ry="40" fill="url(#ag)" opacity=".55"/>
-  <circle cx="${bx}" cy="${by}" r="9" fill="#fff" stroke="#FFE14F" stroke-width="3" vector-effect="non-scaling-stroke"/></svg>`;
-}
+/* ======================= EXTRA ICONS ======================= */
+Object.assign(I,{
+  grid:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg>',
+  bell:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 21h4"/></svg>',
+  right:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>',
+  left:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>',
+  up:'<svg viewBox="0 0 12 12" fill="#36C77E"><path d="M6 2l4.5 6h-9z"/></svg>',
+  down:'<svg viewBox="0 0 12 12" fill="#EF5350"><path d="M6 10L1.5 4h9z"/></svg>',
+  even:'<svg viewBox="0 0 12 12" fill="#5E6D92"><rect x="2" y="5" width="8" height="2" rx="1"/></svg>',
+  pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
+  more:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>'
+});
+const MAC_LOGO="https://a.espncdn.com/i/teamlogos/ncaa_conf/500/15.png";
 
-/* ======================= HEADER ======================= */
-const NAV=[["home","Home",I.home],["draft","Team Wheel",I.wheel],["schedule","Schedule",I.cal],["standings","Standings",I.trophy],["stats","Stats",I.chart],["rivals","Rivalries",I.vs],["chat","Chat",I.chat],["rules","Rules",I.book]];
-function fillHeader(d,r){
-  const sel=document.getElementById("me"),cur=myId();
-  sel.innerHTML=`<option value="">Guest</option>`+players(d).map(p=>`<option value="${p.id}" ${p.id===cur?"selected":""}>${esc(p.name)}</option>`).join("");
-  sel.disabled=!!(member&&member.coach&&!demo);
-  const code=(d.draft.assignments||{})[cur]; document.getElementById("meLogo").innerHTML=code?logo(code,"sm"):`<div class="badge sm" style="--c1:#21326D;--c2:#FFE14F">${cur?esc(cur[0].toUpperCase()):"?"}</div>`;
-  document.documentElement.style.setProperty("--tc",code?accent(code):"#FFE14F");
-  const unread=unreadCount();
-  document.getElementById("nav").innerHTML=NAV.map(([k,l,ic])=>`<a href="#${k}" class="${k===r?"on":""}">${ic}${l}${k==="chat"&&unread&&r!=="chat"?'<span class="dot"></span>':""}</a>`).join("");
-  const cw=currentWeek(d), drafted=Object.keys(d.draft.assignments||{}).length;
-  document.getElementById("seasonLbl").textContent=`Season ${d.season.season||1} · ${cw?("Week "+cw):(drafted>=players(d).length?"Preseason":"Draft night")}`;
+/* ======================= SHELL ======================= */
+const NAV=[["home","Overview",I.grid],["draft","Team Wheel",I.wheel],["schedule","Schedule",I.cal],["standings","Standings",I.trophy],["stats","Stats",I.chart],["rivals","Rivalries",I.vs],["chat","Chat",I.chat],["rules","House Rules",I.book]];
+function shell(d,r){
+  const a=d.draft.assignments||{}, cur=myId(), ps=players(d), unread=unreadCount(), locked=!!(member&&member.coach&&!demo);
+  // rail
+  document.getElementById("rail").innerHTML=`<a class="rb conf" href="#standings" data-tip="MAC Standings"><img src="${MAC_LOGO}" alt="MAC" onerror="this.replaceWith(Object.assign(document.createElement('b'),{textContent:'MAC',style:'color:#192853;font-size:11px'}))"></a><div class="sep"></div>`+
+    ps.map(p=>{const c=a[p.id];return `<button class="rb ${p.id===cur?"on":""}" data-viewas="${p.id}" data-tip="${esc(p.name)}${c?" · "+esc(T(c).school):""}" ${locked?"disabled":""}>${c?logo(c,"sm"):`<div class="badge sm" style="--c1:#233168;--c2:rgba(236,244,247,.2)">${esc(p.name[0])}</div>`}</button>`}).join("")+
+    `<a class="rb add" href="#draft" data-tip="Team Wheel">+</a>`;
+  // side nav
+  const nav=NAV.map(([k,l,ic])=>`<a href="#${k}" class="${k===r?"on":""}">${ic}${l}${k==="chat"&&unread&&r!=="chat"?`<span class="cnt">${unread>9?"9+":unread}</span>`:""}</a>`).join("");
+  document.getElementById("snav").innerHTML=nav;
+  const me=ps.find(p=>p.id===cur), mc=a[cur];
+  document.getElementById("promo").innerHTML=!authUser
+    ?`<b>Join the league chat</b><p>Sign in with Google to chat and check in your games.</p><button class="pbtn" data-act="signin">Sign in <i>${I.right.replace('<svg','<svg width="11" height="11"')}</i></button>`
+    :`<b>${canWrite?"Commissioner":"Coach "+esc(me?me.name:"")}</b><p>${esc(authUser.email)}</p><button class="pbtn" data-act="signout">Sign out <i>${I.right.replace('<svg','<svg width="11" height="11"')}</i></button>`;
+  // header
+  const cw=currentWeek(d), drafted=Object.keys(a).length;
+  document.getElementById("seasonLbl").textContent=`Season ${d.season.season||1}`;
+  document.getElementById("hello").textContent=me?`Welcome back, Coach ${me.name}!`:"Welcome to the MAC Dynasty!";
+  document.getElementById("hellosub").textContent=cw?`Week ${cw} of ${d.season.totalWeeks||((d.season.weeks||[]).slice(-1)[0]||{}).week||"?"} · here's what's happening in the conference.`:drafted<ps.length?"Draft night · the wheel decides every coach's program.":"Preseason · the coaches are set.";
+  document.getElementById("bell").innerHTML=I.bell+(unread&&r!=="chat"?'<span class="dot"></span>':"");
+  document.getElementById("uchip").innerHTML=`<div class="av">${mc?logo(mc,"sm"):`<div class="badge sm" style="--c1:#233168;--c2:#FFE14F">${cur?esc(cur[0].toUpperCase()):"?"}</div>`}</div><div class="txt"><b>${me?esc(me.name):"Guest"}</b>${locked?`<small>${mc?esc(T(mc).school+" "+T(mc).mascot):"Coach"}</small>`:`<select id="me" aria-label="Viewing as"><option value="">View as…</option>${ps.map(p=>`<option value="${p.id}" ${p.id===cur?"selected":""}>${esc(p.name)}</option>`).join("")}</select>`}</div>`;
+  const sel=document.getElementById("me"); if(sel) sel.onchange=e=>{store.set("macdyn.me",e.target.value);render()};
+  document.querySelectorAll("[data-viewas]").forEach(b=>b.onclick=()=>{if(locked)return;store.set("macdyn.me",b.dataset.viewas===cur?"":b.dataset.viewas);render()});
+  document.querySelectorAll("#promo [data-act]").forEach(b=>b.onclick=b.dataset.act==="signin"?signIn:()=>firebase.auth().signOut());
+  // bottom nav (mobile)
+  const bn=[["home","Home",I.grid],["schedule","Schedule",I.cal],["standings","Table",I.trophy],["chat","Chat",I.chat]];
+  document.getElementById("bnav").innerHTML=bn.map(([k,l,ic])=>`<a href="#${k}" class="${k===r?"on":""}">${ic}${l}${k==="chat"&&unread&&r!=="chat"?'<span class="dot"></span>':""}</a>`).join("")+`<button id="bmore" class="${["draft","stats","rivals","rules"].includes(r)?"on":""}">${I.more}More</button>`;
+  document.getElementById("bmore").onclick=()=>document.body.classList.add("drawer");
   document.getElementById("demoBanner").hidden=!demo;
 }
-document.getElementById("me").onchange=e=>{store.set("macdyn.me",e.target.value);render()};
+document.getElementById("burger").onclick=()=>document.body.classList.add("drawer");
+document.getElementById("scrim").onclick=()=>document.body.classList.remove("drawer");
 document.getElementById("demoOff").onclick=()=>{demo=false;render()};
 
 /* ======================= ROUTER ======================= */
 const views={home,draft,schedule,standings:standingsView,stats,rivals,chat:chatView,rules};
 const route=()=>{const h=location.hash.slice(1);return views[h]?h:"home"};
-let lastRoute=null;
+let lastRoute=null, heroTimer=null, heroIdx=0;
 function render(){
-  const d=D(),r=route(); fillHeader(d,r);
-  if(r==="chat"&&lastRoute==="chat"&&document.getElementById("msgs")&&authUser&&member&&member.coach){ updateChat(); lastRoute=r; return; }
-  const keepScroll=r===lastRoute?window.scrollY:0;
-  document.getElementById("view").innerHTML=views[r](d)+footer();
+  const d=D(),r=route(); document.body.classList.remove("drawer"); shell(d,r);
+  if(r==="chat"&&lastRoute==="chat"&&document.getElementById("msgs")&&authUser&&member&&member.coach){updateChat();lastRoute=r;return}
+  const keep=r===lastRoute?window.scrollY:0;
+  document.getElementById("view").innerHTML=views[r](d);
   if(r==="draft")mountWheel(); bind(r); if(r==="chat")afterChat();
-  if(r===lastRoute)window.scrollTo(0,keepScroll); else window.scrollTo(0,0);
-  lastRoute=r;
+  window.scrollTo(0,keep); lastRoute=r;
+  clearInterval(heroTimer); if(r==="home"&&heroSlides(d).length>1) heroTimer=setInterval(()=>{heroIdx++;paintHero()},7000);
 }
-window.addEventListener("hashchange",render);
-function footer(){return `<div class="foot"><span>MAC Dynasty · fantasyapp.io</span><span style="display:flex;gap:8px;align-items:center">${authUser?`<span>${canWrite?"Commissioner":"Signed in"} · ${esc(authUser.email)}</span><button data-act="signout">Sign out</button>`:`<button data-act="signin">Sign in</button>`}</span></div>`}
+window.addEventListener("hashchange",()=>{heroIdx=0;render()});
 
 /* ======================= COMPONENTS ======================= */
-function pass(d,g,compact){
-  const a=T(g.away),h=T(g.home),fin=isFinal(g),ao=ownerOf(d,g.away),ho=ownerOf(d,g.home),mq=ao&&ho;
-  const ra=rec(d,g.away),rh=rec(d,g.home);
-  const side=(c,t,s,o,r)=>`<div class="pt ${r?"r":""}">${logo(c,compact?"":"lg")}<div style="min-width:0">${fin?`<div class="score ${s<(r?g.as:g.hs)?"l":""}">${s}</div>`:`<div class="code">${esc(t.abbr)}</div>`}<div class="nm">${esc(t.school)}</div></div></div>`;
-  return `<div class="pass ${compact?"compact":""} ${mq?"marquee":""}" style="--a:${accent(g.away)};--h:${accent(g.home)}">
-   <div class="prow"><span class="lbl">Away · ${ra.w}-${ra.l}</span>${mq?`<span class="tag y">${I.star.replace('<svg','<svg width="11" height="11"')} Coach vs Coach</span>`:isConf(g)?`<span class="tag dim">MAC</span>`:`<span class="tag dim">Non-conf</span>`}<span class="lbl">Home · ${rh.w}-${rh.l}</span></div>
-   <div class="pmid">${side(g.away,a,g.as,ao,false)}<div class="mid"><div class="route"><i></i>${I.ball}<i></i></div><span class="lbl">${fin?"Final":"Week "+g.week}</span></div>${side(g.home,h,g.hs,ho,true)}</div>
-   <div class="prow"><span>${ao?`<span class="who">${esc(ao.name)}</span>`:`<span class="lbl">CPU</span>`}</span><span class="lbl">${fin?`Week ${g.week}`:(g.date?esc(g.date):"")}</span><span>${ho?`<span class="who">${esc(ho.name)}</span>`:`<span class="lbl">CPU</span>`}</span></div>
-  </div>`;
+function form(d,c,n=5){const gs=ptsSeries(d,c).slice(-n);const out=gs.map(g=>`<i class="${g.v>g.o?"W":"L"}">${g.v>g.o?"W":"L"}</i>`);while(out.length<n)out.unshift('<i class="N">–</i>');return `<div class="form">${out.join("")}</div>`}
+function nextGame(d,c){return teamGames(d,c).find(g=>!isFinal(g))}
+function mcard(d,g,cp){
+  const fin=isFinal(g),ao=ownerOf(d,g.away),ho=ownerOf(d,g.home),mq=ao&&ho,ra=rec(d,g.away),rh=rec(d,g.home);
+  return `<div class="mc ${mq?"marquee":""} ${cp?"cp":""}"><div class="mh"><span>Week ${g.week}${mq?' · <span class="y">Coach vs Coach</span>':isConf(g)?" · MAC":" · Non-conf"}</span>${fin?'<span class="tag final">FINAL</span>':g.week===currentWeek(D())?'<span class="tag live">THIS WEEK</span>':'<span class="tag">UPCOMING</span>'}</div>
+  <div class="mr"><div class="tm">${logo(g.away,cp?"":"md")}<span>${esc(cp?T(g.away).abbr:T(g.away).school)}</span></div><div class="sc">${fin?`<span class="${g.as<g.hs?"l":""}">${g.as}</span>:<span class="${g.hs<g.as?"l":""}">${g.hs}</span>`:'<span class="dim" style="font-size:16px">vs</span>'}<small>${fin?"Final":"@"}</small></div><div class="tm">${logo(g.home,cp?"":"md")}<span>${esc(cp?T(g.home).abbr:T(g.home).school)}</span></div></div>
+  <div class="mf"><div class="c">${ao?`<span class="who">${esc(ao.name)}</span>`:'<span class="who alt">CPU</span>'}<span class="rec">${ra.w}-${ra.l}</span></div><div class="c"><span class="rec">${rh.w}-${rh.l}</span>${ho?`<span class="who">${esc(ho.name)}</span>`:'<span class="who alt">CPU</span>'}</div></div></div>`;
 }
-function coachCard(d,p){
-  const c=(d.draft.assignments||{})[p.id], m=h2h(d), ht=h2hTot(m,p.id), me=p.id===myId();
-  if(!c) return `<div class="card ccard ${me?"me":""}"><div class="row"><span class="lbl">${esc(p.name)}</span></div><div class="rec mute">—</div><div class="lbl">Awaiting spin</div><div class="spark">${spark([8,10,9,13,12,15],"rgba(236,244,247,.18)")}</div></div>`;
-  const r=rec(d,c), s=ptsSeries(d,c).map(x=>x.v), col=accent(c);
-  return `<div class="card ccard glowT ${me?"me":""}" style="--gt:${col}" data-coach="${p.id}"><div class="row"><div><span class="lbl">${esc(p.name)}</span><div class="rec">${r.w}-${r.l}</div><div class="lbl" style="text-transform:none;letter-spacing:.02em">${esc(T(c).school)} · ${ht.w}-${ht.l} vs coaches</div></div>${logo(c)}</div><div class="spark">${spark(s,vivid(c))}</div></div>`;
+function heroSlides(d){
+  const ws=d.season.weeks||[]; if(!ws.length) return [];
+  const cw=currentWeek(d), wk=ws.find(w=>w.week===cw)||{games:[]}, a=d.draft.assignments||{}, mine=a[myId()];
+  const gs=(wk.games||[]).map(g=>({...g,week:wk.week})).filter(g=>ownerOf(d,g.home)||ownerOf(d,g.away));
+  const score=g=>(mine&&(g.home===mine||g.away===mine)?4:0)+(ownerOf(d,g.home)&&ownerOf(d,g.away)?2:0);
+  return gs.sort((x,y)=>score(y)-score(x));
 }
-function readyCard(d,wk){
-  const ps=players(d), done=readyMap(d,wk), n=ps.filter(p=>done[p.id]).length, mine=myId();
-  return `<div class="card glowB ready" style="min-height:220px"><div class="ch" style="margin-bottom:6px"><span class="lbl" style="color:rgba(236,244,247,.8)">Ready to advance</span><span style="color:#9cc6ff">${I.flag.replace('<svg','<svg width="26" height="26"')}</span></div>
-  <div class="big md">${n}<span style="opacity:.55">/${ps.length}</span></div><div style="color:rgba(236,244,247,.85);font-weight:500;margin-top:8px">${n===ps.length?"Everyone's played. Advance the week.":`Week ${wk} · ${ps.length-n} still to play`}</div>
-  <div class="rlist">${ps.map(p=>{const can=canWrite||(member&&member.coach===p.id);return `<button class="rp ${done[p.id]?"done":""}" data-ready="${p.id}" ${can?"":"disabled"}><i>${done[p.id]?"✓":""}</i>${esc(p.name)}</button>`}).join("")}</div>
-  <svg class="wave" viewBox="0 0 400 90" preserveAspectRatio="none"><path d="M0 50 C80 20 140 70 220 45 S340 30 400 50 V90 H0Z" fill="rgba(59,139,255,.35)"/><path d="M0 62 C90 40 160 80 240 58 S350 50 400 62 V90 H0Z" fill="rgba(11,36,97,.6)"/></svg></div>`;
+function heroHTML(d){
+  const ps=players(d), a=d.draft.assignments||{}, drafted=ps.filter(p=>a[p.id]).length, slides=heroSlides(d);
+  if(!slides.length){
+    const last=(d.draft.log||[]).slice(-1)[0];
+    return `<div class="hc"><span class="kick">${I.wheel.replace('<svg','<svg width="13" height="13"')} ${drafted<ps.length?"Draft night":"Preseason"}</span><h2>${drafted<ps.length?"Spin for your program":"Every coach has a program"}</h2>
+      <div class="meta"><span>${I.star}${drafted} of ${ps.length} coaches assigned</span><span>${I.pin}Mid-American Conference</span></div>
+      <div class="cta"><a class="btn" href="#draft">${drafted<ps.length?"Go to the wheel":"View the draft board"} <span class="arr">${I.right}</span></a></div></div>
+      <div class="logos">${last?logo(last.code,"xl"):`<img src="${MAC_LOGO}" alt="" style="width:150px;height:150px;background:#fff;border-radius:50%;padding:18px">`}</div>`;
+  }
+  const g=slides[heroIdx%slides.length], ao=ownerOf(d,g.away), ho=ownerOf(d,g.home), fin=isFinal(g), mine=a[myId()];
+  return `<div class="hc"><span class="kick">${I.star.replace('<svg','<svg width="12" height="12"')} ${mine&&(g.home===mine||g.away===mine)?"Your game":ao&&ho?"Coach vs Coach":"Coach game"}</span>
+    <h2>${esc(T(g.away).school)} ${fin?`<span class="y">${g.as}–${g.hs}</span>`:"vs"} ${esc(T(g.home).school)}</h2>
+    <div class="meta"><span>${I.cal}Week ${g.week}${g.date?" · "+esc(g.date):""}</span><span>${I.pin}at ${esc(T(g.home).school)}</span><span>${I.vs}${ao?esc(ao.name):"CPU"} vs ${ho?esc(ho.name):"CPU"}</span></div>
+    <div class="cta"><a class="btn" href="#schedule">${fin?"See results":"View matchup"} <span class="arr">${I.right}</span></a></div></div>
+    <div class="logos">${logo(g.away,"xl")}<div class="l2">${logo(g.home,"xl")}</div></div>
+    ${slides.length>1?`<div class="dots">${slides.map((_,i)=>`<button class="${i===heroIdx%slides.length?"on":""}" data-hero="${i}" aria-label="Slide ${i+1}"></button>`).join("")}</div>`:""}`;
 }
-function leaders(d){
-  const blocks=[["passing","Passing yds","passYds"],["rushing","Rushing yds","rushYds"],["receiving","Receiving yds","recYds"]];
-  return `<div class="leaders">${blocks.map(([cat,l,k])=>{const r=statRows(d,cat,true),t=r[0];return `<div class="card ldr"><span class="lbl">${l}</span>${t?`<div class="big sm y" style="margin-top:10px">${t[k].toLocaleString()}</div><div class="top">${logo(t.team,"sm")}<div class="pn">${esc(t.name)}<small>${esc(T(t.team).school)} · ${esc(t.pos||"")}</small></div></div><ol>${r.slice(1,4).map(p=>`<li><span>${esc(p.name)} · ${T(p.team).abbr}</span><b>${p[k].toLocaleString()}</b></li>`).join("")}</ol>`:`<div class="mute" style="margin-top:12px">No stats yet</div>`}</div>`}).join("")}</div>`;
+function paintHero(){const el=document.getElementById("hero");if(!el)return;el.innerHTML=heroHTML(D());el.querySelectorAll("[data-hero]").forEach(b=>b.onclick=()=>{heroIdx=+b.dataset.hero;paintHero()})}
+function macTable(d,limit,full){
+  const st=standings(d), cw=currentWeek(d), prev=cw&&cw>2?standings(d,cw-2):null, me=(d.draft.assignments||{})[myId()];
+  const rows=limit?st.slice(0,limit):st;
+  return `<div class="scroll"><table><thead><tr><th>Pos</th><th>Program</th><th class="n hm">GP</th><th class="n">Conf</th><th class="n">${full?"Overall":"W-L"}</th>${full?'<th class="n hm">PF</th><th class="n hm">PA</th>':""}<th class="n hm">Diff</th><th>Form</th><th class="n">Next</th></tr></thead><tbody>
+  ${rows.map((r,i)=>{const o=ownerOf(d,r.code),df=r.pf-r.pa,pi=prev?prev.findIndex(x=>x.code===r.code):i,mv=pi>i?I.up:pi<i?I.down:I.even,nx=nextGame(d,r.code),op=nx?(nx.home===r.code?nx.away:nx.home):null;
+    return `<tr class="${r.code===me?"me":""} ${o?"user":""}"><td><span class="pos">${i+1} ${mv}</span></td><td><div class="tc">${logo(r.code,"sm")}<span class="nm">${esc(T(r.code).school)}</span>${o?`<span class="who">${esc(o.name)}</span>`:""}</div></td><td class="n hm">${r.w+r.l}</td><td class="n b">${r.cw}-${r.cl}</td><td class="n">${r.w}-${r.l}</td>${full?`<td class="n mute hm">${r.pf}</td><td class="n mute hm">${r.pa}</td>`:""}<td class="n hm ${df>0?"win":df<0?"loss":""}">${df>0?"+":""}${df}</td><td>${form(d,r.code,full?5:3)}</td><td class="n">${op?`<span title="${esc(T(op).school)}" style="display:inline-block">${logo(op,"xs")}</span>`:'<span class="dim">—</span>'}</td></tr>`}).join("")}
+  </tbody></table></div>`;
 }
-function wireStrip(d){
-  const items=[], a=d.draft.assignments||{};
-  (d.season.news||[]).slice(-5).forEach(n=>items.push(esc(typeof n==="string"?n:n.text)));
-  allGames(d).filter(g=>isFinal(g)&&(ownerOf(d,g.home)||ownerOf(d,g.away))).slice(-5).reverse().forEach(g=>items.push(`${T(g.away).abbr} ${g.as} · ${T(g.home).abbr} ${g.hs} final`));
-  players(d).forEach(p=>{if(a[p.id])items.push(`${esc(p.name)} → ${esc(T(a[p.id]).school)}`)});
-  if(!items.length)items.push("Draft night","5 coaches","1 wheel","The MAC awaits");
-  const html=items.map(i=>`<span>${i}</span><i>MAC Dynasty</i>`).join("");
-  return `<div class="card strip" style="border-radius:20px;margin-top:16px"><div class="run">${html}${html}</div></div>`;
+function coachList(d){
+  const ps=players(d),a=d.draft.assignments||{},m=h2h(d),me=myId();
+  return ps.map(p=>{const c=a[p.id],ht=h2hTot(m,p.id),r=c?rec(d,c):null,last=c?teamGames(d,c).filter(isFinal).slice(-3):[];
+    return `<div class="lcard ${p.id===me?"me":""}" ${c?`data-coach="${p.id}"`:""}><div class="lt"><div class="av">${c?logo(c,"sm"):`<div class="badge sm" style="--c1:#233168;--c2:rgba(236,244,247,.2)">${esc(p.name[0])}</div>`}</div><div style="min-width:0"><b>${esc(p.name)}</b><small>${c?esc(T(c).school+" "+T(c).mascot):"Awaiting spin"}</small></div><div class="when"><b>${r?`${r.w}-${r.l}`:"—"}</b><small>${c?T(c).ovr+" OVR":""}</small></div></div>
+    <div class="lb"><span>vs coaches <b>${ht.w}-${ht.l}</b></span><span class="ic">${last.length?last.map(g=>{const op=g.home===c?g.away:g.home,w=(g.home===c?g.hs>g.as:g.as>g.hs);return `<span class="${w?"W":"L"}" title="${w?"W":"L"} vs ${esc(T(op).school)}">${LOGO[op]?`<img src="${logoUrl(op)}" alt="">`:""}</span>`}).join(""):'<span class="dim" style="background:none;width:auto">No games yet</span>'}</span></div></div>`}).join("");
+}
+function topPerformer(d){
+  const r=statRows(d,"passing",true), t=r[0];
+  if(!t) return `<div class="top1"><div class="empty"><b>No stats yet</b>Box scores fill this in after week 1.</div></div>`;
+  return `<div class="top1" style="--tc:${vivid(t.team)}"><div class="feat">${LOGO[t.team]?`<img class="bg" src="${logoUrl(t.team)}" alt="">`:""}<b>${esc(t.name)}</b><small>${esc(T(t.team).school)} · ${esc(t.pos)}</small><div class="stat">${t.passYds.toLocaleString()} pass yds · ${t.passTd} TD</div></div>
+  ${r.slice(1,4).map((p,i)=>`<div class="row ${i===0?"hl":""}">${logo(p.team,"xs")}<span class="nm">${esc(p.name)}</span><span class="v">${p.passYds.toLocaleString()} YDS</span></div>`).join("")}</div>`;
+}
+function readyPanel(d,wk){
+  const ps=players(d),done=readyMap(d,wk),n=ps.filter(p=>done[p.id]).length;
+  return `<div class="panel livec"><div class="lh"><div><b>Ready to advance</b><small>Week ${wk}</small></div>${n===ps.length?'<span class="tag live">ALL IN</span>':`<span class="tag y">${n}/${ps.length}</span>`}</div>
+   <div class="chips" style="margin:14px 0">${ps.map(p=>{const can=canWrite||demo||(member&&member.coach===p.id);return `<button class="chip ${done[p.id]?"on":""}" data-ready="${p.id}" ${can?"":"disabled"}>${done[p.id]?I.check:""}${esc(p.name)}</button>`}).join("")}</div>
+   <div class="lf"><span class="mute" style="font-size:12px">${n===ps.length?"Everyone's played. Advance the week.":`${ps.length-n} still to play`}</span><a href="#chat">Nudge ${I.right}</a></div></div>`;
 }
 
 /* ======================= VIEWS ======================= */
 function home(d){
-  const ps=players(d), a=d.draft.assignments||{}, drafted=ps.filter(p=>a[p.id]).length, ws=d.season.weeks||[], cw=currentWeek(d);
+  const ps=players(d),a=d.draft.assignments||{},ws=d.season.weeks||[],cw=currentWeek(d);
+  const right=`<div class="stack"><div><div class="sh"><h3>Coaches</h3><a href="#rivals">Rivalries ${I.right}</a></div><div class="stack" style="gap:10px">${coachList(d)}</div></div>
+    <div><div class="sh"><h3>Top performer</h3><a href="#stats">view all ${I.right}</a></div>${topPerformer(d)}</div></div>`;
   if(!ws.length){
-    return `<div class="ptitle"><h2>${drafted<ps.length?"Draft <em>night</em>":"The coaches are <em>set</em>"}</h2><p>${drafted<ps.length?"Spin the wheel to hand every coach a MAC program.":"Once the dynasty is created, send Josh the schedule screenshots and the season goes live here."}</p></div>
-    <div class="grid gHome">
-      <div class="card glowY arc"><div class="top"><div class="t1">${drafted} of ${ps.length}<small>Coaches assigned</small></div><div class="t2">Draft<br>Night</div></div>${arc(drafted/ps.length)}<div class="bot"><b>${drafted<ps.length?`${ps.length-drafted} spins to go`:"Draft complete"}</b><span class="y">${I.sun}</span></div></div>
-      <div class="card" style="display:flex;flex-direction:column;justify-content:space-between;gap:16px"><div><span class="lbl">Next up</span><div class="big md" style="margin-top:10px">${drafted<ps.length?"Spin":"Schedule"}</div><p class="mute" style="margin-top:10px;line-height:1.5">${drafted<ps.length?"The commissioner runs the wheel on draft night. Everyone watches live.":"Set the conference schedule so every coach plays every other coach."}</p></div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn" href="#draft">${I.wheel}${drafted<ps.length?"Go to the wheel":"Draft board"}</a><button class="btn ghost" data-act="demo">Preview a season</button></div></div>
-    </div>
-    <div class="sect"><h3>Coaches</h3></div><div class="coaches">${ps.map(p=>coachCard(d,p)).join("")}</div>${wireStrip(d)}`;
+    const order=draftOrder(d);
+    return `<div class="cols"><div class="stack"><div class="hero" id="hero">${heroHTML(d)}</div>
+      <div class="two"><div class="panel"><div class="sh"><h3>Draft board</h3><a href="#draft">open ${I.right}</a></div><div class="stack" style="gap:8px">${order.map((id,i)=>{const p=d.draft.players.find(x=>x.id===id),c=a[id];return `<div class="mc" style="flex-direction:row;align-items:center;padding:9px 12px"><span class="dim" style="width:16px;font-weight:600">${i+1}</span>${c?logo(c,"sm"):`<div class="badge sm" style="--c1:#233168;--c2:rgba(236,244,247,.2)">?</div>`}<b style="flex:1;font-weight:600">${esc(p.name)}</b><span class="mute" style="font-size:12px">${c?esc(T(c).school):id===nextUp(d)?'<span class="y">On the clock</span>':"—"}</span></div>`}).join("")}</div></div>
+        <div class="panel livec"><div class="lh"><div><b>Preview a season</b><small>See the hub with sample data</small></div><span class="tag y">DEMO</span></div><p class="mute" style="margin:14px 0;line-height:1.55;font-size:13px">Once the dynasty starts, this fills with weekly matchups, the MAC table, coach records and stat leaders.</p><div class="lf"><button class="btn sm ghost" data-act="demo">Open preview</button><a href="#rules">House rules ${I.right}</a></div></div></div>
+      <div class="panel flat"><div class="ph"><h3>MAC Programs</h3><a class="pill ghost" href="#draft">${eligible(d).length} on the wheel</a></div>
+        <div class="scroll"><table><thead><tr><th>#</th><th>Program</th><th class="n">OVR</th><th>Coach</th><th>Status</th></tr></thead><tbody>${Object.keys(TEAMS).filter(c=>!TEAMS[c].optional).sort((x,y)=>TEAMS[y].ovr-TEAMS[x].ovr).map((c,i)=>{const o=ownerOf(d,c),ex=(d.draft.excluded||[]).includes(c);return `<tr class="${o?"user":""}"><td class="dim">${i+1}</td><td><div class="tc">${logo(c,"sm")}<span class="nm">${esc(TEAMS[c].school)}</span></div></td><td class="n b">${TEAMS[c].ovr}</td><td>${o?`<span class="who">${esc(o.name)}</span>`:'<span class="dim">CPU</span>'}</td><td>${o?'<span class="tag y">Drafted</span>':ex?'<span class="tag">Off wheel</span>':'<span class="tag live">On wheel</span>'}</td></tr>`}).join("")}</tbody></table></div></div>
+    </div>${right}</div>`;
   }
-  const total=d.season.totalWeeks||ws[ws.length-1].week, wk0=ws.find(w=>w.week===cw)||{games:[]};
-  const games=(wk0.games||[]).map(g=>({...g,week:wk0.week})), ug=games.filter(g=>ownerOf(d,g.home)||ownerOf(d,g.away));
-  const mine=a[myId()], feat=(mine&&ug.find(g=>g.home===mine||g.away===mine))||ug.find(g=>ownerOf(d,g.home)&&ownerOf(d,g.away))||ug[0];
-  const left=total-cw;
-  return `<div class="ptitle"><h2>Week <em>${cw}</em></h2><p>${ug.filter(g=>ownerOf(d,g.home)&&ownerOf(d,g.away)).length} coach-vs-coach game${ug.filter(g=>ownerOf(d,g.home)&&ownerOf(d,g.away)).length===1?"":"s"} this week</p></div>
-  <div class="grid gHome">
-    <div class="grid">
-      <div class="card glowY arc"><div class="top"><div class="t1">Week ${cw} of ${total}<small>Season ${d.season.season||1} · MAC</small></div><div class="t2">Regular<br>Season</div></div>${arc((cw-.5)/total)}<div class="bot"><b>${left>0?`${left} week${left>1?"s":""} to go`:"Final week"}</b><span class="y">${I.sun}</span></div></div>
-      ${feat?`<div><div class="sect" style="margin-top:6px"><h3>${feat&&mine&&(feat.home===mine||feat.away===mine)?"Your game":"Game of the week"}</h3><a href="#schedule">Full schedule →</a></div>${pass(d,feat)}</div>`:""}
-    </div>
-    <div class="grid">${readyCard(d,cw)}
-      <div class="card"><div class="ch"><h3>Coaches' table</h3><span class="lbl">vs coaches</span></div>${coachTable(d)}</div>
-    </div>
-  </div>
-  <div class="sect"><h3>Coaches</h3><a href="#standings">Standings →</a></div><div class="coaches">${ps.map(p=>coachCard(d,p)).join("")}</div>
-  ${ug.length>1?`<div class="sect"><h3>This week's coach games</h3></div><div class="grid g2">${ug.filter(g=>g!==feat).map(g=>pass(d,g,true)).join("")}</div>`:""}
-  <div class="sect"><h3>Stat leaders</h3><a href="#stats">All stats →</a></div>${leaders(d)}
-  ${wireStrip(d)}`;
-}
-function coachTable(d){
-  const ps=players(d),a=d.draft.assignments||{},m=h2h(d),me=myId();
-  const rows=ps.map(p=>({p,c:a[p.id],h:h2hTot(m,p.id),r:a[p.id]?rec(d,a[p.id]):{w:0,l:0}})).sort((x,y)=>(y.h.w-y.h.l)-(x.h.w-x.h.l)||(y.r.w-y.r.l)-(x.r.w-x.r.l));
-  return `<table><tbody>${rows.map((x,i)=>`<tr class="${x.p.id===me?"me":""}"><td class="rank">${i+1}</td><td><div class="tc">${x.c?logo(x.c,"sm"):""}<span class="nm">${esc(x.p.name)}</span></div></td><td class="n b">${x.h.w}-${x.h.l}</td><td class="n mute">${x.r.w}-${x.r.l}</td></tr>`).join("")}</tbody></table>`;
+  const lastWk=ws.filter(w=>w.week<cw).slice(-1)[0], lastG=(lastWk?.games||[]).map(g=>({...g,week:lastWk.week})).filter(g=>isFinal(g)&&(ownerOf(d,g.home)||ownerOf(d,g.away)));
+  const mine=a[myId()]; lastG.sort((x,y)=>((mine&&(y.home===mine||y.away===mine))?1:0)-((mine&&(x.home===mine||x.away===mine))?1:0));
+  return `<div class="cols"><div class="stack"><div class="hero" id="hero">${heroHTML(d)}</div>
+    <div class="two"><div class="panel"><div class="sh"><h3>Latest results</h3><a href="#schedule">view all ${I.right}</a></div>${lastG.length?`<div class="g2">${lastG.slice(0,2).map(g=>mcard(d,g,true)).join("")}</div>`:'<div class="empty">No results yet.</div>'}</div>${readyPanel(d,cw)}</div>
+    <div class="panel flat"><div class="ph"><h3>MAC Table</h3><a class="pill" href="#standings">Season ${d.season.season||1} ${I.right.replace('<svg','<svg width="12" height="12"')}</a></div>${macTable(d,8)}</div>
+  </div>${right}</div>`;
 }
 
 let schedWeek=null, schedFilter="all";
 function schedule(d){
   const ws=d.season.weeks||[];
-  if(!ws.length) return `<div class="ptitle"><h2>Schedule</h2></div><div class="card"><div class="empty"><b>Schedule not imported yet</b>Once the dynasty is created, send Josh screenshots of the schedule and every week shows up here.</div></div>`;
+  if(!ws.length) return `<div class="ptitle"><h2>Schedule</h2><p>Week-by-week matchups</p></div><div class="panel"><div class="empty"><b>Schedule not imported yet</b>Once the dynasty is created, send Josh screenshots of the schedule and every week shows up here.</div></div>`;
   const a=d.draft.assignments||{}, cw=currentWeek(d);
+  const fchips=`<div class="chips scroll" style="margin-bottom:16px"><button class="chip ${schedFilter==="all"?"on":""}" data-sf="all">All games</button><button class="chip ${schedFilter==="coaches"?"on":""}" data-sf="coaches">${I.star}Coaches only</button>${players(d).filter(p=>a[p.id]).map(p=>`<button class="chip ${schedFilter===p.id?"on":""}" data-sf="${p.id}">${LOGO[a[p.id]]?`<img src="${logoUrl(a[p.id])}" alt="">`:""}${esc(p.name)}</button>`).join("")}</div>`;
   if(schedFilter!=="all"&&schedFilter!=="coaches"&&a[schedFilter]){
-    const c=a[schedFilter], p=players(d).find(x=>x.id===schedFilter), gs=teamGames(d,c);
-    return `<div class="ptitle"><h2>${esc(p.name)}'s <em>season</em></h2><p>${esc(T(c).school)} · ${rec(d,c).w}-${rec(d,c).l}</p></div>${filterChips(d)}
-    <div class="tl" style="--tcl:${vivid(c)};margin-top:18px">${gs.map(g=>`<div class="node ${isFinal(g)?"past":""}"><div class="wkl">Week ${g.week}${g.week===cw?' · <span class="y">This week</span>':""}</div>${pass(d,g,true)}</div>`).join("")}</div>`;
+    const c=a[schedFilter],p=players(d).find(x=>x.id===schedFilter),gs=teamGames(d,c),r=rec(d,c);
+    return `<div class="ptitle"><h2>${esc(p.name)}'s season</h2><p>${esc(T(c).school)} ${esc(T(c).mascot)} · ${r.w}-${r.l} overall · ${r.cw}-${r.cl} MAC</p></div>${fchips}
+    <div class="tl" style="--tcl:${vivid(c)};max-width:760px">${gs.map(g=>`<div class="node ${isFinal(g)?"past":""} ${g.week===cw?"cur":""}"><div class="wkl">Week ${g.week}${g.week===cw?' · <span class="y">This week</span>':""}</div>${mcard(d,g)}</div>`).join("")}</div>`;
   }
   if(schedWeek==null||!ws.find(w=>w.week===schedWeek)) schedWeek=cw;
   const wk=ws.find(w=>w.week===schedWeek); let games=(wk.games||[]).map(g=>({...g,week:wk.week}));
   if(schedFilter==="coaches") games=games.filter(g=>ownerOf(d,g.home)||ownerOf(d,g.away));
-  const score=g=>(ownerOf(d,g.home)&&ownerOf(d,g.away)?2:0)+(ownerOf(d,g.home)||ownerOf(d,g.away)?1:0);
-  games.sort((x,y)=>score(y)-score(x));
-  return `<div class="ptitle"><h2>Schedule</h2><p>Gold star = coach-vs-coach week</p></div>
-  <div class="tiles" id="tiles">${ws.map(w=>{const gs=w.games||[];const fin=gs.length&&gs.every(isFinal);const mq=gs.some(g=>ownerOf(d,g.home)&&ownerOf(d,g.away));
-    return `<button class="tile ${w.week===schedWeek?"on":""}" data-wk="${w.week}">${mq?`<span class="star">${I.star}</span>`:""}<b>${w.week}</b><span>${w.label||"week"}</span>${fin?`<span class="tag dim">Final</span>`:w.week===cw?`<span class="tag">Live</span>`:`<span class="tag dim">Upcoming</span>`}</button>`}).join("")}</div>
-  ${filterChips(d)}
-  <div class="grid g2" style="margin-top:16px">${games.map(g=>pass(d,g,true)).join("")||`<div class="empty">No games match.</div>`}</div>`;
+  const sc=g=>(ownerOf(d,g.home)&&ownerOf(d,g.away)?2:0)+(ownerOf(d,g.home)||ownerOf(d,g.away)?1:0); games.sort((x,y)=>sc(y)-sc(x));
+  const i=ws.indexOf(wk);
+  return `<div class="ptitle"><h2>Schedule</h2><p>Week ${schedWeek} of ${ws.length} · ${games.length} games</p></div>
+  <div class="panel" style="margin-bottom:16px;padding:12px"><div class="wknav"><button class="arrow" data-wk="${ws[i-1]?.week??""}" ${i<=0?"disabled":""} aria-label="Previous week">${I.left}</button>
+   <div class="wkstrip" id="wkstrip" style="flex:1">${ws.map(w=>{const mq=(w.games||[]).some(g=>ownerOf(d,g.home)&&ownerOf(d,g.away));return `<button class="${w.week===schedWeek?"on":""} ${w.week===cw?"cur":""}" data-wk="${w.week}">${mq?`<span class="s">${I.star}</span>`:""}${w.week}<small>WK</small></button>`}).join("")}</div>
+   <button class="arrow" data-wk="${ws[i+1]?.week??""}" ${i>=ws.length-1?"disabled":""} aria-label="Next week">${I.right}</button></div></div>
+  ${fchips}<div class="g3">${games.map(g=>mcard(d,g)).join("")||'<div class="empty">No games match.</div>'}</div>`;
 }
-function filterChips(d){const a=d.draft.assignments||{};return `<div class="chips scroll"><button class="chip ${schedFilter==="all"?"on":""}" data-sf="all">${I.cal}All games</button><button class="chip ${schedFilter==="coaches"?"on":""}" data-sf="coaches">${I.star}Coaches only</button>${players(d).filter(p=>a[p.id]).map(p=>`<button class="chip ${schedFilter===p.id?"on":""}" data-sf="${p.id}">${logo(a[p.id],"sm").replace('class="logo sm"','class="logo" style="width:18px;height:18px"').replace('class="badge sm"','class="badge" style="width:18px;height:18px;font-size:6px"')}${esc(p.name)}</button>`).join("")}</div>`}
 
 function standingsView(d){
-  const st=standings(d), me=(d.draft.assignments||{})[myId()];
-  return `<div class="ptitle"><h2>Standings</h2><p>Conference record first, then overall.</p></div>
-  <div class="grid gHome">
-   <div class="card flat"><div class="scroll"><table><thead><tr><th>#</th><th>Team</th><th class="n">Conf</th><th class="n">All</th><th class="n">PF</th><th class="n">PA</th><th class="n">Diff</th><th class="n">Strk</th></tr></thead><tbody>
-   ${st.map((r,i)=>{const o=ownerOf(d,r.code),df=r.pf-r.pa;return `<tr class="${r.code===me?"me":""} ${o?"user":""}"><td class="rank">${i+1}</td><td><div class="tc">${logo(r.code,"sm")}<span class="nm">${esc(T(r.code).school)}</span>${o?`<span class="who">${esc(o.name)}</span>`:""}</div></td><td class="n b">${r.cw}-${r.cl}</td><td class="n">${r.w}-${r.l}</td><td class="n mute">${r.pf}</td><td class="n mute">${r.pa}</td><td class="n ${df>0?"mint":df<0?"coral":""}">${df>0?"+":""}${df}</td><td class="n">${r.streak?`<span class="tag ${r.streak[0]==="W"?"":"coral"}">${r.streak}</span>`:"—"}</td></tr>`}).join("")}
-   </tbody></table></div></div>
-   <div class="grid">
-    <div class="card"><div class="ch"><h3>Coaches' table</h3><span class="lbl">vs coaches · overall</span></div>${coachTable(d)}</div>
-    ${(()=>{const top=st[0];return top?`<div class="card glowT" style="--gt:${accent(top.code)}"><span class="lbl">Conference leader</span><div style="display:flex;align-items:center;gap:14px;margin-top:12px">${logo(top.code,"lg")}<div><div class="big sm">${top.cw}-${top.cl}</div><div class="mute" style="font-weight:600;margin-top:4px">${esc(T(top.school?top.code:top.code).school)}</div></div></div></div>`:""})()}
-   </div>
-  </div>`;
+  return `<div class="ptitle"><h2>Standings</h2><p>Conference record first, then overall · ▲▼ movement over the last two weeks</p></div>
+  <div class="cols"><div class="panel flat"><div class="ph"><h3>MAC Table</h3><span class="pill">Season ${d.season.season||1}</span></div>${macTable(d,0,true)}</div>
+  <div class="stack"><div><div class="sh"><h3>Coaches</h3></div><div class="stack" style="gap:10px">${coachList(d)}</div></div></div></div>`;
 }
 
 const STATCATS={passing:{label:"Passing",cols:[["cmp","CMP"],["att","ATT"],["passYds","YDS"],["passTd","TD"],["int","INT"]],sort:"passYds"},rushing:{label:"Rushing",cols:[["car","CAR"],["rushYds","YDS"],["ypc","YPC"],["rushTd","TD"]],sort:"rushYds"},receiving:{label:"Receiving",cols:[["rec","REC"],["recYds","YDS"],["ypr","YPR"],["recTd","TD"]],sort:"recYds"},defense:{label:"Defense",cols:[["tkl","TKL"],["tfl","TFL"],["sacks","SACK"],["defInt","INT"]],sort:"tkl"}};
 function statRows(d,cat,usersOnly){const a=Object.values(d.draft.assignments||{});return (d.season.playerStats||[]).map(p=>({...p,ypc:p.car?(p.rushYds/p.car).toFixed(1):"",ypr:p.rec?(p.recYds/p.rec).toFixed(1):""})).filter(p=>(p[STATCATS[cat].sort]||0)>0&&(!usersOnly||a.includes(p.team))).sort((x,y)=>(y[STATCATS[cat].sort]||0)-(x[STATCATS[cat].sort]||0))}
-let statCat="passing",statUsers=true,chartCoach=null;
+let statCat="passing",statUsers=true;
 function stats(d){
-  const a=d.draft.assignments||{}, ps=players(d).filter(p=>a[p.id]);
-  if(!chartCoach||!a[chartCoach]) chartCoach=(a[myId()]&&myId())||(ps[0]&&ps[0].id);
-  const c=chartCoach&&a[chartCoach], ser=c?ptsSeries(d,c):[], col=c?vivid(c):"#FFE14F";
-  const tot=ser.reduce((s,x)=>s+x.v,0), cc=STATCATS[statCat], rows=statRows(d,statCat,statUsers), me=a[myId()];
-  return `<div class="ptitle"><h2>Stats</h2><p>Season ${d.season.season||1}</p></div>
-  ${ps.length?`<div class="card flat strava" style="padding:0;overflow:hidden"><div style="padding:24px 24px 0"><div class="hd"><div><span class="lbl">Points scored · ${c?esc(T(c).school):""}</span><div class="big xl" style="margin-top:14px">${tot}</div><div class="mute" style="font-weight:600;margin-top:6px">${ser.length?`${(tot/ser.length).toFixed(1)} per game · ${ser.length} games`:"No games yet"}</div></div>${c?logo(c):""}</div>
-   <div class="chips scroll" style="margin-top:16px">${ps.map(p=>`<button class="chip sm ${p.id===chartCoach?"on":""}" data-cc="${p.id}">${esc(p.name)}</button>`).join("")}</div></div>
-   <div class="chart">${stravaChart(ser,col,"pts")}</div>
-   <div class="strip"><div class="run">${Array(8).fill(`<span>MAC Dynasty</span><i>Season ${d.season.season||1}</i>`).join("")}</div></div></div>`:""}
-  <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;margin:22px 0 14px">
-   <div class="chips">${Object.entries(STATCATS).map(([k,v])=>`<button class="chip ${k===statCat?"on":""}" data-cat="${k}">${v.label}</button>`).join("")}</div>
+  const cc=STATCATS[statCat],rows=statRows(d,statCat,statUsers),me=(d.draft.assignments||{})[myId()];
+  const feats=[["passing","Passing leader","passYds","pass yds"],["rushing","Rushing leader","rushYds","rush yds"],["receiving","Receiving leader","recYds","rec yds"]];
+  return `<div class="ptitle"><h2>Stats</h2><p>Season ${d.season.season||1} player leaders</p></div>
+  <div class="g3" style="margin-bottom:20px">${feats.map(([cat,l,k,u])=>{const t=statRows(d,cat,statUsers)[0];return `<div class="top1" style="--tc:${t?vivid(t.team):"#FFE14F"}"><div class="feat">${t&&LOGO[t.team]?`<img class="bg" src="${logoUrl(t.team)}" alt="">`:""}<small style="text-transform:uppercase;letter-spacing:.08em;font-size:10.5px;font-weight:600">${l}</small>${t?`<b>${esc(t.name)}</b><small>${esc(T(t.team).school)} · ${esc(t.pos)}</small><div class="stat">${t[k].toLocaleString()} ${u}</div>`:`<b class="mute">No stats yet</b>`}</div></div>`}).join("")}</div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;margin-bottom:14px"><div class="chips">${Object.entries(STATCATS).map(([k,v])=>`<button class="chip ${k===statCat?"on":""}" data-cat="${k}">${v.label}</button>`).join("")}</div>
    <div class="chips"><button class="chip ${statUsers?"on":""}" data-su="1">Coaches' teams</button><button class="chip ${!statUsers?"on":""}" data-su="0">All MAC</button></div></div>
-  <div class="card flat">${rows.length?`<div class="scroll"><table><thead><tr><th>#</th><th>Player</th><th>Team</th><th>Pos</th><th class="n">GP</th>${cc.cols.map(([k,l])=>`<th class="n">${l}</th>`).join("")}</tr></thead><tbody>
-   ${rows.map((p,i)=>`<tr class="${p.team===me?"me":""} ${ownerOf(d,p.team)?"user":""}"><td class="rank">${i+1}</td><td style="font-weight:700">${esc(p.name)}</td><td><div class="tc">${logo(p.team,"sm")}<span class="mute">${T(p.team).abbr}</span></div></td><td class="mute">${esc(p.pos||"")}</td><td class="n mute">${p.gp??""}</td>${cc.cols.map(([k])=>`<td class="n ${k===cc.sort?"b":""}">${p[k]??0}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`
+  <div class="panel flat">${rows.length?`<div class="scroll"><table><thead><tr><th>#</th><th>Player</th><th>Team</th><th>Pos</th><th class="n">GP</th>${cc.cols.map(([k,l])=>`<th class="n">${l}</th>`).join("")}</tr></thead><tbody>
+   ${rows.map((p,i)=>`<tr class="${p.team===me?"me":""} ${ownerOf(d,p.team)?"user":""}"><td class="dim">${i+1}</td><td style="font-weight:600">${esc(p.name)}</td><td><div class="tc">${logo(p.team,"xs")}<span class="mute">${T(p.team).abbr}</span></div></td><td class="mute">${esc(p.pos||"")}</td><td class="n mute">${p.gp??""}</td>${cc.cols.map(([k])=>`<td class="n ${k===cc.sort?"b":""}">${p[k]??0}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`
    :`<div class="empty"><b>No ${cc.label.toLowerCase()} stats yet</b>Post a box score screenshot after each game and the leaderboards fill in.</div>`}</div>`;
 }
 
 function rivals(d){
-  const ps=players(d),m=h2h(d),a=d.draft.assignments||{}, games=allGames(d).filter(g=>isFinal(g)&&ownerOf(d,g.home)&&ownerOf(d,g.away));
-  return `<div class="ptitle"><h2>Rival<em>ries</em></h2><p>Read across: the row coach's record against the column coach.</p></div>
-  <div class="card flat"><div class="scroll"><table class="h2h"><thead><tr><th></th>${ps.map(p=>`<th style="text-align:center">${esc(p.name)}</th>`).join("")}</tr></thead><tbody>
-  ${ps.map(p=>`<tr><td><div class="tc">${a[p.id]?logo(a[p.id],"sm"):""}<span class="nm">${esc(p.name)}</span></div></td>${ps.map(q=>{if(p.id===q.id)return `<td class="self"></td>`;const r=m[p.id][q.id];return `<td class="c ${r.w>r.l?"w":r.l>r.w?"l":""}">${r.w||r.l?`${r.w}-${r.l}`:'<span class="mute" style="font-weight:500">—</span>'}</td>`}).join("")}</tr>`).join("")}
+  const ps=players(d),m=h2h(d),a=d.draft.assignments||{},games=allGames(d).filter(g=>isFinal(g)&&ownerOf(d,g.home)&&ownerOf(d,g.away));
+  return `<div class="ptitle"><h2>Rivalries</h2><p>Read across: the row coach's record against the column coach.</p></div>
+  <div class="panel flat" style="margin-bottom:20px"><div class="ph"><h3>Head-to-head</h3></div><div class="scroll"><table class="h2h"><thead><tr><th></th>${ps.map(p=>`<th class="n">${esc(p.name)}</th>`).join("")}</tr></thead><tbody>
+  ${ps.map(p=>`<tr><td><div class="tc">${a[p.id]?logo(a[p.id],"sm"):""}<b>${esc(p.name)}</b></div></td>${ps.map(q=>{if(p.id===q.id)return '<td class="self"></td>';const r=m[p.id][q.id];return `<td class="c ${r.w>r.l?"w":r.l>r.w?"l":""}">${r.w||r.l?`${r.w}-${r.l}`:'<span class="dim" style="font-weight:400">—</span>'}</td>`}).join("")}</tr>`).join("")}
   </tbody></table></div></div>
-  <div class="sect"><h3>Coach vs coach results</h3><span class="lbl">${games.length} games</span></div>
-  ${games.length?`<div class="grid g2">${games.reverse().map(g=>pass(d,g,true)).join("")}</div>`:`<div class="card"><div class="empty"><b>No rivalry games yet</b>Every coach-vs-coach result lands here, all-time.</div></div>`}`;
+  <div class="sh"><h3>Coach vs coach results</h3><span class="va mute">${games.length} games</span></div>
+  ${games.length?`<div class="g3">${games.reverse().map(g=>mcard(d,g)).join("")}</div>`:'<div class="panel"><div class="empty"><b>No rivalry games yet</b>Every coach-vs-coach result lands here, all-time.</div></div>'}`;
 }
 
 function rules(d){const r=d.season.rules&&d.season.rules.length?d.season.rules:DEFAULT_RULES;
-  return `<div class="ptitle"><h2>House <em>rules</em></h2><p>League settings. Tell Josh what you agree on and it gets posted here.</p></div>
-  <div class="card"><ul class="rules">${r.map(({k,v})=>`<li><span class="rk">${esc(k)}</span><span class="rv ${/^TBD/.test(v)?"tbd":""}">${esc(v)}</span></li>`).join("")}</ul></div>`}
+  return `<div class="ptitle"><h2>House rules</h2><p>League settings. Tell Josh what you agree on and it gets posted here.</p></div>
+  <div class="panel flat" style="max-width:820px"><ul class="rules">${r.map(({k,v})=>`<li><span class="rk">${esc(k)}</span><span class="rv ${/^TBD/.test(v)?"tbd":""}">${esc(v)}</span></li>`).join("")}</ul></div>`}
 
+function draft(d){
+  const a=d.draft.assignments||{},nu=nextUp(d),started=Object.keys(a).length>0,ex=d.draft.excluded||[],tk=Object.values(a);
+  const nuP=(d.draft.players||[]).find(p=>p.id===nu),order=draftOrder(d),outs=(d.draft.players||[]).filter(p=>!p.active),can=canWrite||demo;
+  return `<div class="ptitle"><h2>Team Wheel</h2><p>${eligible(d).length} programs on the wheel · ${Object.keys(a).length}/${order.length} coaches assigned</p></div>
+  <div class="draft"><div class="panel wheelcard">
+     <div class="clock">${nuP?`<span class="mute">On the clock</span><span class="pill">${esc(nuP.name)}</span>`:`<span class="pill">${I.check.replace('<svg','<svg width="13" height="13"')} Every coach has a program</span>`}</div>
+     <div class="wheelbox"><div class="pointer" id="ptr"></div><canvas id="wheel" width="1100" height="1100"></canvas><div class="hub"><div><small>${nuP?"Spinning for":"Draft"}</small><b>${nuP?esc(nuP.name):"Done"}</b></div></div></div>
+     <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center"><button class="btn" id="spin" ${!nuP||!eligible(d).length||!can?"disabled":""}>${I.wheel}Spin the wheel</button><button class="btn ghost" id="shuffle" ${started||!can?"disabled":""}>Randomize order</button></div>
+     ${can?"":`<div class="mute" style="font-size:12.5px">View only. The commissioner runs the wheel and results show up live.</div>`}</div>
+   <div class="stack">
+    <div class="panel board"><div class="sh"><h3>Draft board</h3><span class="va mute">Pick order</span></div>
+      <div class="tl">${order.map((id,i)=>{const p=d.draft.players.find(x=>x.id===id),c=a[id];return `<div class="node ${c?"past":""} ${id===nu?"next cur":""}" style="${c?`--tcl:${vivid(c)}`:""}"><div class="slot">${c?logo(c):`<div class="badge" style="--c1:#233168;--c2:rgba(236,244,247,.2)">${i+1}</div>`}<div class="nm">${esc(p.name)}<small>${c?esc(T(c).school)+" · "+T(c).ovr+" OVR":id===nu?"On the clock":"Pick "+(i+1)}</small></div>${!c&&can&&id==="ryan"?`<button class="tg in" data-tog="${id}">In · drop</button>`:""}</div></div>`}).join("")}
+      ${outs.map(p=>`<div class="node out"><div class="slot"><div class="badge" style="--c1:#233168;--c2:rgba(236,244,247,.15)">–</div><div class="nm">${esc(p.name)}<small>Not playing</small></div>${can?`<button class="tg" data-tog="${p.id}">Out · add</button>`:""}</div></div>`).join("")}</div>
+      ${can?`<div style="display:flex;gap:8px;margin-top:4px"><button class="btn ghost sm" id="undo" ${!started?"disabled":""}>Undo last spin</button><button class="btn ghost sm" id="reset" ${!started?"disabled":""}>Reset draft</button></div>`:""}</div>
+    <div class="panel"><div class="sh"><h3>Program pool</h3><span class="va mute">${started?"Locked":"Tap to toggle"}</span></div>
+      <div class="pool">${Object.keys(TEAMS).map(c=>{const t=TEAMS[c],isEx=ex.includes(c),isT=tk.includes(c);return `<button class="pteam ${isEx?"ex":""} ${isT?"taken":""}" data-ex="${c}" ${started||!can?"disabled":""}>${logo(c,"sm")}<span>${esc(t.school)}<small>${t.ovr} OVR${t.optional?" · if in game":""}${isT?" · "+esc(ownerOf(d,c).name):""}</small></span></button>`}).join("")}</div>
+      <p class="mute" style="font-size:12px;margin-top:12px;line-height:1.5">Miami (OH) and UMass start off the wheel as the high and low outliers. Northern Illinois is off until we confirm CFB 27 still has them in the MAC.</p></div>
+   </div></div>`;
+}
+
+function chatView(d){
+  const ps=players(d); let body;
+  if(!DB) body=`<div class="gate"><h3>Chat is offline</h3><p>Couldn't reach the league database.</p></div>`;
+  else if(!authUser) body=`<div class="gate">${I.chat.replace('<svg','<svg width="42" height="42" style="color:var(--y)"')}<h3>League chat</h3><p>Sign in with Google so everyone knows who's talking. Anyone with the link can view the hub; only signed-in coaches can chat.</p><button class="btn" data-act="signin">${I.google}Sign in with Google</button></div>`;
+  else if(!member||!member.coach) body=`<div class="gate"><h3>Which coach are you?</h3><p>Signed in as ${esc(authUser.email)}. Pick your name once and your messages and check-ins show under your team.</p><div class="chips">${ps.map(p=>`<button class="chip" data-claim="${p.id}">${esc(p.name)}</button>`).join("")}</div></div>`;
+  else body=`<div class="msgs" id="msgs"></div><form class="compose" id="compose"><textarea id="ctext" placeholder="Talk your trash…" maxlength="600" rows="1"></textarea><button class="btn" type="submit" aria-label="Send">${I.send}</button></form>`;
+  return `<div class="ptitle"><h2>League chat</h2><p>${member&&member.coach?`Chatting as ${esc((ps.find(p=>p.id===member.coach)||{}).name||member.coach)}`:"Coaches only"}</p></div><div class="panel chat">${body}</div>`;
+}
+
+/* ======================= BINDINGS ======================= */
+function bind(r){
+  const q=s=>document.querySelectorAll(s),on=(id,fn)=>{const e=document.getElementById(id);if(e)e.onclick=fn};
+  q('main [data-act="demo"]').forEach(b=>b.onclick=()=>{demo=true;demoData=makeDemo();render()});
+  q('main [data-act="signin"]').forEach(b=>b.onclick=signIn);
+  q("[data-ready]").forEach(b=>b.onclick=()=>toggleReady(b.dataset.ready));
+  q("main [data-coach]").forEach(b=>b.onclick=()=>{schedFilter=b.dataset.coach;location.hash="schedule";if(route()==="schedule")render()});
+  q("[data-cat]").forEach(b=>b.onclick=()=>{statCat=b.dataset.cat;render()});
+  q("[data-su]").forEach(b=>b.onclick=()=>{statUsers=b.dataset.su==="1";render()});
+  q("[data-wk]").forEach(b=>b.onclick=()=>{if(b.dataset.wk==="")return;schedWeek=+b.dataset.wk;if(schedFilter!=="coaches")schedFilter="all";render()});
+  q("[data-sf]").forEach(b=>b.onclick=()=>{schedFilter=b.dataset.sf;render()});
+  q("[data-claim]").forEach(b=>b.onclick=()=>claimCoach(b.dataset.claim));
+  q("[data-hero]").forEach(b=>b.onclick=()=>{heroIdx=+b.dataset.hero;paintHero()});
+  const ws=document.getElementById("wkstrip");if(ws){const o=ws.querySelector(".on");if(o)ws.scrollLeft=o.offsetLeft-ws.clientWidth/2}
+  if(r==="draft"){
+    on("spin",spin);
+    on("shuffle",async()=>{const nd=clone(D().draft),o=draftOrder(D());for(let i=o.length-1;i>0;i--){const j=rand(i+1);[o[i],o[j]]=[o[j],o[i]]}nd.order=o;await saveDraft(nd);render()});
+    on("undo",async()=>{const nd=clone(D().draft),last=(nd.log||[]).pop();if(last)delete nd.assignments[last.who];else{const k=Object.keys(nd.assignments).pop();delete nd.assignments[k]}await saveDraft(nd);render()});
+    on("reset",async()=>{if(await ask("Reset the draft?","This clears every team assignment so you can spin again from the top.")){const nd=clone(D().draft);nd.assignments={};nd.log=[];await saveDraft(nd);render()}});
+    q("[data-ex]").forEach(b=>b.onclick=async()=>{const nd=clone(D().draft),c=b.dataset.ex;nd.excluded=nd.excluded||[];nd.excluded=nd.excluded.includes(c)?nd.excluded.filter(x=>x!==c):nd.excluded.concat(c);await saveDraft(nd);render()});
+    q("[data-tog]").forEach(b=>b.onclick=async()=>{const nd=clone(D().draft),p=nd.players.find(x=>x.id===b.dataset.tog);p.active=!p.active;await saveDraft(nd);render()});
+  }
+}
 /* ---------- WHEEL ---------- */
 function eligible(d){const ex=d.draft.excluded||[],tk=Object.values(d.draft.assignments||{});return Object.keys(TEAMS).filter(c=>!ex.includes(c)&&!tk.includes(c))}
 function draftOrder(d){const act=players(d).map(p=>p.id);const o=(d.draft.order||[]).filter(id=>act.includes(id));act.forEach(id=>{if(!o.includes(id))o.push(id)});return o}
 const nextUp=d=>{const a=d.draft.assignments||{};return draftOrder(d).find(id=>!a[id])};
-function draft(d){
-  const a=d.draft.assignments||{},nu=nextUp(d),started=Object.keys(a).length>0,ex=d.draft.excluded||[],tk=Object.values(a);
-  const nuP=(d.draft.players||[]).find(p=>p.id===nu), order=draftOrder(d), outs=(d.draft.players||[]).filter(p=>!p.active), can=canWrite||demo;
-  return `<div class="ptitle"><h2>The team <em>wheel</em></h2><p>${eligible(d).length} programs on the wheel · ${Object.keys(a).length}/${order.length} coaches assigned</p></div>
-  <div class="draft">
-   <div class="card wheelcard">
-     <div class="clock">${nuP?`<span class="lbl">On the clock</span><span class="chip gold">${esc(nuP.name)}</span>`:`<span class="chip gold">${I.check}Every coach has a program</span>`}</div>
-     <div class="wheelbox"><div class="pointer" id="ptr"></div><canvas id="wheel" width="1100" height="1100"></canvas><div class="hub"><div><small>${nuP?"Spinning for":"Draft"}</small><b>${nuP?esc(nuP.name):"Done"}</b></div></div></div>
-     <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center"><button class="btn" id="spin" ${!nuP||!eligible(d).length||!can?"disabled":""}>${I.wheel}Spin the wheel</button><button class="btn ghost" id="shuffle" ${started||!can?"disabled":""}>Randomize order</button></div>
-     ${can?"":`<div class="mute" style="font-size:13px">View only. The commissioner runs the wheel and you'll see results live.</div>`}
-   </div>
-   <div class="grid">
-    <div class="card board"><div class="ch"><h3>Draft board</h3><span class="lbl">Pick order</span></div>
-      <div class="tl">${order.map((id,i)=>{const p=d.draft.players.find(x=>x.id===id),c=a[id];return `<div class="node ${c?"past":""} ${id===nu?"next":""}" style="${c?`--tcl:${vivid(c)}`:""}"><div class="slot">${c?logo(c):`<div class="badge" style="--c1:#21326D;--c2:rgba(236,244,247,.2)">${i+1}</div>`}<div class="nm">${esc(p.name)}<small>${c?esc(T(c).school)+" · "+T(c).ovr+" OVR":id===nu?"On the clock":"Pick "+(i+1)}</small></div>${!c&&can&&id==="ryan"?`<button class="tg in" data-tog="${id}">In · drop</button>`:""}</div></div>`}).join("")}
-      ${outs.map(p=>`<div class="node out"><div class="slot"><div class="badge" style="--c1:#21326D;--c2:rgba(236,244,247,.15)">–</div><div class="nm">${esc(p.name)}<small>Not playing</small></div>${can?`<button class="tg" data-tog="${p.id}">Out · add</button>`:""}</div></div>`).join("")}</div>
-      ${can?`<div style="display:flex;gap:8px;margin-top:6px"><button class="btn ghost sm" id="undo" ${!started?"disabled":""}>Undo last spin</button><button class="btn ghost sm" id="reset" ${!started?"disabled":""}>Reset draft</button></div>`:""}
-    </div>
-    <div class="card"><div class="ch"><h3>Program pool</h3><span class="lbl">${started?"Locked":"Tap to toggle"}</span></div>
-      <div class="pool">${Object.keys(TEAMS).map(c=>{const t=TEAMS[c],isEx=ex.includes(c),isT=tk.includes(c);return `<button class="pteam ${isEx?"ex":""} ${isT?"taken":""}" data-ex="${c}" ${started||!can?"disabled":""}>${logo(c,"sm")}<span>${esc(t.school)}<small>${t.ovr} OVR${t.optional?" · if in game":""}${isT?" · "+esc(ownerOf(d,c).name):""}</small></span></button>`}).join("")}</div>
-      <p class="mute" style="font-size:12.5px;margin-top:12px;line-height:1.45">Miami (OH) and UMass start off the wheel as the high and low outliers. Northern Illinois is off until we confirm CFB 27 still has them in the MAC.</p></div>
-   </div>
-  </div>`;
-}
 function drawWheel(){
   const cv=document.getElementById("wheel"); if(!cv) return;
   const d=D(),codes=eligible(d),ctx=cv.getContext("2d"),W=cv.width,R=W/2-24,cx=W/2,cy=W/2;
   ctx.clearRect(0,0,W,W);
   ctx.beginPath();ctx.arc(cx,cy,R+18,0,Math.PI*2);ctx.fillStyle="#FFE14F";ctx.fill();
   ctx.beginPath();ctx.arc(cx,cy,R+6,0,Math.PI*2);ctx.fillStyle="#08102B";ctx.fill();
-  if(!codes.length){ctx.fillStyle="#9DB0CC";ctx.font="800 56px Outfit";ctx.textAlign="center";ctx.fillText("NO TEAMS LEFT",cx,cy-230);return}
+  if(!codes.length){ctx.fillStyle="#9DB0CC";ctx.font="700 56px Poppins";ctx.textAlign="center";ctx.fillText("NO TEAMS LEFT",cx,cy-230);return}
   const seg=Math.PI*2/codes.length;
   codes.forEach((c,i)=>{const t=TEAMS[c],a0=rot+i*seg-Math.PI/2,a1=a0+seg;
     const g=ctx.createRadialGradient(cx,cy,R*.3,cx,cy,R);g.addColorStop(0,t.c1);g.addColorStop(1,shade(t.c1,-.25));
@@ -705,8 +750,8 @@ function drawWheel(){
     ctx.strokeStyle="#08102B";ctx.lineWidth=6;ctx.stroke();
     ctx.save();ctx.translate(cx,cy);ctx.rotate(a0+seg/2);ctx.textAlign="right";ctx.textBaseline="middle";ctx.fillStyle=txtOn(t.c1);
     const fs=Math.min(58,360/codes.length*2.5);
-    if(WLOGO[c]){const sz=Math.min(140,R*seg*.58),cr=sz*.62,dd=R-48-cr;ctx.beginPath();ctx.arc(dd,0,cr,0,Math.PI*2);ctx.fillStyle="#ECF4F7";ctx.fill();ctx.save();ctx.translate(dd,0);ctx.rotate(Math.PI/2);ctx.drawImage(WLOGO[c],-sz/2,-sz/2,sz,sz);ctx.restore();ctx.fillStyle=txtOn(t.c1);ctx.font=`800 ${fs*.6}px Outfit`;ctx.fillText(t.abbr,dd-cr-18,0)}
-    else{ctx.font=`800 ${fs}px Outfit`;ctx.fillText(t.abbr,R-50,0);ctx.font=`600 ${fs*.4}px Outfit`;ctx.globalAlpha=.8;ctx.fillText(t.mascot.toUpperCase(),R-54,fs*.62);ctx.globalAlpha=1}
+    if(WLOGO[c]){const sz=Math.min(140,R*seg*.58),cr=sz*.62,dd=R-48-cr;ctx.beginPath();ctx.arc(dd,0,cr,0,Math.PI*2);ctx.fillStyle="#ECF4F7";ctx.fill();ctx.save();ctx.translate(dd,0);ctx.rotate(Math.PI/2);ctx.drawImage(WLOGO[c],-sz/2,-sz/2,sz,sz);ctx.restore();ctx.fillStyle=txtOn(t.c1);ctx.font=`800 ${fs*.6}px Poppins`;ctx.fillText(t.abbr,dd-cr-18,0)}
+    else{ctx.font=`800 ${fs}px Poppins`;ctx.fillText(t.abbr,R-50,0);ctx.font=`600 ${fs*.4}px Poppins`;ctx.globalAlpha=.8;ctx.fillText(t.mascot.toUpperCase(),R-54,fs*.62);ctx.globalAlpha=1}
     ctx.restore()});
   codes.forEach((c,i)=>{const a=rot+i*seg-Math.PI/2;ctx.beginPath();ctx.arc(cx+(R+12)*Math.cos(a),cy+(R+12)*Math.sin(a),6,0,Math.PI*2);ctx.fillStyle="#192853";ctx.fill()});
 }
@@ -734,15 +779,6 @@ function ask(title,body){return new Promise(res=>{const m=document.getElementByI
 /* ---------- CHAT ---------- */
 let chatSeen=store.get("macdyn.chatSeen")||0;
 function unreadCount(){return (live.chat||[]).filter(m=>(m.ms||0)>chatSeen&&(!authUser||m.uid!==authUser.uid)).length}
-function chatView(d){
-  const ps=players(d);
-  if(!DB) return `<div class="ptitle"><h2>Chat</h2></div><div class="card"><div class="empty"><b>Chat is offline</b>Couldn't reach the league database.</div></div>`;
-  let body;
-  if(!authUser) body=`<div class="gate">${I.chat.replace('<svg','<svg width="44" height="44" style="color:var(--y)"')}<div class="big sm">League chat</div><p>Sign in with Google so everyone knows who's talking. Anyone with the link can read the hub; only signed-in coaches can chat.</p><button class="btn" data-act="signin">${I.google}Sign in with Google</button></div>`;
-  else if(!member||!member.coach) body=`<div class="gate"><div class="big sm">Which coach are you?</div><p>Signed in as ${esc(authUser.email)}. Pick your name once, and your messages and ready check will show under your team.</p><div class="chips">${ps.map(p=>`<button class="chip" data-claim="${p.id}">${esc(p.name)}</button>`).join("")}</div></div>`;
-  else body=`<div class="msgs" id="msgs"></div><form class="compose" id="compose"><textarea id="ctext" placeholder="Talk your trash…" maxlength="600" rows="1"></textarea><button class="btn" type="submit" aria-label="Send">${I.send}</button></form>`;
-  return `<div class="ptitle"><h2>League <em>chat</em></h2><p>${member&&member.coach?`Chatting as ${esc((ps.find(p=>p.id===member.coach)||{}).name||member.coach)}`:"Coaches only"}</p></div><div class="card chat">${body}</div>`;
-}
 function fmtTime(ms){const d=new Date(ms);return d.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})}
 function fmtDay(ms){const d=new Date(ms),t=new Date();const y=new Date();y.setDate(t.getDate()-1);if(d.toDateString()===t.toDateString())return "Today";if(d.toDateString()===y.toDateString())return "Yesterday";return d.toLocaleDateString([],{weekday:"short",month:"short",day:"numeric"})}
 function updateChat(){
@@ -764,31 +800,6 @@ function afterChat(){
   f.onsubmit=e=>{e.preventDefault();send()};ta.onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send()}};
 }
 function postSystem(text){if(!DB||!canWrite)return;DB.collection("dynasty_chat").add({uid:authUser.uid,sys:true,coach:"",name:"MAC Wire",text,ts:firebase.firestore.FieldValue.serverTimestamp()}).catch(()=>{})}
-
-/* ======================= BINDINGS ======================= */
-function bind(r){
-  const q=s=>document.querySelectorAll(s),on=(id,fn)=>{const e=document.getElementById(id);if(e)e.onclick=fn};
-  q('[data-act="demo"]').forEach(b=>b.onclick=()=>{demo=true;demoData=makeDemo();render()});
-  q('[data-act="signin"]').forEach(b=>b.onclick=signIn);
-  q('[data-act="signout"]').forEach(b=>b.onclick=()=>firebase.auth().signOut());
-  q("[data-ready]").forEach(b=>b.onclick=()=>toggleReady(b.dataset.ready));
-  q("[data-coach]").forEach(b=>b.onclick=()=>{schedFilter=b.dataset.coach;location.hash="schedule"});
-  q("[data-cat]").forEach(b=>b.onclick=()=>{statCat=b.dataset.cat;render()});
-  q("[data-su]").forEach(b=>b.onclick=()=>{statUsers=b.dataset.su==="1";render()});
-  q("[data-cc]").forEach(b=>b.onclick=()=>{chartCoach=b.dataset.cc;render()});
-  q("[data-wk]").forEach(b=>b.onclick=()=>{schedWeek=+b.dataset.wk;render()});
-  q("[data-sf]").forEach(b=>b.onclick=()=>{schedFilter=b.dataset.sf;render()});
-  q("[data-claim]").forEach(b=>b.onclick=()=>claimCoach(b.dataset.claim));
-  const tl=document.getElementById("tiles");if(tl){const on_=tl.querySelector(".on");if(on_)tl.scrollLeft=on_.offsetLeft-tl.clientWidth/2+54}
-  if(r==="draft"){
-    on("spin",spin);
-    on("shuffle",async()=>{const nd=clone(D().draft),o=draftOrder(D());for(let i=o.length-1;i>0;i--){const j=rand(i+1);[o[i],o[j]]=[o[j],o[i]]}nd.order=o;await saveDraft(nd);render()});
-    on("undo",async()=>{const nd=clone(D().draft),last=(nd.log||[]).pop();if(last)delete nd.assignments[last.who];else{const k=Object.keys(nd.assignments).pop();delete nd.assignments[k]}await saveDraft(nd);render()});
-    on("reset",async()=>{if(await ask("Reset the draft?","This clears every team assignment so you can spin again from the top.")){const nd=clone(D().draft);nd.assignments={};nd.log=[];await saveDraft(nd);render()}});
-    q("[data-ex]").forEach(b=>b.onclick=async()=>{const nd=clone(D().draft),c=b.dataset.ex;nd.excluded=nd.excluded||[];nd.excluded=nd.excluded.includes(c)?nd.excluded.filter(x=>x!==c):nd.excluded.concat(c);await saveDraft(nd);render()});
-    q("[data-tog]").forEach(b=>b.onclick=async()=>{const nd=clone(D().draft),p=nd.players.find(x=>x.id===b.dataset.tog);p.active=!p.active;await saveDraft(nd);render()});
-  }
-}
 
 /* ======================= PERSISTENCE (Firebase · fantasyapp-io) ======================= */
 let writing=Promise.resolve();
