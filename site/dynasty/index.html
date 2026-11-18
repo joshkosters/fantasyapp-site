@@ -281,7 +281,9 @@ const TEAMS = {
   NIU:{school:"Northern Illinois",mascot:"Huskies",abbr:"NIU",c1:"#C8102E",c2:"#111111",ovr:70,optional:true}
 };
 const ESPN={MIA:193,WMU:2711,OHIO:195,AKR:2006,EMU:2199,TOL:2649,BALL:2050,BGSU:189,BUFF:2084,CMU:2117,KENT:2309,SAC:16,MASS:113,NIU:2459};
-const logoUrl=c=>`https://a.espncdn.com/i/teamlogos/ncaa/500/${ESPN[c]}.png`;
+const logoUrl=c=>`https://a.espncdn.com/i/teamlogos/ncaa/500-dark/${ESPN[c]}.png`;
+const wheelLogoUrl=c=>`https://a.espncdn.com/i/teamlogos/ncaa/500/${ESPN[c]}.png`;
+const WLOGO={};Object.keys(ESPN).forEach(c=>{const i=new Image();i.onload=()=>{WLOGO[c]=i;drawWheel()};i.src=wheelLogoUrl(c)});
 const DEFAULT_PLAYERS = [
   {id:"josh",name:"Josh",active:true},{id:"nate",name:"Nate",active:true},{id:"caleb",name:"Caleb",active:true},
   {id:"matthew",name:"Matthew",active:true},{id:"tyler",name:"Tyler",active:true},{id:"ryan",name:"Ryan",active:false}
@@ -587,8 +589,8 @@ function drawWheel(){
     ctx.strokeStyle="#05070c";ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+R*Math.cos(a0),cy+R*Math.sin(a0));ctx.stroke();
     ctx.save();ctx.translate(cx,cy);ctx.rotate(a0+seg/2);ctx.textAlign="right";ctx.textBaseline="middle";ctx.fillStyle=txtOn(t.c1);
     const fs=Math.min(62, 360/codes.length*2.6);
-    if(LOGO[c]){const sz=Math.min(150,R*seg*0.62);ctx.rotate(Math.PI/2);ctx.drawImage(LOGO[c],-sz/2,-(R-40),sz,sz);ctx.rotate(-Math.PI/2);ctx.font=`italic 900 ${fs*.55}px 'Barlow Condensed'`;ctx.fillText(t.abbr,R-60-sz,0);}else{ctx.font=`italic 900 ${fs}px 'Barlow Condensed'`;ctx.fillText(t.abbr,R-48,0);}
-    if(!LOGO[c]){ctx.font=`italic 700 ${fs*.42}px 'Barlow Condensed'`;ctx.globalAlpha=.8;ctx.fillText(t.mascot.toUpperCase(),R-52,fs*.62);ctx.globalAlpha=1;}
+    if(WLOGO[c]){const sz=Math.min(140,R*seg*0.58),cr=sz*0.62,d=R-46-cr;ctx.beginPath();ctx.arc(d,0,cr,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();ctx.lineWidth=5;ctx.strokeStyle=t.c2;ctx.stroke();ctx.save();ctx.translate(d,0);ctx.rotate(Math.PI/2);ctx.drawImage(WLOGO[c],-sz/2,-sz/2,sz,sz);ctx.restore();ctx.fillStyle=txtOn(t.c1);ctx.font=`italic 900 ${fs*.62}px 'Barlow Condensed'`;ctx.fillText(t.abbr,d-cr-16,0);}else{ctx.font=`italic 900 ${fs}px 'Barlow Condensed'`;ctx.fillText(t.abbr,R-48,0);}
+    if(!WLOGO[c]){ctx.font=`italic 700 ${fs*.42}px 'Barlow Condensed'`;ctx.globalAlpha=.8;ctx.fillText(t.mascot.toUpperCase(),R-52,fs*.62);ctx.globalAlpha=1;}
     ctx.restore();
   });
   // pegs
