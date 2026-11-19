@@ -35,8 +35,6 @@ img{display:block}
 .rail .rb img{width:30px;height:30px;object-fit:contain}
 .rail .rb:hover{background:var(--panel2)}
 .rail .rb.on{border-color:var(--y);background:var(--panel2)}
-.rail .rb.conf{background:#fff;border-radius:50%}
-.rail .rb.conf img{width:32px;height:32px}
 .rail .rb .badge{width:30px;height:30px;font-size:8px}
 .rail .rb.add{color:var(--mute);font-size:22px;font-weight:400}
 .rail .sep{width:28px;height:1px;background:var(--line2);margin:2px 0}
@@ -332,6 +330,36 @@ tr.me{background:rgba(255,225,79,.07)!important}
 .toast.show{opacity:1;transform:translateX(-50%)}
 .scrim{display:none}
 
+
+/* ---------- MAC COIN ---------- */
+.coinwrap{display:inline-grid;place-items:center;perspective:700px;flex:none}
+.coin{--s:150px;width:var(--s);height:var(--s);position:relative;transform-style:preserve-3d;transform:rotateY(-14deg) rotateX(8deg)}
+.coin.anim{animation:sway 8s ease-in-out infinite}
+.coin.tilt{transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.coinwrap:hover .coin.tilt{transform:rotateY(22deg) rotateX(-6deg)}
+.coin .edge{position:absolute;inset:0;border-radius:50%;transform:translateZ(calc(var(--i) * var(--s) * -0.012));
+  background:linear-gradient(90deg,#6E5300,#B8901A 30%,#E2BE3A 50%,#9A7608 75%,#5E4600)}
+.coin .edge.last{box-shadow:0 calc(var(--s)*.06) calc(var(--s)*.14) rgba(0,0,0,.55)}
+.coin .face{position:absolute;inset:0;border-radius:50%;overflow:hidden;
+  background:conic-gradient(from 210deg,#FFF6C2,#E9C62E 10%,#9C7A08 22%,#FFE14F 34%,#FFF9D9 46%,#C9A21A 58%,#7E6000 70%,#E9C62E 82%,#FFF6C2);
+  box-shadow:inset 0 0 0 calc(var(--s)*.012) rgba(255,255,255,.55),inset 0 calc(var(--s)*-.02) calc(var(--s)*.04) rgba(90,60,0,.5)}
+.coin .face::before{content:"";position:absolute;inset:3.5%;border-radius:50%;background:repeating-conic-gradient(rgba(0,0,0,.16) 0 1.2deg,rgba(255,255,255,.12) 1.2deg 2.4deg);
+  -webkit-mask:radial-gradient(circle,transparent 58%,#000 59%,#000 66%,transparent 67%);mask:radial-gradient(circle,transparent 58%,#000 59%,#000 66%,transparent 67%)}
+.coin .disc{position:absolute;inset:9%;border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle at 34% 28%,#34489a,#192853 52%,#0b1331);
+  box-shadow:inset 0 calc(var(--s)*.035) calc(var(--s)*.07) rgba(0,0,0,.6),inset 0 calc(var(--s)*-.01) calc(var(--s)*.02) rgba(255,225,79,.25),0 0 0 calc(var(--s)*.01) #7E6000}
+.coin .disc img{width:66%;height:auto;margin-top:4%;filter:drop-shadow(0 calc(var(--s)*.015) calc(var(--s)*.02) rgba(0,0,0,.55))}
+.coin .sheen{position:absolute;inset:0;border-radius:50%;pointer-events:none;mix-blend-mode:screen;
+  background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.0) 38%,rgba(255,255,255,.55) 47%,rgba(255,255,255,.0) 56%,transparent 64%);
+  background-size:260% 100%;background-position:120% 0}
+.coin.anim .sheen{animation:sheen 8s ease-in-out infinite}
+.coinwrap:hover .coin.tilt .sheen{background-position:-20% 0;transition:background-position .7s}
+.coin .gloss{position:absolute;inset:9%;border-radius:50%;pointer-events:none;background:radial-gradient(120% 70% at 30% 0%,rgba(255,255,255,.22),transparent 55%)}
+@keyframes sway{0%,100%{transform:rotateY(-24deg) rotateX(10deg)}50%{transform:rotateY(24deg) rotateX(-4deg)}}
+@keyframes sheen{0%,100%{background-position:120% 0}50%{background-position:-20% 0}}
+@media (prefers-reduced-motion:reduce){.coin.anim,.coin.anim .sheen{animation:none}}
+.rail .rb.conf{background:none;border:0;width:48px;height:48px}
+.brand{display:flex;align-items:center;gap:12px}
 /* ---------- RESPONSIVE ---------- */
 @media(max-width:1180px){.cols{grid-template-columns:minmax(0,1fr)}.cols>.stack:last-child{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}}
 @media(max-width:960px){
@@ -363,7 +391,7 @@ tr.me{background:rgba(255,225,79,.07)!important}
 <div class="app">
   <aside class="rail" id="rail"></aside>
   <aside class="side" id="side">
-    <a class="brand" href="#home"><div class="wm">College Football <b>27</b></div><small>MAC Dynasty · <span id="seasonLbl">Season 1</span></small></a>
+    <a class="brand" href="#home"><span><div class="wm">College Football <b>27</b></div><small>MAC Dynasty · <span id="seasonLbl">Season 1</span></small></span></a>
     <nav class="snav" id="snav"></nav>
     <div class="promo" id="promo"></div>
   </aside>
@@ -486,14 +514,16 @@ Object.assign(I,{
   pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
   more:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>'
 });
-const MAC_LOGO="https://a.espncdn.com/i/teamlogos/ncaa_conf/500/15.png";
+const MAC_LOGO="mac-logo.svg";
+function coin(s,mode){const n=s>=100?9:s>=60?6:3;let e="";for(let i=n;i>=1;i--)e+=`<span class="edge ${i===n?"last":""}" style="--i:${i}"></span>`;
+  return `<span class="coinwrap"><span class="coin ${mode||"tilt"}" style="--s:${s}px">${e}<span class="face"></span><span class="disc"><img src="${MAC_LOGO}" alt="MAC"></span><span class="gloss"></span><span class="sheen"></span></span></span>`}
 
 /* ======================= SHELL ======================= */
 const NAV=[["home","Overview",I.grid],["draft","Team Wheel",I.wheel],["schedule","Schedule",I.cal],["standings","Standings",I.trophy],["stats","Stats",I.chart],["rivals","Rivalries",I.vs],["chat","Chat",I.chat],["rules","House Rules",I.book]];
 function shell(d,r){
   const a=d.draft.assignments||{}, cur=myId(), ps=players(d), unread=unreadCount(), locked=!!(member&&member.coach&&!demo);
   // rail
-  document.getElementById("rail").innerHTML=`<a class="rb conf" href="#standings" data-tip="MAC Standings"><img src="${MAC_LOGO}" alt="MAC" onerror="this.replaceWith(Object.assign(document.createElement('b'),{textContent:'MAC',style:'color:#192853;font-size:11px'}))"></a><div class="sep"></div>`+
+  document.getElementById("rail").innerHTML=`<a class="rb conf" href="#standings" data-tip="MAC Standings">${coin(44)}</a><div class="sep"></div>`+
     ps.map(p=>{const c=a[p.id];return `<button class="rb ${p.id===cur?"on":""}" data-viewas="${p.id}" data-tip="${esc(p.name)}${c?" · "+esc(T(c).school):""}" ${locked?"disabled":""}>${c?logo(c,"sm"):`<div class="badge sm" style="--c1:#233168;--c2:rgba(236,244,247,.2)">${esc(p.name[0])}</div>`}</button>`}).join("")+
     `<a class="rb add" href="#draft" data-tip="Team Wheel">+</a>`;
   // side nav
@@ -561,7 +591,7 @@ function heroHTML(d){
     return `<div class="hc"><span class="kick">${I.wheel.replace('<svg','<svg width="13" height="13"')} ${drafted<ps.length?"Draft night":"Preseason"}</span><h2>${drafted<ps.length?"Spin for your program":"Every coach has a program"}</h2>
       <div class="meta"><span>${I.star}${drafted} of ${ps.length} coaches assigned</span><span>${I.pin}Mid-American Conference</span></div>
       <div class="cta"><a class="btn" href="#draft">${drafted<ps.length?"Go to the wheel":"View the draft board"} <span class="arr">${I.right}</span></a></div></div>
-      <div class="logos">${last?logo(last.code,"xl"):`<img src="${MAC_LOGO}" alt="" style="width:150px;height:150px;background:#fff;border-radius:50%;padding:18px">`}</div>`;
+      <div class="logos">${last?logo(last.code,"xl"):coin(170,"anim")}</div>`;
   }
   const g=slides[heroIdx%slides.length], ao=ownerOf(d,g.away), ho=ownerOf(d,g.home), fin=isFinal(g), mine=a[myId()];
   return `<div class="hc"><span class="kick">${I.star.replace('<svg','<svg width="12" height="12"')} ${mine&&(g.home===mine||g.away===mine)?"Your game":ao&&ho?"Coach vs Coach":"Coach game"}</span>
