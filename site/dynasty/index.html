@@ -681,21 +681,22 @@ function rules(d){const r=d.season.rules&&d.season.rules.length?d.season.rules:D
   <div class="panel flat" style="max-width:820px"><ul class="rules">${r.map(({k,v})=>`<li><span class="rk">${esc(k)}</span><span class="rv ${/^TBD/.test(v)?"tbd":""}">${esc(v)}</span></li>`).join("")}</ul></div>`}
 
 function draft(d){
-  const a=d.draft.assignments||{},nu=nextUp(d),started=Object.keys(a).length>0,ex=d.draft.excluded||[],tk=Object.values(a);
+  const a=d.draft.assignments||{},nu=nextUp(d),started=Object.keys(a).length>0||!!d.draft.pending||Object.keys(d.draft.mulligan||{}).length>0,ex=d.draft.excluded||[],tk=Object.values(a);
   const nuP=(d.draft.players||[]).find(p=>p.id===nu),order=draftOrder(d),outs=(d.draft.players||[]).filter(p=>!p.active),can=canWrite||demo;
+  const pend=d.draft.pending, respin=!pend&&isRespin(d,nu), mul=d.draft.mulligan||{}, rejOf=id=>{const l=(d.draft.log||[]).filter(x=>x.who===id).slice(-1)[0];return l&&l.rejected};
   return `<div class="ptitle"><h2>Team Wheel</h2><p>${eligible(d).length} programs on the wheel · ${Object.keys(a).length}/${order.length} coaches assigned</p></div>
   <div class="draft"><div class="panel wheelcard">
-     <div class="clock">${nuP?`<span class="mute">On the clock</span><span class="pill">${esc(nuP.name)}</span>`:`<span class="pill">${I.check.replace('<svg','<svg width="13" height="13"')} Every coach has a program</span>`}</div>
-     <div class="wheelbox"><div class="pointer" id="ptr"></div><canvas id="wheel" width="1100" height="1100"></canvas><div class="hub"><div><small>${nuP?"Spinning for":"Draft"}</small><b>${nuP?esc(nuP.name):"Done"}</b></div></div></div>
-     <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center"><button class="btn" id="spin" ${!nuP||!eligible(d).length||!can?"disabled":""}>${I.wheel}Spin the wheel</button><button class="btn ghost" id="shuffle" ${started||!can?"disabled":""}>Randomize order</button></div>
-     ${can?"":`<div class="mute" style="font-size:12.5px">View only. The commissioner runs the wheel and results show up live.</div>`}</div>
+     <div class="clock">${pend?`<span class="mute">Deciding</span><span class="pill">${esc(nuP.name)}</span>`:nuP?`<span class="mute">${respin?"Final spin for":"On the clock"}</span><span class="pill">${esc(nuP.name)}</span>`:`<span class="pill">${I.check.replace('<svg','<svg width="13" height="13"')} Every coach has a program</span>`}</div>
+     <div class="wheelbox"><div class="pointer" id="ptr"></div><canvas id="wheel" width="1100" height="1100"></canvas><div class="hub"><div><small>${pend?"Deciding":respin?"Final spin":nuP?"Spinning for":"Draft"}</small><b>${nuP?esc(nuP.name):"Done"}</b></div></div></div>
+     <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">${pend&&can?`<button class="btn ghost" id="ispin">${I.wheel}Spin again</button><button class="btn" id="iaccept">${I.check}Keep ${esc(T(pend.code).school)}</button>`:`<button class="btn" id="spin" ${!nuP||!wheelCodes(d).length||!can||pend?"disabled":""}>${I.wheel}${respin?"Final spin":"Spin the wheel"}</button>`}<button class="btn ghost" id="shuffle" ${started||!can?"disabled":""}>Randomize order</button></div>
+     <div class="mute" style="font-size:12.5px;text-align:center;line-height:1.5">${can?"":"View only. The commissioner runs the wheel and results show up live.<br>"}Every coach can keep their first spin or spin once more. The second spin is final.</div></div>
    <div class="stack">
     <div class="panel board"><div class="sh"><h3>Draft board</h3><span class="va mute">Pick order</span></div>
-      <div class="tl">${order.map((id,i)=>{const p=d.draft.players.find(x=>x.id===id),c=a[id];return `<div class="node ${c?"past":""} ${id===nu?"next cur":""}" style="${c?`--tcl:${vivid(c)}`:""}"><div class="slot">${c?logo(c):`<div class="badge" style="--c1:#233168;--c2:rgba(236,244,247,.2)">${i+1}</div>`}<div class="nm">${esc(p.name)}<small>${c?esc(T(c).school)+" · "+T(c).ovr+" OVR":id===nu?"On the clock":"Pick "+(i+1)}</small></div>${!c&&can&&id==="ryan"?`<button class="tg in" data-tog="${id}">In · drop</button>`:""}</div></div>`}).join("")}
+      <div class="tl">${order.map((id,i)=>{const p=d.draft.players.find(x=>x.id===id),c=a[id];return `<div class="node ${c?"past":""} ${id===nu?"next cur":""}" style="${c?`--tcl:${vivid(c)}`:""}"><div class="slot">${c?logo(c):pend&&pend.who===id?`<span style="opacity:.55">${logo(pend.code)}</span>`:`<div class="badge" style="--c1:#233168;--c2:rgba(236,244,247,.2)">${i+1}</div>`}<div class="nm">${esc(p.name)}<small>${c?esc(T(c).school)+" · "+T(c).ovr+" OVR"+(rejOf(id)?` · <span class="y">passed on ${esc(T(rejOf(id)).abbr)}</span>`:""):pend&&pend.who===id?`<span class="y">Deciding on ${esc(T(pend.code).school)}…</span>`:mul[id]?`<span class="y">Passed on ${esc(T(mul[id]).school)} · final spin next</span>`:id===nu?"On the clock":"Pick "+(i+1)}</small></div>${!c&&can&&id==="ryan"?`<button class="tg in" data-tog="${id}">In · drop</button>`:""}</div></div>`}).join("")}
       ${outs.map(p=>`<div class="node out"><div class="slot"><div class="badge" style="--c1:#233168;--c2:rgba(236,244,247,.15)">–</div><div class="nm">${esc(p.name)}<small>Not playing</small></div>${can?`<button class="tg" data-tog="${p.id}">Out · add</button>`:""}</div></div>`).join("")}</div>
       ${can?`<div style="display:flex;gap:8px;margin-top:4px"><button class="btn ghost sm" id="undo" ${!started?"disabled":""}>Undo last spin</button><button class="btn ghost sm" id="reset" ${!started?"disabled":""}>Reset draft</button></div>`:""}</div>
     <div class="panel"><div class="sh"><h3>Program pool</h3><span class="va mute">${started?"Locked":"Tap to toggle"}</span></div>
-      <div class="pool">${Object.keys(TEAMS).map(c=>{const t=TEAMS[c],isEx=ex.includes(c),isT=tk.includes(c);return `<button class="pteam ${isEx?"ex":""} ${isT?"taken":""}" data-ex="${c}" ${started||!can?"disabled":""}>${logo(c,"sm")}<span>${esc(t.school)}<small>${t.ovr} OVR${t.optional?" · if in game":""}${isT?" · "+esc(ownerOf(d,c).name):""}</small></span></button>`}).join("")}</div>
+      <div class="pool">${Object.keys(TEAMS).map(c=>{const t=TEAMS[c],isEx=ex.includes(c),isT=tk.includes(c)||(d.draft.pending&&d.draft.pending.code===c);return `<button class="pteam ${isEx?"ex":""} ${isT?"taken":""}" data-ex="${c}" ${started||!can?"disabled":""}>${logo(c,"sm")}<span>${esc(t.school)}<small>${t.ovr} OVR${t.optional?" · if in game":""}${isT?" · "+esc((ownerOf(d,c)||{name:pname(d,d.draft.pending&&d.draft.pending.who)+"?"}).name):""}</small></span></button>`}).join("")}</div>
       <p class="mute" style="font-size:12px;margin-top:12px;line-height:1.5">Miami (OH) and UMass start off the wheel as the high and low outliers. Northern Illinois is off until we confirm CFB 27 still has them in the MAC.</p></div>
    </div></div>`;
 }
@@ -726,19 +727,28 @@ function bind(r){
   if(r==="draft"){
     on("spin",spin);
     on("shuffle",async()=>{const nd=clone(D().draft),o=draftOrder(D());for(let i=o.length-1;i>0;i--){const j=rand(i+1);[o[i],o[j]]=[o[j],o[i]]}nd.order=o;await saveDraft(nd);render()});
-    on("undo",async()=>{const nd=clone(D().draft),last=(nd.log||[]).pop();if(last)delete nd.assignments[last.who];else{const k=Object.keys(nd.assignments).pop();delete nd.assignments[k]}await saveDraft(nd);render()});
-    on("reset",async()=>{if(await ask("Reset the draft?","This clears every team assignment so you can spin again from the top.")){const nd=clone(D().draft);nd.assignments={};nd.log=[];await saveDraft(nd);render()}});
+    on("iaccept",acceptPending);on("ispin",respinPending);
+    on("undo",async()=>{const nd=clone(D().draft);nd.mulligan=nd.mulligan||{};
+      if(nd.pending){delete nd.pending}
+      else{const lastM=Object.keys(nd.mulligan).find(w=>!nd.assignments[w]);
+        if(lastM){delete nd.mulligan[lastM]}
+        else{const last=(nd.log||[]).pop();const w=last?last.who:Object.keys(nd.assignments).pop();if(w){delete nd.assignments[w];delete nd.mulligan[w]}}}
+      await saveDraft(nd);render()});
+    on("reset",async()=>{if(await ask("Reset the draft?","This clears every team assignment so you can spin again from the top.")){const nd=clone(D().draft);nd.assignments={};nd.log=[];delete nd.pending;nd.mulligan={};await saveDraft(nd);render()}});
     q("[data-ex]").forEach(b=>b.onclick=async()=>{const nd=clone(D().draft),c=b.dataset.ex;nd.excluded=nd.excluded||[];nd.excluded=nd.excluded.includes(c)?nd.excluded.filter(x=>x!==c):nd.excluded.concat(c);await saveDraft(nd);render()});
     q("[data-tog]").forEach(b=>b.onclick=async()=>{const nd=clone(D().draft),p=nd.players.find(x=>x.id===b.dataset.tog);p.active=!p.active;await saveDraft(nd);render()});
   }
 }
 /* ---------- WHEEL ---------- */
-function eligible(d){const ex=d.draft.excluded||[],tk=Object.values(d.draft.assignments||{});return Object.keys(TEAMS).filter(c=>!ex.includes(c)&&!tk.includes(c))}
+function eligible(d,who){const ex=d.draft.excluded||[],tk=Object.values(d.draft.assignments||{});if(d.draft.pending)tk.push(d.draft.pending.code);const rej=who&&d.draft.mulligan&&d.draft.mulligan[who];return Object.keys(TEAMS).filter(c=>!ex.includes(c)&&!tk.includes(c)&&c!==rej)}
+const wheelCodes=d=>eligible(d,d.draft.pending?null:nextUp(d));
+const isRespin=(d,who)=>!!(who&&d.draft.mulligan&&d.draft.mulligan[who]);
+const pname=(d,id)=>((d.draft.players||[]).find(p=>p.id===id)||{name:id}).name;
 function draftOrder(d){const act=players(d).map(p=>p.id);const o=(d.draft.order||[]).filter(id=>act.includes(id));act.forEach(id=>{if(!o.includes(id))o.push(id)});return o}
-const nextUp=d=>{const a=d.draft.assignments||{};return draftOrder(d).find(id=>!a[id])};
+const nextUp=d=>{const a=d.draft.assignments||{};if(d.draft.pending)return d.draft.pending.who;return draftOrder(d).find(id=>!a[id])};
 function drawWheel(){
   const cv=document.getElementById("wheel"); if(!cv) return;
-  const d=D(),codes=eligible(d),ctx=cv.getContext("2d"),W=cv.width,R=W/2-24,cx=W/2,cy=W/2;
+  const d=D(),codes=wheelCodes(d),ctx=cv.getContext("2d"),W=cv.width,R=W/2-24,cx=W/2,cy=W/2;
   ctx.clearRect(0,0,W,W);
   ctx.beginPath();ctx.arc(cx,cy,R+18,0,Math.PI*2);ctx.fillStyle="#FFE14F";ctx.fill();
   ctx.beginPath();ctx.arc(cx,cy,R+6,0,Math.PI*2);ctx.fillStyle="#08102B";ctx.fill();
@@ -759,7 +769,8 @@ function shade(hex,p){const n=parseInt(hex.slice(1),16);let r=n>>16,g=n>>8&255,b
 function mountWheel(){drawWheel();if(document.fonts)document.fonts.ready.then(drawWheel)}
 function rand(n){const u=new Uint32Array(1);crypto.getRandomValues(u);return u[0]%n}
 function spin(){
-  if(spinning)return;const d=D(),codes=eligible(d),who=nextUp(d);if(!codes.length||!who)return;
+  if(spinning)return;const d=D();if(d.draft.pending)return;const codes=wheelCodes(d),who=nextUp(d);if(!codes.length||!who)return;
+  document.getElementById("reveal").classList.remove("show");
   spinning=true;document.getElementById("spin").disabled=true;
   const win=rand(codes.length),seg=Math.PI*2/codes.length,tau=Math.PI*2,target=-(win+.5)*seg+(Math.random()-.5)*seg*.7;
   const delta=((target-rot)%tau+tau)%tau,start=rot,end=rot+tau*(6+rand(3))+delta,dur=6200,t0=performance.now(),ptr=document.getElementById("ptr");let last=null;
@@ -768,12 +779,31 @@ function spin(){
     const s=Math.floor((((-rot)%tau)+tau)%tau/seg);if(s!==last){last=s;ptr.classList.remove("tick");void ptr.offsetWidth;ptr.classList.add("tick")}
     if(p<1)requestAnimationFrame(f);else{rot=end%tau;finishSpin(who,codes[win])}})(t0);
 }
-async function finishSpin(who,code){const nd=clone(D().draft);nd.assignments=nd.assignments||{};nd.assignments[who]=code;nd.log=(nd.log||[]).concat([{who,code,at:new Date().toISOString()}]);
-  showReveal(nd.players.find(p=>p.id===who).name,code);await saveDraft(nd);spinning=false;
-  if(!demo)postSystem(`${nd.players.find(p=>p.id===who).name} spun ${TEAMS[code].school} ${TEAMS[code].mascot}`);}
-function showReveal(name,code){const t=TEAMS[code],el=document.getElementById("reveal"),c=document.getElementById("rcard");c.style.setProperty("--r1",accent(code));
-  c.innerHTML=`<span class="lbl">The wheel has spoken</span><div class="coach">${esc(name)}</div>${logo(code,"xl")}<div class="school">${esc(t.school)}</div><div class="chips"><span class="chip sm">${esc(t.mascot)}</span><span class="chip sm gold">${I.star}${t.ovr} OVR</span></div><button class="btn" id="rclose" style="width:100%">Continue</button>`;
-  el.classList.add("show");document.getElementById("rclose").onclick=()=>{el.classList.remove("show");render()}}
+async function finishSpin(who,code){
+  const nd=clone(D().draft),name=pname(D(),who),t=TEAMS[code];nd.assignments=nd.assignments||{};
+  if(nd.mulligan&&nd.mulligan[who]){const rej=nd.mulligan[who];nd.assignments[who]=code;nd.log=(nd.log||[]).concat([{who,code,rejected:rej,at:new Date().toISOString()}]);
+    showReveal(name,code,"final",rej);await saveDraft(nd);spinning=false;if(!demo)postSystem(`${name} spun again and is locked into ${t.school} ${t.mascot} (passed on ${TEAMS[rej].school})`);}
+  else{nd.pending={who,code};showReveal(name,code,"decide");await saveDraft(nd);spinning=false;}
+  render();
+}
+async function acceptPending(){const nd=clone(D().draft),p=nd.pending;if(!p)return;nd.assignments=nd.assignments||{};nd.assignments[p.who]=p.code;nd.log=(nd.log||[]).concat([{who:p.who,code:p.code,at:new Date().toISOString()}]);delete nd.pending;
+  document.getElementById("reveal").classList.remove("show");await saveDraft(nd);render();if(!demo)postSystem(`${pname(D(),p.who)} keeps ${TEAMS[p.code].school} ${TEAMS[p.code].mascot}`)}
+async function respinPending(){const nd=clone(D().draft),p=nd.pending;if(!p)return;nd.mulligan={...(nd.mulligan||{}),[p.who]:p.code};delete nd.pending;
+  document.getElementById("reveal").classList.remove("show");await saveDraft(nd);render();if(!demo)postSystem(`${pname(D(),p.who)} passed on ${TEAMS[p.code].school}. Spinning again, no take-backs.`);setTimeout(spin,600)}
+function showReveal(name,code,mode,rej){
+  const t=TEAMS[code],el=document.getElementById("reveal"),c=document.getElementById("rcard"),can=canWrite||demo;c.style.setProperty("--r1",accent(code));
+  const top=mode==="decide"?"First spin":mode==="final"?"Second spin · final":"The wheel has spoken";
+  let act;
+  if(mode==="decide"&&can) act=`<p class="mute" style="font-size:12.5px;margin:-6px 0 14px">Keep ${esc(t.school)}, or spin again and live with whatever comes next.</p><div style="display:flex;gap:10px"><button class="btn ghost" id="rspin" style="flex:1">${I.wheel}Spin again</button><button class="btn" id="raccept" style="flex:1">${I.check}Accept</button></div>`;
+  else if(mode==="decide") act=`<div class="pill ghost" style="justify-content:center;width:100%;padding:11px">${esc(name)} is deciding: keep it or spin again…</div><button class="btn ghost sm" id="rclose" style="margin-top:10px">Close</button>`;
+  else act=`${mode==="final"&&rej?`<p class="mute" style="font-size:12.5px;margin:-6px 0 14px">Passed on ${esc(TEAMS[rej].school)}. No take-backs.</p>`:""}<button class="btn" id="rclose" style="width:100%">Continue</button>`;
+  c.innerHTML=`<span class="lbl">${top}</span><div class="coach">${esc(name)}</div>${logo(code,"xl")}<div class="school">${esc(t.school)}</div><div class="chips"><span class="chip">${esc(t.mascot)}</span><span class="chip on">${I.star}${t.ovr} OVR</span></div>${act}`;
+  el.classList.add("show");
+  const b=id=>document.getElementById(id);
+  if(b("rclose"))b("rclose").onclick=()=>{el.classList.remove("show");render()};
+  if(b("raccept"))b("raccept").onclick=acceptPending;
+  if(b("rspin"))b("rspin").onclick=respinPending;
+}
 function ask(title,body){return new Promise(res=>{const m=document.getElementById("modal");document.getElementById("mTitle").textContent=title;document.getElementById("mBody").textContent=body;m.classList.add("show");document.getElementById("mYes").onclick=()=>{m.classList.remove("show");res(true)};document.getElementById("mNo").onclick=()=>{m.classList.remove("show");res(false)}})}
 
 /* ---------- CHAT ---------- */
@@ -814,6 +844,11 @@ async function toggleReady(id){
     live.ready=r;render();writeDoc("ready",r);return}
   if(member&&member.coach===id&&authUser){const was=readyMap(d,wk)[id];DB.collection("dynasty_ready").doc(authUser.uid).set({coach:id,week:wk,done:!was}).catch(e=>toast("Couldn't update ("+(e.code||"error")+")"))}
 }
+function liveReveal(a,b){try{const d={draft:b};
+  if(b.pending&&(!a.pending||a.pending.code!==b.pending.code))return showReveal(pname(d,b.pending.who),b.pending.code,"decide");
+  const na=b.assignments||{},oa=a.assignments||{};const w=Object.keys(na).find(k=>na[k]!==oa[k]);
+  if(w){const l=(b.log||[]).filter(x=>x.who===w).slice(-1)[0];showReveal(pname(d,w),na[w],l&&l.rejected?"final":"kept",l&&l.rejected)}
+  else if(a.pending&&!b.pending)document.getElementById("reveal").classList.remove("show");}catch(e){}}
 function claimCoach(id){if(!authUser)return;DB.collection("dynasty_members").doc(authUser.uid).set({coach:id,name:authUser.displayName||"",email:authUser.email||""}).then(()=>{store.set("macdyn.me",id)}).catch(e=>toast("Couldn't save ("+(e.code||"error")+")"))}
 function toast(t){let el=document.getElementById("toast");if(!el){el=document.createElement("div");el.id="toast";el.className="toast";document.body.appendChild(el)}el.textContent=t;el.classList.add("show");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("show"),3500)}
 function signIn(){const p=new firebase.auth.GoogleAuthProvider();p.setCustomParameters({prompt:"select_account"});
@@ -835,7 +870,7 @@ let unsubMember=null,unsubChat=null;
       if(!spinning)render();
     });
     const timer=setTimeout(()=>{if(!live.draft)toast("Still loading the league…")},10000);
-    docRef("draft").onSnapshot(s=>{clearTimeout(timer);live.draft=s.exists?s.data():clone(DEFAULT_DRAFT);if(!spinning)render()},e=>{console.error(e);live.draft=live.draft||clone(DEFAULT_DRAFT);render()});
+    docRef("draft").onSnapshot(s=>{clearTimeout(timer);const prev=live.draft;live.draft=s.exists?s.data():clone(DEFAULT_DRAFT);if(prev&&!canWrite)liveReveal(prev,live.draft);if(!spinning)render()},e=>{console.error(e);live.draft=live.draft||clone(DEFAULT_DRAFT);render()});
     docRef("season").onSnapshot(s=>{live.season=s.exists?s.data():{};if(!spinning)render()},e=>console.error(e));
     docRef("ready").onSnapshot(s=>{live.ready=s.exists?s.data():{};if(!spinning)render()},e=>console.error(e));
     DB.collection("dynasty_ready").onSnapshot(s=>{live.readyMembers=s.docs.map(x=>x.data());if(!spinning)render()},e=>console.error(e));
