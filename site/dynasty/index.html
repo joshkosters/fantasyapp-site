@@ -379,9 +379,7 @@ tr.me{background:rgba(255,225,79,.07)!important}
 .pc.live .gauge,.pc.live .gnum,.pc.live .odo,.pc.live .unit{transform:translate(calc(var(--ry)*.9px),calc(var(--rx)*-.9px))}
 .pc .pcs{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform:translateZ(calc(var(--T)/2))}
 .pc .pcs.back{transform:rotateY(180deg) translateZ(calc(var(--T)/2))}
-.pc .edge{position:absolute;left:0;top:0;width:100%;height:100%;transform:translateZ(var(--z));
-  background:linear-gradient(100deg,color-mix(in srgb,var(--lc) 70%,#1a2036),color-mix(in srgb,var(--lc) 45%,#f4f7fb) 42%,color-mix(in srgb,var(--lc) 85%,#fff) 50%,color-mix(in srgb,var(--lc) 70%,#10162a))}
-.pc .edge.cap{background:linear-gradient(100deg,#9aa6b8,#ffffff 45%,#b8c2d0)}
+.pc .edge{position:absolute;left:0;top:0;width:100%;height:100%;transform:translateZ(var(--z));overflow:visible;pointer-events:none}
 .pc .pshadow{position:absolute;left:8%;right:4%;top:6%;bottom:-3%;border-radius:8%;background:rgba(0,0,0,.95);box-shadow:0 0 0 calc(var(--T)*.6) color-mix(in srgb,var(--lc) 18%,transparent);filter:blur(calc(var(--T)*2.6));
   transform:translate(calc(var(--ry,0)*-.9% + 3%),calc(var(--rx,0)*.6% + 4%)) scale(calc(.97 - var(--liftn,0)*.05));opacity:calc(.85 - var(--liftn,0)*.25);transition:transform .25s ease-out,opacity .25s}
 .pc .pin{transform:translateZ(var(--lift,0px)) rotateX(calc(var(--rx,0)*1deg)) rotateY(calc(var(--ry,0)*1deg + var(--flip,0deg))) !important}
@@ -897,6 +895,7 @@ const TROPHY='<svg viewBox="0 0 66 62"><path fill="currentColor" d="M14 2h38v6h1
    <linearGradient id="pcf-fade" x1="720" y1="737" x2="720" y2="883" gradientUnits="userSpaceOnUse"><stop stop-color="${CARD_THEME.base}" stop-opacity="0"/><stop offset="1" stop-color="${CARD_THEME.base}"/></linearGradient>
    <linearGradient id="pcf-plate" x1="479" y1="1255" x2="989" y2="1255" gradientUnits="userSpaceOnUse"><stop stop-color="#DCE3EB" stop-opacity="0"/><stop offset=".55" stop-color="#DCE3EB" stop-opacity=".55"/><stop offset="1" stop-color="#CFD8E3"/></linearGradient>
    <linearGradient id="pcf-mg" x1="0" y1="700" x2="0" y2="960" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient><mask id="pcf-pmask" maskUnits="userSpaceOnUse" x="0" y="0" width="1143" height="1367"><rect width="1143" height="1367" fill="url(#pcf-mg)"/></mask>
+   <linearGradient id="pcf-ecap" x1="0" y1="0" x2="1143" y2="200" gradientUnits="userSpaceOnUse"><stop stop-color="#9aa6b8"/><stop offset=".45" stop-color="#fff"/><stop offset="1" stop-color="#b8c2d0"/></linearGradient>
    <linearGradient id="pcf-glass" x1="600" y1="15" x2="960" y2="900" gradientUnits="userSpaceOnUse"><stop stop-color="#fff" stop-opacity=".94"/><stop offset=".5" stop-color="#fff" stop-opacity=".78"/><stop offset="1" stop-color="#F2F6FA" stop-opacity=".66"/></linearGradient>
    <linearGradient id="pcf-sheen" x1="560" y1="15" x2="900" y2="520" gradientUnits="userSpaceOnUse"><stop stop-color="#fff" stop-opacity=".9"/><stop offset=".28" stop-color="#fff" stop-opacity=".25"/><stop offset=".29" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
    <linearGradient id="pcf-base" x1="200" y1="35" x2="900" y2="1367" gradientUnits="userSpaceOnUse"><stop stop-color="#E9EEF4"/><stop offset=".55" stop-color="#D9E1EA"/><stop offset="1" stop-color="#C6D0DC"/></linearGradient>
@@ -921,7 +920,7 @@ const P_PANELU=P_PANEL+"M562 380H885V1020H562Z";
 function pcard(d,p,cat,rank,opts={}){
   const lg="pcl"+(++pcSeq), lc=vivid(p.team);
   const W0=opts.w||parseInt(opts.cw)||240, TH=Math.max(7,Math.round(W0*.05)), nE=TOUCH?(opts.big?6:3):(opts.big?12:6), kN=W0/1143, cpS=`path("${scalePath(P_BASE,kN)}")`;
-  const edges=Array.from({length:nE},(_,i)=>`<div class="edge${i===0||i===nE-1?" cap":""}" style="--z:${(-TH/2+TH*(i+.5)/nE).toFixed(2)}px;clip-path:${cpS}"></div>`).join("");
+  const edges=Array.from({length:nE},(_,i)=>`<svg class="edge" viewBox="0 0 1143 1367" preserveAspectRatio="none" style="--z:${(-TH/2+TH*(i+.5)/nE).toFixed(2)}px"><path d="${P_BASE}" fill="${i===0||i===nE-1?"url(#pcf-ecap)":`url(#${lg}e)`}"/></svg>`).join("");
   const t=T(p.team),[k,lbl,unit,ribLbl]=CAT_HEAD[cat]||CAT_HEAD.passing,own=ownerOf(d,p.team);
   const w=opts.w||parseInt(opts.cw)||240,kk=(w/1143).toFixed(5);
   const parts=String(p.name||"").trim().split(/\s+/),first=parts.length>1?parts.slice(0,-1).join(" "):"",last=parts.slice(-1)[0]||"";
@@ -938,7 +937,7 @@ function pcard(d,p,cat,rank,opts={}){
      <svg class="layer" viewBox="0 0 1143 1367"><path d="M22 1016H111V1143L22 1103V1016Z" fill="#A99430"/><path d="${P_BASE}" fill="url(#pcf-base)"/>${opts.texture?`<image href="${esc(opts.texture)}" width="1143" height="1367" preserveAspectRatio="xMidYMid slice" style="clip-path:path('${P_BASE}')"/>`:""}<path d="${P_BASE}" fill="url(#pcf-bsheen)" class="bsheen"/><path d="${P_BASE}" fill="none" stroke="#fff" stroke-opacity=".95" stroke-width="3"/></svg>
      ${p.img?`<img class="cut" src="${esc(p.img)}" alt="">`:`<div class="wm">${LOGO[p.team]?`<img src="${wheelLogoUrl(p.team)}" alt="">`:""}</div>`}
      <div class="frost" style="clip-path:path('${P_PANELU}')">${p.img?`<img class="cut" src="${esc(p.img)}" alt="">`:""}</div>
-     <svg class="layer" viewBox="0 0 1143 1367"><defs><linearGradient id="${lg}" x1="797" y1="15.5" x2="797" y2="1018" gradientUnits="userSpaceOnUse"><stop stop-color="${lc}"/><stop offset=".6" stop-color="${lc}" stop-opacity=".8"/><stop offset="1" stop-color="${lc}" stop-opacity="0"/></linearGradient></defs>
+     <svg class="layer" viewBox="0 0 1143 1367"><defs><linearGradient id="${lg}e" x1="0" y1="0" x2="1143" y2="200" gradientUnits="userSpaceOnUse"><stop stop-color="${shade(lc,-.55)}"/><stop offset=".42" stop-color="${shade(lc,.35)}"/><stop offset=".5" stop-color="${shade(lc,.6)}"/><stop offset="1" stop-color="${shade(lc,-.6)}"/></linearGradient><linearGradient id="${lg}" x1="797" y1="15.5" x2="797" y2="1018" gradientUnits="userSpaceOnUse"><stop stop-color="${lc}"/><stop offset=".6" stop-color="${lc}" stop-opacity=".8"/><stop offset="1" stop-color="${lc}" stop-opacity="0"/></linearGradient></defs>
        <g mask="url(#pcf-pmask)"><g filter="url(#pcf-panel)"><g opacity=".5"><path d="${P_PANEL}" fill="#fff"/><rect x="562" y="380" width="323" height="640" fill="#fff"/></g></g><path d="${P_PANEL}" fill="url(#pcf-glass)" opacity=".4"/></g><path d="${P_PANEL}" fill="url(#pcf-sheen)"/><path d="M566 118L620 26C623 21 628 18.5 634 18.5H1010C1019 18.5 1027 26 1027 35V60" fill="none" stroke="#fff" stroke-width="3" stroke-opacity=".95"/>
        <path d="${P_LINE}" stroke="url(#${lg})" stroke-width="6" fill="none" filter="url(#pcf-line)"/>
        <path d="M22 1016H756L736 1059.5L756 1103H22V1016Z" fill="var(--ribbon)" filter="url(#pcf-rib)"/>
