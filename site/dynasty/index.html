@@ -361,6 +361,101 @@ tr.me{background:rgba(255,225,79,.07)!important}
 @media (prefers-reduced-motion:reduce){.holo.anim{animation:none}}
 .rail .rb.conf{background:none;border:0;width:52px;height:52px}
 .brand{display:flex;align-items:center;gap:12px}
+/* ---------- PLAYER CARDS ---------- */
+.pcrow{display:flex;gap:18px;overflow-x:auto;scrollbar-width:none;padding:6px 4px 18px;margin:0 -4px 8px;scroll-snap-type:x proximity}
+.pcrow::-webkit-scrollbar{display:none}
+.pcslot{flex:none;display:flex;flex-direction:column;gap:8px;scroll-snap-align:start}
+.pcslot .cap{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);padding-left:2px}
+.pc{--cw:220px;--tc:#FFE14F;--tc1:#192853;--tc2:#FFE14F;width:var(--cw);aspect-ratio:5/7;position:relative;perspective:1100px;cursor:pointer;flex:none;font-size:calc(var(--cw)*.05)}
+.pc .pin{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.8,.2,1);transform:rotateX(calc(var(--rx,0)*1deg)) rotateY(calc(var(--ry,0)*1deg + var(--flip,0deg)))}
+.pc.live .pin{transition:transform .1s ease-out}
+.pc.flipped{--flip:180deg}
+.pc:not(.big):hover .pin{transform:translateY(-6px) rotateX(4deg) rotateY(-6deg)}
+.pc .pcs{position:absolute;inset:0;border-radius:calc(var(--cw)*.055);overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;isolation:isolate;
+  box-shadow:0 calc(var(--cw)*.06) calc(var(--cw)*.14) rgba(0,0,0,.55),0 0 0 1px rgba(236,244,247,.08) inset}
+.pc .back{transform:rotateY(180deg)}
+/* frame */
+.pc .front{background:linear-gradient(160deg,#1f2a55,#121a3b 60%,#0c1230)}
+.pc .frame{position:absolute;inset:3.2%;border-radius:calc(var(--cw)*.035);border:calc(var(--cw)*.008) solid rgba(236,244,247,.14);pointer-events:none;z-index:3}
+.pc.t-gold .pcs{box-shadow:0 calc(var(--cw)*.06) calc(var(--cw)*.14) rgba(0,0,0,.55),0 0 0 calc(var(--cw)*.014) #D4AF37 inset}
+.pc.t-silver .pcs{box-shadow:0 calc(var(--cw)*.06) calc(var(--cw)*.14) rgba(0,0,0,.55),0 0 0 calc(var(--cw)*.014) #C7CCD6 inset}
+.pc.t-holo .pcs{box-shadow:0 calc(var(--cw)*.06) calc(var(--cw)*.14) rgba(0,0,0,.55),0 0 0 calc(var(--cw)*.014) var(--y) inset}
+.pc.t-gold .frame{border-color:rgba(212,175,55,.6)} .pc.t-silver .frame{border-color:rgba(199,204,214,.5)} .pc.t-holo .frame{border-color:rgba(255,225,79,.55)}
+/* art panel (left) */
+.pc .art{position:absolute;left:6%;top:6%;width:47%;height:76%;border-radius:calc(var(--cw)*.03);overflow:hidden;
+  background:radial-gradient(120% 80% at 50% 0%,color-mix(in srgb,var(--tc1) 90%,#fff 10%),var(--tc1) 55%,color-mix(in srgb,var(--tc1) 60%,#000));
+  clip-path:polygon(0 4%,8% 0,92% 0,100% 4%,100% 96%,92% 100%,8% 100%,0 96%)}
+.pc .art .num{position:absolute;right:-6%;top:22%;font-weight:800;font-size:5.6em;line-height:1;color:rgba(255,255,255,.1);letter-spacing:-.05em}
+.pc .art .stripe{position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(255,255,255,.05) 0 2px,transparent 2px 9px)}
+.pc .art img.cut,.pc .art svg.cut{position:absolute;left:50%;bottom:6%;transform:translateX(-50%);height:88%;width:auto;filter:drop-shadow(0 6px 10px rgba(0,0,0,.45))}
+.pc .art .ph{position:absolute;inset:0 0 22% 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6em}
+.pc .art .ph img{width:78%;height:auto;filter:drop-shadow(0 8px 14px rgba(0,0,0,.5))}
+.pc .art .ph b{font-weight:800;font-size:2.4em;opacity:.6}
+.pc .art .ph span{font-size:.42em;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);font-weight:600}
+.pc .art .swatch{position:absolute;left:50%;bottom:-17%;width:56%;aspect-ratio:1;transform:translateX(-50%) rotate(45deg);box-shadow:0 0 0 calc(var(--cw)*.01) rgba(10,16,41,.8);
+  background:linear-gradient(90deg,var(--tc2) 50%,var(--tc1) 50%)}
+.pc .art .swatch::after{content:"";position:absolute;inset:0;background:radial-gradient(circle,rgba(0,0,0,.18) 1px,transparent 1.5px);background-size:6px 6px;mix-blend-mode:multiply}
+/* info panel (right) */
+.pc .info{position:absolute;left:57%;right:6%;top:6%;bottom:18%;display:flex;flex-direction:column;align-items:center;text-align:center;z-index:2}
+.pc .ab{font-weight:800;font-size:1.5em;line-height:1;letter-spacing:-.02em}
+.pc .sch{font-size:.5em;color:var(--mute);text-transform:uppercase;letter-spacing:.08em;line-height:1.3;margin-top:.3em;font-weight:500}
+.pc .ring{position:relative;width:2.9em;height:2.9em;margin-top:.7em}
+.pc .ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.pc .ring b{position:absolute;inset:0;display:grid;place-items:center;font-weight:800;font-size:.95em;line-height:1}
+.pc .ring small{position:absolute;left:0;right:0;bottom:-.95em;font-size:.42em;color:var(--mute);font-weight:600;letter-spacing:.08em}
+.pc .nm{margin-top:1.35em;line-height:1.05}
+.pc .nm i{display:block;font-weight:400;font-size:.62em;color:rgba(236,244,247,.8)}
+.pc .nm b{display:block;font-weight:800;font-size:.86em;text-transform:uppercase;letter-spacing:.01em;word-break:break-word}
+.pc .ppos{margin-top:.5em;font-size:.45em;font-weight:700;letter-spacing:.1em;padding:.25em .7em;border-radius:1em;background:rgba(236,244,247,.1);color:var(--mute)}
+.pc .hs{margin-top:auto;line-height:1}
+.pc .hs b{display:block;font-weight:800;font-size:1.25em;color:var(--y);letter-spacing:-.02em}
+.pc .hs small{display:block;font-size:.42em;color:var(--mute);text-transform:uppercase;letter-spacing:.1em;margin-top:.35em;font-weight:600}
+.pc .tlogo{width:2.1em;height:2.1em;border-radius:50%;background:rgba(10,16,41,.6);display:grid;place-items:center;margin-top:.6em;box-shadow:0 0 0 1px rgba(236,244,247,.12)}
+.pc .tlogo img,.pc .tlogo .badge{width:1.45em;height:1.45em}
+.pc .series{position:absolute;left:6%;width:47%;bottom:5.5%;height:9%;display:grid;place-items:center;border-radius:calc(var(--cw)*.02);z-index:2;
+  background:linear-gradient(180deg,#ECF4F7,#c9d3e2);color:var(--navy);font-weight:800;font-size:.46em;letter-spacing:.14em;text-transform:uppercase;box-shadow:inset 0 -2px 0 rgba(0,0,0,.15)}
+.pc .seal{position:absolute;right:6%;width:31%;bottom:5.5%;height:9%;display:flex;align-items:center;justify-content:center;gap:.35em;z-index:2;font-size:.42em;font-weight:700;letter-spacing:.08em;color:var(--mute)}
+.pc .seal i{font-style:normal;width:1.9em;height:1.9em;border-radius:50%;display:grid;place-items:center;background:var(--y);color:var(--navy);font-weight:800;font-size:1.1em}
+.pc .rk{position:absolute;left:4%;top:3%;z-index:4;font-size:.42em;font-weight:800;padding:.3em .6em;border-radius:.6em;background:var(--y);color:var(--navy);letter-spacing:.04em}
+/* finishes */
+.pc .foil,.pc .glare,.pc .spark{position:absolute;inset:0;pointer-events:none;z-index:5}
+.pc .glare{mix-blend-mode:soft-light;opacity:0;transition:opacity .3s;background:radial-gradient(farthest-corner circle at calc(var(--mx,50)*1%) calc(var(--my,30)*1%),rgba(255,255,255,.9),rgba(255,255,255,.25) 25%,rgba(0,0,0,.35) 90%)}
+.pc:hover .glare,.pc.live .glare,.pc.big .glare{opacity:.55}
+.pc.t-holo .foil{mix-blend-mode:color-dodge;opacity:.16;background:repeating-linear-gradient(calc(115deg + var(--ry,0)*1deg),hsl(0 90% 62%) 0%,hsl(45 95% 60%) 5%,hsl(110 80% 58%) 10%,hsl(185 90% 58%) 15%,hsl(235 90% 66%) 20%,hsl(295 85% 64%) 25%,hsl(360 90% 62%) 30%);background-size:220% 220%;background-position:calc(var(--mx,30)*1%) calc(var(--my,30)*1%)}
+.pc.t-holo .spark{mix-blend-mode:overlay;opacity:.16;background:repeating-linear-gradient(calc(-45deg + var(--ry,0)*1deg),transparent 0 5px,rgba(255,255,255,.6) 6px,transparent 8px 13px)}
+.pc.t-gold .foil{mix-blend-mode:overlay;opacity:.5;background:linear-gradient(calc(120deg + var(--ry,0)*1deg),transparent 20%,rgba(255,215,90,.75) calc(var(--mx,40)*1%),transparent 80%)}
+.pc.t-silver .foil{mix-blend-mode:overlay;opacity:.45;background:linear-gradient(calc(120deg + var(--ry,0)*1deg),transparent 20%,rgba(255,255,255,.8) calc(var(--mx,40)*1%),transparent 80%)}
+.pc.t-holo:not(.live):not(.big) .foil{animation:pcfoil 7s ease-in-out infinite}
+@keyframes pcfoil{0%,100%{background-position:10% 20%}50%{background-position:90% 80%}}
+@media (prefers-reduced-motion:reduce){.pc .foil{animation:none!important}}
+/* back */
+.pc .back{background:linear-gradient(170deg,#18224d,#0c1230);padding:7% 7% 6%;display:flex;flex-direction:column}
+.pc .bh{display:flex;align-items:center;gap:.6em;border-bottom:1px solid var(--line2);padding-bottom:.55em}
+.pc .bh img,.pc .bh .badge{width:1.9em;height:1.9em}
+.pc .bh b{display:block;font-weight:800;font-size:.78em;text-transform:uppercase;line-height:1.1}
+.pc .bh small{display:block;color:var(--mute);font-size:.46em;margin-top:.15em}
+.pc .bt{font-size:.44em;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--y);margin:.9em 0 .45em}
+.pc .bg{display:grid;grid-template-columns:repeat(3,1fr);gap:.35em}
+.pc .bg div{background:rgba(236,244,247,.05);border:1px solid var(--line);border-radius:.45em;padding:.4em .3em;text-align:center}
+.pc .bg b{display:block;font-weight:800;font-size:.7em;line-height:1.1}
+.pc .bg small{display:block;font-size:.38em;color:var(--mute);letter-spacing:.06em;text-transform:uppercase;margin-top:.2em}
+.pc .rkl{display:flex;flex-direction:column;gap:.3em}
+.pc .rkl div{display:flex;justify-content:space-between;font-size:.48em;color:var(--mute);border-bottom:1px dashed var(--line);padding-bottom:.25em}
+.pc .rkl div b{color:var(--text)}
+.pc .bf{margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-size:.42em;color:var(--dim);font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+/* viewer */
+.cardov{position:fixed;inset:0;z-index:62;display:none;place-items:center;background:rgba(3,6,20,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:20px}
+.cardov.show{display:grid}
+.cardov .stage{display:flex;flex-direction:column;align-items:center;gap:18px}
+.cardov .pc{--cw:min(360px,78vw,calc((100vh - 170px)*.714))}
+.cardov .ctrl{display:flex;align-items:center;gap:10px}
+.cardov .ctrl .arrow{width:42px;height:42px;border-radius:12px;background:var(--panel2);border:1px solid var(--line2);display:grid;place-items:center}
+.cardov .ctrl .arrow svg{width:18px;height:18px}
+.cardov .ctrl .arrow:disabled{opacity:.3}
+.cardov .hint{font-size:12px;color:var(--mute)}
+.cardov .x{position:absolute;top:18px;right:18px;width:42px;height:42px;border-radius:12px;background:var(--panel2);display:grid;place-items:center;font-size:20px}
+.pcmini{display:flex;justify-content:center;padding:14px 0 6px}
+tr.clk{cursor:pointer} tr.clk:hover td{background:rgba(255,225,79,.04)}
 /* ---------- RESPONSIVE ---------- */
 @media(max-width:1180px){.cols{grid-template-columns:minmax(0,1fr)}.cols>.stack:last-child{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}}
 @media(max-width:960px){
@@ -625,8 +720,9 @@ function coachList(d){
 function topPerformer(d){
   const r=statRows(d,"passing",true), t=r[0];
   if(!t) return `<div class="top1"><div class="empty"><b>No stats yet</b>Box scores fill this in after week 1.</div></div>`;
-  return `<div class="top1" style="--tc:${vivid(t.team)}"><div class="feat">${LOGO[t.team]?`<img class="bg" src="${logoUrl(t.team)}" alt="">`:""}<b>${esc(t.name)}</b><small>${esc(T(t.team).school)} · ${esc(t.pos)}</small><div class="stat">${t.passYds.toLocaleString()} pass yds · ${t.passTd} TD</div></div>
-  ${r.slice(1,4).map((p,i)=>`<div class="row ${i===0?"hl":""}">${logo(p.team,"xs")}<span class="nm">${esc(p.name)}</span><span class="v">${p.passYds.toLocaleString()} YDS</span></div>`).join("")}</div>`;
+  const set=r.slice(0,4).map((p,i)=>[p.name,p.team,"passing",catRank(d,p,"passing")]);
+  return `<div class="top1" data-cardset="${esc(JSON.stringify(set))}"><div class="pcmini">${pcard(d,t,"passing",catRank(d,t,"passing"),{tier:"holo",cw:"210px"})}</div>
+  ${r.slice(1,4).map((p,i)=>`<div class="row ${i===0?"hl":""}" data-pcard="${esc(p.name)}|${p.team}|passing|${catRank(d,p,"passing")}" style="cursor:pointer">${logo(p.team,"xs")}<span class="nm">${esc(p.name)}</span><span class="v">${p.passYds.toLocaleString()} YDS</span></div>`).join("")}</div>`;
 }
 function readyPanel(d,wk){
   const ps=players(d),done=readyMap(d,wk),n=ps.filter(p=>done[p.id]).length;
@@ -693,11 +789,11 @@ function stats(d){
   const cc=STATCATS[statCat],rows=statRows(d,statCat,statUsers),me=(d.draft.assignments||{})[myId()];
   const feats=[["passing","Passing leader","passYds","pass yds"],["rushing","Rushing leader","rushYds","rush yds"],["receiving","Receiving leader","recYds","rec yds"]];
   return `<div class="ptitle"><h2>Stats</h2><p>Season ${d.season.season||1} player leaders</p></div>
-  <div class="g3" style="margin-bottom:20px">${feats.map(([cat,l,k,u])=>{const t=statRows(d,cat,statUsers)[0];return `<div class="top1" style="--tc:${t?vivid(t.team):"#FFE14F"}"><div class="feat">${t&&LOGO[t.team]?`<img class="bg" src="${logoUrl(t.team)}" alt="">`:""}<small style="text-transform:uppercase;letter-spacing:.08em;font-size:10.5px;font-weight:600">${l}</small>${t?`<b>${esc(t.name)}</b><small>${esc(T(t.team).school)} · ${esc(t.pos)}</small><div class="stat">${t[k].toLocaleString()} ${u}</div>`:`<b class="mute">No stats yet</b>`}</div></div>`}).join("")}</div>
+  ${leaderRow(d)}
   <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;margin-bottom:14px"><div class="chips">${Object.entries(STATCATS).map(([k,v])=>`<button class="chip ${k===statCat?"on":""}" data-cat="${k}">${v.label}</button>`).join("")}</div>
    <div class="chips"><button class="chip ${statUsers?"on":""}" data-su="1">Coaches' teams</button><button class="chip ${!statUsers?"on":""}" data-su="0">All MAC</button></div></div>
-  <div class="panel flat">${rows.length?`<div class="scroll"><table><thead><tr><th>#</th><th>Player</th><th>Team</th><th>Pos</th><th class="n">GP</th>${cc.cols.map(([k,l])=>`<th class="n">${l}</th>`).join("")}</tr></thead><tbody>
-   ${rows.map((p,i)=>`<tr class="${p.team===me?"me":""} ${ownerOf(d,p.team)?"user":""}"><td class="dim">${i+1}</td><td style="font-weight:600">${esc(p.name)}</td><td><div class="tc">${logo(p.team,"xs")}<span class="mute">${T(p.team).abbr}</span></div></td><td class="mute">${esc(p.pos||"")}</td><td class="n mute">${p.gp??""}</td>${cc.cols.map(([k])=>`<td class="n ${k===cc.sort?"b":""}">${p[k]??0}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`
+  <div class="panel flat" data-cardset="${esc(JSON.stringify(rows.slice(0,25).map((p,i)=>[p.name,p.team,statCat,i+1])))}">${rows.length?`<div class="scroll"><table><thead><tr><th>#</th><th>Player</th><th>Team</th><th>Pos</th><th class="n">GP</th>${cc.cols.map(([k,l])=>`<th class="n">${l}</th>`).join("")}</tr></thead><tbody>
+   ${rows.map((p,i)=>`<tr class="clk ${p.team===me?"me":""} ${ownerOf(d,p.team)?"user":""}" data-pcard="${esc(p.name)}|${p.team}|${statCat}|${i+1}" title="View card"><td class="dim">${i+1}</td><td style="font-weight:600">${esc(p.name)}</td><td><div class="tc">${logo(p.team,"xs")}<span class="mute">${T(p.team).abbr}</span></div></td><td class="mute">${esc(p.pos||"")}</td><td class="n mute">${p.gp??""}</td>${cc.cols.map(([k])=>`<td class="n ${k===cc.sort?"b":""}">${p[k]??0}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`
    :`<div class="empty"><b>No ${cc.label.toLowerCase()} stats yet</b>Post a box score screenshot after each game and the leaderboards fill in.</div>`}</div>`;
 }
 
@@ -745,8 +841,71 @@ function chatView(d){
   return `<div class="ptitle"><h2>League chat</h2><p>${member&&member.coach?`Chatting as ${esc((ps.find(p=>p.id===member.coach)||{}).name||member.coach)}`:"Coaches only"}</p></div><div class="panel chat">${body}</div>`;
 }
 
+/* ======================= PLAYER CARDS ======================= */
+const CARD_SERIES="MAC Legends";   // placeholder series name: swap when Josh picks one
+const STATLBL={passYds:"Pass Yds",passTd:"Pass TD",int:"INT",cmp:"Comp",att:"Att",rushYds:"Rush Yds",rushTd:"Rush TD",car:"Carries",rec:"Rec",recYds:"Rec Yds",recTd:"Rec TD",tkl:"Tackles",tfl:"TFL",sacks:"Sacks",defInt:"Def INT"};
+const CAT_HEAD={passing:["passYds","Pass yards"],rushing:["rushYds","Rush yards"],receiving:["recYds","Rec yards"],defense:["tkl","Tackles"]};
+const tierFor=r=>r===1?"holo":r<=3?"gold":r<=5?"silver":"base";
+const SILHOUETTE=`<svg class="cut" viewBox="0 0 200 260" fill="none"><defs><linearGradient id="sil" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset="1" stop-color="#fff" stop-opacity=".55"/></linearGradient></defs>
+<path fill="url(#sil)" d="M100 18c-32 0-56 22-58 54-1 14 3 26 10 36l-4 10c-2 6 2 12 8 12h10c4 10 16 18 34 18s30-8 34-18h10c6 0 10-6 8-12l-4-10c7-10 11-22 10-36-2-32-26-54-58-54z"/>
+<path stroke="rgba(10,16,41,.55)" stroke-width="5" stroke-linecap="round" d="M62 92h76M70 108h60M100 92v40"/>
+<path fill="url(#sil)" opacity=".9" d="M20 260c2-48 18-82 48-96 10 8 20 12 32 12s22-4 32-12c30 14 46 48 48 96z"/></svg>`;
+function catRank(d,p,cat){const r=statRows(d,cat,false);const i=r.findIndex(x=>x.name===p.name&&x.team===p.team);return i<0?null:i+1}
+function pcard(d,p,cat,rank,opts={}){
+  const t=T(p.team),[k,lbl]=CAT_HEAD[cat]||["passYds","Yards"],tier=opts.tier||tierFor(rank),own=ownerOf(d,p.team);
+  const parts=String(p.name||"").split(" "),first=parts.length>1?parts.slice(0,-1).join(" "):"",last=parts.slice(-1)[0];
+  const rows=statRows(d,cat,false),max=rows.length?rows[0][k]:1,pct=Math.max(.08,Math.min(1,(p[k]||0)/(max||1)));
+  const ringVal=p.ovr||("#"+(catRank(d,p,cat)||rank)),ringLbl=p.ovr?"OVR":"MAC";
+  const C=2*Math.PI*15.5;
+  const stats=Object.keys(STATLBL).filter(s=>p[s]!=null&&p[s]!=="");
+  const ranks=Object.keys(CAT_HEAD).map(c=>[c,catRank(d,p,c)]).filter(([,r])=>r);
+  return `<div class="pc t-${tier} ${opts.big?"big":""}" data-pcard="${esc(p.name)}|${p.team}|${cat}|${rank}" style="--tc1:${t.c1};--tc2:${lum(t.c2)<.06?t.c1:t.c2};--tc:${vivid(p.team)}${opts.cw?`;--cw:${opts.cw}`:""}"><div class="pin">
+   <div class="pcs front"><div class="frame"></div>
+     ${rank?`<span class="rk">#${rank} ${esc(lbl)}</span>`:""}
+     <div class="art"><div class="stripe"></div><span class="num">${esc(p.num||"")}</span>${p.img?`<img class="cut" src="${esc(p.img)}" alt="">`:`<div class="ph">${LOGO[p.team]?`<img src="${logoUrl(p.team)}" alt="">`:`<b>${esc(t.abbr)}</b>`}<span>Player photo</span></div>`}<div class="swatch"></div></div>
+     <div class="info"><div class="ab">${esc(t.abbr)}</div><div class="sch">${esc(t.school)}<br>${esc(t.mascot)}</div>
+       <div class="ring"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15.5" stroke="rgba(236,244,247,.12)" stroke-width="3" fill="none"/><circle cx="18" cy="18" r="15.5" stroke="${tier==="holo"?"#FFE14F":tier==="gold"?"#D4AF37":tier==="silver"?"#C7CCD6":"#36C77E"}" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="${(C*pct).toFixed(1)} ${C.toFixed(1)}"/></svg><b>${esc(ringVal)}</b><small>${ringLbl}</small></div>
+       <div class="nm">${first?`<i>${esc(first)}</i>`:""}<b>${esc(last)}</b></div><span class="ppos">${esc(p.pos||"")}</span>
+       <div class="hs"><b>${(p[k]||0).toLocaleString()}</b><small>${esc(lbl)}</small></div>
+       <div class="tlogo">${logo(p.team,"xs")}</div></div>
+     <div class="series">${esc(CARD_SERIES)}</div><div class="seal">${own?`<i>${esc(own.name[0])}</i>${esc(own.name)}`:"CPU"}</div>
+     <div class="foil"></div><div class="spark"></div><div class="glare"></div></div>
+   <div class="pcs back"><div class="bh">${logo(p.team,"sm")}<div><b>${esc(p.name)}</b><small>${esc(t.school)} · ${esc(p.pos||"")}${own?" · Coach "+esc(own.name):""}</small></div></div>
+     <div class="bt">Season ${d.season.season||1} · ${p.gp??"–"} games</div>
+     <div class="bg">${stats.slice(0,9).map(s=>`<div><b>${Number(p[s]).toLocaleString()}</b><small>${STATLBL[s]}</small></div>`).join("")}</div>
+     ${ranks.length?`<div class="bt">MAC ranks</div><div class="rkl">${ranks.map(([c,r])=>`<div><span>${esc(CAT_HEAD[c][1])}</span><b>#${r}</b></div>`).join("")}</div>`:""}
+     ${p.bio?`<div class="bt">Bio</div><div class="rkl">${Object.entries(p.bio).map(([a,b])=>`<div><span>${esc(a)}</span><b>${esc(b)}</b></div>`).join("")}</div>`:""}
+     <div class="bf"><span>${esc(CARD_SERIES)}</span><span>${tier} · ${rank?"#"+rank:""}</span></div>
+     <div class="glare"></div></div>
+  </div></div>`;
+}
+/* viewer */
+let cardList=[],cardIdx=0;
+function openCard(list,i){cardList=list;cardIdx=i;paintCard();document.getElementById("cardov").classList.add("show")}
+function paintCard(){const d=D(),[p,cat,rank]=cardList[cardIdx];const st=document.getElementById("cardstage");
+  st.innerHTML=`${pcard(d,p,cat,rank,{big:true})}<div class="ctrl"><button class="arrow" id="cprev" ${cardIdx<=0?"disabled":""} aria-label="Previous card">${I.left}</button><span class="hint">Tap the card to flip · ${cardIdx+1} of ${cardList.length}</span><button class="arrow" id="cnext" ${cardIdx>=cardList.length-1?"disabled":""} aria-label="Next card">${I.right}</button></div>`;
+  st.querySelector(".pc").onclick=e=>{e.stopPropagation();e.currentTarget.classList.toggle("flipped")};
+  document.getElementById("cprev").onclick=e=>{e.stopPropagation();if(cardIdx>0){cardIdx--;paintCard()}};
+  document.getElementById("cnext").onclick=e=>{e.stopPropagation();if(cardIdx<cardList.length-1){cardIdx++;paintCard()}};}
+(function(){const ov=document.createElement("div");ov.className="cardov";ov.id="cardov";ov.innerHTML=`<button class="x" aria-label="Close">✕</button><div class="stage" id="cardstage"></div>`;document.body.appendChild(ov);
+  ov.onclick=e=>{if(e.target===ov||e.target.classList.contains("x"))ov.classList.remove("show")};
+  document.addEventListener("keydown",e=>{if(!ov.classList.contains("show"))return;if(e.key==="Escape")ov.classList.remove("show");if(e.key==="ArrowRight"&&cardIdx<cardList.length-1){cardIdx++;paintCard()}if(e.key==="ArrowLeft"&&cardIdx>0){cardIdx--;paintCard()}if(e.key===" "){e.preventDefault();const c=ov.querySelector(".pc");c&&c.classList.toggle("flipped")}})})();
+document.addEventListener("pointermove",e=>{const el=e.target.closest&&e.target.closest(".pc.big");if(!el)return;const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+  el.classList.add("live");el.style.setProperty("--ry",((x-.5)*30).toFixed(1));el.style.setProperty("--rx",((.5-y)*24).toFixed(1));el.style.setProperty("--mx",(x*100).toFixed(1));el.style.setProperty("--my",(y*100).toFixed(1))});
+document.addEventListener("pointerout",e=>{const el=e.target.closest&&e.target.closest(".pc.big");if(!el||el.contains(e.relatedTarget))return;el.classList.remove("live");["--ry","--rx","--mx","--my"].forEach(k=>el.style.removeProperty(k))});
+function bindCards(d){document.querySelectorAll("main [data-pcard]").forEach(el=>el.onclick=()=>{const list=JSON.parse(el.closest("[data-cardset]")?.dataset.cardset||"null");
+  const [name,team,cat,rank]=el.dataset.pcard.split("|");const find=(n,tm)=>(d.season.playerStats||[]).find(x=>x.name===n&&x.team===tm);
+  if(list){const items=list.map(([n,tm,c,r])=>[find(n,tm),c,r]).filter(x=>x[0]);const i=items.findIndex(x=>x[0].name===name&&x[0].team===team);openCard(items,Math.max(0,i))}
+  else{const p=find(name,team);if(p)openCard([[p,cat,+rank]],0)}})}
+function leaderRow(d){
+  const cats=["passing","rushing","receiving","defense"],set=[];
+  const html=cats.map(c=>{const t=statRows(d,c,statUsers)[0];if(!t)return "";const r=catRank(d,t,c);set.push([t.name,t.team,c,r]);return `<div class="pcslot"><span class="cap">${STATCATS[c].label} leader</span>${pcard(d,t,c,r,{tier:"holo"})}</div>`}).join("");
+  if(!set.length) return `<div class="panel" style="margin-bottom:20px"><div class="empty"><b>Leader cards unlock after week 1</b>Once box scores are in, each category leader gets a collectible card here.</div></div>`;
+  return `<div class="pcrow" data-cardset="${esc(JSON.stringify(set))}">${html}</div>`;
+}
 /* ======================= BINDINGS ======================= */
 function bind(r){
+  bindCards(D());
   const q=s=>document.querySelectorAll(s),on=(id,fn)=>{const e=document.getElementById(id);if(e)e.onclick=fn};
   q('main [data-act="demo"]').forEach(b=>b.onclick=()=>{demo=true;demoData=makeDemo();render()});
   q('main [data-act="signin"]').forEach(b=>b.onclick=signIn);
