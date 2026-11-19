@@ -453,7 +453,7 @@ const logoUrl=c=>`https://a.espncdn.com/i/teamlogos/ncaa/500-dark/${ESPN[c]}.png
 const wheelLogoUrl=c=>`https://a.espncdn.com/i/teamlogos/ncaa/500/${ESPN[c]}.png`;
 const DEFAULT_PLAYERS = [
   {id:"josh",name:"Josh",active:true},{id:"nate",name:"Nate",active:true},{id:"caleb",name:"Caleb",active:true},
-  {id:"matthew",name:"Matthew",active:true},{id:"tyler",name:"Tyler",active:true},{id:"ryan",name:"Ryan",active:false}
+  {id:"matthew",name:"Matthew",active:true},{id:"tyler",name:"Tyler",active:true},{id:"ryan",name:"Ryan",active:false,optional:true},{id:"mitch",name:"Mitch",active:false,optional:true}
 ];
 const DEFAULT_DRAFT = {players:DEFAULT_PLAYERS, excluded:["MIA","MASS"], assignments:{}, order:DEFAULT_PLAYERS.map(p=>p.id), log:[]};
 const DEFAULT_RULES = [
@@ -470,7 +470,9 @@ let demo=false, demoData=null, spinning=false, rot=0;
 const store={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const clone=o=>JSON.parse(JSON.stringify(o));
 const esc=s=>String(s??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
-function D(){ if(demo) return demoData; return {draft:live.draft||clone(DEFAULT_DRAFT), season:live.season||{}, ready:live.ready||{}, readyMembers:live.readyMembers||[]}; }
+function withDefaults(dr){if(!dr)return clone(DEFAULT_DRAFT);const ps=dr.players||[];const miss=DEFAULT_PLAYERS.filter(p=>!ps.some(x=>x.id===p.id));return miss.length?{...dr,players:ps.concat(clone(miss))}:dr}
+const isOptional=id=>!!(DEFAULT_PLAYERS.find(p=>p.id===id)||{}).optional;
+function D(){ if(demo) return demoData; return {draft:withDefaults(live.draft), season:live.season||{}, ready:live.ready||{}, readyMembers:live.readyMembers||[]}; }
 const T=c=>TEAMS[c]||{school:c,mascot:"",abbr:(c||"?").slice(0,4).toUpperCase(),c1:"#2b3550",c2:"#62759C",ovr:null,ext:true};
 function lum(hex){const n=parseInt(hex.slice(1),16);const r=(n>>16)/255,g=(n>>8&255)/255,b=(n&255)/255;return .2126*r+.7152*g+.0722*b}
 const txtOn=hex=>lum(hex)>.6?"#111":"#fff";
@@ -725,7 +727,7 @@ function draft(d){
      <div class="mute" style="font-size:12.5px;text-align:center;line-height:1.5">${can?"":"View only. The commissioner runs the wheel and results show up live.<br>"}Every coach can keep their first spin or spin once more. The second spin is final.</div></div>
    <div class="stack">
     <div class="panel board"><div class="sh"><h3>Draft board</h3><span class="va mute">Pick order</span></div>
-      <div class="tl">${order.map((id,i)=>{const p=d.draft.players.find(x=>x.id===id),c=a[id];return `<div class="node ${c?"past":""} ${id===nu?"next cur":""}" style="${c?`--tcl:${vivid(c)}`:""}"><div class="slot">${c?logo(c):pend&&pend.who===id?`<span style="opacity:.55">${logo(pend.code)}</span>`:`<div class="badge" style="--c1:#233168;--c2:rgba(236,244,247,.2)">${i+1}</div>`}<div class="nm">${esc(p.name)}<small>${c?esc(T(c).school)+" · "+T(c).ovr+" OVR"+(rejOf(id)?` · <span class="y">passed on ${esc(T(rejOf(id)).abbr)}</span>`:""):pend&&pend.who===id?`<span class="y">Deciding on ${esc(T(pend.code).school)}…</span>`:mul[id]?`<span class="y">Passed on ${esc(T(mul[id]).school)} · final spin next</span>`:id===nu?"On the clock":"Pick "+(i+1)}</small></div>${!c&&can&&id==="ryan"?`<button class="tg in" data-tog="${id}">In · drop</button>`:""}</div></div>`}).join("")}
+      <div class="tl">${order.map((id,i)=>{const p=d.draft.players.find(x=>x.id===id),c=a[id];return `<div class="node ${c?"past":""} ${id===nu?"next cur":""}" style="${c?`--tcl:${vivid(c)}`:""}"><div class="slot">${c?logo(c):pend&&pend.who===id?`<span style="opacity:.55">${logo(pend.code)}</span>`:`<div class="badge" style="--c1:#233168;--c2:rgba(236,244,247,.2)">${i+1}</div>`}<div class="nm">${esc(p.name)}<small>${c?esc(T(c).school)+" · "+T(c).ovr+" OVR"+(rejOf(id)?` · <span class="y">passed on ${esc(T(rejOf(id)).abbr)}</span>`:""):pend&&pend.who===id?`<span class="y">Deciding on ${esc(T(pend.code).school)}…</span>`:mul[id]?`<span class="y">Passed on ${esc(T(mul[id]).school)} · final spin next</span>`:id===nu?"On the clock":"Pick "+(i+1)}</small></div>${!c&&can&&isOptional(id)?`<button class="tg in" data-tog="${id}">In · drop</button>`:""}</div></div>`}).join("")}
       ${outs.map(p=>`<div class="node out"><div class="slot"><div class="badge" style="--c1:#233168;--c2:rgba(236,244,247,.15)">–</div><div class="nm">${esc(p.name)}<small>Not playing</small></div>${can?`<button class="tg" data-tog="${p.id}">Out · add</button>`:""}</div></div>`).join("")}</div>
       ${can?`<div style="display:flex;gap:8px;margin-top:4px"><button class="btn ghost sm" id="undo" ${!started?"disabled":""}>Undo last spin</button><button class="btn ghost sm" id="reset" ${!started?"disabled":""}>Reset draft</button></div>`:""}</div>
     <div class="panel"><div class="sh"><h3>Program pool</h3><span class="va mute">${started?"Locked":"Tap to toggle"}</span></div>
