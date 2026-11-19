@@ -405,19 +405,19 @@ const I = {
 
 /* ======================= CONSTANTS ======================= */
 const TEAMS = {
-  MIA:{g:"#E3263F",school:"Miami (OH)",mascot:"RedHawks",abbr:"MIA",c1:"#C3142D",c2:"#FFFFFF",ovr:76},
-  WMU:{g:"#D8B35B",school:"Western Michigan",mascot:"Broncos",abbr:"WMU",c1:"#6C4023",c2:"#C9A24B",ovr:75},
-  OHIO:{g:"#1FA37A",school:"Ohio",mascot:"Bobcats",abbr:"OHIO",c1:"#00694E",c2:"#E9E4D4",ovr:74},
-  AKR:{g:"#C9B37E",school:"Akron",mascot:"Zips",abbr:"AKR",c1:"#041E42",c2:"#A89968",ovr:73},
-  EMU:{g:"#22A85F",school:"Eastern Michigan",mascot:"Eagles",abbr:"EMU",c1:"#006633",c2:"#FFFFFF",ovr:73},
-  TOL:{g:"#FFD200",school:"Toledo",mascot:"Rockets",abbr:"TOL",c1:"#15397F",c2:"#FFD200",ovr:73},
-  BALL:{g:"#E0223F",school:"Ball State",mascot:"Cardinals",abbr:"BALL",c1:"#BA0C2F",c2:"#E6E6E6",ovr:72},
-  BGSU:{g:"#FF6A1A",school:"Bowling Green",mascot:"Falcons",abbr:"BGSU",c1:"#FE5000",c2:"#4F2C1D",ovr:72},
-  BUFF:{g:"#3D8BFF",school:"Buffalo",mascot:"Bulls",abbr:"BUFF",c1:"#005BBB",c2:"#FFFFFF",ovr:72},
-  CMU:{g:"#FFC82E",school:"Central Michigan",mascot:"Chippewas",abbr:"CMU",c1:"#6A0032",c2:"#FFC82E",ovr:72},
-  KENT:{g:"#EAAB00",school:"Kent State",mascot:"Golden Flashes",abbr:"KENT",c1:"#002664",c2:"#EAAB00",ovr:72},
-  SAC:{g:"#C4B581",school:"Sacramento State",mascot:"Hornets",abbr:"SAC",c1:"#043927",c2:"#C4B581",ovr:72},
-  MASS:{g:"#D23B3B",school:"UMass",mascot:"Minutemen",abbr:"MASS",c1:"#881C1C",c2:"#C4C4C4",ovr:71},
+  MIA:{off:75,def:77,g:"#E3263F",school:"Miami (OH)",mascot:"RedHawks",abbr:"MIA",c1:"#C3142D",c2:"#FFFFFF",ovr:76},
+  WMU:{off:77,def:73,g:"#D8B35B",school:"Western Michigan",mascot:"Broncos",abbr:"WMU",c1:"#6C4023",c2:"#C9A24B",ovr:75},
+  OHIO:{off:71,def:77,g:"#1FA37A",school:"Ohio",mascot:"Bobcats",abbr:"OHIO",c1:"#00694E",c2:"#E9E4D4",ovr:74},
+  AKR:{off:75,def:72,g:"#C9B37E",school:"Akron",mascot:"Zips",abbr:"AKR",c1:"#041E42",c2:"#A89968",ovr:73},
+  EMU:{off:75,def:72,g:"#22A85F",school:"Eastern Michigan",mascot:"Eagles",abbr:"EMU",c1:"#006633",c2:"#FFFFFF",ovr:73},
+  TOL:{off:75,def:71,g:"#FFD200",school:"Toledo",mascot:"Rockets",abbr:"TOL",c1:"#15397F",c2:"#FFD200",ovr:73},
+  BALL:{off:72,def:73,g:"#E0223F",school:"Ball State",mascot:"Cardinals",abbr:"BALL",c1:"#BA0C2F",c2:"#E6E6E6",ovr:72},
+  BGSU:{off:70,def:75,g:"#FF6A1A",school:"Bowling Green",mascot:"Falcons",abbr:"BGSU",c1:"#FE5000",c2:"#4F2C1D",ovr:72},
+  BUFF:{off:71,def:73,g:"#3D8BFF",school:"Buffalo",mascot:"Bulls",abbr:"BUFF",c1:"#005BBB",c2:"#FFFFFF",ovr:72},
+  CMU:{off:73,def:71,g:"#FFC82E",school:"Central Michigan",mascot:"Chippewas",abbr:"CMU",c1:"#6A0032",c2:"#FFC82E",ovr:72},
+  KENT:{off:73,def:70,g:"#EAAB00",school:"Kent State",mascot:"Golden Flashes",abbr:"KENT",c1:"#002664",c2:"#EAAB00",ovr:72},
+  SAC:{off:73,def:72,g:"#C4B581",school:"Sacramento State",mascot:"Hornets",abbr:"SAC",c1:"#043927",c2:"#C4B581",ovr:72},
+  MASS:{off:71,def:72,g:"#D23B3B",school:"UMass",mascot:"Minutemen",abbr:"MASS",c1:"#881C1C",c2:"#C4C4C4",ovr:71},
 };
 const ESPN={MIA:193,WMU:2711,OHIO:195,AKR:2006,EMU:2199,TOL:2649,BALL:2050,BGSU:189,BUFF:2084,CMU:2117,KENT:2309,SAC:16,MASS:113,NIU:2459};
 const logoUrl=c=>`https://a.espncdn.com/i/teamlogos/ncaa/500-dark/${ESPN[c]}.png`;
@@ -695,7 +695,7 @@ function draft(d){
       ${outs.map(p=>`<div class="node out"><div class="slot"><div class="badge" style="--c1:#233168;--c2:rgba(236,244,247,.15)">–</div><div class="nm">${esc(p.name)}<small>Not playing</small></div>${can?`<button class="tg" data-tog="${p.id}">Out · add</button>`:""}</div></div>`).join("")}</div>
       ${can?`<div style="display:flex;gap:8px;margin-top:4px"><button class="btn ghost sm" id="undo" ${!started?"disabled":""}>Undo last spin</button><button class="btn ghost sm" id="reset" ${!started?"disabled":""}>Reset draft</button></div>`:""}</div>
     <div class="panel"><div class="sh"><h3>Program pool</h3><span class="va mute">${started?"Locked":"Tap to toggle"}</span></div>
-      <div class="pool">${Object.keys(TEAMS).map(c=>{const t=TEAMS[c],isEx=ex.includes(c),isT=tk.includes(c)||(d.draft.pending&&d.draft.pending.code===c);return `<button class="pteam ${isEx?"ex":""} ${isT?"taken":""}" data-ex="${c}" ${started||!can?"disabled":""}>${logo(c,"sm")}<span>${esc(t.school)}<small>${t.ovr} OVR${t.optional?" · if in game":""}${isT?" · "+esc((ownerOf(d,c)||{name:pname(d,d.draft.pending&&d.draft.pending.who)+"?"}).name):""}</small></span></button>`}).join("")}</div>
+      <div class="pool">${Object.keys(TEAMS).map(c=>{const t=TEAMS[c],isEx=ex.includes(c),isT=tk.includes(c)||(d.draft.pending&&d.draft.pending.code===c);return `<button class="pteam ${isEx?"ex":""} ${isT?"taken":""}" data-ex="${c}" ${started||!can?"disabled":""}>${logo(c,"sm")}<span>${esc(t.school)}<small>${t.ovr} OVR · ${t.off}/${t.def}${isT?" · "+esc((ownerOf(d,c)||{name:pname(d,d.draft.pending&&d.draft.pending.who)+"?"}).name):""}</small></span></button>`}).join("")}</div>
       <p class="mute" style="font-size:12px;margin-top:12px;line-height:1.5">All 13 MAC programs for 2026. Miami (OH) and UMass start off the wheel as the high and low outliers. Tap a program to add or remove it before the first spin.</p></div>
    </div></div>`;
 }
@@ -796,7 +796,7 @@ function showReveal(name,code,mode,rej){
   if(mode==="decide"&&can) act=`<p class="mute" style="font-size:12.5px;margin:-6px 0 14px">Keep ${esc(t.school)}, or spin again and live with whatever comes next.</p><div style="display:flex;gap:10px"><button class="btn ghost" id="rspin" style="flex:1">${I.wheel}Spin again</button><button class="btn" id="raccept" style="flex:1">${I.check}Accept</button></div>`;
   else if(mode==="decide") act=`<div class="pill ghost" style="justify-content:center;width:100%;padding:11px">${esc(name)} is deciding: keep it or spin again…</div><button class="btn ghost sm" id="rclose" style="margin-top:10px">Close</button>`;
   else act=`${mode==="final"&&rej?`<p class="mute" style="font-size:12.5px;margin:-6px 0 14px">Passed on ${esc(TEAMS[rej].school)}. No take-backs.</p>`:""}<button class="btn" id="rclose" style="width:100%">Continue</button>`;
-  c.innerHTML=`<span class="lbl">${top}</span><div class="coach">${esc(name)}</div>${logo(code,"xl")}<div class="school">${esc(t.school)}</div><div class="chips"><span class="chip">${esc(t.mascot)}</span><span class="chip on">${I.star}${t.ovr} OVR</span></div>${act}`;
+  c.innerHTML=`<span class="lbl">${top}</span><div class="coach">${esc(name)}</div>${logo(code,"xl")}<div class="school">${esc(t.school)}</div><div class="chips"><span class="chip">${esc(t.mascot)}</span><span class="chip on">${I.star}${t.ovr} OVR</span><span class="chip">OFF ${t.off} · DEF ${t.def}</span></div>${act}`;
   el.classList.add("show");
   const b=id=>document.getElementById(id);
   if(b("rclose"))b("rclose").onclick=()=>{el.classList.remove("show");render()};
