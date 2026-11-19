@@ -655,7 +655,7 @@ document.getElementById("scrim").onclick=()=>document.body.classList.remove("dra
 document.getElementById("demoOff").onclick=()=>{demo=false;render()};
 
 /* ======================= ROUTER ======================= */
-const views={home,draft,schedule,standings:standingsView,stats,rivals,chat:chatView,rules};
+const views={home,draft,schedule,standings:standingsView,stats,rivals,chat:chatView,rules,cards:cardlab};
 const route=()=>{const h=location.hash.slice(1);return views[h]?h:"home"};
 let lastRoute=null, heroTimer=null, heroIdx=0;
 function render(){
@@ -842,7 +842,7 @@ function chatView(d){
 }
 
 /* ======================= PLAYER CARDS ======================= */
-const CARD_SERIES="MAC Legends";   // placeholder series name: swap when Josh picks one
+let CARD_SERIES="MAC Legends";   // placeholder series name: swap when Josh picks one
 const STATLBL={passYds:"Pass Yds",passTd:"Pass TD",int:"INT",cmp:"Comp",att:"Att",rushYds:"Rush Yds",rushTd:"Rush TD",car:"Carries",rec:"Rec",recYds:"Rec Yds",recTd:"Rec TD",tkl:"Tackles",tfl:"TFL",sacks:"Sacks",defInt:"Def INT"};
 const CAT_HEAD={passing:["passYds","Pass yards"],rushing:["rushYds","Rush yards"],receiving:["recYds","Rec yards"],defense:["tkl","Tackles"]};
 const tierFor=r=>r===1?"holo":r<=3?"gold":r<=5?"silver":"base";
@@ -882,7 +882,7 @@ function pcard(d,p,cat,rank,opts={}){
 /* viewer */
 let cardList=[],cardIdx=0;
 function openCard(list,i){cardList=list;cardIdx=i;paintCard();document.getElementById("cardov").classList.add("show")}
-function paintCard(){const d=D(),[p,cat,rank]=cardList[cardIdx];const st=document.getElementById("cardstage");
+function paintCard(){const d=route()==="cards"&&lab.data?lab.data:D(),[p,cat,rank]=cardList[cardIdx];const st=document.getElementById("cardstage");
   st.innerHTML=`${pcard(d,p,cat,rank,{big:true})}<div class="ctrl"><button class="arrow" id="cprev" ${cardIdx<=0?"disabled":""} aria-label="Previous card">${I.left}</button><span class="hint">Tap the card to flip · ${cardIdx+1} of ${cardList.length}</span><button class="arrow" id="cnext" ${cardIdx>=cardList.length-1?"disabled":""} aria-label="Next card">${I.right}</button></div>`;
   st.querySelector(".pc").onclick=e=>{e.stopPropagation();e.currentTarget.classList.toggle("flipped")};
   document.getElementById("cprev").onclick=e=>{e.stopPropagation();if(cardIdx>0){cardIdx--;paintCard()}};
@@ -903,6 +903,43 @@ function leaderRow(d){
   if(!set.length) return `<div class="panel" style="margin-bottom:20px"><div class="empty"><b>Leader cards unlock after week 1</b>Once box scores are in, each category leader gets a collectible card here.</div></div>`;
   return `<div class="pcrow" data-cardset="${esc(JSON.stringify(set))}">${html}</div>`;
 }
+/* ======================= CARD LAB (#cards) ======================= */
+let lab={img:null,team:"",tier:"all",w:240,data:null,flip:false};
+function cardlab(){
+  if(!lab.data) lab.data=makeDemo();
+  const d=lab.data, cats=["passing","rushing","receiving","defense"], tiers=["holo","gold","silver","base"];
+  const pick=c=>{let r=statRows(d,c,false);if(lab.team)r=r.filter(p=>p.team===lab.team);return r};
+  const withImg=p=>lab.img?{...p,img:lab.img}:p;
+  const rows=cats.map(c=>{const r=pick(c);return `<div style="margin-bottom:26px"><div class="sh"><h3>${STATCATS[c].label}</h3><span class="va mute">${r.length?esc(r[0].name)+" · "+esc(T(r[0].team).school):"No player"}</span></div>
+    <div class="pcrow" style="flex-wrap:wrap">${tiers.filter(t=>lab.tier==="all"||lab.tier===t).map(t=>r[0]?`<div class="pcslot"><span class="cap">${t}</span>${pcard(d,withImg(r[0]),c,catRank(d,r[0],c),{tier:t,cw:lab.w+"px"}).replace('class="pc ','class="pc '+(lab.flip?"flipped ":""))}</div>`:"").join("")}</div></div>`}).join("");
+  const big=pick("passing")[0];
+  return `<div class="ptitle"><h2>Card lab</h2><p>A sandbox for designing the player cards. Sample players and stats; nothing here is saved or shown to the league.</p></div>
+  <div class="panel" style="margin-bottom:22px;display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end">
+    <label style="display:grid;gap:6px;font-size:12px;color:var(--mute)">Player cutout (PNG)<input type="file" id="labimg" accept="image/*" style="font:12px Poppins;color:var(--text)"></label>
+    <label style="display:grid;gap:6px;font-size:12px;color:var(--mute)">Team<select id="labteam" class="pill ghost" style="padding:7px 28px 7px 12px;background-color:var(--panel2)"><option value="">Each category's leader</option>${Object.keys(TEAMS).map(c=>`<option value="${c}" ${lab.team===c?"selected":""}>${esc(TEAMS[c].school)}</option>`).join("")}</select></label>
+    <label style="display:grid;gap:6px;font-size:12px;color:var(--mute)">Tier<select id="labtier" class="pill ghost" style="padding:7px 28px 7px 12px;background-color:var(--panel2)">${["all","holo","gold","silver","base"].map(t=>`<option ${lab.tier===t?"selected":""}>${t}</option>`).join("")}</select></label>
+    <label style="display:grid;gap:6px;font-size:12px;color:var(--mute)">Series name<input id="labseries" value="${esc(CARD_SERIES)}" style="background:var(--panel2);border:1px solid var(--line2);border-radius:9px;color:var(--text);font:500 13px Poppins;padding:7px 10px;width:180px"></label>
+    <label style="display:grid;gap:6px;font-size:12px;color:var(--mute)">Card width · <span id="labwv">${lab.w}px</span><input type="range" id="labw" min="160" max="360" step="10" value="${lab.w}"></label>
+    <button class="btn ghost sm" id="labflip">${lab.flip?"Show fronts":"Show backs"}</button>
+    ${big?`<button class="btn sm" id="labbig">Open full-size viewer</button>`:""}
+    ${lab.img?`<button class="btn ghost sm" id="labclear">Remove cutout</button>`:""}
+  </div>
+  <div class="panel" style="margin-bottom:22px;font-size:12.5px;color:var(--mute);line-height:1.6"><b style="color:var(--text)">Asset specs</b> · Card ratio 5:7 (e.g. 1000×1400). Art window is the left 47% × 76% of the card. Cutouts: transparent PNG, about 1200×1600, head in the top third; they're bottom-aligned at 88% of the art window's height. Hover a card to tilt it; the full-size viewer follows your mouse and flips on click.</div>
+  ${rows}`;
+}
+function bindLab(){
+  const g=id=>document.getElementById(id);
+  g("labimg").onchange=e=>{const f=e.target.files[0];if(!f)return;if(lab.img)URL.revokeObjectURL(lab.img);lab.img=URL.createObjectURL(f);render()};
+  g("labteam").onchange=e=>{lab.team=e.target.value;render()};
+  g("labtier").onchange=e=>{lab.tier=e.target.value;render()};
+  g("labseries").onchange=e=>{CARD_SERIES=e.target.value||"MAC Legends";render()};
+  g("labw").oninput=e=>{g("labwv").textContent=e.target.value+"px"};g("labw").onchange=e=>{lab.w=+e.target.value;render()};
+  g("labflip").onclick=()=>{lab.flip=!lab.flip;render()};
+  if(g("labclear"))g("labclear").onclick=()=>{URL.revokeObjectURL(lab.img);lab.img=null;render()};
+  if(g("labbig"))g("labbig").onclick=()=>{const d=lab.data,items=["passing","rushing","receiving","defense"].map(c=>{let r=statRows(d,c,false);if(lab.team)r=r.filter(p=>p.team===lab.team);const p=r[0];return p?[lab.img?{...p,img:lab.img}:p,c,catRank(d,p,c)]:null}).filter(Boolean);
+    const saved=D;window.__labD=d;openCard(items,0)};
+  document.querySelectorAll("main .pc").forEach(el=>el.onclick=()=>el.classList.toggle("flipped"));
+}
 /* ======================= BINDINGS ======================= */
 function bind(r){
   bindCards(D());
@@ -918,6 +955,7 @@ function bind(r){
   q("[data-claim]").forEach(b=>b.onclick=()=>claimCoach(b.dataset.claim));
   q("[data-hero]").forEach(b=>b.onclick=()=>{heroIdx=+b.dataset.hero;paintHero()});
   const ws=document.getElementById("wkstrip");if(ws){const o=ws.querySelector(".on");if(o)ws.scrollLeft=o.offsetLeft-ws.clientWidth/2}
+  if(r==="cards"){bindLab();return}
   if(r==="draft"){
     on("spin",spin);
     on("shuffle",async()=>{const nd=clone(D().draft),o=draftOrder(D());for(let i=o.length-1;i>0;i--){const j=rand(i+1);[o[i],o[j]]=[o[j],o[i]]}nd.order=o;await saveDraft(nd);render()});
