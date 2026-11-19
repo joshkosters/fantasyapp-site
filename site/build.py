@@ -23,14 +23,14 @@ games=[
  ('marquee-grid','Marquee Grid','trivia','Trivia · Movies','Spin the wheel and fill the grid with movie knowledge.','','background:var(--ink);color:var(--cream)','live'),
  ('crew-chief','NASCAR Crew Chief','sports','Sports · Coming 2027','Build a crew. Out-wrench your friends.','','background:var(--yellow)','live'),
  ('nascar','Fantasy NASCAR','sports','Sports · Weekly','Pick 3 drivers a week. A, B, C.','','background:var(--card);border:2px solid var(--ink)','live'),
- ('m3','Mystery game','mystery','Game 05','Something new.','','background:var(--dark2);color:var(--cream)','mystery'),
+ ('drop-four','Drop Four','board','Board game · 2 players or solo','Four in a row, with power discs.','','background:#1f4fd8;color:#fff','live'),
  ('gridiron-iq','Gridiron IQ','learn','Learn · Football IQ','Read defenses with real game film.','wide','background:var(--ink);color:var(--cream)','live'),
  ('m4','Mystery game','mystery','Game 06 · Unlocks in 4 weeks','Something new.','wide','background:var(--orange)','mystery'),
 ]
 def gcard(g):
     s,n,c,tag,d,cls,st,stat=g
-    tagc='color:var(--orange)' if 'ink' in st and 'cream' in st else ''
-    cl=('g '+cls).strip()+(' topo-k' if s=='marquee-grid' else '')
+    tagc='color:var(--orange)' if 'ink' in st and 'cream' in st else ('color:#ffc61a' if s=='drop-four' else '')
+    cl=('g '+cls).strip()+(' topo-k' if s=='marquee-grid' else '')+(' g-df' if s=='drop-four' else '')
     inner=f'<div class="eb" style="{tagc}">{tag}</div><div><div class="d">{n.replace(" ","<br>",1) if cls!="wide" else n}</div>'+(f'<div style="font-weight:700;margin-top:8px;font-size:15px">{d}</div></div>' if cls=='big' else '</div>')
     if cls=='wide': inner=f'<div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap"><span class="eb" style="color:var(--orange)">{tag}</span><span class="d">{n}</span></div>'
     if stat=='mystery':
@@ -68,7 +68,7 @@ h+='''<section class="panel hero"><div class="strip topo" aria-hidden="true"></d
 <div class="row"><span class="n">04</span><span class="tx">Get a new game every week</span><a class="cir" href="#signup" aria-label="Join the list">↗</a></div></div>
 <div class="pop" aria-hidden="true"><div class="eb" style="color:var(--mute2);margin-bottom:10px">Week 9 · In progress</div><div style="height:8px;border-radius:9px;background:#e9e1c4"><div style="width:61%;height:8px;border-radius:9px;background:var(--orange)"></div></div><div style="display:flex;justify-content:space-between;font-weight:800;font-size:14px;margin-top:12px"><span>Jordan Hart</span><span style="background:var(--ink);color:var(--cream);padding:2px 8px;border-radius:6px;font-size:12px">24.6</span></div><div style="display:flex;justify-content:space-between;font-weight:700;font-size:14px;margin-top:8px"><span>Marcus Cole</span><span style="background:var(--yellow);padding:2px 8px;border-radius:6px;font-size:12px">LIVE</span></div></div></section>
 <section id="games" style="padding:40px 14px 0;display:flex;flex-direction:column;gap:20px"><div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px"><h2 class="d" style="font-size:clamp(52px,7.5vw,96px)">Shall we play<br>a game?</h2>
-<div class="tabs" role="tablist"><button class="on" data-f="all">All</button><button data-f="sports">Sports</button><button data-f="trivia">Trivia</button><button data-f="learn">Learn</button></div></div></section>
+<div class="tabs" role="tablist"><button class="on" data-f="all">All</button><button data-f="sports">Sports</button><button data-f="trivia">Trivia</button><button data-f="learn">Learn</button><button data-f="board">Board</button></div></div></section>
 <section class="games" id="grid">'''+''.join(gcard(g) for g in games)+'</section>'
 h+=foot(p)+'''<script>
 (function(){var b=document.querySelectorAll('.tabs button'),c=document.querySelectorAll('#grid>[data-cat]');
@@ -76,7 +76,7 @@ function f(k){b.forEach(function(x){x.classList.toggle('on',x.dataset.f===k)});c
 b.forEach(function(x){x.addEventListener('click',function(){f(x.dataset.f)})});
 document.querySelectorAll('[data-cat].nav a, .links a[data-cat]').forEach(function(a){a.addEventListener('click',function(){f(a.dataset.cat)})});
 var h=location.hash;})();
-</script>'''+end()
+</script><style>.g-df{overflow:hidden}.g-df::after{content:"";position:absolute;right:-14px;bottom:-14px;width:150px;height:96px;opacity:.95;pointer-events:none;background:radial-gradient(circle,#f0352b 0 13px,transparent 14px) 0 0/38px 38px,radial-gradient(circle,#ffc61a 0 13px,transparent 14px) 19px 19px/38px 38px}</style>'''+end()
 open('index.html','w').write(h)
 # ---------- cfb game page
 p='../'
@@ -227,6 +227,7 @@ open('nascar/data/index.html','w').write(h)
 # ---------- privacy page
 
 exec(open('cc_page.py').read())
+exec(open('drop_page.py').read())
 os.makedirs('privacy',exist_ok=True)
 p='../'
 def sec(t,b): return f'<h2 class="d" style="font-size:34px;margin:34px 0 10px">{t}</h2><p style="font-size:17px;line-height:1.65;margin:0;font-weight:500">{b}</p>'
