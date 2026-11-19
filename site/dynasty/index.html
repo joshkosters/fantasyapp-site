@@ -369,16 +369,26 @@ tr.me{background:rgba(255,225,79,.07)!important}
 .pc{--k:.21;--panel:#FFFFFF;--base:#F4F8FA;--ink:#192853;--ink2:#5B6788;--accent:#02AC49;--ribbon:#FFE14F;--fold:#B9A12E;--odo:#050007;
   width:calc(1143px*var(--k));height:calc(1367px*var(--k));position:relative;perspective:1600px;cursor:pointer;flex:none;font-family:Inter,Poppins,sans-serif}
 .pc .pin{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.8,.2,1);transform:rotateX(calc(var(--rx,0)*1deg)) rotateY(calc(var(--ry,0)*1deg + var(--flip,0deg)))}
-.pc.live .pin{transition:transform .1s ease-out}
+.pc.live:not(.flipping) .pin{transition:transform .12s ease-out}
 .pc.flipped{--flip:180deg}
-.pc:not(.big):hover .pin{transform:translateY(-6px) rotateX(3deg) rotateY(calc(-5deg + var(--flip,0deg)))}
+
 .pc:hover .glare{opacity:.45}
 .pc .cut,.pc .rib,.pc .clogo,.pc .gauge,.pc .gnum,.pc .odo,.pc .unit{transition:transform .12s ease-out}
 .pc.live .cut{transform:translate(calc(var(--ry)*-1.8px),calc(var(--rx)*1.8px))}
 .pc.live .rib,.pc.live .clogo{transform:translate(calc(var(--ry)*1.6px),calc(var(--rx)*-1.6px))}
 .pc.live .gauge,.pc.live .gnum,.pc.live .odo,.pc.live .unit{transform:translate(calc(var(--ry)*.9px),calc(var(--rx)*-.9px))}
-.pc .pcs{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
-.pc .pcs.back{transform:rotateY(180deg)}
+.pc .pcs{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform:translateZ(calc(var(--T)/2))}
+.pc .pcs.back{transform:rotateY(180deg) translateZ(calc(var(--T)/2))}
+.pc .edge{position:absolute;left:0;top:0;width:1143px;height:1367px;transform-origin:0 0;transform:translateZ(var(--z)) scale(var(--k));clip-path:var(--cp);
+  background:linear-gradient(100deg,color-mix(in srgb,var(--lc) 70%,#1a2036),color-mix(in srgb,var(--lc) 45%,#f4f7fb) 42%,color-mix(in srgb,var(--lc) 85%,#fff) 50%,color-mix(in srgb,var(--lc) 70%,#10162a))}
+.pc .edge.cap{background:linear-gradient(100deg,#9aa6b8,#ffffff 45%,#b8c2d0)}
+.pc .pshadow{position:absolute;left:8%;right:4%;top:6%;bottom:-3%;border-radius:8%;background:rgba(0,0,0,.95);box-shadow:0 0 0 calc(var(--T)*.6) color-mix(in srgb,var(--lc) 18%,transparent);filter:blur(calc(var(--T)*2.6));
+  transform:translate(calc(var(--ry,0)*-.9% + 3%),calc(var(--rx,0)*.6% + 4%)) scale(calc(.97 - var(--liftn,0)*.05));opacity:calc(.85 - var(--liftn,0)*.25);transition:transform .25s ease-out,opacity .25s}
+.pc .pin{transform:translateZ(var(--lift,0px)) rotateX(calc(var(--rx,0)*1deg)) rotateY(calc(var(--ry,0)*1deg + var(--flip,0deg))) !important}
+.pc:hover{--lift:28px;--liftn:1}
+.pc:active{--lift:6px;--liftn:.3}
+.pc.flipping{--lift:60px;--liftn:1.4}
+.pc.flipping .pin{transition:transform .8s cubic-bezier(.3,1.25,.4,1)}
 .pc .nat{position:absolute;left:0;top:0;width:1143px;height:1367px;transform:scale(var(--k));transform-origin:0 0}
 .pc .nat>*{position:absolute}
 .pc svg.layer{left:0;top:0;width:1143px;height:1367px;overflow:visible}
@@ -431,6 +441,23 @@ tr.me{background:rgba(255,225,79,.07)!important}
 .pc .clogo::after{content:"";position:absolute;inset:6px;border-radius:50%;background:linear-gradient(150deg,rgba(255,255,255,.4),transparent 45%);pointer-events:none}
 .pc .clogo img{width:110px;height:110px;object-fit:contain;filter:drop-shadow(0 4px 4px rgba(0,0,0,.35))}
 .pc .clogo b{font-weight:800;font-size:40px;color:#fff}
+/* back (mirrored) */
+.pc .bk2{left:175px;top:66px;width:885px;height:930px;display:flex;flex-direction:column;color:var(--ink)}
+.pc .bk2 .bh{display:flex;align-items:center;justify-content:space-between;gap:26px;padding-bottom:24px;border-bottom:3px solid rgba(25,40,83,.12)}
+.pc .bk2 .bh img,.pc .bk2 .bh .badge{width:120px;height:120px;filter:drop-shadow(0 6px 8px rgba(0,0,0,.25))}
+.pc .bk2 .bh b{display:block;font-weight:800;font-size:70px;text-transform:uppercase;line-height:1;letter-spacing:-.01em}
+.pc .bk2 .bh small{display:block;font-weight:500;font-size:30px;color:var(--ink2);margin-top:12px}
+.pc .bk2 .bt{font-weight:800;font-size:28px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:34px 0 16px}
+.pc .bk2 .bgr{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.pc .bk2 .bgr div{background:rgba(255,255,255,.82);border:2px solid rgba(255,255,255,.9);border-radius:22px;padding:22px 8px 20px;text-align:center;box-shadow:0 10px 22px rgba(25,40,83,.12),inset 0 1px 0 #fff}
+.pc .bk2 .bgr b{display:block;font-weight:800;font-size:74px;line-height:1;letter-spacing:-.02em}
+.pc .bk2 .bgr small{display:block;font-weight:800;font-size:24px;color:var(--ink2);letter-spacing:.08em;text-transform:uppercase;margin-top:10px}
+.pc .bk2 .rkl div{display:flex;justify-content:space-between;font-size:38px;font-weight:600;color:var(--ink2);padding:12px 0;border-bottom:3px dashed rgba(25,40,83,.14)}
+.pc .bk2 .rkl b{color:var(--ink);font-weight:800}
+.pc .rb2{left:470px;width:560px;justify-content:flex-end;padding-right:20px}
+.pc .bmac{left:170px;top:1112px;width:215px;height:auto;filter:drop-shadow(0 10px 14px rgba(25,40,83,.35)) drop-shadow(0 2px 3px rgba(0,0,0,.25))}
+.pc .bf2{left:420px;top:1150px;width:430px;display:flex;flex-direction:column;gap:8px;font-size:26px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
+.pc .bf2 span:last-child{font-weight:500;letter-spacing:.06em}
 /* back */
 .pc .bk{left:70px;top:60px;width:880px;height:1240px;display:flex;flex-direction:column;color:var(--ink)}
 .pc .bk .bh{display:flex;align-items:center;gap:26px;padding-bottom:26px;border-bottom:3px solid rgba(25,40,83,.1)}
@@ -877,9 +904,15 @@ function odoHTML(v){const s=Math.round(v||0).toLocaleString(),ds=s.replace(/\D/g
 function odoVars(t){const c1=t.c1,c2=lum(t.c2)<.06?"#F1EBDF":t.c2;
   return `--odo:${shade(c1,-.62)};--o0:${shade(c1,-.75)};--o1:${shade(c1,-.45)};--o2:${shade(c1,-.18)};--od:${c2};--l0:${shade(c2,-.4)};--l1:${c2};--l2:${shade(c2,.12)};--ld:${lum(c2)>.5?shade(c1,-.25):"#fff"}`}
 let pcSeq=0;
+document.documentElement.style.setProperty("--cp",`path("${"M1010.5 35H66C54.9543 35 46 43.9543 46 55V1155.36C46 1164.03 49.7476 1172.27 56.2778 1177.97L167.5 1275L261.963 1359.37C267.461 1364.29 274.575 1367 281.947 1367H969.5C980.546 1367 989.5 1358.05 989.5 1347V477.5L1024.64 442.358C1028.39 438.607 1030.5 433.52 1030.5 428.216V55C1030.5 43.9543 1021.55 35 1010.5 35Z"}")`);
+function flipCard(el){el.classList.add("flipping");el.classList.toggle("flipped");clearTimeout(el._ft);el._ft=setTimeout(()=>el.classList.remove("flipping"),820)}
+function mirrorPath(dp){const t=dp.match(/[A-Za-z]|-?\d*\.?\d+/g);let out=[],cmd="",k=0;for(const x of t){if(/[A-Za-z]/.test(x)){cmd=x;k=0;out.push(x);continue}
+  const v=+x;if(cmd==="H"||((cmd==="M"||cmd==="L"||cmd==="C")&&k%2===0))out.push((1143-v).toFixed(3));else out.push(x);k++}return out.join(" ")}
 const P_PANELU=P_PANEL+"M562 380H885V1020H562Z";
 function pcard(d,p,cat,rank,opts={}){
   const lg="pcl"+(++pcSeq), lc=vivid(p.team);
+  const W0=opts.w||parseInt(opts.cw)||240, TH=Math.max(7,Math.round(W0*.05)), nE=opts.big?18:10;
+  const edges=Array.from({length:nE},(_,i)=>`<div class="edge${i===0||i===nE-1?" cap":""}" style="--z:${(-TH/2+TH*(i+.5)/nE).toFixed(2)}px"></div>`).join("");
   const t=T(p.team),[k,lbl,unit,ribLbl]=CAT_HEAD[cat]||CAT_HEAD.passing,own=ownerOf(d,p.team);
   const w=opts.w||parseInt(opts.cw)||240,kk=(w/1143).toFixed(5);
   const parts=String(p.name||"").trim().split(/\s+/),first=parts.length>1?parts.slice(0,-1).join(" "):"",last=parts.slice(-1)[0]||"";
@@ -890,10 +923,10 @@ function pcard(d,p,cat,rank,opts={}){
   const arcD=`M${sx} ${sy}A${R} ${R} 0 1 1 ${ex} ${sy}`;
   const stats=Object.keys(STATLBL).filter(s=>p[s]!=null&&p[s]!=="");
   const ranks=Object.keys(CAT_HEAD).map(cc=>[cc,catRank(d,p,cc)]).filter(([,r])=>r);
-  const back=`<svg class="layer" viewBox="0 0 1143 1367"><path d="${P_BASE}" fill="${CARD_THEME.base}" filter="url(#pcf-panel)"/>${opts.texture?`<image href="${esc(opts.texture)}" width="1143" height="1367" preserveAspectRatio="xMidYMid slice" clip-path="path('${P_BASE}')"/>`:""}</svg>`;
-  return `<div class="pc ${opts.big?"big":""}" data-pcard="${esc(p.name)}|${p.team}|${cat}|${r0}" style="--k:${kk};--tc1:${t.c1};--tc2:${lum(t.c2)<.06?t.c1:t.c2};${odoVars(t)}"><div class="pin">
+  const back=`<svg class="layer" viewBox="0 0 1143 1367"><g transform="translate(1143 0) scale(-1 1)"><path d="M22 1016H111V1143L22 1103V1016Z" fill="#A99430"/><path d="${P_BASE}" fill="url(#pcf-base)"/><path d="${P_BASE}" fill="url(#pcf-bsheen)"/><path d="${P_BASE}" fill="none" stroke="#fff" stroke-opacity=".95" stroke-width="3"/>${opts.texture?`<image href="${esc(opts.texture)}" width="1143" height="1367" preserveAspectRatio="xMidYMid slice" style="clip-path:path('${P_BASE}')" transform="translate(1143 0) scale(-1 1)"/>`:""}<path d="M22 1016H756L736 1059.5L756 1103H22V1016Z" fill="var(--ribbon)" filter="url(#pcf-rib)"/></g></svg>`;
+  return `<div class="pc ${opts.big?"big":""}" data-pcard="${esc(p.name)}|${p.team}|${cat}|${r0}" style="--k:${kk};--T:${TH}px;--lc:${lc};--tc1:${t.c1};--tc2:${lum(t.c2)<.06?t.c1:t.c2};${odoVars(t)}"><div class="pshadow"></div><div class="pin">${edges}
    <div class="pcs front"><div class="nat">
-     <svg class="layer" viewBox="0 0 1143 1367"><path d="M22 1016H111V1143L22 1103V1016Z" fill="#A99430"/><path d="${P_BASE}" fill="url(#pcf-base)" filter="url(#pcf-card)"/>${opts.texture?`<image href="${esc(opts.texture)}" width="1143" height="1367" preserveAspectRatio="xMidYMid slice" style="clip-path:path('${P_BASE}')"/>`:""}<path d="${P_BASE}" fill="url(#pcf-bsheen)" class="bsheen"/><path d="${P_BASE}" fill="none" stroke="#fff" stroke-opacity=".95" stroke-width="3"/></svg>
+     <svg class="layer" viewBox="0 0 1143 1367"><path d="M22 1016H111V1143L22 1103V1016Z" fill="#A99430"/><path d="${P_BASE}" fill="url(#pcf-base)"/>${opts.texture?`<image href="${esc(opts.texture)}" width="1143" height="1367" preserveAspectRatio="xMidYMid slice" style="clip-path:path('${P_BASE}')"/>`:""}<path d="${P_BASE}" fill="url(#pcf-bsheen)" class="bsheen"/><path d="${P_BASE}" fill="none" stroke="#fff" stroke-opacity=".95" stroke-width="3"/></svg>
      ${p.img?`<img class="cut" src="${esc(p.img)}" alt="">`:`<div class="wm">${LOGO[p.team]?`<img src="${wheelLogoUrl(p.team)}" alt="">`:""}</div>`}
      <div class="frost" style="clip-path:path('${P_PANELU}')">${p.img?`<img class="cut" src="${esc(p.img)}" alt="">`:""}</div>
      <svg class="layer" viewBox="0 0 1143 1367"><defs><linearGradient id="${lg}" x1="797" y1="15.5" x2="797" y2="1018" gradientUnits="userSpaceOnUse"><stop stop-color="${lc}"/><stop offset=".6" stop-color="${lc}" stop-opacity=".8"/><stop offset="1" stop-color="${lc}" stop-opacity="0"/></linearGradient></defs>
@@ -915,13 +948,16 @@ function pcard(d,p,cat,rank,opts={}){
      <div class="glare" style="clip-path:path('${P_BASE}')"></div>
    </div></div>
    <div class="pcs back"><div class="nat">${back}
-     <div class="bk"><div class="bh">${logo(p.team)}<div><b>${esc(p.name)}</b><small>${esc(t.school)} · ${esc(p.pos||"")}${p.num?" · #"+esc(p.num):""}${own?" · Coach "+esc(own.name):""}</small></div></div>
+     <div class="bk2">
+       <div class="bh"><div><b>${esc(p.name)}</b><small>${esc(t.school)} · ${esc(p.pos||"")}${p.num?" · #"+esc(p.num):""}${own?" · Coach "+esc(own.name):""}</small></div>${logo(p.team)}</div>
        <div class="bt">Season ${d.season.season||1} · ${p.gp??"–"} games</div>
-       <div class="bgr">${stats.slice(0,9).map(s=>`<div><b>${Number(p[s]).toLocaleString()}</b><small>${STATLBL[s]}</small></div>`).join("")}</div>
-       ${ranks.length?`<div class="bt">MAC ranks</div><div class="rkl">${ranks.map(([cc,r])=>`<div><span>${esc(CAT_HEAD[cc][1])}</span><b>#${r}</b></div>`).join("")}</div>`:""}
-       ${p.bio?`<div class="bt">Bio</div><div class="rkl">${Object.entries(p.bio).map(([a,b])=>`<div><span>${esc(a)}</span><b>${esc(b)}</b></div>`).join("")}</div>`:""}
-       <div class="bf"><span>${esc(CARD_SERIES)}</span><span>${esc(rib)}</span></div></div>
-     <div class="glare" style="clip-path:path('${P_BASE}')"></div></div></div>
+       <div class="bgr">${stats.slice(0,ranks.length?6:9).map(s=>`<div><b>${Number(p[s]).toLocaleString()}</b><small>${STATLBL[s]}</small></div>`).join("")}</div>
+       ${ranks.length?`<div class="bt">MAC ranks</div><div class="rkl">${ranks.slice(0,3).map(([cc,r])=>`<div><span>${esc(CAT_HEAD[cc][1])}</span><b>#${r}</b></div>`).join("")}</div>`:""}
+     </div>
+     <div class="rib rb2" style="font-size:${fitPx(rib,500,58,.66)}px">${TROPHY}<span>${esc(rib)}</span></div>
+     <img class="bmac" src="${MAC_LOGO}" alt="MAC">
+     <div class="bf2"><span>${esc(CARD_SERIES)}</span><span>Season ${d.season.season||1}</span></div>
+     <div class="glare" style="clip-path:path('${mirrorPath(P_BASE)}')"></div></div></div>
   </div></div>`;
 }
 /* animation: gauge fill + glow, odometer roll, number count-up */
@@ -941,16 +977,16 @@ function openCard(list,i,d){cardList=list;cardIdx=i;cardData=d||null;paintCard()
 function paintCard(){const d=cardData||D(),[p,cat,rank]=cardList[cardIdx],st=document.getElementById("cardstage");
   const w=Math.round(Math.min(440,innerWidth*.88,(innerHeight-150)*1143/1367));
   st.innerHTML=`${pcard(d,p,cat,rank,{big:true,w,texture:cardTexture})}<div class="ctrl"><button class="arrow" id="cprev" ${cardIdx<=0?"disabled":""} aria-label="Previous card">${I.left}</button><span class="hint">Tap the card to flip · ${cardIdx+1} of ${cardList.length}</span><button class="arrow" id="cnext" ${cardIdx>=cardList.length-1?"disabled":""} aria-label="Next card">${I.right}</button></div>`;
-  const pc=st.querySelector(".pc");pc.onclick=e=>{e.stopPropagation();pc.classList.toggle("flipped")};armCards(st);
+  const pc=st.querySelector(".pc");pc.onclick=e=>{e.stopPropagation();flipCard(pc)};armCards(st);
   document.getElementById("cprev").onclick=e=>{e.stopPropagation();if(cardIdx>0){cardIdx--;paintCard()}};
   document.getElementById("cnext").onclick=e=>{e.stopPropagation();if(cardIdx<cardList.length-1){cardIdx++;paintCard()}};}
 let cardTexture=null;
 (function(){const ov=document.createElement("div");ov.className="cardov";ov.id="cardov";ov.innerHTML=`<button class="x" aria-label="Close">✕</button><div class="stage" id="cardstage"></div>`;document.body.appendChild(ov);
   ov.onclick=e=>{if(e.target===ov||e.target.classList.contains("x"))ov.classList.remove("show")};
-  document.addEventListener("keydown",e=>{if(!ov.classList.contains("show"))return;if(e.key==="Escape")ov.classList.remove("show");if(e.key==="ArrowRight"&&cardIdx<cardList.length-1){cardIdx++;paintCard()}if(e.key==="ArrowLeft"&&cardIdx>0){cardIdx--;paintCard()}if(e.key===" "){e.preventDefault();const c=ov.querySelector(".pc");c&&c.classList.toggle("flipped")}})})();
-document.addEventListener("pointermove",e=>{const el=e.target.closest&&e.target.closest(".pc.big");if(!el)return;const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
-  el.classList.add("live");el.style.setProperty("--ry",((x-.5)*26).toFixed(1));el.style.setProperty("--rx",((.5-y)*20).toFixed(1));el.style.setProperty("--mx",(x*100).toFixed(1));el.style.setProperty("--my",(y*100).toFixed(1))});
-document.addEventListener("pointerout",e=>{const el=e.target.closest&&e.target.closest(".pc.big");if(!el||el.contains(e.relatedTarget))return;el.classList.remove("live");["--ry","--rx","--mx","--my"].forEach(k=>el.style.removeProperty(k))});
+  document.addEventListener("keydown",e=>{if(!ov.classList.contains("show"))return;if(e.key==="Escape")ov.classList.remove("show");if(e.key==="ArrowRight"&&cardIdx<cardList.length-1){cardIdx++;paintCard()}if(e.key==="ArrowLeft"&&cardIdx>0){cardIdx--;paintCard()}if(e.key===" "){e.preventDefault();const c=ov.querySelector(".pc");c&&flipCard(c)}})})();
+document.addEventListener("pointermove",e=>{const el=e.target.closest&&e.target.closest(".pc");if(!el)return;const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height,m=el.classList.contains("big")?1:.8;
+  el.classList.add("live");el.style.setProperty("--ry",((x-.5)*32*m).toFixed(1));el.style.setProperty("--rx",((.5-y)*24*m).toFixed(1));el.style.setProperty("--mx",(x*100).toFixed(1));el.style.setProperty("--my",(y*100).toFixed(1))});
+document.addEventListener("pointerout",e=>{const el=e.target.closest&&e.target.closest(".pc");if(!el||el.contains(e.relatedTarget))return;el.classList.remove("live");["--ry","--rx","--mx","--my"].forEach(k=>el.style.removeProperty(k))});
 function bindCards(d){armCards(document.getElementById("view"));document.querySelectorAll("main [data-pcard]").forEach(el=>el.onclick=()=>{const list=JSON.parse(el.closest("[data-cardset]")?.dataset.cardset||"null");
   const [name,team,cat,rank]=el.dataset.pcard.split("|");const find=(n,tm)=>(d.season.playerStats||[]).find(x=>x.name===n&&x.team===tm);
   if(list){const items=list.map(([n,tm,c,r])=>[find(n,tm),c,r]).filter(x=>x[0]);const i=items.findIndex(x=>x[0].name===name&&x[0].team===team);openCard(items,Math.max(0,i),d)}
@@ -999,7 +1035,7 @@ function bindLab(){
   g("labsample").onclick=()=>{lab.useSample=!lab.useSample;render()};
   if(g("labclear"))g("labclear").onclick=()=>{if(lab.img)URL.revokeObjectURL(lab.img);if(cardTexture)URL.revokeObjectURL(cardTexture);lab.img=null;cardTexture=null;render()};
   g("labbig").onclick=()=>{const d=labData(),items=["passing","rushing","receiving","defense"].map(c=>{let r=statRows(d,c,false);if(lab.team)r=r.filter(p=>p.team===lab.team);const p=c==="passing"&&!lab.team?(r.find(x=>x.sample)||r[0]):r[0];return p?[labPlayer(p),c,catRank(d,p,c)]:null}).filter(Boolean);openCard(items,0,d)};
-  document.querySelectorAll("main .pc").forEach(el=>el.onclick=()=>el.classList.toggle("flipped"));
+  document.querySelectorAll("main .pc").forEach(el=>el.onclick=()=>flipCard(el));
 }
 /* ======================= BINDINGS ======================= */
 function bind(r){
