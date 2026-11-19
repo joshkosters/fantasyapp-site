@@ -418,7 +418,6 @@ const TEAMS = {
   KENT:{g:"#EAAB00",school:"Kent State",mascot:"Golden Flashes",abbr:"KENT",c1:"#002664",c2:"#EAAB00",ovr:72},
   SAC:{g:"#C4B581",school:"Sacramento State",mascot:"Hornets",abbr:"SAC",c1:"#043927",c2:"#C4B581",ovr:72},
   MASS:{g:"#D23B3B",school:"UMass",mascot:"Minutemen",abbr:"MASS",c1:"#881C1C",c2:"#C4C4C4",ovr:71},
-  NIU:{g:"#E8213F",school:"Northern Illinois",mascot:"Huskies",abbr:"NIU",c1:"#C8102E",c2:"#111111",ovr:70,optional:true}
 };
 const ESPN={MIA:193,WMU:2711,OHIO:195,AKR:2006,EMU:2199,TOL:2649,BALL:2050,BGSU:189,BUFF:2084,CMU:2117,KENT:2309,SAC:16,MASS:113,NIU:2459};
 const logoUrl=c=>`https://a.espncdn.com/i/teamlogos/ncaa/500-dark/${ESPN[c]}.png`;
@@ -427,7 +426,7 @@ const DEFAULT_PLAYERS = [
   {id:"josh",name:"Josh",active:true},{id:"nate",name:"Nate",active:true},{id:"caleb",name:"Caleb",active:true},
   {id:"matthew",name:"Matthew",active:true},{id:"tyler",name:"Tyler",active:true},{id:"ryan",name:"Ryan",active:false}
 ];
-const DEFAULT_DRAFT = {players:DEFAULT_PLAYERS, excluded:["MIA","MASS","NIU"], assignments:{}, order:DEFAULT_PLAYERS.map(p=>p.id), log:[]};
+const DEFAULT_DRAFT = {players:DEFAULT_PLAYERS, excluded:["MIA","MASS"], assignments:{}, order:DEFAULT_PLAYERS.map(p=>p.id), log:[]};
 const DEFAULT_RULES = [
   ["Difficulty","TBD"],["Quarter length","TBD"],["Accelerated clock","TBD"],["Advance schedule","TBD — e.g. Sun & Wed nights"],
   ["Sim policy","TBD — what happens if someone misses the deadline"],["4th downs","TBD"],["Banned plays / cheese","TBD"],
@@ -697,7 +696,7 @@ function draft(d){
       ${can?`<div style="display:flex;gap:8px;margin-top:4px"><button class="btn ghost sm" id="undo" ${!started?"disabled":""}>Undo last spin</button><button class="btn ghost sm" id="reset" ${!started?"disabled":""}>Reset draft</button></div>`:""}</div>
     <div class="panel"><div class="sh"><h3>Program pool</h3><span class="va mute">${started?"Locked":"Tap to toggle"}</span></div>
       <div class="pool">${Object.keys(TEAMS).map(c=>{const t=TEAMS[c],isEx=ex.includes(c),isT=tk.includes(c)||(d.draft.pending&&d.draft.pending.code===c);return `<button class="pteam ${isEx?"ex":""} ${isT?"taken":""}" data-ex="${c}" ${started||!can?"disabled":""}>${logo(c,"sm")}<span>${esc(t.school)}<small>${t.ovr} OVR${t.optional?" · if in game":""}${isT?" · "+esc((ownerOf(d,c)||{name:pname(d,d.draft.pending&&d.draft.pending.who)+"?"}).name):""}</small></span></button>`}).join("")}</div>
-      <p class="mute" style="font-size:12px;margin-top:12px;line-height:1.5">Miami (OH) and UMass start off the wheel as the high and low outliers. Northern Illinois is off until we confirm CFB 27 still has them in the MAC.</p></div>
+      <p class="mute" style="font-size:12px;margin-top:12px;line-height:1.5">All 13 MAC programs for 2026. Miami (OH) and UMass start off the wheel as the high and low outliers. Tap a program to add or remove it before the first spin.</p></div>
    </div></div>`;
 }
 
