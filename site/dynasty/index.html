@@ -371,7 +371,12 @@ tr.me{background:rgba(255,225,79,.07)!important}
 .pc .pin{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.8,.2,1);transform:rotateX(calc(var(--rx,0)*1deg)) rotateY(calc(var(--ry,0)*1deg + var(--flip,0deg)))}
 .pc.live .pin{transition:transform .1s ease-out}
 .pc.flipped{--flip:180deg}
-.pc:not(.big):hover .pin{transform:translateY(-5px) rotateX(3deg) rotateY(-5deg)}
+.pc:not(.big):hover .pin{transform:translateY(-6px) rotateX(3deg) rotateY(calc(-5deg + var(--flip,0deg)))}
+.pc:hover .glare{opacity:.45}
+.pc .cut,.pc .rib,.pc .clogo,.pc .gauge,.pc .gnum,.pc .odo,.pc .unit{transition:transform .12s ease-out}
+.pc.live .cut{transform:translate(calc(var(--ry)*-1.8px),calc(var(--rx)*1.8px))}
+.pc.live .rib,.pc.live .clogo{transform:translate(calc(var(--ry)*1.6px),calc(var(--rx)*-1.6px))}
+.pc.live .gauge,.pc.live .gnum,.pc.live .odo,.pc.live .unit{transform:translate(calc(var(--ry)*.9px),calc(var(--rx)*-.9px))}
 .pc .pcs{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
 .pc .pcs.back{transform:rotateY(180deg)}
 .pc .nat{position:absolute;left:0;top:0;width:1143px;height:1367px;transform:scale(var(--k));transform-origin:0 0}
@@ -395,25 +400,28 @@ tr.me{background:rgba(255,225,79,.07)!important}
 .pc .ln{left:580px;width:430px;top:288px;text-align:center;font-weight:800;line-height:1;color:var(--ink);text-transform:uppercase;white-space:nowrap;letter-spacing:-.005em}
 /* odometer */
 .pc .odo{left:620px;top:383px;width:215px;height:73px;border-radius:16.75px 0 0 16.75px;overflow:hidden;display:flex;align-items:stretch;padding:6px 0 6px 10px}
-.pc .odo .reel{flex:none;position:relative;overflow:hidden;background:linear-gradient(#000,#262626 22%,#3a3a3a 50%,#262626 78%,#000);box-shadow:inset 1px 0 0 rgba(255,255,255,.06),inset -1px 0 0 rgba(0,0,0,.8);margin-right:2px;border-radius:3px}
-.pc .odo .reel.last{background:linear-gradient(#9c9283,#ECE3D6 28%,#F4EDE2 50%,#ECE3D6 72%,#9c9283)}
+.pc .odo .reel{flex:none;position:relative;overflow:hidden;background:linear-gradient(var(--o0),var(--o1) 22%,var(--o2) 50%,var(--o1) 78%,var(--o0));box-shadow:inset 1px 0 0 rgba(255,255,255,.06),inset -1px 0 0 rgba(0,0,0,.8);margin-right:2px;border-radius:3px}
+.pc .odo .reel.last{background:linear-gradient(var(--l0),var(--l1) 28%,var(--l2) 50%,var(--l1) 72%,var(--l0))}
 .pc .odo .reel .strip{position:absolute;left:0;right:0;top:0;transition:transform var(--dur,1.6s) cubic-bezier(.2,.75,.25,1)}
-.pc .odo .reel .strip span{display:block;height:61px;line-height:61px;text-align:center;font-weight:400;font-size:46px;color:#F1EBDF;font-variant-numeric:tabular-nums}
-.pc .odo .reel.last .strip span{color:#111}
+.pc .odo .reel .strip span{display:block;height:61px;line-height:61px;text-align:center;font-weight:400;font-size:46px;color:var(--od);font-variant-numeric:tabular-nums;text-shadow:0 2px 3px rgba(0,0,0,.45)}
+.pc .odo .reel.last .strip span{color:var(--ld);text-shadow:0 1px 0 rgba(255,255,255,.3)}
 .pc .odo .reel::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(rgba(0,0,0,.75),transparent 30%,transparent 70%,rgba(0,0,0,.75))}
 .pc .odo .reel.last::after{background:linear-gradient(rgba(60,40,10,.55),transparent 32%,transparent 68%,rgba(60,40,10,.55))}
-.pc .odo .sep{flex:none;width:12px;color:#F1EBDF;font-size:40px;line-height:70px;text-align:center;font-weight:300}
+.pc .odo .sep{flex:none;width:12px;color:var(--od);font-size:40px;line-height:70px;text-align:center;font-weight:300}
 .pc .unit{left:835px;width:132px;top:383px;height:73px;display:grid;place-items:center;font-weight:800;color:#fff;letter-spacing:.01em;text-transform:uppercase}
 /* ribbon */
 .pc .rib{left:140px;width:590px;top:1016px;height:87px;display:flex;align-items:center;gap:26px;color:var(--ink);font-weight:800;text-transform:uppercase;white-space:nowrap;letter-spacing:.005em}
 .pc .rib svg{width:66px;height:62px;flex:none}
 /* coach plate */
-.pc .cpill{left:636px;top:1192px;width:138px;height:26px;border-radius:13px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:800;font-size:17px;letter-spacing:.12em;box-shadow:0 3px 3px rgba(0,0,0,.09)}
+.pc .cpill{left:626px;top:1180px;width:150px;height:30px;border-radius:15px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:800;font-size:19px;letter-spacing:.12em;box-shadow:0 3px 3px rgba(0,0,0,.09),0 6px 12px color-mix(in srgb,var(--accent) 35%,transparent),inset 0 1px 0 rgba(255,255,255,.35)}
 .pc .cpill i{width:9px;height:9px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25)}
-.pc .cf{left:500px;width:272px;top:1234px;text-align:right;font-weight:300;font-size:38px;line-height:1;color:var(--ink);text-transform:uppercase;white-space:nowrap}
-.pc .cl{left:480px;width:292px;top:1272px;text-align:right;font-weight:800;font-size:38px;line-height:1;color:var(--ink);text-transform:uppercase;white-space:nowrap}
-.pc .clogo{left:798px;top:1186px;width:131px;height:131px;border-radius:50%;display:grid;place-items:center;background:var(--tc1,#192853);box-shadow:inset 0 0 0 7px var(--tc2,#FFE14F)}
-.pc .clogo img{width:92px;height:92px;object-fit:contain}
+.pc .cf{left:440px;width:338px;top:1222px;text-align:right;font-weight:300;font-size:46px;line-height:1;color:var(--ink);text-transform:uppercase;white-space:nowrap}
+.pc .cl{left:430px;width:348px;top:1268px;text-align:right;font-weight:800;font-size:48px;line-height:1;color:var(--ink);text-transform:uppercase;white-space:nowrap}
+.pc .clogo{left:790px;top:1166px;width:176px;height:176px;border-radius:50%;display:grid;place-items:center;border:8px solid #fff;
+  background:radial-gradient(circle at 34% 28%,color-mix(in srgb,var(--tc1,#192853) 70%,#fff),var(--tc1,#192853) 55%,color-mix(in srgb,var(--tc1,#192853) 70%,#000));
+  box-shadow:0 0 0 3px #DDE4EC,0 14px 26px rgba(25,40,83,.28),0 4px 8px rgba(25,40,83,.18),inset 0 0 0 9px var(--tc2,#FFE14F),inset 0 6px 10px rgba(255,255,255,.35),inset 0 -10px 16px rgba(0,0,0,.35)}
+.pc .clogo::after{content:"";position:absolute;inset:6px;border-radius:50%;background:linear-gradient(150deg,rgba(255,255,255,.4),transparent 45%);pointer-events:none}
+.pc .clogo img{width:110px;height:110px;object-fit:contain;filter:drop-shadow(0 4px 4px rgba(0,0,0,.35))}
 .pc .clogo b{font-weight:800;font-size:40px;color:#fff}
 /* back */
 .pc .bk{left:70px;top:60px;width:880px;height:1240px;display:flex;flex-direction:column;color:var(--ink)}
@@ -842,17 +850,24 @@ const P_LINE="M563.5 1018V118.5L618.637 23C621.316 18.359 626.268 15.5 631.627 1
 const TROPHY='<svg viewBox="0 0 66 62"><path fill="currentColor" d="M14 2h38v6h12v8c0 9-6 15-14 16-2 6-7 10-13 11v7h9c2 0 3 1 3 3v7H17v-7c0-2 1-3 3-3h9v-7c-6-1-11-5-13-11C8 31 2 25 2 16V8h12V2zm-6 12v2c0 5 3 9 7 10-1-3-1-6-1-9v-3H8zm44 0v3c0 3 0 6-1 9 4-1 7-5 7-10v-2h-6z"/></svg>';
 (function cardDefs(){const s=document.createElementNS("http://www.w3.org/2000/svg","svg");s.setAttribute("width","0");s.setAttribute("height","0");s.style.position="absolute";
   const sh=(id,x,y,w,h,list)=>`<filter id="${id}" x="${x}" y="${y}" width="${w}" height="${h}" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">`+list.map(([dx,dy,sd,a],i)=>`<feGaussianBlur in="SourceAlpha" stdDeviation="${sd}" result="b${i}"/><feOffset in="b${i}" dx="${dx}" dy="${dy}" result="o${i}"/><feComponentTransfer in="o${i}" result="s${i}"><feFuncA type="linear" slope="${a}"/></feComponentTransfer>`).join("")+`<feMerge>${list.map((_,i)=>`<feMergeNode in="s${i}"/>`).join("")}<feMergeNode in="SourceGraphic"/></feMerge></filter>`;
-  s.innerHTML=`<defs>${sh("pcf-panel",-400,-400,2000,2400,[[2,12,13.5,.1],[8,49,25,.09],[18,111,33.5,.05]])}${sh("pcf-rib",-100,900,1100,400,[[0,3,3.5,.1],[0,13,6.5,.09],[0,30,9,.05]])}${sh("pcf-odo",500,300,600,300,[[0,2,2,.1],[0,7,3.5,.09],[0,16,4.5,.05]])}
+  s.innerHTML=`<defs>${sh("pcf-panel",-400,-400,2000,2400,[[2,12,13.5,.1],[8,49,25,.09],[18,111,33.5,.05]])}${sh("pcf-card",-400,-400,2000,2400,[[0,6,8,.25],[0,30,30,.3],[0,70,60,.25]])}${sh("pcf-rib",-100,900,1100,400,[[0,3,3.5,.1],[0,13,6.5,.09],[0,30,9,.05]])}${sh("pcf-odo",500,300,600,300,[[0,2,2,.1],[0,7,3.5,.09],[0,16,4.5,.05]])}
    <filter id="pcf-line" x="500" y="0" width="600" height="1100" filterUnits="userSpaceOnUse"><feGaussianBlur in="SourceGraphic" stdDeviation="2.25" result="g"/><feOffset in="g" dy="4" result="go"/><feComponentTransfer in="go" result="gs"><feFuncA type="linear" slope=".56"/></feComponentTransfer><feMerge><feMergeNode in="gs"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
    <linearGradient id="pcf-linegrad" x1="797" y1="15.5" x2="797" y2="1018" gradientUnits="userSpaceOnUse"><stop stop-color="${CARD_THEME.accent}"/><stop offset="1" stop-color="${CARD_THEME.accent}" stop-opacity="0"/></linearGradient>
    <linearGradient id="pcf-fade" x1="720" y1="737" x2="720" y2="883" gradientUnits="userSpaceOnUse"><stop stop-color="${CARD_THEME.base}" stop-opacity="0"/><stop offset="1" stop-color="${CARD_THEME.base}"/></linearGradient>
-   <linearGradient id="pcf-plate" x1="479" y1="1255" x2="989" y2="1255" gradientUnits="userSpaceOnUse"><stop stop-color="${CARD_THEME.panel}"/><stop offset="1" stop-color="${CARD_THEME.plateEnd}"/></linearGradient></defs>`;
+   <linearGradient id="pcf-plate" x1="479" y1="1255" x2="989" y2="1255" gradientUnits="userSpaceOnUse"><stop stop-color="#DCE3EB" stop-opacity="0"/><stop offset=".55" stop-color="#DCE3EB" stop-opacity=".55"/><stop offset="1" stop-color="#CFD8E3"/></linearGradient>
+   <linearGradient id="pcf-mg" x1="0" y1="700" x2="0" y2="960" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient><mask id="pcf-pmask" maskUnits="userSpaceOnUse" x="0" y="0" width="1143" height="1367"><rect width="1143" height="1367" fill="url(#pcf-mg)"/></mask>
+   <linearGradient id="pcf-glass" x1="600" y1="15" x2="960" y2="900" gradientUnits="userSpaceOnUse"><stop stop-color="#fff" stop-opacity=".94"/><stop offset=".5" stop-color="#fff" stop-opacity=".78"/><stop offset="1" stop-color="#F2F6FA" stop-opacity=".66"/></linearGradient>
+   <linearGradient id="pcf-sheen" x1="560" y1="15" x2="900" y2="520" gradientUnits="userSpaceOnUse"><stop stop-color="#fff" stop-opacity=".9"/><stop offset=".28" stop-color="#fff" stop-opacity=".25"/><stop offset=".29" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+   <linearGradient id="pcf-base" x1="200" y1="35" x2="900" y2="1367" gradientUnits="userSpaceOnUse"><stop stop-color="#FFFFFF"/><stop offset=".55" stop-color="${CARD_THEME.base}"/><stop offset="1" stop-color="#E3EAF1"/></linearGradient>
+   <linearGradient id="pcf-bsheen" x1="46" y1="35" x2="700" y2="900" gradientUnits="userSpaceOnUse"><stop stop-color="#fff" stop-opacity=".0"/><stop offset=".42" stop-color="#fff" stop-opacity=".0"/><stop offset=".5" stop-color="#fff" stop-opacity=".55"/><stop offset=".58" stop-color="#fff" stop-opacity=".0"/></linearGradient></defs>`;
   document.body.appendChild(s)})();
 function catRank(d,p,cat){const r=statRows(d,cat,false);const i=r.findIndex(x=>x.name===p.name&&x.team===p.team);return i<0?null:i+1}
 const fitPx=(txt,box,max,w=.62)=>Math.min(max,Math.floor(box/(Math.max(1,String(txt).length)*w)));
 function odoHTML(v){const s=Math.round(v||0).toLocaleString(),ds=s.replace(/\D/g,"").length,seps=s.length-ds,rw=Math.min(40,(196-seps*12-ds*2)/ds);let j=ds;
   return s.split("").map(ch=>{if(!/\d/.test(ch))return `<span class="sep">,</span>`;j--;const d=+ch,idx=(j===0?20:10)+d;
     return `<span class="reel ${j===0?"last":""}" style="width:${rw}px;--dur:${(1.5+(ds-1-j)*.18).toFixed(2)}s"><span class="strip" data-to="${idx}">${Array.from({length:30},(_,k)=>`<span style="height:52px;line-height:52px">${k%10}</span>`).join("")}</span></span>`}).join("")}
+function odoVars(t){const c1=t.c1,c2=lum(t.c2)<.06?"#F1EBDF":t.c2;
+  return `--odo:${shade(c1,-.62)};--o0:${shade(c1,-.75)};--o1:${shade(c1,-.45)};--o2:${shade(c1,-.18)};--od:${c2};--l0:${shade(c2,-.4)};--l1:${c2};--l2:${shade(c2,.12)};--ld:${lum(c2)>.5?shade(c1,-.25):"#fff"}`}
 function pcard(d,p,cat,rank,opts={}){
   const t=T(p.team),[k,lbl,unit,ribLbl]=CAT_HEAD[cat]||CAT_HEAD.passing,own=ownerOf(d,p.team);
   const w=opts.w||parseInt(opts.cw)||240,kk=(w/1143).toFixed(5);
@@ -865,17 +880,16 @@ function pcard(d,p,cat,rank,opts={}){
   const stats=Object.keys(STATLBL).filter(s=>p[s]!=null&&p[s]!=="");
   const ranks=Object.keys(CAT_HEAD).map(cc=>[cc,catRank(d,p,cc)]).filter(([,r])=>r);
   const back=`<svg class="layer" viewBox="0 0 1143 1367"><path d="${P_BASE}" fill="${CARD_THEME.base}" filter="url(#pcf-panel)"/>${opts.texture?`<image href="${esc(opts.texture)}" width="1143" height="1367" preserveAspectRatio="xMidYMid slice" clip-path="path('${P_BASE}')"/>`:""}</svg>`;
-  return `<div class="pc ${opts.big?"big":""}" data-pcard="${esc(p.name)}|${p.team}|${cat}|${r0}" style="--k:${kk};--tc1:${t.c1};--tc2:${lum(t.c2)<.06?t.c1:t.c2}"><div class="pin">
+  return `<div class="pc ${opts.big?"big":""}" data-pcard="${esc(p.name)}|${p.team}|${cat}|${r0}" style="--k:${kk};--tc1:${t.c1};--tc2:${lum(t.c2)<.06?t.c1:t.c2};${odoVars(t)}"><div class="pin">
    <div class="pcs front"><div class="nat">
-     <svg class="layer" viewBox="0 0 1143 1367"><path d="M22 1016H111V1143L22 1103V1016Z" fill="#A99430"/><path d="${P_BASE}" fill="${CARD_THEME.base}"/>${opts.texture?`<image href="${esc(opts.texture)}" width="1143" height="1367" preserveAspectRatio="xMidYMid slice" style="clip-path:path('${P_BASE}')"/>`:""}</svg>
+     <svg class="layer" viewBox="0 0 1143 1367"><path d="M22 1016H111V1143L22 1103V1016Z" fill="#A99430"/><path d="${P_BASE}" fill="url(#pcf-base)" filter="url(#pcf-card)"/>${opts.texture?`<image href="${esc(opts.texture)}" width="1143" height="1367" preserveAspectRatio="xMidYMid slice" style="clip-path:path('${P_BASE}')"/>`:""}<path d="${P_BASE}" fill="url(#pcf-bsheen)" class="bsheen"/><path d="${P_BASE}" fill="none" stroke="#fff" stroke-opacity=".95" stroke-width="3"/></svg>
      ${p.img?`<img class="cut" src="${esc(p.img)}" alt="">`:`<div class="wm">${LOGO[p.team]?`<img src="${wheelLogoUrl(p.team)}" alt="">`:""}</div>`}
      <svg class="layer" viewBox="0 0 1143 1367">
-       <path d="${P_PANEL}" fill="${CARD_THEME.panel}" filter="url(#pcf-panel)"/><rect x="562" y="380" width="323" height="640" fill="${CARD_THEME.panel}"/>
+       <g mask="url(#pcf-pmask)"><g filter="url(#pcf-panel)"><g opacity=".74"><path d="${P_PANEL}" fill="#fff"/><rect x="562" y="380" width="323" height="640" fill="#fff"/></g></g><path d="${P_PANEL}" fill="url(#pcf-glass)" opacity=".4"/></g><path d="${P_PANEL}" fill="url(#pcf-sheen)"/><path d="M566 118L620 26C623 21 628 18.5 634 18.5H1010C1019 18.5 1027 26 1027 35V60" fill="none" stroke="#fff" stroke-width="3" stroke-opacity=".95"/>
        <path d="${P_LINE}" stroke="url(#pcf-linegrad)" stroke-width="3" fill="none" filter="url(#pcf-line)"/>
-       <rect x="519" y="737" width="403" height="293" fill="url(#pcf-fade)"/>
        <path d="M22 1016H756L736 1059.5L756 1103H22V1016Z" fill="var(--ribbon)" filter="url(#pcf-rib)"/>
        <path d="M479 1143H989V1348C989 1358.49 980.493 1367 970 1367H479V1143Z" fill="url(#pcf-plate)"/>
-       <rect x="620" y="383" width="347" height="73" rx="16.75" fill="var(--odo)" filter="url(#pcf-odo)"/>
+       <rect x="620" y="383" width="347" height="73" rx="16.75" fill="var(--odo)" filter="url(#pcf-odo)"/><rect x="621.5" y="384.5" width="344" height="70" rx="15.5" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="2"/>
      </svg>
      <div class="ab">${esc(t.abbr)}</div><div class="sch">${esc(t.school)}<br>${esc(t.mascot)}</div>
      <div class="gauge"><svg viewBox="0 0 151 151"><path class="trk" d="${arcD}" fill="none" stroke-width="12"/><path class="arc" d="${arcD}" fill="none" stroke-width="12" pathLength="100" stroke-dasharray="100 100" stroke-dashoffset="100" data-to="${(100-pct*100).toFixed(1)}"/></svg></div>
