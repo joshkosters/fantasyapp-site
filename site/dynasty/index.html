@@ -415,6 +415,14 @@ tr.me{background:rgba(255,225,79,.07)!important}
 /* coach plate */
 .pc .cpill{left:626px;top:1180px;width:150px;height:30px;border-radius:15px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:800;font-size:19px;letter-spacing:.12em;box-shadow:0 3px 3px rgba(0,0,0,.09),0 6px 12px color-mix(in srgb,var(--accent) 35%,transparent),inset 0 1px 0 rgba(255,255,255,.35)}
 .pc .cpill i{width:9px;height:9px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25)}
+.pc .cpill:not(.cpu) i{animation:cblink 1.4s ease-in-out infinite}
+@keyframes cblink{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(255,255,255,.7)}50%{opacity:.25;box-shadow:0 0 0 5px rgba(255,255,255,0)}}
+.pc .cpill.cpu{background:#8D97AA;box-shadow:0 3px 3px rgba(0,0,0,.09),inset 0 1px 0 rgba(255,255,255,.3)}
+.pc .cpill.cpu i{background:#E4E8EF}
+.pc .frost{left:0;top:0;width:1143px;height:1367px;background:linear-gradient(160deg,#F3F6FA,#E4EAF1 60%,#DCE3EB);
+  -webkit-mask-image:linear-gradient(to bottom,#000 53%,transparent 70%);mask-image:linear-gradient(to bottom,#000 53%,transparent 70%)}
+.pc .frost img.cut{filter:blur(18px) saturate(1.35) brightness(1.12);opacity:.85}
+.pc.live .frost img.cut{transform:translate(calc(var(--ry)*-1.8px),calc(var(--rx)*1.8px))}
 .pc .cf{left:440px;width:338px;top:1222px;text-align:right;font-weight:300;font-size:46px;line-height:1;color:var(--ink);text-transform:uppercase;white-space:nowrap}
 .pc .cl{left:430px;width:348px;top:1268px;text-align:right;font-weight:800;font-size:48px;line-height:1;color:var(--ink);text-transform:uppercase;white-space:nowrap}
 .pc .clogo{left:790px;top:1166px;width:176px;height:176px;border-radius:50%;display:grid;place-items:center;border:8px solid #fff;
@@ -858,7 +866,7 @@ const TROPHY='<svg viewBox="0 0 66 62"><path fill="currentColor" d="M14 2h38v6h1
    <linearGradient id="pcf-mg" x1="0" y1="700" x2="0" y2="960" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient><mask id="pcf-pmask" maskUnits="userSpaceOnUse" x="0" y="0" width="1143" height="1367"><rect width="1143" height="1367" fill="url(#pcf-mg)"/></mask>
    <linearGradient id="pcf-glass" x1="600" y1="15" x2="960" y2="900" gradientUnits="userSpaceOnUse"><stop stop-color="#fff" stop-opacity=".94"/><stop offset=".5" stop-color="#fff" stop-opacity=".78"/><stop offset="1" stop-color="#F2F6FA" stop-opacity=".66"/></linearGradient>
    <linearGradient id="pcf-sheen" x1="560" y1="15" x2="900" y2="520" gradientUnits="userSpaceOnUse"><stop stop-color="#fff" stop-opacity=".9"/><stop offset=".28" stop-color="#fff" stop-opacity=".25"/><stop offset=".29" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
-   <linearGradient id="pcf-base" x1="200" y1="35" x2="900" y2="1367" gradientUnits="userSpaceOnUse"><stop stop-color="#FFFFFF"/><stop offset=".55" stop-color="${CARD_THEME.base}"/><stop offset="1" stop-color="#E3EAF1"/></linearGradient>
+   <linearGradient id="pcf-base" x1="200" y1="35" x2="900" y2="1367" gradientUnits="userSpaceOnUse"><stop stop-color="#E9EEF4"/><stop offset=".55" stop-color="#D9E1EA"/><stop offset="1" stop-color="#C6D0DC"/></linearGradient>
    <linearGradient id="pcf-bsheen" x1="46" y1="35" x2="700" y2="900" gradientUnits="userSpaceOnUse"><stop stop-color="#fff" stop-opacity=".0"/><stop offset=".42" stop-color="#fff" stop-opacity=".0"/><stop offset=".5" stop-color="#fff" stop-opacity=".55"/><stop offset=".58" stop-color="#fff" stop-opacity=".0"/></linearGradient></defs>`;
   document.body.appendChild(s)})();
 function catRank(d,p,cat){const r=statRows(d,cat,false);const i=r.findIndex(x=>x.name===p.name&&x.team===p.team);return i<0?null:i+1}
@@ -868,13 +876,16 @@ function odoHTML(v){const s=Math.round(v||0).toLocaleString(),ds=s.replace(/\D/g
     return `<span class="reel ${j===0?"last":""}" style="width:${rw}px;--dur:${(1.5+(ds-1-j)*.18).toFixed(2)}s"><span class="strip" data-to="${idx}">${Array.from({length:30},(_,k)=>`<span style="height:52px;line-height:52px">${k%10}</span>`).join("")}</span></span>`}).join("")}
 function odoVars(t){const c1=t.c1,c2=lum(t.c2)<.06?"#F1EBDF":t.c2;
   return `--odo:${shade(c1,-.62)};--o0:${shade(c1,-.75)};--o1:${shade(c1,-.45)};--o2:${shade(c1,-.18)};--od:${c2};--l0:${shade(c2,-.4)};--l1:${c2};--l2:${shade(c2,.12)};--ld:${lum(c2)>.5?shade(c1,-.25):"#fff"}`}
+let pcSeq=0;
+const P_PANELU=P_PANEL+"M562 380H885V1020H562Z";
 function pcard(d,p,cat,rank,opts={}){
+  const lg="pcl"+(++pcSeq), lc=vivid(p.team);
   const t=T(p.team),[k,lbl,unit,ribLbl]=CAT_HEAD[cat]||CAT_HEAD.passing,own=ownerOf(d,p.team);
   const w=opts.w||parseInt(opts.cw)||240,kk=(w/1143).toFixed(5);
   const parts=String(p.name||"").trim().split(/\s+/),first=parts.length>1?parts.slice(0,-1).join(" "):"",last=parts.slice(-1)[0]||"";
   const rows=statRows(d,cat,false),max=rows.length?rows[0][k]:1,r0=rank||catRank(d,p,cat)||1;
   const hasOvr=p.ovr!=null&&p.ovr!=="",gv=hasOvr?+p.ovr:r0,pct=hasOvr?Math.max(.05,Math.min(1,gv/99)):Math.max(.08,Math.min(1,(p[k]||0)/(max||1)));
-  const rib=r0===1?ribLbl:`#${r0} ${lbl}`, cf=own?(COACH_LAST[own.id]?own.name:"Head coach"):"Head coach", cl=own?(COACH_LAST[own.id]||own.name):"CPU";
+  const rib=r0===1?ribLbl:`#${r0} ${lbl}`, cf=own?(COACH_LAST[own.id]?own.name:"Head coach"):"Computer", cl=own?(COACH_LAST[own.id]||own.name):"Coach";
   const c=75.5,R=61,sx=(c-R*Math.sin(Math.PI/5)).toFixed(2),sy=(c+R*Math.cos(Math.PI/5)).toFixed(2),ex=(c+R*Math.sin(Math.PI/5)).toFixed(2);
   const arcD=`M${sx} ${sy}A${R} ${R} 0 1 1 ${ex} ${sy}`;
   const stats=Object.keys(STATLBL).filter(s=>p[s]!=null&&p[s]!=="");
@@ -884,9 +895,10 @@ function pcard(d,p,cat,rank,opts={}){
    <div class="pcs front"><div class="nat">
      <svg class="layer" viewBox="0 0 1143 1367"><path d="M22 1016H111V1143L22 1103V1016Z" fill="#A99430"/><path d="${P_BASE}" fill="url(#pcf-base)" filter="url(#pcf-card)"/>${opts.texture?`<image href="${esc(opts.texture)}" width="1143" height="1367" preserveAspectRatio="xMidYMid slice" style="clip-path:path('${P_BASE}')"/>`:""}<path d="${P_BASE}" fill="url(#pcf-bsheen)" class="bsheen"/><path d="${P_BASE}" fill="none" stroke="#fff" stroke-opacity=".95" stroke-width="3"/></svg>
      ${p.img?`<img class="cut" src="${esc(p.img)}" alt="">`:`<div class="wm">${LOGO[p.team]?`<img src="${wheelLogoUrl(p.team)}" alt="">`:""}</div>`}
-     <svg class="layer" viewBox="0 0 1143 1367">
-       <g mask="url(#pcf-pmask)"><g filter="url(#pcf-panel)"><g opacity=".74"><path d="${P_PANEL}" fill="#fff"/><rect x="562" y="380" width="323" height="640" fill="#fff"/></g></g><path d="${P_PANEL}" fill="url(#pcf-glass)" opacity=".4"/></g><path d="${P_PANEL}" fill="url(#pcf-sheen)"/><path d="M566 118L620 26C623 21 628 18.5 634 18.5H1010C1019 18.5 1027 26 1027 35V60" fill="none" stroke="#fff" stroke-width="3" stroke-opacity=".95"/>
-       <path d="${P_LINE}" stroke="url(#pcf-linegrad)" stroke-width="3" fill="none" filter="url(#pcf-line)"/>
+     <div class="frost" style="clip-path:path('${P_PANELU}')">${p.img?`<img class="cut" src="${esc(p.img)}" alt="">`:""}</div>
+     <svg class="layer" viewBox="0 0 1143 1367"><defs><linearGradient id="${lg}" x1="797" y1="15.5" x2="797" y2="1018" gradientUnits="userSpaceOnUse"><stop stop-color="${lc}"/><stop offset=".6" stop-color="${lc}" stop-opacity=".8"/><stop offset="1" stop-color="${lc}" stop-opacity="0"/></linearGradient></defs>
+       <g mask="url(#pcf-pmask)"><g filter="url(#pcf-panel)"><g opacity=".5"><path d="${P_PANEL}" fill="#fff"/><rect x="562" y="380" width="323" height="640" fill="#fff"/></g></g><path d="${P_PANEL}" fill="url(#pcf-glass)" opacity=".4"/></g><path d="${P_PANEL}" fill="url(#pcf-sheen)"/><path d="M566 118L620 26C623 21 628 18.5 634 18.5H1010C1019 18.5 1027 26 1027 35V60" fill="none" stroke="#fff" stroke-width="3" stroke-opacity=".95"/>
+       <path d="${P_LINE}" stroke="url(#${lg})" stroke-width="6" fill="none" filter="url(#pcf-line)"/>
        <path d="M22 1016H756L736 1059.5L756 1103H22V1016Z" fill="var(--ribbon)" filter="url(#pcf-rib)"/>
        <path d="M479 1143H989V1348C989 1358.49 980.493 1367 970 1367H479V1143Z" fill="url(#pcf-plate)"/>
        <rect x="620" y="383" width="347" height="73" rx="16.75" fill="var(--odo)" filter="url(#pcf-odo)"/><rect x="621.5" y="384.5" width="344" height="70" rx="15.5" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="2"/>
@@ -898,7 +910,7 @@ function pcard(d,p,cat,rank,opts={}){
      <div class="ln" style="font-size:${fitPx(last,430,76,.7)}px;${first?"":"top:250px"}">${esc(last)}</div>
      <div class="odo">${odoHTML(p[k])}</div><div class="unit" style="font-size:${fitPx(unit,118,31,.72)}px">${esc(unit)}</div>
      <div class="rib" style="font-size:${fitPx(rib,500,58,.66)}px">${TROPHY}<span>${esc(rib)}</span></div>
-     <div class="cpill"><i></i>COACH</div><div class="cf">${esc(cf)}</div><div class="cl">${esc(cl)}</div>
+     <div class="cpill ${own?"":"cpu"}"><i></i>${own?"COACH":"CPU"}</div><div class="cf">${esc(cf)}</div><div class="cl">${esc(cl)}</div>
      <div class="clogo">${LOGO[p.team]?`<img src="${logoUrl(p.team)}" alt="">`:`<b>${esc(t.abbr[0])}</b>`}</div>
      <div class="glare" style="clip-path:path('${P_BASE}')"></div>
    </div></div>
