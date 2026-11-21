@@ -369,14 +369,10 @@ tr.me{background:rgba(255,225,79,.07)!important}
 .pc{--k:.21;--panel:#FFFFFF;--base:#F7F7F7;--ink:#FFFFFF;--ink2:#B4B6BA;--accent:#02AC49;--ribbon:#FFE14F;--fold:#B9A12E;--odo:#050007;
   width:calc(1143px*var(--k));height:calc(1367px*var(--k));position:relative;perspective:1600px;cursor:pointer;flex:none;font-family:Inter,Poppins,sans-serif}
 .pc .pin{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.8,.2,1);transform:rotateX(calc(var(--rx,0)*1deg)) rotateY(calc(var(--ry,0)*1deg + var(--flip,0deg)))}
-.pc.live:not(.flipping) .pin{transition:transform .12s ease-out}
 .pc.flipped{--flip:180deg}
 
 .pc:hover .glare{opacity:.45}
 .pc .cut,.pc .rib,.pc .clogo,.pc .gauge,.pc .gnum,.pc .odo,.pc .unit{transition:transform .12s ease-out}
-.pc.live .cut{transform:translate(calc(var(--ry)*-1.8px),calc(var(--rx)*1.8px))}
-.pc.live .rib,.pc.live .clogo{transform:translate(calc(var(--ry)*1.6px),calc(var(--rx)*-1.6px))}
-.pc.live .gauge,.pc.live .gnum,.pc.live .odo,.pc.live .unit{transform:translate(calc(var(--ry)*.9px),calc(var(--rx)*-.9px))}
 .pc .pcs{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform:translateZ(calc(var(--T)/2))}
 .pc .pcs.back{transform:rotateY(180deg) translateZ(calc(var(--T)/2))}
 .pc .edge{position:absolute;left:0;top:0;width:100%;height:100%;transform:translateZ(var(--z));overflow:visible;pointer-events:none}
@@ -384,6 +380,12 @@ tr.me{background:rgba(255,225,79,.07)!important}
   transform:translate(calc(var(--ry,0)*-.9% + 3%),calc(var(--rx,0)*.6% + 4%)) scale(calc(.97 - var(--liftn,0)*.05));opacity:calc(.85 - var(--liftn,0)*.25);transition:transform .25s ease-out,opacity .25s}
 .pc .pin{transform:translateZ(var(--lift,0px)) rotateX(calc(var(--rx,0)*1deg)) rotateY(calc(var(--ry,0)*1deg + var(--flip,0deg))) !important}
 .pc:hover{--lift:28px;--liftn:1}
+/* fixed hover pose instead of cursor-tracking tilt: shows edge thickness, one sheen sweep */
+.pc:hover:not(.flipping){--rx:4;--ry:-9}
+.pc.big:not(.flipping){--rx:2;--ry:-6}
+.pc:hover .glare{animation:pcSheen 1.1s ease-out both}
+.pc.big .glare{animation:pcSheen 1.6s .35s ease-out both}
+@keyframes pcSheen{from{--mx:-20}to{--mx:120}}
 .pc:active{--lift:6px;--liftn:.3}
 .pc.flipping{--lift:60px;--liftn:1.4}
 .pc.flipping .pin{transition:transform .8s cubic-bezier(.3,1.25,.4,1)}
@@ -434,9 +436,8 @@ tr.me{background:rgba(255,225,79,.07)!important}
 .touch .pc .pshadow{filter:none;background:radial-gradient(closest-side,rgba(0,0,0,.8),transparent);box-shadow:none}
 .touch .pc.go .gauge .arc{animation:none}
 .touch .pc .glare{display:none}
-.touch .pc:hover{--lift:0px;--liftn:0}
+.touch .pc:hover{--lift:0px;--liftn:0;--rx:0;--ry:0}
 .touch .pc .pin{will-change:auto}
-.pc.live .frost img.cut{transform:translate(calc(var(--ry)*-1.8px),calc(var(--rx)*1.8px))}
 .pc .cf{left:440px;width:338px;top:1222px;text-align:right;font-weight:300;font-size:46px;line-height:1;color:var(--ink);text-transform:uppercase;white-space:nowrap}
 .pc .cl{left:430px;width:348px;top:1268px;text-align:right;font-weight:800;font-size:48px;line-height:1;color:var(--ink);text-transform:uppercase;white-space:nowrap}
 .pc .clogo{left:790px;top:1166px;width:176px;height:176px;border-radius:50%;display:grid;place-items:center;border:8px solid #161616;
@@ -997,9 +998,6 @@ let cardTexture=null;
 (function(){const ov=document.createElement("div");ov.className="cardov";ov.id="cardov";ov.innerHTML=`<button class="x" aria-label="Close">✕</button><div class="stage" id="cardstage"></div>`;document.body.appendChild(ov);
   ov.onclick=e=>{if(e.target===ov||e.target.classList.contains("x"))ov.classList.remove("show")};
   document.addEventListener("keydown",e=>{if(!ov.classList.contains("show"))return;if(e.key==="Escape")ov.classList.remove("show");if(e.key==="ArrowRight"&&cardIdx<cardList.length-1){cardIdx++;paintCard()}if(e.key==="ArrowLeft"&&cardIdx>0){cardIdx--;paintCard()}if(e.key===" "){e.preventDefault();const c=ov.querySelector(".pc");c&&flipCard(c)}})})();
-document.addEventListener("pointermove",e=>{if(e.pointerType!=="mouse")return;const el=e.target.closest&&e.target.closest(".pc");if(!el)return;const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height,m=el.classList.contains("big")?1:.8;
-  el.classList.add("live");el.style.setProperty("--ry",((x-.5)*32*m).toFixed(1));el.style.setProperty("--rx",((.5-y)*24*m).toFixed(1));el.style.setProperty("--mx",(x*100).toFixed(1));el.style.setProperty("--my",(y*100).toFixed(1))});
-document.addEventListener("pointerout",e=>{const el=e.target.closest&&e.target.closest(".pc");if(!el||el.contains(e.relatedTarget))return;el.classList.remove("live");["--ry","--rx","--mx","--my"].forEach(k=>el.style.removeProperty(k))});
 function bindCards(d){armCards(document.getElementById("view"));document.querySelectorAll("main [data-pcard]").forEach(el=>el.onclick=()=>{const list=JSON.parse(el.closest("[data-cardset]")?.dataset.cardset||"null");
   const [name,team,cat,rank]=el.dataset.pcard.split("|");const find=(n,tm)=>(d.season.playerStats||[]).find(x=>x.name===n&&x.team===tm);
   if(list){const items=list.map(([n,tm,c,r])=>[find(n,tm),c,r]).filter(x=>x[0]);const i=items.findIndex(x=>x[0].name===name&&x[0].team===team);openCard(items,Math.max(0,i),d)}
