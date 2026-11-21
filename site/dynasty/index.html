@@ -919,7 +919,11 @@ function flipCard(el){el.classList.add("flipping");el.classList.toggle("flipped"
 function mirrorPath(dp){const t=dp.match(/[A-Za-z]|-?\d*\.?\d+/g);let out=[],cmd="",k=0;for(const x of t){if(/[A-Za-z]/.test(x)){cmd=x;k=0;out.push(x);continue}
   const v=+x;if(cmd==="H"||((cmd==="M"||cmd==="L"||cmd==="C")&&k%2===0))out.push((1143-v).toFixed(3));else out.push(x);k++}return out.join(" ")}
 const P_PANELU=P_PANEL+"M562 380H885V1020H562Z";
+// Player cutouts: add "TEAM|Full Name":"file" when a new photo lands in cards/players/
+const PHOTOS={"BUFF|Jason Wright":"buff-jason-wright.webp"};
+function photoOf(p){const f=PHOTOS[(p.team||"")+"|"+(p.name||"")];return f?"cards/players/"+f:null}
 function pcard(d,p,cat,rank,opts={}){
+  if(!p.img){const ph=photoOf(p);if(ph)p={...p,img:ph}}
   const lg="pcl"+(++pcSeq), lc=vivid(p.team);
   const W0=opts.w||parseInt(opts.cw)||240, TH=Math.max(7,Math.round(W0*.05)), nE=TOUCH?(opts.big?6:3):(opts.big?12:6), kN=W0/1143, cpS=`path("${scalePath(P_BASE,kN)}")`;
   const edges=Array.from({length:nE},(_,i)=>`<svg class="edge" viewBox="0 0 1143 1367" preserveAspectRatio="none" style="--z:${(-TH/2+TH*(i+.5)/nE).toFixed(2)}px"><path d="${P_BASE}" fill="${i===0||i===nE-1?"url(#pcf-ecap)":`url(#${lg}e)`}"/></svg>`).join("");
