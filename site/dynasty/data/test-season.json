@@ -1,0 +1,490 @@
+{
+ "season": 1,
+ "currentWeek": 1,
+ "totalWeeks": 12,
+ "test": true,
+ "weeks": [
+  {
+   "week": 1,
+   "games": [
+    {
+     "away": "BUFF",
+     "home": "CMU",
+     "as": 36,
+     "hs": 7,
+     "final": true,
+     "quarters": {
+      "BUFF": [
+       6,
+       16,
+       0,
+       14
+      ],
+      "CMU": [
+       7,
+       0,
+       0,
+       0
+      ]
+     },
+     "team": {
+      "BUFF": {
+       "firstDowns": 24,
+       "totalOff": 491,
+       "plays": 68,
+       "rush": "32-155-2",
+       "pass": "30-36-3"
+      },
+      "CMU": {
+       "firstDowns": 17,
+       "totalOff": 412,
+       "plays": 77,
+       "rush": "27-125-0",
+       "pass": "22-50-1"
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "playerStats": [
+  {
+   "name": "Jason Wright",
+   "team": "BUFF",
+   "gp": 1,
+   "pos": "QB",
+   "num": "7",
+   "ovr": 75,
+   "cmp": 21,
+   "att": 35,
+   "passYds": 267,
+   "passTd": 3,
+   "int": 4,
+   "car": 8,
+   "rushYds": 28,
+   "rushTd": 1,
+   "bio": {
+    "Class": "Freshman",
+    "Archetype": "Dual Threat",
+    "Ht / Wt": "6'2\" \u00b7 200",
+    "Hometown": "Chesterfield, VA"
+   }
+  },
+  {
+   "name": "Messiah Burch",
+   "team": "BUFF",
+   "gp": 1,
+   "pos": "HB",
+   "num": "4",
+   "ovr": 85,
+   "cmp": 1,
+   "att": 1,
+   "passYds": 69,
+   "passTd": 0,
+   "int": 0,
+   "car": 12,
+   "rushYds": 95,
+   "rushTd": 1,
+   "rec": 4,
+   "recYds": 49,
+   "recTd": 0,
+   "bio": {
+    "Class": "Junior",
+    "Archetype": "East/West Playmaker",
+    "Ht / Wt": "5'9\" \u00b7 190",
+    "Hometown": "Staten Island, NY"
+   }
+  },
+  {
+   "name": "T. Shelton Jr.",
+   "team": "BUFF",
+   "gp": 1,
+   "car": 9,
+   "rushYds": 16,
+   "rushTd": 0,
+   "rec": 4,
+   "recYds": 120,
+   "recTd": 1,
+   "tkl": 1,
+   "tfl": 0,
+   "sacks": 0,
+   "defInt": 0
+  },
+  {
+   "name": "Patrick Clacks III",
+   "team": "BUFF",
+   "gp": 1,
+   "pos": "WR",
+   "num": "3",
+   "ovr": 74,
+   "car": 3,
+   "rushYds": 16,
+   "rushTd": 0,
+   "rec": 7,
+   "recYds": 37,
+   "recTd": 1,
+   "bio": {
+    "Class": "Sophomore",
+    "Archetype": "Elusive Route Runner",
+    "Ht / Wt": "6'0\" \u00b7 195",
+    "Hometown": "Hobart, IN"
+   }
+  },
+  {
+   "name": "C. Walker",
+   "team": "BUFF",
+   "gp": 1,
+   "rec": 3,
+   "recYds": 43,
+   "recTd": 0
+  },
+  {
+   "name": "J. Gathings",
+   "team": "BUFF",
+   "gp": 1,
+   "rec": 2,
+   "recYds": 55,
+   "recTd": 1
+  },
+  {
+   "name": "D. Early Jr.",
+   "team": "BUFF",
+   "gp": 1,
+   "rec": 1,
+   "recYds": 20,
+   "recTd": 0
+  },
+  {
+   "name": "C. Morrow",
+   "team": "BUFF",
+   "gp": 1,
+   "rec": 1,
+   "recYds": 12,
+   "recTd": 0
+  },
+  {
+   "name": "Saveon Brown",
+   "team": "BUFF",
+   "gp": 1,
+   "pos": "SS",
+   "num": "1",
+   "ovr": 82,
+   "tkl": 12,
+   "tfl": 1,
+   "sacks": 0,
+   "defInt": 1,
+   "bio": {
+    "Class": "Senior",
+    "Archetype": "Box Specialist",
+    "Ht / Wt": "6'1\" \u00b7 210",
+    "Hometown": "Harvey, IL"
+   }
+  },
+  {
+   "name": "Z. Bergmann",
+   "team": "BUFF",
+   "gp": 1,
+   "tkl": 10,
+   "tfl": 0,
+   "sacks": 0,
+   "defInt": 1
+  },
+  {
+   "name": "R. Davis",
+   "team": "BUFF",
+   "gp": 1,
+   "tkl": 6,
+   "tfl": 0,
+   "sacks": 0,
+   "defInt": 0
+  },
+  {
+   "name": "M. Crawford",
+   "team": "BUFF",
+   "gp": 1,
+   "tkl": 5,
+   "tfl": 1,
+   "sacks": 0,
+   "defInt": 0
+  },
+  {
+   "name": "S. Bracey",
+   "team": "BUFF",
+   "gp": 1,
+   "tkl": 6,
+   "tfl": 2,
+   "sacks": 0,
+   "defInt": 0
+  },
+  {
+   "name": "K. Bradley",
+   "team": "BUFF",
+   "gp": 1,
+   "tkl": 3,
+   "tfl": 1,
+   "sacks": 1.0,
+   "defInt": 0
+  },
+  {
+   "name": "J. Bennett",
+   "team": "BUFF",
+   "gp": 1,
+   "tkl": 4,
+   "tfl": 3,
+   "sacks": 1.0,
+   "defInt": 0
+  },
+  {
+   "name": "L. Goodwin",
+   "team": "BUFF",
+   "gp": 1,
+   "tkl": 2,
+   "tfl": 1,
+   "sacks": 1.0,
+   "defInt": 0
+  },
+  {
+   "name": "M. Greer",
+   "team": "BUFF",
+   "gp": 1,
+   "tkl": 6,
+   "tfl": 0,
+   "sacks": 0,
+   "defInt": 2
+  },
+  {
+   "name": "S. Vessah",
+   "team": "BUFF",
+   "gp": 1,
+   "tkl": 3,
+   "tfl": 1,
+   "sacks": 0,
+   "defInt": 0
+  },
+  {
+   "name": "B. Ilunga-Bisselele",
+   "team": "BUFF",
+   "gp": 1,
+   "tkl": 2,
+   "tfl": 0,
+   "sacks": 0,
+   "defInt": 0
+  },
+  {
+   "name": "Angel Flores",
+   "team": "CMU",
+   "gp": 1,
+   "pos": "QB",
+   "num": "7",
+   "ovr": 75,
+   "cmp": 13,
+   "att": 32,
+   "passYds": 164,
+   "passTd": 1,
+   "int": 3,
+   "car": 4,
+   "rushYds": 4,
+   "rushTd": 0,
+   "bio": {
+    "Class": "Senior",
+    "Archetype": "Pure Runner",
+    "Ht / Wt": "6'1\" \u00b7 210",
+    "Hometown": "Casa Grande, AZ"
+   }
+  },
+  {
+   "name": "M. Beamon",
+   "team": "CMU",
+   "gp": 1,
+   "cmp": 9,
+   "att": 18,
+   "passYds": 123,
+   "passTd": 0,
+   "int": 2,
+   "car": 5,
+   "rushYds": 20,
+   "rushTd": 0
+  },
+  {
+   "name": "Vaughn Blue",
+   "team": "CMU",
+   "gp": 1,
+   "pos": "HB",
+   "num": "24",
+   "ovr": 78,
+   "car": 16,
+   "rushYds": 94,
+   "rushTd": 0,
+   "rec": 6,
+   "recYds": 68,
+   "recTd": 1,
+   "bio": {
+    "Class": "Junior",
+    "Archetype": "East/West Playmaker",
+    "Ht / Wt": "5'11\" \u00b7 205",
+    "Hometown": "Mount Pleasant, SC"
+   }
+  },
+  {
+   "name": "B. Townsend",
+   "team": "CMU",
+   "gp": 1,
+   "car": 2,
+   "rushYds": 7,
+   "rushTd": 0,
+   "rec": 1,
+   "recYds": 17,
+   "recTd": 0
+  },
+  {
+   "name": "Myles Peters",
+   "team": "CMU",
+   "gp": 1,
+   "pos": "TE",
+   "num": "85",
+   "ovr": 69,
+   "rec": 7,
+   "recYds": 40,
+   "recTd": 0,
+   "bio": {
+    "Class": "Sophomore",
+    "Archetype": "Physical Route Runner",
+    "Ht / Wt": "6'3\" \u00b7 245",
+    "Hometown": "Sandy, UT"
+   }
+  },
+  {
+   "name": "C. Payne",
+   "team": "CMU",
+   "gp": 1,
+   "rec": 4,
+   "recYds": 62,
+   "recTd": 0
+  },
+  {
+   "name": "J. Ruffin Jr.",
+   "team": "CMU",
+   "gp": 1,
+   "rec": 4,
+   "recYds": 100,
+   "recTd": 0,
+   "tkl": 1,
+   "tfl": 0,
+   "sacks": 0,
+   "defInt": 0
+  },
+  {
+   "name": "Xavier White",
+   "team": "CMU",
+   "gp": 1,
+   "pos": "MIKE",
+   "num": "11",
+   "ovr": 71,
+   "tkl": 10,
+   "tfl": 2,
+   "sacks": 0,
+   "defInt": 0,
+   "bio": {
+    "Class": "Junior",
+    "Archetype": "Lurker",
+    "Ht / Wt": "6'0\" \u00b7 240",
+    "Hometown": "Los Angeles, CA"
+   }
+  },
+  {
+   "name": "M. Van Fleet",
+   "team": "CMU",
+   "gp": 1,
+   "tkl": 5,
+   "tfl": 3,
+   "sacks": 1.5,
+   "defInt": 0
+  },
+  {
+   "name": "J. Jackson",
+   "team": "CMU",
+   "gp": 1,
+   "tkl": 5,
+   "tfl": 0,
+   "sacks": 0,
+   "defInt": 0
+  },
+  {
+   "name": "D. Bryant Jr.",
+   "team": "CMU",
+   "gp": 1,
+   "tkl": 7,
+   "tfl": 3,
+   "sacks": 0,
+   "defInt": 0
+  },
+  {
+   "name": "V. Earl",
+   "team": "CMU",
+   "gp": 1,
+   "tkl": 5,
+   "tfl": 2,
+   "sacks": 0,
+   "defInt": 0
+  },
+  {
+   "name": "J. Taylor",
+   "team": "CMU",
+   "gp": 1,
+   "tkl": 7,
+   "tfl": 0,
+   "sacks": 0,
+   "defInt": 1
+  },
+  {
+   "name": "M. McKenzie",
+   "team": "CMU",
+   "gp": 1,
+   "tkl": 6,
+   "tfl": 0,
+   "sacks": 0,
+   "defInt": 0
+  },
+  {
+   "name": "K. Demma",
+   "team": "CMU",
+   "gp": 1,
+   "tkl": 8,
+   "tfl": 3,
+   "sacks": 0.5,
+   "defInt": 0
+  },
+  {
+   "name": "N. VanTimmeren",
+   "team": "CMU",
+   "gp": 1,
+   "tkl": 3,
+   "tfl": 0,
+   "sacks": 0,
+   "defInt": 0
+  },
+  {
+   "name": "D. Philord",
+   "team": "CMU",
+   "gp": 1,
+   "tkl": 5,
+   "tfl": 0,
+   "sacks": 0,
+   "defInt": 3
+  },
+  {
+   "name": "M. Koivisto",
+   "team": "CMU",
+   "gp": 1,
+   "tkl": 2,
+   "tfl": 0,
+   "sacks": 0,
+   "defInt": 0
+  }
+ ],
+ "news": [
+  "Test game: Buffalo rolls Central Michigan 36\u20137",
+  "Saveon Brown: 12 tackles and a pick for Buffalo",
+  "D. Philord picks off 3 passes in the loss"
+ ]
+}
