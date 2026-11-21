@@ -925,7 +925,7 @@ function mirrorPath(dp){const t=dp.match(/[A-Za-z]|-?\d*\.?\d+/g);let out=[],cmd
   const v=+x;if(cmd==="H"||((cmd==="M"||cmd==="L"||cmd==="C")&&k%2===0))out.push((1143-v).toFixed(3));else out.push(x);k++}return out.join(" ")}
 const P_PANELU=P_PANEL+"M562 380H885V1020H562Z";
 // Player cutouts: add "TEAM|Full Name":"file" when a new photo lands in cards/players/
-const PHOTOS={"BUFF|Jason Wright":"buff-jason-wright.webp","BUFF|Messiah Burch":"buff-messiah-burch.webp","BUFF|Saveon Brown":["buff-saveon-brown.webp",1.3,"35% 100%"],"BUFF|Terrance Shelton Jr.":"buff-terrance-shelton-jr.webp","CMU|M. Beamon":"cmu-m-beamon.webp","KENT|Dru DeShields":"kent-dru-deshields.webp","CMU|Angel Flores":["cmu-angel-flores-v2.webp",1.32,"78% 100%"]}; // [file, zoom, zoom origin] for wide shots
+const PHOTOS={"BUFF|Jason Wright":"buff-jason-wright.webp","BUFF|Messiah Burch":"buff-messiah-burch-v2.webp","BUFF|Saveon Brown":["buff-saveon-brown.webp",1.3,"35% 100%"],"BUFF|Terrance Shelton Jr.":"buff-terrance-shelton-jr.webp","CMU|M. Beamon":"cmu-m-beamon.webp","KENT|Dru DeShields":"kent-dru-deshields.webp","CMU|Angel Flores":["cmu-angel-flores-v2.webp",1.32,"78% 100%"]}; // [file, zoom, zoom origin] for wide shots
 function photoOf(p){const f=PHOTOS[(p.team||"")+"|"+(p.name||"")];if(!f)return null;const [n,z,o]=Array.isArray(f)?f:[f];return {src:"cards/players/"+n,z:z||1,o:o||"50% 100%"}}
 function pcard(d,p,cat,rank,opts={}){
   if(!p.img){const ph=photoOf(p);if(ph)p={...p,img:ph.src,imgZ:ph.z,imgO:ph.o}}
