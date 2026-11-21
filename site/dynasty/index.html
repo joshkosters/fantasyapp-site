@@ -392,39 +392,37 @@ tr.me{background:rgba(255,225,79,.07)!important}
 .pc .nat{position:absolute;left:0;top:0;width:1143px;height:1367px;transform:scale(var(--k));transform-origin:0 0}
 .pc .nat>*{position:absolute}
 .pc svg.layer{left:0;top:0;width:1143px;height:1367px;overflow:visible}
-.pc .cut{left:-4px;top:-4px;width:614px;height:1083px;object-fit:contain;object-position:center bottom}
+.pc .cut{left:-4px;top:-4px;width:614px;height:985px;object-fit:contain;object-position:center bottom}
 .pc .wm{left:40px;top:180px;width:520px;height:700px;display:grid;place-items:center;opacity:.1}
 .pc .wm img{width:420px;height:auto}
 /* panel text */
+.pc .jn{left:560px;width:245px;top:76px;text-align:right;font-weight:800;font-size:86px;line-height:1;color:var(--ink);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .pc .ab{left:590px;width:265px;top:62px;text-align:center;font-weight:800;font-size:54px;line-height:1;color:var(--ink);letter-spacing:-.01em}
 .pc .sch{left:590px;width:265px;top:128px;text-align:center;font-weight:700;font-size:22px;line-height:1.2;color:var(--ink);text-transform:uppercase}
-.pc .gauge{left:855px;top:41px;width:151px;height:151px}
+.pc .gauge{left:824px;top:46px;width:142px;height:142px}
 .pc .gauge svg{width:100%;height:100%;overflow:visible}
 .pc .gauge .trk{stroke:rgba(255,255,255,.1)}
 .pc .gauge .arc{stroke:var(--accent);transition:stroke-dashoffset 1.8s cubic-bezier(.22,.9,.24,1);filter:drop-shadow(0 4px 5px color-mix(in srgb,var(--accent) 60%,transparent)) drop-shadow(0 0 10px color-mix(in srgb,var(--accent) 45%,transparent))}
 .pc.go .gauge .arc{animation:gglow 2.6s ease-in-out 1.8s infinite}
 @keyframes gglow{0%,100%{filter:drop-shadow(0 4px 5px color-mix(in srgb,var(--accent) 60%,transparent)) drop-shadow(0 0 8px color-mix(in srgb,var(--accent) 40%,transparent))}50%{filter:drop-shadow(0 4px 6px color-mix(in srgb,var(--accent) 75%,transparent)) drop-shadow(0 0 22px color-mix(in srgb,var(--accent) 80%,transparent))}}
-.pc .gnum{left:855px;width:151px;top:80px;text-align:center;font-weight:800;font-size:62px;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
-.pc .glbl{left:855px;width:151px;top:160px;text-align:center;font-weight:700;font-size:21px;color:var(--ink)}
-.pc .fn{left:580px;width:430px;top:214px;text-align:center;font-weight:300;line-height:1;color:var(--ink);text-transform:uppercase;white-space:nowrap}
-.pc .ln{left:580px;width:430px;top:288px;text-align:center;font-weight:800;line-height:1;color:var(--ink);text-transform:uppercase;white-space:nowrap;letter-spacing:-.005em}
+.pc .gnum{left:824px;width:142px;top:80px;text-align:center;font-weight:800;font-size:58px;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.pc .glbl{left:824px;width:142px;top:152px;text-align:center;font-weight:700;font-size:21px;color:var(--ink)}
+.pc .fn{left:528px;width:430px;top:214px;text-align:right;font-weight:300;line-height:1;color:var(--ink);text-transform:uppercase;white-space:nowrap}
+.pc .ln{left:528px;width:430px;top:288px;text-align:right;font-weight:800;line-height:1;color:var(--ink);text-transform:uppercase;white-space:nowrap;letter-spacing:-.005em}
 /* odometer */
-.pc .odo{left:588px;top:378px;width:270px;height:84px;border-radius:14px;overflow:hidden;display:flex;align-items:stretch;padding:0 0 0 6px;background:#0c0c0c}
-.pc .odo .reel{flex:none;position:relative;overflow:hidden;background:linear-gradient(var(--o0),var(--o1) 22%,var(--o2) 50%,var(--o1) 78%,var(--o0));box-shadow:inset 1px 0 0 rgba(255,255,255,.06),inset -1px 0 0 rgba(0,0,0,.8);margin-right:2px;border-radius:3px}
-.pc .odo .reel.last{background:linear-gradient(var(--l0),var(--l1) 28%,var(--l2) 50%,var(--l1) 72%,var(--l0))}
+.pc .odo{right:343px;top:406px;height:85px;display:flex;gap:6px;align-items:stretch}
+.pc .odo .reel{flex:none;position:relative;overflow:hidden;border-radius:6px;background:linear-gradient(#2b2b2d,#18181a 55%,#101011);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 2px 4px rgba(0,0,0,.25)}
 .pc .odo .reel .strip{position:absolute;left:0;right:0;top:0;transition:transform var(--dur,1.6s) cubic-bezier(.2,.75,.25,1)}
-.pc .odo .reel .strip span{display:block;height:76px;line-height:76px;text-align:center;font-weight:500;font-size:66px;color:var(--od);font-variant-numeric:tabular-nums;text-shadow:0 2px 3px rgba(0,0,0,.45)}
-.pc .odo .reel.last .strip span{color:var(--ld);text-shadow:0 1px 0 rgba(255,255,255,.3)}
-.pc .odo .reel::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(rgba(0,0,0,.75),transparent 30%,transparent 70%,rgba(0,0,0,.75))}
-.pc .odo .reel.last::after{background:linear-gradient(rgba(60,40,10,.55),transparent 32%,transparent 68%,rgba(60,40,10,.55))}
+.pc .odo .reel .strip span{display:block;height:85px;line-height:85px;text-align:center;font-weight:800;font-size:76px;color:#fff;font-variant-numeric:tabular-nums}
+.pc .odo .reel::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(rgba(0,0,0,.35),transparent 18%,transparent 82%,rgba(0,0,0,.35))}
 .pc .odo .sep{flex:none;width:14px;color:var(--od);font-size:56px;line-height:92px;text-align:center;font-weight:300}
-.pc .unit{left:860px;width:105px;top:372px;height:96px;display:grid;place-items:center;font-weight:800;color:var(--frtx,#111);letter-spacing:.01em;text-transform:uppercase}
+.pc .unit{left:816px;width:200px;top:386px;height:125px;display:flex;align-items:center;font-weight:800;color:var(--frtx,#111);letter-spacing:.01em;text-transform:uppercase}
 /* ribbon */
-.pc .rib{left:140px;width:590px;top:1016px;height:87px;display:flex;align-items:center;gap:26px;color:var(--frtx,#111);font-weight:800;text-transform:uppercase;white-space:nowrap;letter-spacing:.005em}
-.pc .rib svg{width:66px;height:62px;flex:none}
+.pc .rib{left:132px;width:740px;top:913px;height:100px;display:flex;align-items:center;gap:52px;color:var(--frtx,#111);font-weight:800;text-transform:uppercase;white-space:nowrap;letter-spacing:.005em}
+.pc .rib svg{width:84px;height:80px;flex:none}
 /* coach plate */
-.pc .cpill{left:560px;top:1150px;width:190px;height:40px;border-radius:20px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;gap:10px;font-weight:800;font-size:25px;letter-spacing:.12em;box-shadow:0 3px 3px rgba(0,0,0,.09),0 6px 12px color-mix(in srgb,var(--accent) 35%,transparent),inset 0 1px 0 rgba(255,255,255,.35)}
-.pc .cpill i{width:12px;height:12px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25)}
+.pc .cpill{left:421px;top:1090px;width:229px;height:46px;border-radius:23px;background:var(--accent);color:#0E2414;display:flex;align-items:center;justify-content:center;gap:12px;font-weight:800;font-size:29px;letter-spacing:.14em;box-shadow:0 3px 3px rgba(0,0,0,.09),0 6px 12px color-mix(in srgb,var(--accent) 35%,transparent),inset 0 1px 0 rgba(255,255,255,.35)}
+.pc .cpill i{width:13px;height:13px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25)}
 .pc .cpill:not(.cpu) i{animation:cblink 1.4s ease-in-out infinite}
 @keyframes cblink{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(255,255,255,.7)}50%{opacity:.25;box-shadow:0 0 0 5px rgba(255,255,255,0)}}
 .pc .cpill.cpu{background:#979AA0;box-shadow:0 3px 3px rgba(0,0,0,.09),inset 0 1px 0 rgba(255,255,255,.3)}
@@ -438,12 +436,12 @@ tr.me{background:rgba(255,225,79,.07)!important}
 .touch .pc .glare{display:none}
 .touch .pc:hover{--lift:0px;--liftn:0;--rx:0;--ry:0}
 .touch .pc .pin{will-change:auto}
-.pc .cf{left:300px;width:450px;top:1206px;text-align:right;font-weight:300;font-size:56px;line-height:1;color:var(--ink);text-transform:uppercase;white-space:nowrap}
-.pc .cl.solo{top:1214px}
-.pc .cl{left:300px;width:450px;top:1262px;text-align:right;font-weight:800;line-height:1;color:var(--ink);text-transform:uppercase;white-space:nowrap}
-.pc .clogo{left:770px;top:1144px;width:206px;height:206px;border-radius:50%;display:grid;place-items:center;border:8px solid #161616;
-  background:radial-gradient(circle at 34% 28%,color-mix(in srgb,var(--tc1,#333539) 70%,#fff),var(--tc1,#333539) 55%,color-mix(in srgb,var(--tc1,#333539) 70%,#000));
-  box-shadow:0 0 0 3px #333,0 14px 26px rgba(0,0,0,.5),0 4px 8px rgba(51,53,57,.18),inset 0 0 0 9px var(--tc2,#FFE14F),inset 0 6px 10px rgba(255,255,255,.35),inset 0 -10px 16px rgba(0,0,0,.35)}
+.pc .cf{left:150px;width:500px;top:1156px;text-align:right;font-weight:300;font-size:66px;line-height:1;color:var(--ink);text-transform:uppercase;white-space:nowrap}
+.pc .cl.solo{top:1166px}
+.pc .cl{left:150px;width:500px;top:1224px;text-align:right;font-weight:800;line-height:1;color:var(--ink);text-transform:uppercase;white-space:nowrap}
+.pc .clogo{left:701px;top:1088px;width:202px;height:202px;border-radius:50%;display:grid;place-items:center;border:4px solid #161616;
+  background:radial-gradient(circle at 40% 30%,color-mix(in srgb,var(--tc1,#333539) 88%,#fff),var(--tc1,#333539) 60%);
+  box-shadow:0 0 0 3px #333,0 14px 26px rgba(0,0,0,.5),0 4px 8px rgba(51,53,57,.18),inset 0 0 0 10px var(--tc2,#FFE14F),inset 0 3px 6px rgba(255,255,255,.18),inset 0 -6px 10px rgba(0,0,0,.25)}
 .pc .clogo::after{content:"";position:absolute;inset:6px;border-radius:50%;background:linear-gradient(150deg,rgba(255,255,255,.4),transparent 45%);pointer-events:none}
 .pc .clogo img{width:134px;height:134px;object-fit:contain;filter:drop-shadow(0 4px 4px rgba(0,0,0,.35))}
 .pc .clogo b{font-weight:800;font-size:52px;color:#fff}
@@ -460,7 +458,7 @@ tr.me{background:rgba(255,225,79,.07)!important}
 .pc .bk2 .bgr small{display:block;font-weight:800;font-size:24px;color:var(--ink2);letter-spacing:.08em;text-transform:uppercase;margin-top:10px}
 .pc .bk2 .rkl div{display:flex;justify-content:space-between;font-size:38px;font-weight:600;color:var(--ink2);padding:12px 0;border-bottom:3px dashed rgba(255,255,255,.12)}
 .pc .bk2 .rkl b{color:var(--ink);font-weight:800}
-.pc .rb2{left:470px;width:560px;justify-content:flex-end;padding-right:20px}
+.pc .rb2{left:250px;width:860px;justify-content:flex-end;padding-right:36px}
 .pc .bmac{left:170px;top:1112px;width:215px;height:auto;filter:drop-shadow(0 10px 14px rgba(51,53,57,.35)) drop-shadow(0 2px 3px rgba(0,0,0,.25))}
 .pc .bf2{left:420px;top:1150px;width:430px;display:flex;flex-direction:column;gap:8px;font-size:26px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
 .pc .bf2 span:last-child{font-weight:500;letter-spacing:.06em}
@@ -894,7 +892,7 @@ const P_LINE="M563.5 1018V118.5L618.637 23C621.316 18.359 626.268 15.5 631.627 1
 const TROPHY='<svg viewBox="0 0 66 62"><path fill="currentColor" d="M14 2h38v6h12v8c0 9-6 15-14 16-2 6-7 10-13 11v7h9c2 0 3 1 3 3v7H17v-7c0-2 1-3 3-3h9v-7c-6-1-11-5-13-11C8 31 2 25 2 16V8h12V2zm-6 12v2c0 5 3 9 7 10-1-3-1-6-1-9v-3H8zm44 0v3c0 3 0 6-1 9 4-1 7-5 7-10v-2h-6z"/></svg>';
 (function cardDefs(){const s=document.createElementNS("http://www.w3.org/2000/svg","svg");s.setAttribute("width","0");s.setAttribute("height","0");s.style.position="absolute";
   const sh=(id,x,y,w,h,list)=>`<filter id="${id}" x="${x}" y="${y}" width="${w}" height="${h}" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">`+list.map(([dx,dy,sd,a],i)=>`<feGaussianBlur in="SourceAlpha" stdDeviation="${sd}" result="b${i}"/><feOffset in="b${i}" dx="${dx}" dy="${dy}" result="o${i}"/><feComponentTransfer in="o${i}" result="s${i}"><feFuncA type="linear" slope="${a}"/></feComponentTransfer>`).join("")+`<feMerge>${list.map((_,i)=>`<feMergeNode in="s${i}"/>`).join("")}<feMergeNode in="SourceGraphic"/></feMerge></filter>`;
-  s.innerHTML=`<defs>${sh("pcf-panel",-400,-400,2000,2400,[[2,12,13.5,.1],[8,49,25,.09],[18,111,33.5,.05]])}${sh("pcf-card",-400,-400,2000,2400,[[0,6,8,.25],[0,30,30,.3],[0,70,60,.25]])}${sh("pcf-rib",-100,900,1100,400,[[0,3,3.5,.1],[0,13,6.5,.09],[0,30,9,.05]])}${sh("pcf-odo",500,300,600,300,[[0,2,2,.1],[0,7,3.5,.09],[0,16,4.5,.05]])}
+  s.innerHTML=`<defs>${sh("pcf-panel",-400,-400,2000,2400,[[2,12,13.5,.1],[8,49,25,.09],[18,111,33.5,.05]])}${sh("pcf-card",-400,-400,2000,2400,[[0,6,8,.25],[0,30,30,.3],[0,70,60,.25]])}${sh("pcf-rib",-100,800,1200,400,[[0,3,3.5,.1],[0,13,6.5,.09],[0,30,9,.05]])}${sh("pcf-odo",380,300,760,320,[[0,2,2,.1],[0,7,3.5,.09],[0,16,4.5,.05]])}
    <filter id="pcf-line" x="500" y="0" width="600" height="1100" filterUnits="userSpaceOnUse"><feGaussianBlur in="SourceGraphic" stdDeviation="2.25" result="g"/><feOffset in="g" dy="4" result="go"/><feComponentTransfer in="go" result="gs"><feFuncA type="linear" slope=".56"/></feComponentTransfer><feMerge><feMergeNode in="gs"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
    <linearGradient id="pcf-linegrad" x1="797" y1="15.5" x2="797" y2="1018" gradientUnits="userSpaceOnUse"><stop stop-color="${CARD_THEME.accent}"/><stop offset="1" stop-color="${CARD_THEME.accent}" stop-opacity="0"/></linearGradient>
    <linearGradient id="pcf-fade" x1="720" y1="737" x2="720" y2="883" gradientUnits="userSpaceOnUse"><stop stop-color="${CARD_THEME.base}" stop-opacity="0"/><stop offset="1" stop-color="${CARD_THEME.base}"/></linearGradient>
@@ -909,9 +907,9 @@ const TROPHY='<svg viewBox="0 0 66 62"><path fill="currentColor" d="M14 2h38v6h1
   document.body.appendChild(s)})();
 function catRank(d,p,cat){const r=statRows(d,cat,false);const i=r.findIndex(x=>x.name===p.name&&x.team===p.team);return i<0?null:i+1}
 const fitPx=(txt,box,max,w=.62)=>Math.min(max,Math.floor(box/(Math.max(1,String(txt).length)*w)));
-function odoHTML(v){const s=Math.round(v||0).toLocaleString(),ds=s.replace(/\D/g,"").length,seps=s.length-ds,rw=Math.min(54,(262-seps*14-ds*2)/ds);let j=ds;
-  return s.split("").map(ch=>{if(!/\d/.test(ch))return `<span class="sep">,</span>`;j--;const d=+ch,idx=(j===0?20:10)+d;
-    return `<span class="reel ${j===0?"last":""}" style="width:${rw}px;--dur:${(1.5+(ds-1-j)*.18).toFixed(2)}s"><span class="strip" data-to="${idx}">${Array.from({length:30},(_,k)=>`<span style="height:76px;line-height:76px">${k%10}</span>`).join("")}</span></span>`}).join("")}
+function odoHTML(v){const s=String(Math.max(0,Math.round(v||0))),ds=s.length,rw=Math.min(72,(330-(ds-1)*6)/ds);let j=ds;
+  return s.split("").map(ch=>{j--;const d=+ch,idx=(j===0?20:10)+d;
+    return `<span class="reel ${j===0?"last":""}" style="width:${rw}px;--dur:${(1.5+(ds-1-j)*.18).toFixed(2)}s"><span class="strip" data-to="${idx}">${Array.from({length:30},(_,k)=>`<span>${k%10}</span>`).join("")}</span></span>`}).join("")}
 function odoVars(t){return `--o0:#050505;--o1:#232323;--o2:#3b3b3b;--od:#F2F2F2;--l0:#9a9a9a;--l1:#f4f4f4;--l2:#fff;--ld:#111;--frtx:${txtOn(vivid(Object.keys(TEAMS).find(k=>TEAMS[k]===t)||""))}`;
   const c1=t.c1,c2=lum(t.c2)<.06?"#F1EBDF":t.c2;
   return `--odo:${shade(c1,-.62)};--o0:${shade(c1,-.75)};--o1:${shade(c1,-.45)};--o2:${shade(c1,-.18)};--od:${c2};--l0:${shade(c2,-.4)};--l1:${c2};--l2:${shade(c2,.12)};--ld:${lum(c2)>.5?shade(c1,-.25):"#fff"}`}
@@ -942,25 +940,25 @@ function pcard(d,p,cat,rank,opts={}){
   const arcD=`M${sx} ${sy}A${R} ${R} 0 1 1 ${ex} ${sy}`;
   const stats=Object.keys(STATLBL).filter(s=>p[s]!=null&&p[s]!=="");
   const ranks=Object.keys(CAT_HEAD).map(cc=>[cc,catRank(d,p,cc)]).filter(([,r])=>r);
-  const back=`<svg class="layer" viewBox="0 0 1143 1367"><g transform="translate(1143 0) scale(-1 1)"><path d="M22 1016H111V1143L22 1103V1016Z" fill="${shade(lc,-.45)}"/><path d="${P_BASE}" fill="url(#pcf-hex)"/><path d="${P_BASE}" fill="url(#pcf-vig)"/><path d="${P_BASE}" fill="none" stroke="${lc}" stroke-width="16"/><path d="M22 1016H756L736 1059.5L756 1103H22V1016Z" fill="${lc}" filter="url(#pcf-rib)"/></g></svg>`;
+  const back=`<svg class="layer" viewBox="0 0 1143 1367"><g transform="translate(1143 0) scale(-1 1)"><path d="M22 913H111V1040L22 1000V913Z" fill="${shade(lc,-.45)}"/><path d="${P_BASE}" fill="url(#pcf-hex)"/><path d="${P_BASE}" fill="url(#pcf-vig)"/><path d="${P_BASE}" fill="none" stroke="${lc}" stroke-width="16"/><path d="M22 913H900L876 963L900 1013H22V913Z" fill="${lc}" filter="url(#pcf-rib)"/></g></svg>`;
   return `<div class="pc ${opts.big?"big":""}" data-pcard="${esc(p.name)}|${p.team}|${cat}|${r0}" style="--k:${kk};--T:${TH}px;--lc:${lc};--tc1:${t.c1};--tc2:${lum(t.c2)<.06?t.c1:t.c2};${odoVars(t)}"><div class="pshadow"></div><div class="pin">${edges}
    <div class="pcs front"><div class="nat">
-     <svg class="layer" viewBox="0 0 1143 1367"><path d="M22 1016H111V1143L22 1103V1016Z" fill="${shade(lc,-.45)}"/><path d="${P_BASE}" fill="url(#pcf-hex)"/><path d="${P_BASE}" fill="url(#pcf-vig)"/>${opts.texture?`<image href="${esc(opts.texture)}" width="1143" height="1367" preserveAspectRatio="xMidYMid slice" style="clip-path:path('${P_BASE}')"/>`:""}<path d="${P_BASE}" fill="url(#pcf-bsheen)" opacity=".18"/><path d="${P_BASE}" fill="none" stroke="${lc}" stroke-width="16"/></svg>
+     <svg class="layer" viewBox="0 0 1143 1367"><path d="M22 913H111V1040L22 1000V913Z" fill="${shade(lc,-.45)}"/><path d="${P_BASE}" fill="url(#pcf-hex)"/><path d="${P_BASE}" fill="url(#pcf-vig)"/>${opts.texture?`<image href="${esc(opts.texture)}" width="1143" height="1367" preserveAspectRatio="xMidYMid slice" style="clip-path:path('${P_BASE}')"/>`:""}<path d="${P_BASE}" fill="url(#pcf-bsheen)" opacity=".18"/><path d="${P_BASE}" fill="none" stroke="${lc}" stroke-width="16"/></svg>
      ${p.img?`<img class="cut" src="${esc(p.img)}" alt=""${p.imgZ&&p.imgZ!==1?` style="scale:${p.imgZ};transform-origin:${p.imgO}"`:""}>`:`<div class="wm">${LOGO[p.team]?`<img src="${wheelLogoUrl(p.team)}" alt="">`:""}</div>`}
      <svg class="layer" viewBox="0 0 1143 1367"><defs><linearGradient id="${lg}e" x1="0" y1="0" x2="1143" y2="200" gradientUnits="userSpaceOnUse"><stop stop-color="${shade(lc,-.55)}"/><stop offset=".42" stop-color="${shade(lc,.35)}"/><stop offset=".5" stop-color="${shade(lc,.6)}"/><stop offset="1" stop-color="${shade(lc,-.6)}"/></linearGradient><linearGradient id="${lg}" x1="797" y1="15.5" x2="797" y2="1018" gradientUnits="userSpaceOnUse"><stop stop-color="${lc}"/><stop offset=".55" stop-color="${lc}"/><stop offset="1" stop-color="${lc}" stop-opacity="0"/></linearGradient></defs>
-       <g mask="url(#pcf-pmask)"><g filter="url(#pcf-panel)"><path d="${P_PANEL}" fill="url(#pcf-dpanel)"/><rect x="562" y="380" width="323" height="640" fill="#1f1f1f"/></g></g><path d="${P_PANEL}" fill="url(#pcf-sheen)" opacity=".06"/>
+       <g mask="url(#pcf-pmask)"><g filter="url(#pcf-panel)"><path d="${P_PANEL}" fill="url(#pcf-dpanel)"/></g></g><path d="${P_PANEL}" fill="url(#pcf-sheen)" opacity=".06"/>
        <path d="${P_LINE}" stroke="url(#${lg})" stroke-width="13" stroke-linejoin="round" fill="none"/>
-              <path d="M22 1016H756L736 1059.5L756 1103H22V1016Z" fill="${lc}" filter="url(#pcf-rib)"/>
-       <rect x="580" y="372" width="387" height="96" rx="20" fill="${lc}" filter="url(#pcf-odo)"/>
+              <path d="M22 913H900L876 963L900 1013H22V913Z" fill="${lc}" filter="url(#pcf-rib)"/>
+       <rect x="461" y="386" width="578" height="125" rx="22" fill="${lc}" filter="url(#pcf-odo)"/>
      </svg>
-     <div class="ab">${esc(t.abbr)}</div><div class="sch">${esc(t.school)}<br>${esc(t.mascot)}</div>
+     <div class="jn">${p.num?"#"+esc(p.num):esc(t.abbr)}</div>
      <div class="gauge"><svg viewBox="0 0 151 151"><path class="trk" d="${arcD}" fill="none" stroke-width="12"/><path class="arc" d="${arcD}" fill="none" stroke-width="12" pathLength="100" stroke-dasharray="100 100" stroke-dashoffset="100" data-to="${(100-pct*100).toFixed(1)}"/></svg></div>
      <div class="gnum" data-num="${gv}">${hasOvr?"0":"–"}</div><div class="glbl">OVR</div>
      ${first?`<div class="fn" style="font-size:${fitPx(first,430,72,.64)}px">${esc(first)}</div>`:""}
      <div class="ln" style="font-size:${fitPx(last,430,76,.7)}px;${first?"":"top:250px"}">${esc(last)}</div>
-     <div class="odo">${odoHTML(p[k])}</div><div class="unit" style="font-size:${fitPx(unit,96,30,.72)}px">${esc(unit)}</div>
-     <div class="rib" style="font-size:${fitPx(rib,500,58,.66)}px">${TROPHY}<span>${esc(rib)}</span></div>
-     <div class="cpill ${own?"":"cpu"}"><i></i>${own?"COACH":"CPU"}</div>${cf?`<div class="cf">${esc(cf)}</div>`:""}<div class="cl ${cf?"":"solo"}" style="font-size:${fitPx(cl,450,cf?64:72,.7)}px">${esc(cl)}</div>
+     <div class="odo">${odoHTML(p[k])}</div><div class="unit" style="font-size:${fitPx(unit,195,54,.7)}px">${esc(unit)}</div>
+     <div class="rib" style="font-size:${fitPx(rib,560,74,.66)}px">${TROPHY}<span>${esc(rib)}</span></div>
+     <div class="cpill ${own?"":"cpu"}"><i></i>${own?"COACH":"CPU"}</div>${cf?`<div class="cf">${esc(cf)}</div>`:""}<div class="cl ${cf?"":"solo"}" style="font-size:${fitPx(cl,500,cf?68:76,.7)}px">${esc(cl)}</div>
      <div class="clogo">${LOGO[p.team]?`<img src="${logoUrl(p.team)}" alt="">`:`<b>${esc(t.abbr[0])}</b>`}</div>
      <div class="glare" style="clip-path:path('${P_BASE}')"></div>
    </div></div>
@@ -971,7 +969,7 @@ function pcard(d,p,cat,rank,opts={}){
        <div class="bgr">${stats.slice(0,ranks.length?6:9).map(s=>`<div><b>${Number(p[s]).toLocaleString()}</b><small>${STATLBL[s]}</small></div>`).join("")}</div>
        ${ranks.length?`<div class="bt">MAC ranks</div><div class="rkl">${ranks.slice(0,3).map(([cc,r])=>`<div><span>${esc(CAT_HEAD[cc][1])}</span><b>#${r}</b></div>`).join("")}</div>`:""}
      </div>
-     <div class="rib rb2" style="font-size:${fitPx(rib,500,58,.66)}px">${TROPHY}<span>${esc(rib)}</span></div>
+     <div class="rib rb2" style="font-size:${fitPx(rib,560,74,.66)}px">${TROPHY}<span>${esc(rib)}</span></div>
      <img class="bmac" src="${MAC_LOGO}" alt="MAC">
      <div class="bf2"><span>${esc(CARD_SERIES)}</span><span>Season ${d.season.season||1}</span></div>
      <div class="glare" style="clip-path:path('${mirrorPath(P_BASE)}')"></div></div></div>
@@ -980,14 +978,14 @@ function pcard(d,p,cat,rank,opts={}){
 /* animation: gauge fill + glow, odometer roll, number count-up */
 function goCard(el){if(el.classList.contains("go"))return;el.classList.add("go");
   const arc=el.querySelector(".front .gauge .arc");if(arc)arc.setAttribute("stroke-dashoffset",arc.dataset.to);
-  el.querySelectorAll(".front .odo .strip").forEach(s=>s.style.transform=`translateY(${(-s.dataset.to*76+4)}px)`);
+  el.querySelectorAll(".front .odo .strip").forEach(s=>s.style.transform=`translateY(${(-s.dataset.to*85)}px)`);
   const n=el.querySelector(".front .gnum");if(n&&n.textContent!=="–"){const to=+n.dataset.num,t0=performance.now(),dur=1800;
     (function f(now){const q=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-q,3);n.textContent=Math.round(to*e);if(q<1)requestAnimationFrame(f)})(t0)}}
 const cardIO="IntersectionObserver" in window?new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){cardIO.unobserve(e.target);setTimeout(()=>goCard(e.target),120)}}),{threshold:.35}):null;
-function armCards(root){(root||document).querySelectorAll(".pc:not(.armed)").forEach(el=>{el.classList.add("armed");el.querySelectorAll(".odo .strip").forEach(s=>s.style.transform="translateY(4px)");
+function armCards(root){(root||document).querySelectorAll(".pc:not(.armed)").forEach(el=>{el.classList.add("armed");el.querySelectorAll(".odo .strip").forEach(s=>s.style.transform="translateY(0px)");
   if(cardIO)cardIO.observe(el);else goCard(el)})}
 function replayCards(root){(root||document).querySelectorAll(".pc").forEach(el=>{el.classList.remove("go");const a=el.querySelector(".gauge .arc");a.style.transition="none";a.setAttribute("stroke-dashoffset","100");
-  el.querySelectorAll(".odo .strip").forEach(s=>{s.style.transition="none";s.style.transform="translateY(4px)"});void el.offsetWidth;a.style.transition="";el.querySelectorAll(".odo .strip").forEach(s=>s.style.transition="");setTimeout(()=>goCard(el),60)})}
+  el.querySelectorAll(".odo .strip").forEach(s=>{s.style.transition="none";s.style.transform="translateY(0px)"});void el.offsetWidth;a.style.transition="";el.querySelectorAll(".odo .strip").forEach(s=>s.style.transition="");setTimeout(()=>goCard(el),60)})}
 /* viewer */
 let cardList=[],cardIdx=0,cardData=null;
 function openCard(list,i,d){cardList=list;cardIdx=i;cardData=d||null;paintCard();document.getElementById("cardov").classList.add("show")}
