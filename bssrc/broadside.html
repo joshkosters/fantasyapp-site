@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Broadside</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Inter:wght@400;600;800&family=Orbitron:wght@600;900&family=Pirata+One&family=Press+Start+2P&display=swap">
+<style>
+/* VOICE: loud toy-box naval battle, a party game you pass across the couch
+   IDEA: the game box lid and the plotting board in one, re-skinned per world
+   PICTURE: the grid itself, big and first, with bursts, splashes and sonar rings
+   COLOUR and TYPE: each world owns sea, hull, hit and accent colors plus a display face
+   LAYOUT: phone-first single column, 480px max, numbered lobby trays */
+[data-w=navy]{--bg:radial-gradient(120% 80% at 50% 0%,#1c5288 0%,#0b1f38 60%,#06121f 100%);--bgc:#0b1f38;--sea:#1b5c8e;--sea2:#17507d;--line:#0d3354;--ink:#eaf4ff;--mut:#9fbad6;--panel:rgba(255,255,255,.06);--edge:rgba(255,255,255,.13);--acc:#ffc93c;--accink:#2a1d00;--hit:#ff4d3d;--miss:#d6ecff;--ship:#8796a8;--disp:'Black Ops One',sans-serif;--lsz:54px}
+[data-w=space]{--bg:radial-gradient(1.5px 1.5px at 12% 18%,#fff,transparent),radial-gradient(1px 1px at 70% 30%,#cfe,transparent),radial-gradient(1.5px 1.5px at 40% 75%,#fff,transparent),radial-gradient(1px 1px at 85% 85%,#fff,transparent),radial-gradient(1px 1px at 25% 55%,#aaf,transparent),radial-gradient(1px 1px at 55% 10%,#fff,transparent),radial-gradient(90% 60% at 80% 0%,#2a1460 0%,transparent 60%),#05060f;--bgc:#05060f;--sea:#141a3d;--sea2:#0f1532;--line:#2b3570;--ink:#e9ebff;--mut:#8c93c8;--panel:rgba(124,243,255,.05);--edge:rgba(124,243,255,.22);--acc:#7cf3ff;--accink:#001a20;--hit:#ff3df0;--miss:#7380d6;--ship:#5a68a0;--disp:'Orbitron',sans-serif;--lsz:42px}
+[data-w=pirate]{--bg:repeating-linear-gradient(90deg,rgba(0,0,0,.13) 0 2px,transparent 2px 46px),linear-gradient(#4a2e16,#24150a);--bgc:#2e1c0d;--sea:#2f8088;--sea2:#2a737a;--line:#1b4c51;--ink:#f7ebcf;--mut:#cbb48a;--panel:rgba(247,235,207,.07);--edge:rgba(247,235,207,.2);--acc:#f2c14e;--accink:#2a1800;--hit:#ff6a2b;--miss:#f3e6c4;--ship:#8b5a2b;--disp:'Pirata One',serif;--lsz:66px}
+[data-w=arcade]{--bg:repeating-linear-gradient(0deg,rgba(255,43,214,.09) 0 1px,transparent 1px 28px),repeating-linear-gradient(90deg,rgba(255,43,214,.09) 0 1px,transparent 1px 28px),#0a0014;--bgc:#0a0014;--sea:#1a0638;--sea2:#14042c;--line:#5a1a6e;--ink:#fff;--mut:#c9a6ff;--panel:rgba(57,255,20,.05);--edge:rgba(57,255,20,.32);--acc:#39ff14;--accink:#062000;--hit:#ff2b6a;--miss:#00e5ff;--ship:#e6cf00;--disp:'Press Start 2P',monospace;--lsz:30px}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0}
+body{background:var(--bg);background-color:var(--bgc);background-attachment:fixed;color:var(--ink);font:16px/1.45 Inter,system-ui,sans-serif;min-height:100vh;overflow-x:clip;transition:background-color .4s}
+button{font:inherit;color:inherit;cursor:pointer}
+#app{max-width:480px;margin:0 auto;padding:14px 14px 40px}
+.hero{text-align:center;padding:18px 0 6px}
+.logo{font-family:var(--disp);font-size:var(--lsz);line-height:1.05;color:var(--acc);text-shadow:0 4px 0 rgba(0,0,0,.35);letter-spacing:1px}
+.sub{color:var(--mut);margin:6px 0 14px}
+.deco{display:grid;grid-template-columns:repeat(10,1fr);gap:2px;background:var(--line);padding:2px;border-radius:10px;max-width:300px;margin:0 auto 16px}
+.play{display:block;width:100%;border:0;border-radius:14px;background:var(--acc);color:var(--accink);font-family:var(--disp);font-size:24px;padding:14px;min-height:54px;box-shadow:0 5px 0 rgba(0,0,0,.35);letter-spacing:1px}
+.play:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.35)}
+.play[disabled]{opacity:.4;cursor:default}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0}
+.chip{border:1px solid var(--edge);background:var(--panel);border-radius:99px;padding:8px 14px;min-height:40px;font-size:14px}
+.tray{background:var(--panel);border:1px solid var(--edge);border-radius:16px;padding:14px;margin:14px 0}
+.tray h3{margin:0 0 10px;font-size:15px;display:flex;align-items:center;gap:8px}
+.tray h3 b{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--acc);color:var(--accink);font-size:13px}
+.tiles2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tile{border:2px solid var(--edge);background:transparent;border-radius:12px;padding:12px;text-align:left;min-height:64px}
+.tile b{display:block;font-size:16px}.tile small{color:var(--mut)}
+.sel{background:var(--acc)!important;color:var(--accink)!important;border-color:var(--acc)!important}
+.sel small{color:var(--accink)!important;opacity:.75}
+.lv{display:flex;gap:6px;margin-top:10px}
+.lv button{flex:1;border:1px solid var(--edge);background:transparent;border-radius:10px;padding:8px 4px;min-height:52px;font-size:14px}
+.lv small{display:block;font-size:12px;opacity:.75}
+.names{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+input{font:inherit;font-size:16px;width:100%;padding:10px;border-radius:10px;border:1px solid var(--edge);background:rgba(0,0,0,.25);color:var(--ink)}
+.worlds{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px}
+.wcard{flex:0 0 46%;scroll-snap-align:start;border:2px solid var(--edge);border-radius:14px;background:var(--bg);background-color:var(--bgc);padding:10px;text-align:left;color:var(--ink)}
+.wcard .mini{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;background:var(--line);padding:2px;border-radius:6px;margin-bottom:8px}
+.wcard .mini i{aspect-ratio:1;background:var(--sea);border-radius:2px}
+.wcard .mini i.s{background:var(--ship)}.wcard .mini i.h{background:var(--hit)}
+.wcard b{font-family:var(--disp);font-size:15px;display:block;color:var(--acc)}
+.wcard.on{outline:3px solid var(--acc);outline-offset:2px}
+.modes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.mode{border:1px solid var(--edge);background:transparent;border-radius:10px;padding:8px 2px;min-height:64px;font-size:12px;font-weight:600}
+.mode i{display:block;font-style:normal;font-size:20px;line-height:1.2;margin-bottom:2px}
+.desc{color:var(--mut);margin:10px 0 0;font-size:14px;min-height:40px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.row small{display:block;color:var(--mut);font-size:13px}
+.pill{border:0;border-radius:99px;padding:8px 16px;min-width:64px;min-height:40px;background:rgba(0,0,0,.3);font-weight:700}
+.pill.on{background:var(--acc);color:var(--accink)}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.top .x{border:1px solid var(--edge);background:var(--panel);border-radius:10px;width:44px;height:44px;flex:none}
+.top h2{margin:0;font-family:var(--disp);font-size:24px;line-height:1.05;color:var(--acc)}
+.top small{color:var(--mut)}
+.top .r{margin-left:auto;text-align:right;font-size:13px;color:var(--mut)}
+.grid{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:2px;background:var(--line);padding:3px;border-radius:12px;width:100%;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.grid.small{width:62%;padding:2px;gap:1px;border-radius:8px;box-shadow:none}
+.cell{aspect-ratio:1;background:var(--sea);border:0;padding:0;position:relative;border-radius:3px;display:grid;place-items:center;font-weight:800;font-size:12px}
+.cell.alt{background:var(--sea2)}
+.cell.t{cursor:crosshair}.cell.t:hover{box-shadow:inset 0 0 0 2px var(--acc)}
+.cell.ship{background:var(--ship);box-shadow:inset 0 0 0 1px rgba(255,255,255,.2),inset 0 -3px 0 rgba(0,0,0,.25)}
+.cell.reveal{background:color-mix(in srgb,var(--ship) 60%,transparent)}
+.cell.miss::after{content:'';position:absolute;inset:36%;border-radius:50%;background:var(--miss);opacity:.85}
+.cell.stale::after{opacity:.28}
+.cell.hit{background:color-mix(in srgb,var(--hit) 30%,var(--sea))}
+.cell.ship.hit{background:color-mix(in srgb,var(--hit) 45%,var(--ship))}
+.cell.hit::after{content:'';position:absolute;inset:12%;border-radius:50%;background:radial-gradient(circle,#fff 0 14%,var(--hit) 38%,transparent 72%)}
+.cell.sunk{background:color-mix(in srgb,var(--hit) 55%,#000)!important}
+.cell.sunk::after{content:'';position:absolute;inset:22%;background:linear-gradient(45deg,transparent 42%,#fff 42% 58%,transparent 58%),linear-gradient(-45deg,transparent 42%,#fff 42% 58%,transparent 58%);opacity:.85}
+.cell.boom::after{content:'✹';color:var(--hit);font-size:150%;position:static}
+.cell.mymine::after{content:'';position:absolute;inset:30%;border-radius:50%;background:#111;box-shadow:0 0 0 2px var(--hit)}
+.cell.spot{box-shadow:inset 0 0 0 3px var(--acc)}
+.cell .n{position:relative;z-index:2;background:var(--acc);color:var(--accink);border-radius:50%;width:72%;height:72%;display:grid;place-items:center;font-size:11px}
+.cell.ghost{box-shadow:inset 0 0 0 100px color-mix(in srgb,var(--acc) 55%,transparent)}
+.cell.bad{box-shadow:inset 0 0 0 100px rgba(255,40,40,.5)}
+.cell.aim{box-shadow:inset 0 0 0 100px color-mix(in srgb,var(--acc) 45%,transparent)}
+.cell.fresh{animation:pop .55s ease-out}
+@keyframes pop{0%{transform:scale(1.7);filter:brightness(2.2);z-index:3}100%{transform:scale(1)}}
+.shake{animation:shake .4s}
+@keyframes shake{20%{transform:translate(-6px,2px)}40%{transform:translate(5px,-3px)}60%{transform:translate(-4px,1px)}80%{transform:translate(3px,0)}}
+.lbl{font-size:12px;font-weight:700;color:var(--mut);margin:12px 0 6px;display:flex;justify-content:space-between}
+.headline{font-family:var(--disp);font-size:26px;line-height:1.1;margin:4px 0 2px;color:var(--ink)}
+.pips{display:flex;gap:4px;margin:4px 0}.pips i{width:12px;height:12px;border-radius:50%;background:var(--acc)}.pips i.u{background:rgba(255,255,255,.15)}
+.msg{min-height:44px;margin:8px 0;padding:10px 12px;border-radius:10px;background:var(--panel);border:1px solid var(--edge);font-weight:600;font-size:15px}
+.specials{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.sp{border:1px solid var(--edge);background:var(--panel);border-radius:10px;padding:6px 10px;min-height:44px;font-size:13px;font-weight:700}
+.sp i{font-style:normal;margin-right:4px}
+.sp.armed{background:var(--acc);color:var(--accink)}
+.sp[disabled]{opacity:.35;cursor:default}
+.hint{font-size:13px;color:var(--mut);margin:-4px 0 8px}
+.fleet{display:flex;flex-wrap:wrap;gap:5px}
+.fs{font-size:12px;padding:3px 8px;border-radius:99px;background:var(--panel);border:1px solid var(--edge);white-space:nowrap}
+.fs.dead{text-decoration:line-through;opacity:.45}
+.fs u{text-decoration:none;color:var(--hit);letter-spacing:-1px}
+.bottom{display:flex;gap:12px;align-items:flex-start}
+.bottom>div{flex:1}
+.shiplist{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.shipchip{border:1px solid var(--edge);background:var(--panel);border-radius:10px;padding:6px 10px;min-height:44px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px}
+.shipchip i{display:inline-block;height:10px;width:calc(var(--len)*9px);background:var(--ship);border-radius:5px}
+.shipchip.done{opacity:.45}
+.btnrow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.btn{border:1px solid var(--edge);background:var(--panel);border-radius:12px;min-height:46px;font-weight:700}
+.note{color:var(--mut);font-size:14px;text-align:center}
+#ov{position:fixed;inset:0;display:none;place-items:center;padding:16px;background:rgba(0,0,0,.6);z-index:20}
+#ov.on{display:grid}#ov.cover{background:var(--bg);background-color:var(--bgc)}
+.card{width:100%;max-width:420px;max-height:90vh;overflow:auto;background:var(--bgc);border:1px solid var(--edge);border-radius:18px;padding:20px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.card h2{font-family:var(--disp);color:var(--acc);font-size:34px;line-height:1.05;margin:6px 0 10px}
+.card .k{color:var(--mut);font-size:14px}
+.card .big{font-size:44px;line-height:1}
+.card table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px}
+.card td,.card th{padding:6px;border-bottom:1px solid var(--edge)}
+.card td:not(:first-child),.card th:not(:first-child){text-align:right}
+.card .play{margin-top:10px}.card .btn{width:100%;margin-top:8px}
+.help{text-align:left;font-size:14px}.help h4{margin:14px 0 4px;color:var(--acc)}.help p{margin:4px 0}
+@media(prefers-reduced-motion:reduce){.cell.fresh,.shake{animation:none}}
+</style></head>
+<body data-w="navy">
+<div id="app"></div>
+<div id="ov"></div>
+<script>
+{
+// ---------- data ----------
+const WORLDS={
+ navy:{name:'Fleet Command',tag:'Steel, salt and big guns',ships:['Carrier','Battleship','Cruiser','Submarine','Destroyer','Frigate','Patrol Boat']},
+ space:{name:'Deep Space',tag:'Silent war among the stars',ships:['Mothership','Dreadnought','Frigate','Stealth Pod','Scout','Lancer','Drone']},
+ pirate:{name:'Pirate Cove',tag:'Cannons, plunder and parley',ships:['Galleon',"Man-o'-War",'Brigantine','Sloop','Cutter','Schooner','Dinghy']},
+ arcade:{name:'Arcade',tag:'Insert coin to sink',ships:['MEGA','GIGA','ZAP','BLIP','BIT','BYTE','PIX']}
+};
+const MODES=[
+ {id:'classic',name:'Classic',ic:'◎',desc:'One shot a turn. First to sink the whole fleet wins.'},
+ {id:'salvo',name:'Salvo',ic:'⁂',desc:'Fire one shot for every ship you still have afloat. Lose ships, lose firepower.'},
+ {id:'streak',name:'Hot Streak',ic:'↯',desc:'Every hit earns another shot. Chain them together.'},
+ {id:'drift',name:'Drift',ic:'≋',desc:'Every 3 rounds, untouched ships slide one square. Old misses go stale, so a ship could be hiding under one.'},
+ {id:'fog',name:'Fog of War',ic:'▒',desc:'Your miss markers fade after 3 turns. Remember where you already shot (the computer keeps a logbook).'},
+ {id:'mines',name:'Minefield',ic:'✹',desc:'4 hidden mines in each sea. Hit one and it blows a hole in your own fleet and ends your turn.'},
+ {id:'bigsea',name:'Big Sea',ic:'▦',desc:'A 14×14 ocean and seven ships per side. A longer, sneakier hunt.'},
+ {id:'mayhem',name:'Mayhem',ic:'⚄',desc:'Every 3 rounds a random event hits both fleets: storms, spy planes, riptides, supply drops.'}
+];
+const SP={
+ sonar:{name:'Sonar',ic:'◉',desc:'Scan a 3×3 area. Shows how many ship squares are inside.'},
+ strike:{name:'Airstrike',ic:'✈',desc:'Hits 3 squares in a line. Flip it across or down.'},
+ cluster:{name:'Cluster',ic:'✚',desc:'Hits a plus shape of 5 squares.'},
+ torpedo:{name:'Torpedo',ic:'➤',desc:'Runs along a row from the left edge until it hits something.'}
+};
+const EVENTS={
+ storm:{name:'Meteor Storm',ic:'☄',desc:'Three random squares in each sea get blasted.'},
+ drift:{name:'Riptide',ic:'≋',desc:'Untouched ships slide a square. Old misses go stale.'},
+ supply:{name:'Supply Drop',ic:'▣',desc:'Both captains get a random special weapon.'},
+ spy:{name:'Spy Plane',ic:'◈',desc:'Each side gets one enemy ship square spotted.'},
+ double:{name:'Double Time',ic:'»',desc:'Everyone gets an extra shot this round.'},
+ blackout:{name:'Blackout',ic:'●',desc:'Every miss marker goes stale. Ships could be under any of them.'}
+};
+const LV={rookie:{name:'Ensign Pip',lab:'Rookie'},captain:{name:'Captain Reyes',lab:'Captain'},admiral:{name:'Admiral Kraken',lab:'Admiral'}};
+
+// ---------- helpers ----------
+const rnd=n=>Math.floor(Math.random()*n), pick=a=>a[rnd(a.length)];
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let S={rec:{},games:0,mute:false,cfg:null};
+try{S=Object.assign(S,JSON.parse(localStorage.getItem('broadside1'))||{})}catch(e){}
+const save=()=>{try{localStorage.setItem('broadside1',JSON.stringify(S))}catch(e){}};
+let cfg=Object.assign({vs:'cpu',lvl:'captain',world:'navy',mode:'classic',specials:true,n1:'Player 1',n2:'Player 2'},S.cfg||{});
+let G=null,screen='lobby',placing=null,busy=false,aim=null;
+
+// ---------- engine ----------
+function mkPlayer(name,cpu,N,fleet,names,specials){
+ return {name,cpu,ships:fleet.map(([len,ni],id)=>({id,len,name:names[ni],cells:[],hit:new Set(),sunk:false})),
+  at:new Int16Array(N*N).fill(-1),mines:new Set(),know:new Uint8Array(N*N),knowT:new Int32Array(N*N),
+  sonar:{},spot:new Set(),specials:specials?{sonar:1,strike:1,cluster:1,torpedo:1}:{sonar:0,strike:0,cluster:0,torpedo:0},stats:{shots:0,hits:0}};
+}
+function newGame(c){
+ const big=c.mode==='bigsea',N=big?14:10;
+ const fleet=big?[[5,0],[4,1],[4,5],[3,2],[3,3],[2,4],[2,6]]:[[5,0],[4,1],[3,2],[3,3],[2,4]];
+ const names=WORLDS[c.world].ships;
+ G={cfg:{...c},N,turn:0,round:1,turnCount:[0,0],shotsLeft:0,extra:0,fired:false,last:null,fresh:[],over:false,armed:null,sdir:true,
+  p:[mkPlayer(c.vs==='cpu'?'You':(c.n1||'Player 1'),false,N,fleet,names,c.specials),
+     mkPlayer(c.vs==='cpu'?LV[c.lvl].name:(c.n2||'Player 2'),c.vs==='cpu'?c.lvl:false,N,fleet,names,c.specials)]};
+ return G;
+}
+function cellsFor(i,len,h){const N=G.N,r=i/N|0,c=i%N,out=[];for(let k=0;k<len;k++){const rr=h?r:r+k,cc=h?c+k:c;if(rr>=N||cc>=N)return{cells:out,ok:false};out.push(rr*N+cc)}return{cells:out,ok:true}}
+const fits=(P,cells,id)=>cells.every(i=>P.at[i]<0||P.at[i]===id);
+function placeShip(P,sh,cells){sh.cells.forEach(i=>P.at[i]=-1);sh.cells=cells;cells.forEach(i=>P.at[i]=sh.id)}
+function unplace(P,sh){sh.cells.forEach(i=>P.at[i]=-1);sh.cells=[]}
+function randomFleet(P){P.at.fill(-1);P.ships.forEach(s=>s.cells=[]);
+ for(const sh of [...P.ships].sort((a,b)=>b.len-a.len)){for(let t=0;t<2000;t++){const r=cellsFor(rnd(G.N*G.N),sh.len,Math.random()<.5);if(r.ok&&fits(P,r.cells,sh.id)){placeShip(P,sh,r.cells);break}}}}
+function placeMines(P){if(G.cfg.mode!=='mines'||P.mines.size)return;while(P.mines.size<4){const i=rnd(G.N*G.N);if(P.at[i]<0)P.mines.add(i)}}
+function view(s,i){const P=G.p[s],k=P.know[i];if(k===1&&G.cfg.mode==='fog'&&!P.cpu&&G.turnCount[s]-P.knowT[i]>=3)return 0;return k}
+const open=k=>k===0||k===5;
+function shotsFor(s){return (G.cfg.mode==='salvo'?G.p[s].ships.filter(x=>!x.sunk).length:1)+G.extra}
+function nbrs(i){const N=G.N,r=i/N|0,c=i%N,o=[];if(r>0)o.push(i-N);if(r<N-1)o.push(i+N);if(c>0)o.push(i-1);if(c<N-1)o.push(i+1);return o}
+function damage(s){const V=G.p[s],O=G.p[1-s],opts=[];
+ V.ships.forEach(sh=>{if(!sh.sunk)sh.cells.forEach(c=>{if(!sh.hit.has(c))opts.push(c)})});
+ if(!opts.length)return null;const c=pick(opts),sh=V.ships[V.at[c]];sh.hit.add(c);O.know[c]=2;
+ if(sh.hit.size===sh.len){sh.sunk=true;sh.cells.forEach(x=>O.know[x]=3)}return{c,sh}}
+function shoot(s,i,silent){const A=G.p[s],D=G.p[1-s];if(!silent)A.stats.shots++;
+ const id=D.at[i];
+ if(id>=0){const sh=D.ships[id];if(sh.hit.has(i))return{t:'dup',i};sh.hit.add(i);A.know[i]=2;if(!silent)A.stats.hits++;
+  if(sh.hit.size===sh.len){sh.sunk=true;sh.cells.forEach(c=>A.know[c]=3);return{t:'sunk',i,sh}}return{t:'hit',i,sh}}
+ if(D.mines.has(i)){D.mines.delete(i);A.know[i]=4;return{t:'mine',i,dmg:damage(s)}}
+ A.know[i]=1;A.knowT[i]=G.turnCount[s];return{t:'miss',i}}
+function area(kind,i){const N=G.N,r=i/N|0,c=i%N,o=[];const add=(r,c)=>{if(r>=0&&c>=0&&r<N&&c<N)o.push(r*N+c)};
+ if(kind==='sonar'){for(let a=-1;a<2;a++)for(let b=-1;b<2;b++)add(r+a,c+b)}
+ else if(kind==='cluster'){add(r,c);add(r-1,c);add(r+1,c);add(r,c-1);add(r,c+1)}
+ else if(kind==='strike'){if(G.sdir){const c0=Math.min(Math.max(c-1,0),N-3);for(let k=0;k<3;k++)add(r,c0+k)}else{const r0=Math.min(Math.max(r-1,0),N-3);for(let k=0;k<3;k++)add(r0+k,c)}}
+ else if(kind==='torpedo'){for(let k=0;k<N;k++)add(r,k)}
+ else add(r,c);
+ return o}
+function special(s,kind,i){const D=G.p[1-s],A=G.p[s],cells=area(kind,i),res=[];
+ if(kind==='sonar'){const n=cells.filter(x=>D.at[x]>=0).length;A.sonar[i]=n;return[{t:'sonar',i,n}]}
+ for(const x of cells){const v=view(s,x);if(v===2||v===3)continue;const r=shoot(s,x);res.push(r);
+  if(r.t==='mine')break;if(kind==='torpedo'&&r.t!=='miss')break}
+ return res}
+function winner(){if(G.p[1].ships.every(x=>x.sunk))return 0;if(G.p[0].ships.every(x=>x.sunk))return 1;return null}
+function driftFleet(v){const P=G.p[v],N=G.N;const mov=shuffle(P.ships.filter(sh=>!sh.sunk&&sh.hit.size===0)).slice(0,3);
+ for(const sh of mov){for(const [dr,dc] of shuffle([[0,1],[0,-1],[1,0],[-1,0]])){
+  const nc=sh.cells.map(i=>{const r=(i/N|0)+dr,c=i%N+dc;return(r<0||c<0||r>=N||c>=N)?-1:r*N+c});
+  if(nc.includes(-1)||nc.some(i=>(P.at[i]>=0&&P.at[i]!==sh.id)||P.mines.has(i)))continue;
+  placeShip(P,sh,nc);break}}
+ washMisses(1-v);G.p[1-v].spot=new Set()}
+function washMisses(s){const P=G.p[s];for(let i=0;i<P.know.length;i++)if(P.know[i]===1||P.know[i]===4)P.know[i]=5;P.sonar={}}
+function runEvent(id){
+ if(id==='drift'){driftFleet(0);driftFleet(1)}
+ else if(id==='blackout'){washMisses(0);washMisses(1)}
+ else if(id==='supply'){for(const P of G.p)P.specials[pick(Object.keys(SP))]++}
+ else if(id==='double'){G.extra=1}
+ else if(id==='spy'){for(const s of [0,1]){const D=G.p[1-s],o=[];D.ships.forEach(sh=>{if(!sh.sunk)sh.cells.forEach(c=>{if(!sh.hit.has(c)&&open(view(s,c)))o.push(c)})});if(o.length)G.p[s].spot.add(pick(o))}}
+ else if(id==='storm'){for(const s of [0,1]){const D=G.p[1-s],o=[];for(let i=0;i<G.N*G.N;i++)if(view(s,i)===0&&!D.mines.has(i))o.push(i);shuffle(o).slice(0,3).forEach(i=>shoot(s,i,true))}}
+}
+function density(s){const A=G.p[s],D=G.p[1-s],N=G.N,d=new Float64Array(N*N);
+ for(const sh of D.ships){if(sh.sunk)continue;const L=sh.len;
+  for(let r=0;r<N;r++)for(let c=0;c<N;c++)for(const h of [1,0]){if(h?c+L>N:r+L>N)continue;
+   let ok=true,hits=0;const cells=[];
+   for(let k=0;k<L;k++){const i=h?r*N+c+k:(r+k)*N+c,x=view(s,i);if(x===1||x===3||x===4){ok=false;break}if(x===2)hits++;cells.push(i)}
+   if(!ok)continue;const w=hits?1+hits*15:1;for(const i of cells){const x=view(s,i);if(x===0)d[i]+=w;else if(x===5)d[i]+=w*.3}}}
+ for(const k in A.sonar){if(A.sonar[k]===0)area('sonar',+k).forEach(i=>d[i]=0)}
+ A.spot.forEach(i=>d[i]+=100);
+ return d}
+function argmax(list,d){let best=-1,bi=list[0];for(const i of shuffle([...list]))if(d[i]>best){best=d[i];bi=i}return bi}
+function cpuChoose(s){const A=G.p[s],N=G.N,L=A.cpu,cand=[];
+ for(let i=0;i<N*N;i++)if(open(view(s,i)))cand.push(i);
+ if(!cand.length){const any=[];for(let i=0;i<N*N;i++)if(A.know[i]<2)any.push(i);return{kind:'shot',i:pick(any.length?any:[0])}}
+ const live=[];for(let i=0;i<N*N;i++)if(A.know[i]===2)live.push(i);
+ const adj=[];live.forEach(i=>nbrs(i).forEach(j=>{if(open(view(s,j))&&!adj.includes(j))adj.push(j)}));
+ const spot=[...A.spot].filter(i=>open(view(s,i)));
+ if(spot.length&&L!=='rookie')return{kind:'shot',i:spot[0]};
+ if(L==='rookie'){if(adj.length&&Math.random()<.55)return{kind:'shot',i:pick(adj)};return{kind:'shot',i:pick(cand)}}
+ const d=density(s);
+ const sps=['cluster','strike','torpedo'].filter(k=>A.specials[k]>0);
+ if(!live.length&&G.turnCount[s]>2&&!G.fired&&sps.length&&Math.random()<(L==='admiral'?.4:.25)){
+  const k=pick(sps);if(k==='strike')G.sdir=Math.random()<.5;
+  let best=-1,bi=0;for(let i=0;i<N*N;i++){const sc=area(k,i).reduce((a,x)=>a+(open(view(s,x))?d[x]:0),0);if(sc>best){best=sc;bi=i}}
+  return{kind:k,i:bi}}
+ if(L==='captain'){if(adj.length)return{kind:'shot',i:argmax(adj,d)};
+  const par=cand.filter(i=>((i/N|0)+i%N)%2===0);return{kind:'shot',i:Math.random()<.7?pick(par.length?par:cand):argmax(cand,d)}}
+ return{kind:'shot',i:argmax(cand,d)}}
+
+// ---------- sound ----------
+let AC=null;
+function ac(){if(S.mute)return null;if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(AC&&AC.state==='suspended')AC.resume().catch(()=>{});return AC}
+function noise(dur,freq,gain,type){const a=ac();if(!a)return;const b=a.createBuffer(1,Math.floor(a.sampleRate*dur),a.sampleRate),d=b.getChannelData(0);
+ for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);
+ const src=a.createBufferSource();src.buffer=b;const f=a.createBiquadFilter();f.type=type||'lowpass';f.frequency.value=freq;const g=a.createGain();g.gain.value=gain;src.connect(f).connect(g).connect(a.destination);src.start()}
+function tone(f1,f2,dur,gain,type,delay){const a=ac();if(!a)return;const t=a.currentTime+(delay||0),o=a.createOscillator(),g=a.createGain();o.type=type||'sine';
+ o.frequency.setValueAtTime(f1,t);o.frequency.exponentialRampToValueAtTime(f2,t+dur);g.gain.setValueAtTime(gain,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g).connect(a.destination);o.start(t);o.stop(t+dur)}
+function sfx(kind,res){
+ if(kind==='sonar'){tone(1300,1250,.35,.12);tone(1300,1250,.35,.07,'sine',.45);return}
+ if(res.some(r=>r.t==='sunk'||r.t==='mine')){noise(1.3,320,.9);tone(95,28,1,.5)}
+ else if(res.some(r=>r.t==='hit')){noise(.6,600,.7);tone(140,40,.4,.35)}
+ else{noise(.45,1700,.35,'bandpass');tone(800,260,.18,.04)}}
+
+// ---------- ui ----------
+const app=document.getElementById('app'),ov=document.getElementById('ov');
+function setWorld(w){document.body.dataset.w=w}
+function overlay(html,cover){ov.innerHTML=`<div class="card">${html}</div>`;ov.className='on'+(cover?' cover':'')}
+function closeOv(){ov.className='';ov.innerHTML=''}
+function viewer(){return G.cfg.vs==='cpu'?0:G.turn}
+function render(){if(screen==='lobby')lobby();else if(screen==='place')placeView();else battle()}
+
+function lobby(){setWorld(cfg.world);const W=WORLDS[cfg.world],M=MODES.find(m=>m.id===cfg.mode);
+ const deco=[0,0,0,1,0,0,0,0,2,0, 0,3,3,3,0,1,0,0,2,0, 0,0,0,0,0,0,0,1,2,0, 1,0,4,4,4,4,0,0,0,0].map((v,i)=>`<i class="cell ${((i/10|0)+i)%2?'alt':''} ${['','miss','hit','ship','ship hit'][v]}"></i>`).join('');
+ const rec=k=>{const r=S.rec[k]||[0,0];return `${r[0]}–${r[1]}`};
+ app.innerHTML=`<header class="hero"><div class="logo">BROADSIDE</div><div class="sub">${W.tag}</div>
+ <div class="deco">${deco}</div>
+ <button class="play" data-a="go">Play</button>
+ <div class="chips"><button class="chip" data-a="help">How to play</button><button class="chip" data-a="stats">Record</button><button class="chip" data-a="mute">Sound: ${S.mute?'Off':'On'}</button></div></header>
+ <section class="tray"><h3><b>1</b>Opponent</h3><div class="tiles2">
+  <button class="tile ${cfg.vs==='cpu'?'sel':''}" data-a="vs" data-v="cpu"><b>vs Computer</b><small>Solo against the fleet AI</small></button>
+  <button class="tile ${cfg.vs==='2p'?'sel':''}" data-a="vs" data-v="2p"><b>Pass and play</b><small>Two players, one device</small></button></div>
+  ${cfg.vs==='cpu'?`<div class="lv">${Object.entries(LV).map(([k,v])=>`<button class="${cfg.lvl===k?'sel':''}" data-a="lvl" data-v="${k}">${v.lab}<small>${rec(k)}</small></button>`).join('')}</div>`
+  :`<div class="names"><input id="n1" maxlength="14" value="${esc(cfg.n1)}" aria-label="Player 1 name"><input id="n2" maxlength="14" value="${esc(cfg.n2)}" aria-label="Player 2 name"></div>`}</section>
+ <section class="tray"><h3><b>2</b>World</h3><div class="worlds">${Object.entries(WORLDS).map(([k,w])=>`<button class="wcard ${cfg.world===k?'on':''}" data-w="${k}" data-a="world" data-v="${k}"><div class="mini">${[0,1,1,1,0,0,0,0,2,0].map(v=>`<i class="${['','s','h'][v]}"></i>`).join('')}</div><b>${w.name}</b><small>${w.ships[0]}, ${w.ships[2]}…</small></button>`).join('')}</div></section>
+ <section class="tray"><h3><b>3</b>Rules</h3><div class="modes">${MODES.map(m=>`<button class="mode ${cfg.mode===m.id?'sel':''}" data-a="mode" data-v="${m.id}"><i>${m.ic}</i>${m.name}</button>`).join('')}</div><p class="desc">${M.desc}</p></section>
+ <section class="tray"><h3><b>4</b>Options</h3><div class="row"><span>Special weapons<small>Sonar, Airstrike, Cluster and Torpedo, one of each</small></span><button class="pill ${cfg.specials?'on':''}" data-a="spec">${cfg.specials?'On':'Off'}</button></div></section>
+ <button class="play" data-a="go">Set sail</button>`;
+ ['n1','n2'].forEach(id=>{const el=document.getElementById(id);if(el)el.oninput=()=>{cfg[id]=el.value.trim()||(id==='n1'?'Player 1':'Player 2');S.cfg=cfg;save()}});
+}
+
+function placeView(){const P=G.p[placing.who],N=G.N;setWorld(G.cfg.world);
+ const cells=[];for(let i=0;i<N*N;i++){const alt=((i/N|0)+i)%2?'alt':'';cells.push(`<button class="cell ${alt} ${P.at[i]>=0?'ship':''}" data-a="pc" data-v="${i}" aria-label="square ${i}"></button>`)}
+ const all=P.ships.every(s=>s.cells.length);
+ app.innerHTML=`<div class="top"><button class="x" data-a="quit" aria-label="Back to lobby">✕</button><div><small>${esc(P.name)}</small><h2>Place your fleet</h2></div></div>
+ <div class="grid" id="pg" style="--n:${N}">${cells.join('')}</div>
+ <div class="shiplist">${P.ships.map((s,k)=>`<button class="shipchip ${placing.sel===k?'sel':''} ${s.cells.length?'done':''}" data-a="selship" data-v="${k}"><i style="--len:${s.len}"></i>${esc(s.name)}</button>`).join('')}</div>
+ <div class="btnrow"><button class="btn" data-a="rot">Rotate ${placing.h?'↔':'↕'}</button><button class="btn" data-a="rand">Shuffle</button><button class="btn" data-a="clear">Clear</button></div>
+ <button class="play" data-a="ready" ${all?'':'disabled'}>Ready</button>
+ <p class="note">${all?'Tap a ship to pick it back up.':'Pick a ship, then tap where its front goes.'}${G.cfg.mode==='mines'?' Four mines will be hidden in your sea.':''}</p>`;
+}
+
+function targetGrid(v,big,clickable){const me=G.p[v],foe=G.p[1-v],N=G.N,o=[];
+ const fr=new Set(G.fresh.filter(f=>f[0]===v).map(f=>f[1]));const aimSet=new Set(aim!=null&&G.armed?area(G.armed,aim):[]);
+ for(let i=0;i<N*N;i++){const k=view(v,i);let c='cell'+(((i/N|0)+i)%2?' alt':'');
+  if(k===1)c+=' miss';else if(k===5)c+=' miss stale';else if(k===2)c+=' hit';else if(k===3)c+=' sunk';else if(k===4)c+=' boom';
+  if(open(k)&&me.spot.has(i))c+=' spot';
+  if(G.over&&open(k)&&foe.at[i]>=0)c+=' reveal';
+  if(fr.has(i))c+=' fresh';if(aimSet.has(i))c+=' aim';
+  const can=clickable&&(G.armed||open(k));if(can)c+=' t';
+  const n=me.sonar[i]!=null?`<span class="n">${me.sonar[i]}</span>`:'';
+  o.push(can?`<button class="${c}" data-a="fire" data-v="${i}" aria-label="target ${i}">${n}</button>`:`<div class="${c}">${n}</div>`)}
+ return `<div class="grid ${big?'':'small'}" id="tg" style="--n:${N}">${o.join('')}</div>`}
+function ownGrid(v,big){const me=G.p[v],foe=G.p[1-v],N=G.N,o=[];const fr=new Set(G.fresh.filter(f=>f[0]===1-v).map(f=>f[1]));
+ for(let i=0;i<N*N;i++){const k=foe.know[i];let c='cell'+(((i/N|0)+i)%2?' alt':'');
+  if(me.at[i]>=0)c+=' ship';if(me.mines.has(i))c+=' mymine';
+  if(k===1||k===5)c+=' miss';else if(k===2)c+=' hit';else if(k===3)c+=' sunk';else if(k===4)c+=' boom';
+  if(fr.has(i))c+=' fresh';o.push(`<div class="${c}"></div>`)}
+ return `<div class="grid ${big?'':'small'}" style="--n:${N}">${o.join('')}</div>`}
+function fleetPills(P){return P.ships.map(s=>`<span class="fs ${s.sunk?'dead':''}">${esc(s.name)} <u>${'■'.repeat(s.hit.size)}</u>${'□'.repeat(s.len-s.hit.size)}</span>`).join('')}
+function describe(v){const L=G.last;if(!L)return v===0&&G.cfg.vs==='cpu'?'Pick a square in enemy waters and fire.':'Pick a square in enemy waters and fire.';
+ const you=L.s===v,who=you?'You':esc(G.p[L.s].name),theirs=you?'their':'your',res=L.res;
+ if(L.kind==='sonar')return `${who} pinged sonar: ${res[0].n} ship square${res[0].n===1?'':'s'} in range.`;
+ const hits=res.filter(r=>r.t==='hit'||r.t==='sunk').length,sunk=res.filter(r=>r.t==='sunk'),mine=res.find(r=>r.t==='mine');let m='';
+ const tag=L.kind==='shot'?'':SP[L.kind].name+': ';
+ if(sunk.length)m=`${tag}${who} sank ${theirs} ${sunk.map(r=>esc(r.sh.name)).join(' and ')}!`;
+ else if(hits)m=L.kind==='shot'?`${who} scored a hit!`:`${tag}${hits} hit${hits>1?'s':''}!`;
+ else if(!mine)m=L.kind==='shot'?`${who} missed.`:`${tag}all misses.`;
+ if(mine)m+=(m?' ':'')+`${who} hit a mine!`+(mine.dmg?` It blasted ${you?'your':'their'} own ${esc(mine.dmg.sh.name)}.`:'');
+ return m}
+function battle(){const v=viewer(),me=G.p[v],foe=G.p[1-v],myTurn=G.turn===v&&!G.over,human=!G.p[G.turn].cpu;setWorld(G.cfg.world);
+ const M=MODES.find(m=>m.id===G.cfg.mode);
+ const clickable=myTurn&&human&&!busy;
+ const head=G.over?'Battle over':myTurn?`${v===0&&G.cfg.vs==='cpu'?'Your':esc(me.name)+"'s"} shot`:`${esc(foe.name)} is firing…`;
+ const tot=shotsFor(G.turn);
+ const pips=myTurn&&(tot>1||G.cfg.mode==='streak')?`<div class="pips">${Array.from({length:tot},(_,k)=>`<i class="${k<G.shotsLeft?'':'u'}"></i>`).join('')}${G.cfg.mode==='streak'?'<small style="margin-left:6px;color:var(--mut)">hits keep you shooting</small>':''}</div>`:'';
+ const keys=Object.keys(SP).filter(k=>me.specials[k]>0);
+ const spec=myTurn&&human&&keys.length?`<div class="specials">${keys.map(k=>`<button class="sp ${G.armed===k?'armed':''}" data-a="arm" data-v="${k}" ${G.fired||busy?'disabled':''} title="${SP[k].desc}"><i>${SP[k].ic}</i>${SP[k].name}${me.specials[k]>1?' ×'+me.specials[k]:''}</button>`).join('')}${G.armed==='strike'?`<button class="sp" data-a="sdir">${G.sdir?'Across ↔':'Down ↕'}</button>`:''}</div>
+  ${G.armed?`<p class="hint">${SP[G.armed].desc} Tap to aim, tap the same square again to fire. Uses your whole turn.</p>`:''}`:'';
+ app.innerHTML=`<div class="top"><button class="x" data-a="quitask" aria-label="Quit">✕</button><div><small>${M.name} · Round ${G.round}</small><div class="headline">${head}</div>${pips}</div><button class="x r" style="margin-left:auto" data-a="mute" aria-label="Toggle sound">${S.mute?'🔇':'🔊'}</button></div>
+ <div class="lbl"><span>${myTurn||G.over?'Enemy waters':'Your fleet'}</span><span>${myTurn||G.over?'':'incoming!'}</span></div>
+ ${myTurn||G.over?targetGrid(v,true,clickable):ownGrid(v,true)}
+ <div class="msg" id="msg">${describe(v)}</div>
+ ${spec}
+ <div class="bottom"><div><div class="lbl">${myTurn||G.over?'Your fleet':'Enemy waters'}</div>${myTurn||G.over?ownGrid(v,false):targetGrid(v,false,false)}</div></div>
+ <div class="lbl">Enemy fleet</div><div class="fleet">${fleetPills(foe)}</div>
+ <div class="lbl">Your fleet</div><div class="fleet">${fleetPills(me)}</div>`;
+ app.querySelectorAll('.grid.small').forEach(g=>g.style.width='62%');
+}
+function shake(){app.classList.remove('shake');void app.offsetWidth;app.classList.add('shake')}
+
+// ---------- flow ----------
+function handoff(who,extra){return new Promise(res=>{overlay(`<div class="k">Pass the device to</div><h2>${esc(G.p[who].name)}</h2>${extra||''}<button class="play" id="hok">Show my board</button>`,true);document.getElementById('hok').onclick=()=>{closeOv();res()}})}
+function eventCard(id){const e=EVENTS[id]||{name:'The fleets drift',ic:'≋',desc:EVENTS.drift.desc};return `<div class="big">${e.ic}</div><h2 style="font-size:26px">${e.name}</h2><p>${e.desc}</p>`}
+function showEvent(id){return new Promise(res=>{overlay(eventCard(id)+'<button class="play" id="eok">Continue</button>',false);const done=()=>{if(ov.className){closeOv();res()}};document.getElementById('eok').onclick=done;setTimeout(done,3500)})}
+async function ready(){const P=G.p[placing.who];placeMines(P);
+ if(placing.who===0&&G.cfg.vs==='2p'){placing={who:1,sel:0,h:true};render();await handoff(1,`<p>Place your fleet. No peeking, ${esc(G.p[0].name)}.</p>`);return}
+ if(G.cfg.vs==='cpu'){randomFleet(G.p[1]);placeMines(G.p[1])}
+ screen='battle';
+ if(G.cfg.vs==='2p'){render();ov.className='on cover';await handoff(0,'<p>Battle stations. You fire first.</p>')}
+ startTurn()}
+function startTurn(){G.turnCount[G.turn]++;G.shotsLeft=shotsFor(G.turn);G.armed=null;G.fired=false;aim=null;busy=false;render();if(G.p[G.turn].cpu)cpuStep()}
+async function cpuStep(){busy=true;render();await wait(700);if(G.over||screen!=='battle')return;const c=cpuChoose(G.turn);await act(c.kind,c.i)}
+async function act(kind,i){const s=G.turn,A=G.p[s],g=G;busy=true;aim=null;G.armed=null;
+ let res;if(kind==='shot')res=[shoot(s,i)];else{A.specials[kind]--;res=special(s,kind,i)}
+ G.fired=true;G.last={s,kind,res};
+ G.fresh=(kind==='sonar'?area('sonar',i):res.map(r=>r.i)).map(x=>[s,x]);
+ res.forEach(r=>{if(r.dmg)G.fresh.push([1-s,r.dmg.c])});
+ sfx(kind,res);render();if(res.some(r=>r.t!=='miss'&&r.t!=='sonar'))shake();
+ const w=winner();if(w!==null){await wait(600);return gameOver(w)}
+ let cont=false;
+ if(kind==='shot'&&res[0].t!=='mine'){if(G.cfg.mode==='streak'&&(res[0].t==='hit'||res[0].t==='sunk'))cont=true;else cont=--G.shotsLeft>0}
+ await wait(cont?450:1100);if(G!==g||screen!=='battle')return;
+ busy=false;G.fresh=[];
+ if(cont){render();if(A.cpu)cpuStep()}else endTurn()}
+async function endTurn(){const g=G;G.turn=1-G.turn;let ev=null;
+ if(G.turn===0){G.round++;G.extra=0;if((G.round-1)%3===0){if(G.cfg.mode==='drift')ev='driftmode';else if(G.cfg.mode==='mayhem')ev=pick(Object.keys(EVENTS))}}
+ if(ev){runEvent(ev==='driftmode'?'drift':ev);G.last=null}
+ const w=winner();if(w!==null)return gameOver(w);
+ if(G.cfg.vs==='2p'){ov.className='on cover';ov.innerHTML='';await handoff(G.turn,ev?`<div style="margin:10px 0;padding:10px;border:1px solid var(--edge);border-radius:12px">${eventCard(ev)}</div>`:'')}
+ else if(ev){render();await showEvent(ev)}
+ if(G!==g||screen!=='battle')return;startTurn()}
+function gameOver(w){G.over=true;busy=false;render();
+ const cpu=G.cfg.vs==='cpu';
+ if(cpu){const r=S.rec[G.cfg.lvl]||[0,0];r[w===0?0:1]++;S.rec[G.cfg.lvl]=r}S.games++;save();
+ const st=P=>{const a=P.stats;return `<td>${a.shots}</td><td>${a.hits}</td><td>${a.shots?Math.round(a.hits/a.shots*100):0}%</td>`};
+ setTimeout(()=>{if(screen!=='battle')return;overlay(`<div class="k">${cpu?(w===0?'Victory':'Defeat'):'Winner'}</div><h2>${cpu?(w===0?'Fleet destroyed!':'You were sunk'):esc(G.p[w].name)+' wins'}</h2>
+ <p class="k">${G.round} rounds of ${MODES.find(m=>m.id===G.cfg.mode).name}</p>
+ <table><tr><th></th><th>Shots</th><th>Hits</th><th>Acc.</th></tr><tr><td>${esc(G.p[0].name)}</td>${st(G.p[0])}</tr><tr><td>${esc(G.p[1].name)}</td>${st(G.p[1])}</tr></table>
+ <button class="play" data-a="rematch">Rematch</button><button class="btn" data-a="board">See the board</button><button class="btn" data-a="lobby">Lobby</button>`)},1300)}
+function help(){overlay(`<h2>How to play</h2><div class="help"><p>Hide your fleet, then take turns firing at squares in enemy waters. A dot is a miss, a burst is a hit, and a crossed ship is sunk. Sink every enemy ship to win.</p>
+ <p>In pass and play, hand the device over when asked. The cover screen keeps boards secret.</p>
+ <h4>Rules</h4>${MODES.map(m=>`<p><b>${m.name}.</b> ${m.desc}</p>`).join('')}
+ <h4>Special weapons</h4>${Object.values(SP).map(s=>`<p><b>${s.name}.</b> ${s.desc}</p>`).join('')}<p>A special uses your whole turn, so fire it before any normal shot.</p>
+ <h4>Mayhem events</h4>${Object.values(EVENTS).map(s=>`<p><b>${s.name}.</b> ${s.desc}</p>`).join('')}</div><button class="play" data-a="close">Got it</button>`)}
+function stats(){overlay(`<h2>Record</h2><table><tr><th>Opponent</th><th>Won</th><th>Lost</th></tr>${Object.entries(LV).map(([k,v])=>{const r=S.rec[k]||[0,0];return `<tr><td>${v.lab} · ${v.name}</td><td>${r[0]}</td><td>${r[1]}</td></tr>`}).join('')}</table><p class="k">${S.games} games played on this device</p><button class="play" data-a="close">Close</button>`)}
+
+// ---------- events ----------
+function onAction(a,v){
+ switch(a){
+ case 'vs':cfg.vs=v;break;case 'lvl':cfg.lvl=v;break;case 'world':cfg.world=v;break;case 'mode':cfg.mode=v;break;case 'spec':cfg.specials=!cfg.specials;break;
+ case 'mute':S.mute=!S.mute;save();render();return;
+ case 'help':help();return;case 'stats':stats();return;case 'close':closeOv();return;
+ case 'go':newGame(cfg);placing={who:0,sel:0,h:true};screen='place';render();ac();return;
+ case 'quit':case 'lobby':closeOv();G=null;screen='lobby';render();return;
+ case 'quitask':overlay(`<h2>Leave battle?</h2><p class="k">This match will be lost.</p><button class="play" data-a="lobby">Leave</button><button class="btn" data-a="close">Keep fighting</button>`);return;
+ case 'rematch':closeOv();newGame(cfg);placing={who:0,sel:0,h:true};screen='place';render();return;
+ case 'board':closeOv();return;
+ case 'selship':{const P=G.p[placing.who],sh=P.ships[+v];if(sh.cells.length){unplace(P,sh)}placing.sel=+v;render();return}
+ case 'rot':placing.h=!placing.h;render();return;
+ case 'rand':randomFleet(G.p[placing.who]);render();return;
+ case 'clear':{const P=G.p[placing.who];P.ships.forEach(s=>unplace(P,s));placing.sel=0;render();return}
+ case 'ready':ready();return;
+ case 'pc':{const P=G.p[placing.who],i=+v;
+  if(P.at[i]>=0){const sh=P.ships[P.at[i]];unplace(P,sh);placing.sel=sh.id;render();return}
+  const sh=P.ships[placing.sel];if(!sh||sh.cells.length)return;
+  const r=cellsFor(i,sh.len,placing.h);if(!r.ok||!fits(P,r.cells,sh.id)){shake();return}
+  placeShip(P,sh,r.cells);const nx=P.ships.find(s=>!s.cells.length);placing.sel=nx?nx.id:-1;render();return}
+ case 'arm':if(busy||G.fired)return;G.armed=G.armed===v?null:v;aim=null;render();return;
+ case 'sdir':G.sdir=!G.sdir;render();return;
+ case 'fire':{if(busy||G.over||G.p[G.turn].cpu)return;const i=+v;
+  if(G.armed){if(aim===i){act(G.armed,i)}else{aim=i;render()}return}
+  if(!open(view(G.turn,i)))return;act('shot',i);return}
+ }
+ S.cfg=cfg;save();render();
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b||b.disabled)return;onAction(b.dataset.a,b.dataset.v)});
+app.addEventListener('pointerover',e=>{const c=e.target.closest('.cell');app.querySelectorAll('.ghost,.bad').forEach(x=>x.classList.remove('ghost','bad'));
+ if(!c||!G)return;const i=+c.dataset.v;if(isNaN(i))return;
+ if(screen==='place'){const P=G.p[placing.who],sh=P.ships[placing.sel];if(!sh||sh.cells.length||P.at[i]>=0)return;
+  const r=cellsFor(i,sh.len,placing.h),ok=r.ok&&fits(P,r.cells,sh.id),g=document.getElementById('pg');r.cells.forEach(x=>g.children[x].classList.add(ok?'ghost':'bad'))}
+ else if(screen==='battle'&&G.armed&&aim==null){const g=document.getElementById('tg');if(g)area(G.armed,i).forEach(x=>g.children[x]&&g.children[x].classList.add('ghost'))}});
+document.addEventListener('keydown',e=>{if(screen==='place'&&(e.key==='r'||e.key==='R')){placing.h=!placing.h;render()}});
+render();
+}
+</script>
+</body></html>

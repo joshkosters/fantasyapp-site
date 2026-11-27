@@ -25,14 +25,14 @@ games=[
  ('nascar','Fantasy NASCAR','sports','Sports · Weekly','Pick 3 drivers a week. A, B, C.','','background:var(--card);border:2px solid var(--ink)','live'),
  ('drop-four','Drop Four','board','Board game · 2 players or solo','Four in a row, with power discs.','','background:#1f4fd8;color:#fff','live'),
  ('gridiron-iq','Gridiron IQ','learn','Learn · Football IQ','Read defenses with real game film.','wide','background:var(--ink);color:var(--cream)','live'),
- ('m4','Mystery game','mystery','Game 06 · Unlocks in 4 weeks','Something new.','wide','background:var(--orange)','mystery'),
+ ('broadside','Broadside','board','Board game · 2 players or solo','Battleship, with eight twists.','wide','background:#0b2340;color:#fff','live'),
 ]
 def gcard(g):
     s,n,c,tag,d,cls,st,stat=g
-    tagc='color:var(--orange)' if 'ink' in st and 'cream' in st else ('color:#ffc61a' if s=='drop-four' else '')
-    cl=('g '+cls).strip()+(' topo-k' if s=='marquee-grid' else '')+(' g-df' if s=='drop-four' else '')
+    tagc='color:var(--orange)' if 'ink' in st and 'cream' in st else ('color:#ffc61a' if s in ('drop-four','broadside') else '')
+    cl=('g '+cls).strip()+(' topo-k' if s=='marquee-grid' else '')+(' g-df' if s=='drop-four' else '')+(' g-bs' if s=='broadside' else '')
     inner=f'<div class="eb" style="{tagc}">{tag}</div><div><div class="d">{n.replace(" ","<br>",1) if cls!="wide" else n}</div>'+(f'<div style="font-weight:700;margin-top:8px;font-size:15px">{d}</div></div>' if cls=='big' else '</div>')
-    if cls=='wide': inner=f'<div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap"><span class="eb" style="color:var(--orange)">{tag}</span><span class="d">{n}</span></div>'
+    if cls=='wide': inner=f'<div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap"><span class="eb" style="{tagc or "color:var(--orange)"}">{tag}</span><span class="d">{n}</span></div>'
     if stat=='mystery':
         return f'<div class="{cl} mys" data-cat="{c}" style="{st}"><div class="blur" aria-hidden="true">{inner}</div><span class="soon">NEXT UP</span><span class="q d" aria-hidden="true">?</span></div>'
     if stat=='live':
@@ -77,7 +77,7 @@ function f(k){b.forEach(function(x){x.classList.toggle('on',x.dataset.f===k)});c
 b.forEach(function(x){x.addEventListener('click',function(){f(x.dataset.f)})});
 document.querySelectorAll('[data-cat].nav a, .links a[data-cat]').forEach(function(a){a.addEventListener('click',function(){f(a.dataset.cat)})});
 var h=location.hash;})();
-</script><style>.g-df{overflow:hidden}.g-df::after{content:"";position:absolute;right:-14px;bottom:-14px;width:150px;height:96px;opacity:.95;pointer-events:none;background:radial-gradient(circle,#f0352b 0 13px,transparent 14px) 0 0/38px 38px,radial-gradient(circle,#ffc61a 0 13px,transparent 14px) 19px 19px/38px 38px}</style>'''+end()
+</script><style>.g-bs{overflow:hidden}.g-bs::after{content:"";position:absolute;right:70px;top:0;bottom:0;width:240px;pointer-events:none;opacity:.9;background:radial-gradient(circle,#ff4d3d 0 7px,transparent 8px) 6px 10px/60px 44px,radial-gradient(circle,#d6ecff 0 4px,transparent 5px) 36px 32px/60px 44px,repeating-linear-gradient(90deg,rgba(255,255,255,.08) 0 1px,transparent 1px 22px),repeating-linear-gradient(0deg,rgba(255,255,255,.08) 0 1px,transparent 1px 22px)}.g-df{overflow:hidden}.g-df::after{content:"";position:absolute;right:-14px;bottom:-14px;width:150px;height:96px;opacity:.95;pointer-events:none;background:radial-gradient(circle,#f0352b 0 13px,transparent 14px) 0 0/38px 38px,radial-gradient(circle,#ffc61a 0 13px,transparent 14px) 19px 19px/38px 38px}</style>'''+end()
 open('index.html','w').write(h)
 # ---------- cfb game page
 p='../'
@@ -229,6 +229,7 @@ open('nascar/data/index.html','w').write(h)
 
 exec(open('cc_page.py').read())
 exec(open('drop_page.py').read())
+exec(open('bs_page.py').read())
 os.makedirs('privacy',exist_ok=True)
 p='../'
 def sec(t,b): return f'<h2 class="d" style="font-size:34px;margin:34px 0 10px">{t}</h2><p style="font-size:17px;line-height:1.65;margin:0;font-weight:500">{b}</p>'
