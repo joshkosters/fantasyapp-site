@@ -11,12 +11,12 @@ WORLDS=[('Classic','#1f4fd8','#f0352b','#ffc61a','No twist. Just the board you g
  ('Arcade','#3b1fa8','#ffd400','#ff3b8d','Fill the bottom row and it clears, Tetris style.'),
  ('Haunted','#2a2036','#ff8a1f','#dff7ea','Discs fade from sight a few turns after they land.'),
  ('Gridiron','#7a431f','#c8102e','#f2f4f8','Lines score touchdowns. First to three wins.'),
- ('Tabletop','#a56d38','#2a2c30','#f3ead8','Walnut and stone. No twist.')]
+ ('Tabletop','#a56d38','#2a2c30','#ecebe6','Walnut and stone. No twist.')]
 wl=''.join(f'<div class="dw" style="--b:{b};--p1:{a};--p2:{c}"><div class="dwb"><i class="a"></i><i class="b"></i><i class="a"></i><i class="b"></i></div><div class="d">{n}</div><p>{d}</p></div>' for n,b,a,c,d in WORLDS)
 RULES=[('Classic','Line up four, across, down or diagonally.'),('Pop Out','Drop a disc, or pop one of yours out of the bottom row.'),
  ('Gravity Flip','Every sixth move the board turns upside down and everything falls.'),('Roadblocks','Five neutral stones start on the board.'),
  ('Five Alive','A bigger 9 by 7 board where you need five in a row.'),('Mayhem','Every fourth move the board deals a surprise: a quake, a meteor, a turncoat disc.')]
-rl=''.join(f'<div class="row" style="align-items:flex-start"><span class="n">{i+1:02d}</span><span class="tx"><b style="display:block">{n}</b><span style="font-weight:500;font-size:16px;line-height:1.6;color:#4a463c;display:block;margin-top:4px">{d}</span></span></div>' for i,(n,d) in enumerate(RULES))
+rl=''.join(f'<div class="row" style="align-items:flex-start"><span class="n">{i+1:02d}</span><span class="tx"><b style="display:block">{n}</b><span style="font-weight:500;font-size:16px;line-height:1.6;color:#4a4a47;display:block;margin-top:4px">{d}</span></span></div>' for i,(n,d) in enumerate(RULES))
 SHOTS=[('lobby','var(--orange)','Pick your setup','Players, world, rules and match length, all on one screen.'),
  ('draft','var(--yellow)','Draft your powers','Bomb, Anvil, Freeze, Wild and more. Three each, taken in turns.'),
  ('classic','var(--orange)','Classic','The board you know, with powers in your hand.'),
